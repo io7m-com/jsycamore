@@ -7,6 +7,10 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3F;
 
+/**
+ * Type specifying the basic color scheme used by windows and components.
+ */
+
 public final class Theme
 {
   private int                      window_edge_width;

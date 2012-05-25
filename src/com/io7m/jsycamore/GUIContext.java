@@ -364,6 +364,7 @@ public final class GUIContext
 
   public @Nonnull Scissor contextPushScissor(
     final @Nonnull Scissor next)
+    throws ConstraintError
   {
     return this.scissor_stack.push(next);
   }

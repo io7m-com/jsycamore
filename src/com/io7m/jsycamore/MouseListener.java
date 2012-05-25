@@ -6,6 +6,15 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 
+/**
+ * Interface describing an object that can receive mouse events.
+ * 
+ * @param <T>
+ *          The type of object that received the initial event (not
+ *          necessarily the same type of object as the one receiving the event
+ *          now).
+ */
+
 public interface MouseListener<T>
 {
   /**

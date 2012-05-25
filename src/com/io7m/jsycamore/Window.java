@@ -32,6 +32,12 @@ import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.jtensors.VectorReadable2I;
 
+/**
+ * Abstract class implementing the basic functionality for all windows.
+ * 
+ * Each {@link Window} contains an n-ary tree of <code>Component</code>s.
+ */
+
 public abstract class Window implements Comparable<Window>
 {
   private static final @Nonnull AtomicLong     id_pool;

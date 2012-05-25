@@ -239,7 +239,7 @@ public final class DrawPrimitives
         p.putColor(g, color);
         p.putAlpha(g, color.getWF());
         p.putSize(g, DrawPrimitives.ONE);
-        p.putTextureUnit(g, units[0]);
+        p.putTexture0(g, units[0]);
         p.bindPositionAttribute(g, vbo, vbo_desc.getAttribute("position"));
         p.bindUVAttribute(g, vbo, vbo_desc.getAttribute("uv"));
 
@@ -487,7 +487,7 @@ public final class DrawPrimitives
       p.putProjectionMatrix(g, mp);
       p.putAlpha(g, alpha);
       p.putSize(g, size);
-      p.putTextureUnit(g, units[0]);
+      p.putTexture0(g, units[0]);
       p.bindPositionAttribute(
         g,
         DrawPrimitives.textured_vbo,
