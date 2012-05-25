@@ -27,6 +27,10 @@ import com.io7m.jtensors.VectorReadable2I;
 import com.io7m.jvvfs.FilesystemAPI;
 import com.io7m.jvvfs.FilesystemError;
 
+/**
+ * Type representing an active GUI.
+ */
+
 public final class GUI
 {
   /**
@@ -91,6 +95,10 @@ public final class GUI
       throw new GUIException(e);
     }
   }
+
+  /**
+   * Retrieve the context associated with this GUI.
+   */
 
   public @Nonnull GUIContext getContext()
   {

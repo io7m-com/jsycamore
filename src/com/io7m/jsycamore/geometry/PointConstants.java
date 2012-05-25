@@ -2,6 +2,10 @@ package com.io7m.jsycamore.geometry;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Convenient values in various coordinate systems.
+ */
+
 public final class PointConstants
 {
   public static final @Nonnull PointReadable<ScreenRelative> SCREEN_ORIGIN;

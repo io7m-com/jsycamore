@@ -23,6 +23,13 @@ import com.io7m.jvvfs.FilesystemAPI;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathVirtual;
 
+/**
+ * The standard GUI shader program. This class defines a standard GLSL
+ * interface that all shaders called by the GUI are expected to support. Some
+ * GLSL parameters are optional; those that are have an accompanying "has"
+ * function, eg. {@link GUIShader#hasTexture0()}.
+ */
+
 public final class GUIShader implements CompilableProgram, UsableProgram
 {
   private final @Nonnull Program program;
@@ -57,6 +64,22 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     this.program.addVertexShader(path);
   }
 
+  /**
+   * Use <code>aba</code> from <code>vbo</code> as the source of data for the
+   * "position" program attribute.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param vbo
+   *          The source array buffer.
+   * @param aba
+   *          The source array buffer attribute.
+   * @throws ConstraintError
+   *           Iff the program does not have a "position" attribute.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
+
   public void bindPositionAttribute(
     final @Nonnull GLInterface g,
     final @Nonnull ArrayBuffer vbo,
@@ -68,6 +91,22 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     Constraints.constrainNotNull(pa, "Position attribute");
     g.arrayBufferBindVertexAttribute(vbo, aba, pa);
   }
+
+  /**
+   * Use <code>aba</code> from <code>vbo</code> as the source of data for the
+   * "uv" program attribute.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param vbo
+   *          The source array buffer.
+   * @param aba
+   *          The source array buffer attribute.
+   * @throws ConstraintError
+   *           Iff the program does not have a "uv" attribute.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
 
   public void bindUVAttribute(
     final @Nonnull GLInterface g,
@@ -98,16 +137,84 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     this.program.deactivate(gl);
   }
 
+  /**
+   * Return <code>true</code> iff this shader supports the "alpha" parameter.
+   */
+
+  public boolean hasAlpha()
+    throws ConstraintError
+  {
+    return this.program.getUniform("alpha") != null;
+  }
+
+  /**
+   * Return <code>true</code> iff this shader supports the "color" parameter.
+   */
+
+  public boolean hasColor()
+    throws ConstraintError
+  {
+    return this.program.getUniform("color") != null;
+  }
+
+  /**
+   * Return <code>true</code> iff this shader supports the "point_size"
+   * parameter.
+   */
+
+  public boolean hasPointSize()
+    throws ConstraintError
+  {
+    return this.program.getUniform("point_size") != null;
+  }
+
+  /**
+   * Return <code>true</code> iff this shader supports the "point_size"
+   * parameter.
+   */
+
+  public boolean hasTexture0()
+    throws ConstraintError
+  {
+    return this.program.getUniform("texture0") != null;
+  }
+
+  /**
+   * Set the opacity used for shading.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param alpha
+   *          The alpha value to use.
+   * @throws ConstraintError
+   *           Iff the program does not have an "alpha" uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
+
   public void putAlpha(
     final @Nonnull GLInterface g,
     final float alpha)
     throws ConstraintError,
       GLException
   {
+    Constraints.constrainArbitrary(this.hasAlpha(), "Has alpha uniform");
     final ProgramUniform u = this.program.getUniform("alpha");
-    Constraints.constrainNotNull(u, "Alpha uniform");
     g.programPutUniformFloat(u, alpha);
   }
+
+  /**
+   * Set the color used for shading.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param color
+   *          The color value to use.
+   * @throws ConstraintError
+   *           Iff the program does not have a "color" uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
 
   public void putColor(
     final @Nonnull GLInterface g,
@@ -115,10 +222,24 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     throws ConstraintError,
       GLException
   {
+    Constraints.constrainArbitrary(this.hasColor(), "Has color uniform");
     final ProgramUniform u = this.program.getUniform("color");
-    Constraints.constrainNotNull(u, "Color uniform");
     g.programPutUniformVector4f(u, color);
   }
+
+  /**
+   * Set the modelview matrix.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param m
+   *          The modelview matrix.
+   * @throws ConstraintError
+   *           Iff the program does not have a "matrix_modelview"
+   *           uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
 
   public void putModelviewMatrix(
     final @Nonnull GLInterface g,
@@ -131,16 +252,46 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     g.programPutUniformMatrix4x4f(u, m);
   }
 
+  /**
+   * Set the size of points used in shading.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param point_size
+   *          The point size in pixels.
+   * @throws ConstraintError
+   *           Iff the program does not have a "point_size" uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
+
   public void putPointSize(
     final @Nonnull GLInterface g,
-    final int edge_width)
+    final int point_size)
     throws ConstraintError,
       GLException
   {
+    Constraints.constrainArbitrary(
+      this.hasPointSize(),
+      "Program has point_size");
+
     final ProgramUniform u = this.program.getUniform("point_size");
-    Constraints.constrainNotNull(u, "Point size uniform");
-    g.programPutUniformFloat(u, edge_width);
+    g.programPutUniformFloat(u, point_size);
   }
+
+  /**
+   * Set the projection matrix.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param m
+   *          The projection matrix.
+   * @throws ConstraintError
+   *           Iff the program does not have a "matrix_projection"
+   *           uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
 
   public void putProjectionMatrix(
     final @Nonnull GLInterface g,
@@ -153,6 +304,20 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     g.programPutUniformMatrix4x4f(u, m);
   }
 
+  /**
+   * Set the scaling factor.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param size
+   *          The scaling factor to use when shading.
+   * @throws ConstraintError
+   *           Iff the program does not have a "matrix_projection"
+   *           uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
+
   public void putSize(
     final @Nonnull GLInterface g,
     final @Nonnull VectorReadable2I size)
@@ -164,13 +329,26 @@ public final class GUIShader implements CompilableProgram, UsableProgram
     g.programPutUniformVector2i(u, size);
   }
 
-  public void putTextureUnit(
+  /**
+   * Set the texture unit to use for texture <code>0</code> in the shader.
+   * 
+   * @param g
+   *          The OpenGL interface.
+   * @param unit
+   *          The texture unit.
+   * @throws ConstraintError
+   *           Iff the program does not have a "texture0" uniform/parameter.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   */
+
+  public void putTexture0(
     final @Nonnull GLInterface g,
     final @Nonnull TextureUnit unit)
     throws ConstraintError,
       GLException
   {
-    final ProgramUniform u = this.program.getUniform("texture");
+    final ProgramUniform u = this.program.getUniform("texture0");
     Constraints.constrainNotNull(u, "Texture uniform");
     g.programPutUniformTextureUnit(u, unit);
   }

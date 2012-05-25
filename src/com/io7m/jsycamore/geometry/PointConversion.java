@@ -6,6 +6,10 @@ import com.io7m.jaux.Constraints;
 import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jtensors.VectorReadable2I;
 
+/**
+ * Conversion functions between coordinate systems.
+ */
+
 public final class PointConversion
 {
   /**
