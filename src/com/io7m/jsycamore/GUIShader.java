@@ -312,8 +312,7 @@ public final class GUIShader implements CompilableProgram, UsableProgram
    * @param size
    *          The scaling factor to use when shading.
    * @throws ConstraintError
-   *           Iff the program does not have a "matrix_projection"
-   *           uniform/parameter.
+   *           Iff the program does not have a "size" uniform/parameter.
    * @throws GLException
    *           Iff an OpenGL error occurs.
    */
