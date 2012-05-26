@@ -210,12 +210,11 @@ public final class Button extends Component
     throws ConstraintError,
       GLException
   {
-    // TODO Auto-generated method stub
+    // Unused.
   }
 
   @Override public boolean resourceIsDeleted()
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
