@@ -3,6 +3,7 @@ package com.io7m.jsycamore.windows;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import com.io7m.jaux.Constraints;
 import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
@@ -26,16 +27,16 @@ public final class StandardWindow extends Window
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> position,
     final @Nonnull VectorReadable2I size,
-    final @Nonnull String title,
-    final boolean can_close,
-    final boolean can_resize)
+    final @Nonnull WindowParameters parameters)
     throws ConstraintError,
       GUIException
   {
     super(context, position, size);
 
-    this.windowSetMinimumWidth(64);
-    this.windowSetMinimumHeight(64);
+    Constraints.constrainNotNull(parameters, "Parameters");
+
+    this.windowSetMinimumWidth(parameters.getMinimumWidth());
+    this.windowSetMinimumHeight(parameters.getMinimumHeight());
 
     final Component root = this.windowGetRootPane();
     final VectorReadable2I root_size = root.componentGetSize();
@@ -51,8 +52,8 @@ public final class StandardWindow extends Window
           root,
           PointConstants.PARENT_ORIGIN,
           new_size,
-          title,
-          can_close);
+          parameters.getTitle(),
+          parameters.getCanClose());
       this.titlebar
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     }
@@ -76,7 +77,7 @@ public final class StandardWindow extends Window
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     }
 
-    if (can_resize) {
+    if (parameters.getCanResize()) {
       this.resize_box =
         new ResizeBox(
           context,

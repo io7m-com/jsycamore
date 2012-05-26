@@ -25,6 +25,7 @@ import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
+import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jvvfs.Filesystem;
@@ -111,20 +112,33 @@ public final class SimpleTextArea implements Runnable
         this.gl,
         this.fs,
         this.log);
-    final GUIContext c = this.gui.getContext();
+    final GUIContext ctx = this.gui.getContext();
+
+    final WindowParameters wp = new WindowParameters();
+    wp.setCanClose(false);
+    wp.setCanResize(true);
+    wp.setTitle("Text");
 
     this.window0 =
-      new StandardWindow(c, new Point<ScreenRelative>(96, 96), new VectorI2I(
-        500,
-        300), "Text", false, true);
+      new StandardWindow(
+        ctx,
+        new Point<ScreenRelative>(96, 96),
+        new VectorI2I(500, 300),
+        wp);
     this.window0.windowSetAlpha(0.98f);
     this.window0.windowSetMinimumHeight(96);
     this.window0.windowSetMinimumWidth(96);
 
+    wp.setCanClose(false);
+    wp.setCanResize(false);
+    wp.setTitle("Other");
+
     this.window1 =
-      new StandardWindow(c, new Point<ScreenRelative>(64, 64), new VectorI2I(
-        64,
-        64), "Other", false, false);
+      new StandardWindow(
+        ctx,
+        new Point<ScreenRelative>(64, 64),
+        new VectorI2I(64, 64),
+        wp);
     this.window0.windowSetAlpha(0.98f);
     this.window0.windowSetMinimumHeight(96);
     this.window0.windowSetMinimumWidth(96);
@@ -132,7 +146,7 @@ public final class SimpleTextArea implements Runnable
     final ContentPane pane = this.window0.windowGetContentPane();
 
     final TextArea t =
-      new TextArea(c, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
+      new TextArea(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
         pane.componentGetWidth() - 16,
         pane.componentGetHeight() - 16));
     t.componentSetMinimumX(8);
@@ -142,10 +156,12 @@ public final class SimpleTextArea implements Runnable
     t.textAreaAddLine(
       this.gui.getContext(),
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-    t.textAreaAddLine(c, "Nullam sed ultricies velit.");
-    t.textAreaAddLine(c, "Aliquam ut risus metus, sit amet dignissim risus.");
+    t.textAreaAddLine(ctx, "Nullam sed ultricies velit.");
     t.textAreaAddLine(
-      c,
+      ctx,
+      "Aliquam ut risus metus, sit amet dignissim risus.");
+    t.textAreaAddLine(
+      ctx,
       "Nullam urna enim, mollis a dictum eget, pretium nec tortor.");
 
     this.gui.windowAdd(this.window1);
