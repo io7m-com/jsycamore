@@ -25,6 +25,8 @@ public final class Theme
   private final @Nonnull VectorM3F focused_component_over_edge_color;
   private final @Nonnull VectorM3F focused_component_active_background_color;
   private final @Nonnull VectorM3F focused_component_active_edge_color;
+  private final @Nonnull VectorM3F focused_text_area_background_color;
+  private final @Nonnull VectorM3F focused_text_area_foreground_color;
 
   private final @Nonnull VectorM3F unfocused_window_edge_color;
   private final @Nonnull VectorM3F unfocused_window_pane_background_color;
@@ -32,6 +34,8 @@ public final class Theme
   private final @Nonnull VectorM3F unfocused_window_titlebar_text_color;
   private final @Nonnull VectorM3F unfocused_component_edge_color;
   private final @Nonnull VectorM3F unfocused_component_background_color;
+  private final @Nonnull VectorM3F unfocused_text_area_background_color;
+  private final @Nonnull VectorM3F unfocused_text_area_foreground_color;
 
   private final @Nonnull VectorM3F failsafe_color;
   private final @Nonnull VectorM3F bounds_color;
@@ -50,6 +54,8 @@ public final class Theme
     this.focused_component_over_edge_color = new VectorM3F();
     this.focused_component_active_background_color = new VectorM3F();
     this.focused_component_active_edge_color = new VectorM3F();
+    this.focused_text_area_background_color = new VectorM3F();
+    this.focused_text_area_foreground_color = new VectorM3F();
 
     this.unfocused_window_edge_color = new VectorM3F();
     this.unfocused_window_pane_background_color = new VectorM3F();
@@ -57,6 +63,8 @@ public final class Theme
     this.unfocused_window_titlebar_text_color = new VectorM3F();
     this.unfocused_component_background_color = new VectorM3F();
     this.unfocused_component_edge_color = new VectorM3F();
+    this.unfocused_text_area_background_color = new VectorM3F();
+    this.unfocused_text_area_foreground_color = new VectorM3F();
 
     this.failsafe_color = new VectorM3F();
     this.bounds_color = new VectorM3F();
@@ -102,6 +110,16 @@ public final class Theme
     return this.focused_component_over_edge_color;
   }
 
+  public @Nonnull VectorReadable3F getFocusedTextAreaBackgroundColor()
+  {
+    return this.focused_text_area_background_color;
+  }
+
+  public @Nonnull VectorReadable3F getFocusedTextAreaForegroundColor()
+  {
+    return this.focused_text_area_foreground_color;
+  }
+
   public @Nonnull VectorReadable3F getFocusedWindowEdgeColor()
   {
     return this.focused_window_edge_color;
@@ -130,6 +148,16 @@ public final class Theme
   public @Nonnull VectorReadable3F getUnfocusedComponentEdgeColor()
   {
     return this.unfocused_component_edge_color;
+  }
+
+  public @Nonnull VectorReadable3F getUnfocusedTextAreaBackgroundColor()
+  {
+    return this.unfocused_text_area_background_color;
+  }
+
+  public @Nonnull VectorReadable3F getUnfocusedTextAreaForegroundColor()
+  {
+    return this.unfocused_text_area_foreground_color;
   }
 
   public @Nonnull VectorReadable3F getUnfocusedWindowEdgeColor()
@@ -303,6 +331,42 @@ public final class Theme
     this.focused_component_over_edge_color.z = b;
   }
 
+  public void setFocusedTextAreaBackgroundColor3f(
+    final float r,
+    final float g,
+    final float b)
+  {
+    this.focused_text_area_background_color.x = r;
+    this.focused_text_area_background_color.y = g;
+    this.focused_text_area_background_color.z = b;
+  }
+
+  public void setFocusedTextAreaBackgroundColor3f(
+    final @Nonnull VectorReadable3F color)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(color, "Color");
+    VectorM3F.copy(color, this.focused_text_area_background_color);
+  }
+
+  public void setFocusedTextAreaForegroundColor3f(
+    final float r,
+    final float g,
+    final float b)
+  {
+    this.focused_text_area_foreground_color.x = r;
+    this.focused_text_area_foreground_color.y = g;
+    this.focused_text_area_foreground_color.z = b;
+  }
+
+  public void setFocusedTextAreaForegroundColor3f(
+    final @Nonnull VectorReadable3F color)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(color, "Color");
+    VectorM3F.copy(color, this.focused_text_area_foreground_color);
+  }
+
   public void setFocusedWindowEdgeColor(
     final @Nonnull VectorReadable3F color)
     throws ConstraintError
@@ -409,6 +473,42 @@ public final class Theme
     this.unfocused_component_edge_color.x = r;
     this.unfocused_component_edge_color.y = g;
     this.unfocused_component_edge_color.z = b;
+  }
+
+  public void setUnfocusedTextAreaBackgroundColor(
+    final @Nonnull VectorReadable3F color)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(color, "Color");
+    VectorM3F.copy(color, this.unfocused_text_area_background_color);
+  }
+
+  public void setUnfocusedTextAreaBackgroundColor3f(
+    final float r,
+    final float g,
+    final float b)
+  {
+    this.unfocused_text_area_background_color.x = r;
+    this.unfocused_text_area_background_color.y = g;
+    this.unfocused_text_area_background_color.z = b;
+  }
+
+  public void setUnfocusedTextAreaForegroundColor(
+    final @Nonnull VectorReadable3F color)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(color, "Color");
+    VectorM3F.copy(color, this.unfocused_text_area_foreground_color);
+  }
+
+  public void setUnfocusedTextAreaForegroundColor3f(
+    final float r,
+    final float g,
+    final float b)
+  {
+    this.unfocused_text_area_foreground_color.x = r;
+    this.unfocused_text_area_foreground_color.y = g;
+    this.unfocused_text_area_foreground_color.z = b;
   }
 
   public void setUnfocusedWindowEdgeColor(
