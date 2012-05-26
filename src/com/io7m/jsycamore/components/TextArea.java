@@ -149,9 +149,9 @@ public final class TextArea extends Component
     @Override public String toString()
     {
       final StringBuilder builder = new StringBuilder();
-      builder.append("[TextAreaActual ");
+      builder.append("[TextAreaActual \"");
       builder.append(this.lines);
-      builder.append("]");
+      builder.append("\"]");
       return builder.toString();
     }
   }
