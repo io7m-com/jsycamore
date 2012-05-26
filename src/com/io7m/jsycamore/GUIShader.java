@@ -169,7 +169,7 @@ public final class GUIShader implements CompilableProgram, UsableProgram
   }
 
   /**
-   * Return <code>true</code> iff this shader supports the "point_size"
+   * Return <code>true</code> iff this shader supports the "texture0"
    * parameter.
    */
 
