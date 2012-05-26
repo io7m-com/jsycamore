@@ -207,6 +207,38 @@ public final class DrawPrimitives
    *           Iff an internal constraint error occurs.
    */
 
+  public void renderCompiledText(
+    final @Nonnull GUIContext context,
+    final @Nonnull CompiledText compiled_text,
+    final @Nonnull VectorReadable3F color)
+    throws GLException,
+      ConstraintError
+  {
+    this.color_cache.x = color.getXF();
+    this.color_cache.y = color.getYF();
+    this.color_cache.z = color.getZF();
+    this.color_cache.w = 1.0f;
+
+    this.renderCompiledText(context, compiled_text, this.color_cache);
+  }
+
+  /**
+   * Render the compiled text <code>compiled_text</code> at the position given
+   * by the current modelview matrix in <code>context</code>, using the color
+   * <code>color</code>.
+   * 
+   * @param context
+   *          The context.
+   * @param compiled_text
+   *          The compiled text.
+   * @param color
+   *          The color.
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   * @throws ConstraintError
+   *           Iff an internal constraint error occurs.
+   */
+
   @SuppressWarnings("static-method") public void renderCompiledText(
     final @Nonnull GUIContext context,
     final @Nonnull CompiledText compiled_text,
