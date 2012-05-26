@@ -15,6 +15,7 @@ import com.io7m.jcanephora.GLInterface;
 import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jlog.Log;
 import com.io7m.jsycamore.GUI;
+import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.Button;
@@ -24,6 +25,7 @@ import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
+import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jvvfs.Filesystem;
@@ -109,14 +111,20 @@ public final class SimpleScissored implements Runnable
         this.gl,
         this.fs,
         this.log);
+    final GUIContext ctx = this.gui.getContext();
+
+    final WindowParameters wp = new WindowParameters();
+    wp.setCanClose(false);
+    wp.setCanResize(false);
+    wp.setTitle("Window 0");
 
     this.window0 =
-      new StandardWindow(this.gui.getContext(), new Point<ScreenRelative>(
-        64,
-        64), new VectorI2I(300, 200), "Window 0", false, false);
+      new StandardWindow(
+        ctx,
+        new Point<ScreenRelative>(64, 64),
+        new VectorI2I(300, 200),
+        wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
