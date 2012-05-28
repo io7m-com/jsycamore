@@ -13,9 +13,9 @@ import com.io7m.jsycamore.geometry.ScissorRelative;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorReadable2I;
 
-public class ScissorStackTest
+public final class ScissorStackTest
 {
-  @Test public void testInitial()
+  @SuppressWarnings("static-method") @Test public void testInitial()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
@@ -37,21 +37,25 @@ public class ScissorStackTest
     Assert.assertEquals(1, stack.size());
   }
 
-  @Test(expected = ConstraintError.class) public void testPeekEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPeekEmpty()
+      throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
     stack.peek();
   }
 
-  @Test(expected = ConstraintError.class) public void testPopEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPopEmpty()
+      throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
     stack.pop();
   }
 
-  @Test public void testPushNarrowing()
+  @SuppressWarnings("static-method") @Test public void testPushNarrowing()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
@@ -83,7 +87,7 @@ public class ScissorStackTest
     Assert.assertEquals(460, k1_siz.getYI());
   }
 
-  @Test public void testPushPopIdentity()
+  @SuppressWarnings("static-method") @Test public void testPushPopIdentity()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
