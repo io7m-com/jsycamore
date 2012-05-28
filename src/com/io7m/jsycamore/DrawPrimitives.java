@@ -41,6 +41,10 @@ public final class DrawPrimitives
   private static @CheckForNull IndexBuffer            textured_ibo_line;
   private static @CheckForNull ArrayBuffer            textured_vbo;
   private static final @Nonnull ArrayBufferDescriptor textured_descriptor;
+  private static @CheckForNull ArrayBuffer            line_vbo;
+  private static final @Nonnull ArrayBufferDescriptor line_descriptor;
+  private static @CheckForNull IndexBuffer            line_ibo;
+
   private static final @Nonnull VectorI2I             ONE;
 
   static {
@@ -56,6 +60,13 @@ public final class DrawPrimitives
         new ArrayBufferDescriptor(new ArrayBufferAttribute[] {
     new ArrayBufferAttribute("position", GLScalarType.TYPE_FLOAT, 2),
     new ArrayBufferAttribute("uv", GLScalarType.TYPE_FLOAT, 2) });
+
+      line_descriptor =
+        new ArrayBufferDescriptor(
+          new ArrayBufferAttribute[] { new ArrayBufferAttribute(
+            "position",
+            GLScalarType.TYPE_FLOAT,
+            2) });
 
     } catch (final ConstraintError e) {
       throw new AssertionError(e);
@@ -176,6 +187,36 @@ public final class DrawPrimitives
         g.indexBufferUnmap(DrawPrimitives.textured_ibo_line);
       }
     }
+
+    if (DrawPrimitives.line_vbo == null) {
+      DrawPrimitives.line_vbo =
+        g.arrayBufferAllocate(2, DrawPrimitives.line_descriptor);
+
+      final ArrayBufferWritableMap map =
+        g.arrayBufferMapWrite(DrawPrimitives.line_vbo);
+
+      try {
+        final ArrayBufferCursorWritable2f cp = map.getCursor2f("position");
+        cp.put2f(0, 0);
+        cp.put2f(1, 1);
+      } finally {
+        g.arrayBufferUnmap(DrawPrimitives.line_vbo);
+      }
+    }
+
+    if (DrawPrimitives.line_ibo == null) {
+      DrawPrimitives.line_ibo =
+        g.indexBufferAllocate(DrawPrimitives.line_vbo, 2);
+
+      final IndexBufferWritableMap map =
+        g.indexBufferMapWrite(DrawPrimitives.line_ibo);
+      try {
+        map.put(0, 0);
+        map.put(1, 1);
+      } finally {
+        g.indexBufferUnmap(DrawPrimitives.line_ibo);
+      }
+    }
   }
 
   private final @Nonnull VectorM4F color_cache;
@@ -279,6 +320,70 @@ public final class DrawPrimitives
       } finally {
         g.arrayBufferUnbind();
       }
+    }
+  }
+
+  public void renderLine(
+    final @Nonnull GUIContext context,
+    final @Nonnull VectorReadable2I p0,
+    final @Nonnull VectorReadable2I p1,
+    final @Nonnull VectorReadable3F color)
+    throws GLException,
+      ConstraintError
+  {
+    this.color_cache.x = color.getXF();
+    this.color_cache.y = color.getYF();
+    this.color_cache.z = color.getZF();
+    this.color_cache.w = 1.0f;
+
+    this.renderLine(context, p0, p1, this.color_cache);
+  }
+
+  @SuppressWarnings("static-method") public void renderLine(
+    final @Nonnull GUIContext context,
+    final @Nonnull VectorReadable2I p0,
+    final @Nonnull VectorReadable2I p1,
+    final @Nonnull VectorReadable4F color)
+    throws GLException,
+      ConstraintError
+  {
+    final GLInterface g = context.contextGetGL();
+    final MatrixM4x4F mp = context.contextGetMatrixProjection();
+    final MatrixM4x4F mv = context.contextGetMatrixModelview();
+    final GUIShader p = context.contextGetShaderFlat();
+
+    try {
+      assert DrawPrimitives.line_vbo != null;
+      assert DrawPrimitives.line_ibo != null;
+
+      {
+        final ArrayBufferWritableMap map =
+          g.arrayBufferMapWrite(DrawPrimitives.line_vbo);
+
+        try {
+          final ArrayBufferCursorWritable2f cp = map.getCursor2f("position");
+          cp.put2f(p0.getXI(), p0.getYI());
+          cp.put2f(p1.getXI(), p1.getYI());
+        } finally {
+          g.arrayBufferUnmap(DrawPrimitives.line_vbo);
+        }
+      }
+
+      g.arrayBufferBind(DrawPrimitives.line_vbo);
+
+      context.contextShaderActivate(p);
+      p.putModelviewMatrix(g, mv);
+      p.putProjectionMatrix(g, mp);
+      p.putSize(g, DrawPrimitives.ONE);
+      p.putColor(g, color);
+      p.bindPositionAttribute(
+        g,
+        DrawPrimitives.line_vbo,
+        DrawPrimitives.line_descriptor.getAttribute("position"));
+
+      g.drawElements(Primitives.PRIMITIVE_LINES, DrawPrimitives.line_ibo);
+    } finally {
+      g.arrayBufferUnbind();
     }
   }
 

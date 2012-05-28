@@ -30,6 +30,7 @@ import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
+import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2I;
 
 /**
@@ -293,6 +294,7 @@ public abstract class Window implements Comparable<Window>
   {
     try {
       final DrawPrimitives draw = context.contextGetDrawPrimitives();
+      final Theme theme = context.contextGetTheme();
       final Point<ScreenRelative> window_pos = this.windowGetPosition();
       final Log log = context.contextGetRendererLog();
       log.debug("actual " + this);
@@ -323,6 +325,24 @@ public abstract class Window implements Comparable<Window>
           this.windowGetSize(),
           this.alpha,
           this.framebuffer_texture);
+
+        final VectorM2I size = new VectorM2I(this.windowGetSize());
+        size.y = size.y + 1;
+
+        if (this.windowIsFocused()) {
+          draw.renderRectangleEdge(
+            context,
+            size,
+            theme.getWindowEdgeWidth(),
+            theme.getFocusedWindowEdgeColor());
+        } else {
+          draw.renderRectangleEdge(
+            context,
+            size,
+            theme.getWindowEdgeWidth(),
+            theme.getUnfocusedWindowEdgeColor());
+        }
+
       } finally {
         context.contextPopMatrixModelview();
       }
