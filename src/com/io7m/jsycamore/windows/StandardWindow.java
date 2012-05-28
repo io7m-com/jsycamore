@@ -32,7 +32,7 @@ import com.io7m.jtensors.VectorReadable3F;
 
 public final class StandardWindow extends Window
 {
-  private final class CloseBox extends Component
+  private static final class CloseBox extends Component
   {
     private boolean pressed;
     private boolean over;
@@ -67,92 +67,42 @@ public final class StandardWindow extends Window
         final VectorReadable2I size = this.componentGetSize();
         final Window window = this.componentGetWindow();
 
+        final int edge_width = 1;
+        VectorReadable3F edge_color = null;
+        VectorReadable3F fill_color = null;
+
         assert window != null;
         if (window.windowIsFocused()) {
           if (this.over) {
             if (this.pressed) {
-              draw.renderRectangleFill(
-                context,
-                size,
-                theme.getFocusedComponentActiveBackgroundColor());
-              draw.renderLine(
-                context,
-                StandardWindow.CLOSE_BOX_X_TOP_LEFT,
-                StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
-                theme.getFocusedComponentEdgeColor());
-              draw.renderLine(
-                context,
-                StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
-                StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
-                theme.getFocusedComponentEdgeColor());
-              draw.renderRectangleEdge(
-                context,
-                size,
-                theme.getWindowEdgeWidth(),
-                theme.getFocusedComponentActiveEdgeColor());
+              fill_color = theme.getFocusedComponentActiveBackgroundColor();
+              edge_color = theme.getFocusedComponentActiveEdgeColor();
             } else {
-              draw.renderRectangleFill(
-                context,
-                size,
-                theme.getFocusedComponentOverBackgroundColor());
-              draw.renderLine(
-                context,
-                StandardWindow.CLOSE_BOX_X_TOP_LEFT,
-                StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
-                theme.getFocusedComponentEdgeColor());
-              draw.renderLine(
-                context,
-                StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
-                StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
-                theme.getFocusedComponentEdgeColor());
-              draw.renderRectangleEdge(
-                context,
-                size,
-                theme.getWindowEdgeWidth(),
-                theme.getFocusedComponentOverEdgeColor());
+              fill_color = theme.getFocusedComponentOverBackgroundColor();
+              edge_color = theme.getFocusedComponentOverEdgeColor();
             }
           } else {
-            draw.renderRectangleFill(
-              context,
-              size,
-              theme.getFocusedComponentBackgroundColor());
-            draw.renderLine(
-              context,
-              StandardWindow.CLOSE_BOX_X_TOP_LEFT,
-              StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
-              theme.getFocusedComponentEdgeColor());
-            draw.renderLine(
-              context,
-              StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
-              StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
-              theme.getFocusedComponentEdgeColor());
-            draw.renderRectangleEdge(
-              context,
-              size,
-              theme.getWindowEdgeWidth(),
-              theme.getFocusedComponentEdgeColor());
+            fill_color = theme.getFocusedComponentBackgroundColor();
+            edge_color = theme.getFocusedComponentEdgeColor();
           }
         } else {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getUnfocusedComponentBackgroundColor());
-          draw.renderLine(
-            context,
-            StandardWindow.CLOSE_BOX_X_TOP_LEFT,
-            StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
-            theme.getUnfocusedComponentEdgeColor());
-          draw.renderLine(
-            context,
-            StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
-            StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
-            theme.getUnfocusedComponentEdgeColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getUnfocusedComponentEdgeColor());
+          fill_color = theme.getUnfocusedComponentBackgroundColor();
+          edge_color = theme.getUnfocusedComponentEdgeColor();
         }
+
+        draw.renderRectangleFill(context, size, fill_color);
+        draw.renderLine(
+          context,
+          StandardWindow.CLOSE_BOX_X_TOP_LEFT,
+          StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
+          edge_color);
+        draw.renderLine(
+          context,
+          StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
+          StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
+          edge_color);
+        draw.renderRectangleEdge(context, size, edge_width, edge_color);
+
       } catch (final GLException e) {
         throw new GUIException(e);
       }
@@ -252,7 +202,7 @@ public final class StandardWindow extends Window
     }
   }
 
-  private final class ResizeBox extends Component
+  private static final class ResizeBox extends Component
   {
     private final @Nonnull VectorM2I window_delta = new VectorM2I();
     private final @Nonnull VectorM2I window_start = new VectorM2I();
@@ -290,6 +240,7 @@ public final class StandardWindow extends Window
         final Window window = this.componentGetWindow();
         assert window != null;
 
+        final int edge_width = 1;
         VectorReadable3F edge_color = null;
         VectorReadable3F fill_color = null;
 
@@ -311,8 +262,10 @@ public final class StandardWindow extends Window
           edge_color = theme.getUnfocusedComponentEdgeColor();
         }
 
+        assert fill_color != null;
+        assert edge_color != null;
         draw.renderRectangleFill(context, size, fill_color);
-        draw.renderRectangleEdge(context, size, 1, edge_color);
+        draw.renderRectangleEdge(context, size, edge_width, edge_color);
 
         context.contextPushMatrixModelview();
         try {
@@ -326,7 +279,7 @@ public final class StandardWindow extends Window
           draw.renderRectangleEdge(
             context,
             StandardWindow.RESIZE_BOX_INNER_SIZE,
-            1,
+            edge_width,
             edge_color);
         } finally {
           context.contextPopMatrixModelview();
@@ -453,7 +406,7 @@ public final class StandardWindow extends Window
     }
   }
 
-  private final class ScrollBarHorizontal extends Component
+  private static final class ScrollBarHorizontal extends Component
   {
     public ScrollBarHorizontal(
       final @Nonnull Component component,
@@ -484,27 +437,23 @@ public final class StandardWindow extends Window
         final Window window = this.componentGetWindow();
         assert window != null;
 
+        VectorReadable3F fill_color = null;
+        VectorReadable3F edge_color = null;
+        final int edge_width = 1;
+
         if (window.windowIsFocused()) {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getFocusedComponentBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getFocusedComponentEdgeColor());
+          fill_color = theme.getFocusedComponentBackgroundColor();
+          edge_color = theme.getFocusedComponentEdgeColor();
         } else {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getUnfocusedComponentBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getUnfocusedComponentEdgeColor());
+          fill_color = theme.getUnfocusedComponentBackgroundColor();
+          edge_color = theme.getUnfocusedComponentEdgeColor();
         }
+
+        assert fill_color != null;
+        assert edge_color != null;
+        draw.renderRectangleFill(context, size, fill_color);
+        draw.renderRectangleEdge(context, size, edge_width, edge_color);
+
       } catch (final GLException e) {
         throw new GUIException(e);
       }
@@ -524,9 +473,18 @@ public final class StandardWindow extends Window
       // TODO Auto-generated method stub
       return false;
     }
+
+    @Override public String toString()
+    {
+      final StringBuilder builder = new StringBuilder();
+      builder.append("[ScrollBarHorizontal ");
+      builder.append(this.componentGetID());
+      builder.append("]");
+      return builder.toString();
+    }
   }
 
-  private final class ScrollBarVertical extends Component
+  private static final class ScrollBarVertical extends Component
   {
     public ScrollBarVertical(
       final @Nonnull Component component,
@@ -557,27 +515,23 @@ public final class StandardWindow extends Window
         final Window window = this.componentGetWindow();
         assert window != null;
 
+        VectorReadable3F fill_color = null;
+        VectorReadable3F edge_color = null;
+        final int edge_width = 1;
+
         if (window.windowIsFocused()) {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getFocusedComponentBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getFocusedComponentEdgeColor());
+          fill_color = theme.getFocusedComponentBackgroundColor();
+          edge_color = theme.getFocusedComponentEdgeColor();
         } else {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getUnfocusedComponentBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getUnfocusedComponentEdgeColor());
+          fill_color = theme.getUnfocusedComponentBackgroundColor();
+          edge_color = theme.getUnfocusedComponentEdgeColor();
         }
+
+        assert fill_color != null;
+        assert edge_color != null;
+        draw.renderRectangleFill(context, size, fill_color);
+        draw.renderRectangleEdge(context, size, edge_width, edge_color);
+
       } catch (final GLException e) {
         throw new GUIException(e);
       }
@@ -597,9 +551,18 @@ public final class StandardWindow extends Window
       // TODO Auto-generated method stub
       return false;
     }
+
+    @Override public String toString()
+    {
+      final StringBuilder builder = new StringBuilder();
+      builder.append("[ScrollBarVertical ");
+      builder.append(this.componentGetID());
+      builder.append("]");
+      return builder.toString();
+    }
   }
 
-  private final class Titlebar extends Component
+  private static final class Titlebar extends Component
   {
     private final @Nonnull Point<ScreenRelative> window_delta;
     private final @Nonnull Point<ScreenRelative> window_start;
@@ -663,39 +626,32 @@ public final class StandardWindow extends Window
         final Window window = this.componentGetWindow();
         assert window != null;
 
-        VectorReadable3F color = null;
+        VectorReadable3F text_color = null;
+        VectorReadable3F edge_color = null;
+        VectorReadable3F fill_color = null;
+        final int edge_width = 1;
+
         if (window.windowIsFocused()) {
-          color = theme.getFocusedWindowTitlebarTextColor();
+          text_color = theme.getFocusedWindowTitlebarTextColor();
+          edge_color = theme.getFocusedWindowEdgeColor();
+          fill_color = theme.getFocusedWindowTitlebarBackgroundColor();
         } else {
-          color = theme.getUnfocusedWindowTitlebarTextColor();
+          text_color = theme.getUnfocusedWindowTitlebarTextColor();
+          edge_color = theme.getUnfocusedWindowEdgeColor();
+          fill_color = theme.getUnfocusedWindowTitlebarBackgroundColor();
         }
+
+        assert text_color != null;
+        assert edge_color != null;
+        assert fill_color != null;
 
         this.label.labelSetColor3f(
-          color.getXF(),
-          color.getYF(),
-          color.getZF());
+          text_color.getXF(),
+          text_color.getYF(),
+          text_color.getZF());
+        draw.renderRectangleFill(context, size, fill_color);
+        draw.renderRectangleEdge(context, size, edge_width, edge_color);
 
-        if (window.windowIsFocused()) {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getFocusedWindowTitlebarBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getFocusedWindowEdgeColor());
-        } else {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getUnfocusedWindowTitlebarBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getUnfocusedWindowEdgeColor());
-        }
       } catch (final GLException e) {
         throw new GUIException(e);
       }
@@ -879,7 +835,6 @@ public final class StandardWindow extends Window
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
       this.main_pane
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-
       ComponentAlignment.setPositionRelativeBelowSameX(
         this.main_pane,
         0,
@@ -941,7 +896,6 @@ public final class StandardWindow extends Window
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
       this.scrollbar_h
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
-
       ComponentAlignment.setPositionContainerBottomLeft(this.scrollbar_h, 0);
 
       /*
@@ -962,7 +916,6 @@ public final class StandardWindow extends Window
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
       this.scrollbar_v
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-
       ComponentAlignment.setPositionContainerTopRight(this.scrollbar_v, 0);
 
     } else {
