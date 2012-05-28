@@ -599,7 +599,7 @@ public final class StandardWindow extends Window
     }
   }
 
-  final class Titlebar extends Component
+  private final class Titlebar extends Component
   {
     private final @Nonnull Point<ScreenRelative> window_delta;
     private final @Nonnull Point<ScreenRelative> window_start;
@@ -628,7 +628,6 @@ public final class StandardWindow extends Window
           StandardWindow.TITLEBAR_LABEL_OFFSET,
           size,
           title);
-      assert this.label != null;
 
       if (can_close) {
         this.close_box =
@@ -841,7 +840,6 @@ public final class StandardWindow extends Window
     super(context, position, size);
 
     Constraints.constrainNotNull(parameters, "Parameters");
-
     this.windowSetMinimumWidth(parameters.getMinimumWidth());
     this.windowSetMinimumHeight(parameters.getMinimumHeight());
 
@@ -888,6 +886,10 @@ public final class StandardWindow extends Window
         this.titlebar);
     }
 
+    /*
+     * Initialize main pane (the pane that holds everything but the titlebar).
+     */
+
     {
       final VectorM2I pane_size =
         new VectorM2I(this.main_pane.componentGetSize());
@@ -902,12 +904,15 @@ public final class StandardWindow extends Window
           this.main_pane,
           PointConstants.PARENT_ORIGIN,
           pane_size);
-
       this.content_pane
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
       this.content_pane
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     }
+
+    /*
+     * Initialize scrollbars and resize box, if necessary.
+     */
 
     if (parameters.getCanResize()) {
       this.resize_box =
