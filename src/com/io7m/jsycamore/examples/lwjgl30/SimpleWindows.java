@@ -93,6 +93,7 @@ public final class SimpleWindows implements Runnable
     final Properties p = new Properties();
     p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
     p.put("com.io7m.jsycamore.logs.example", "true");
+    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
     p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
     p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
 
