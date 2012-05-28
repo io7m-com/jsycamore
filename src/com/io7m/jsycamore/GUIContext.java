@@ -133,7 +133,7 @@ public final class GUIContext
     this.theme.setFocusedTextAreaBackgroundColor3f(0.7f, 0.7f, 0.7f);
     this.theme.setFocusedTextAreaForegroundColor3f(0.1f, 0.1f, 0.1f);
 
-    this.theme.setUnfocusedWindowEdgeColor3f(1, 1, 1);
+    this.theme.setUnfocusedWindowEdgeColor3f(0.8f, 0.8f, 0.8f);
     this.theme.setUnfocusedWindowPaneBackgroundColor3f(0.2f, 0.2f, 0.2f);
     this.theme.setUnfocusedWindowTitlebarBackgroundColor3f(0.6f, 0.3f, 0.3f);
     this.theme.setUnfocusedWindowTitlebarTextColor3f(0.6f, 0.6f, 0.6f);
