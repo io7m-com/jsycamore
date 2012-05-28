@@ -12,9 +12,9 @@ import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jtensors.VectorI2I;
 
-public class ComponentTest
+public final class ComponentTest
 {
-  @Test public void testHeightMaximum()
+  @SuppressWarnings("static-method") @Test public void testHeightMaximum()
     throws ConstraintError
   {
     final TestComponent c =
@@ -38,7 +38,7 @@ public class ComponentTest
     Assert.assertEquals(7, c.componentGetHeight());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testHeightMaximumBelowMinimum()
       throws ConstraintError
@@ -57,8 +57,10 @@ public class ComponentTest
     c.componentSetMaximumHeight(3);
   }
 
-  @Test public void testHeightMaximumEqualMinimum()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testHeightMaximumEqualMinimum()
+      throws ConstraintError
   {
     TestComponent c = null;
 
@@ -67,7 +69,7 @@ public class ComponentTest
     c.componentSetMaximumHeight(4);
   }
 
-  @Test public void testHeightMinimum()
+  @SuppressWarnings("static-method") @Test public void testHeightMinimum()
     throws ConstraintError
   {
     final TestComponent c =
@@ -91,7 +93,7 @@ public class ComponentTest
     Assert.assertEquals(8, c.componentGetHeight());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testHeightMinimumAboveMaximum()
       throws ConstraintError
@@ -110,7 +112,7 @@ public class ComponentTest
     c.componentSetMinimumHeight(4);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testHeightMinimumTooLow0()
       throws ConstraintError
@@ -128,8 +130,10 @@ public class ComponentTest
     c.componentSetMinimumHeight(0);
   }
 
-  @Test public void testHeightResizeBehaviourIdentity()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testHeightResizeBehaviourIdentity()
+      throws ConstraintError
   {
     final TestComponent c =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
@@ -141,23 +145,21 @@ public class ComponentTest
     }
   }
 
-  @SuppressWarnings("unused") @Test(expected = ConstraintError.class) public
-    void
-    testInitialNoHeight()
-      throws ConstraintError
+  @SuppressWarnings({ "static-method", "unused" }) @Test(
+    expected = ConstraintError.class) public void testInitialNoHeight()
+    throws ConstraintError
   {
     new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(1, 0));
   }
 
-  @SuppressWarnings("unused") @Test(expected = ConstraintError.class) public
-    void
-    testInitialNoWidth()
-      throws ConstraintError
+  @SuppressWarnings({ "static-method", "unused" }) @Test(
+    expected = ConstraintError.class) public void testInitialNoWidth()
+    throws ConstraintError
   {
     new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(0, 1));
   }
 
-  @Test public void testPositionMaximum()
+  @SuppressWarnings("static-method") @Test public void testPositionMaximum()
     throws ConstraintError
   {
     TestComponent c = null;
@@ -178,7 +180,7 @@ public class ComponentTest
     Assert.assertEquals(71, c.componentGetMaximumPosition().getYI());
   }
 
-  @Test public void testPositionMinimum()
+  @SuppressWarnings("static-method") @Test public void testPositionMinimum()
     throws ConstraintError
   {
     TestComponent c = null;
@@ -199,7 +201,7 @@ public class ComponentTest
     Assert.assertEquals(71, c.componentGetMinimumPosition().getYI());
   }
 
-  @Test public void testSizeIdentity()
+  @SuppressWarnings("static-method") @Test public void testSizeIdentity()
     throws ConstraintError
   {
     final TestComponent c =
@@ -209,7 +211,7 @@ public class ComponentTest
     Assert.assertEquals(7, c.componentGetHeight());
   }
 
-  @Test public void testWidthMinimum()
+  @SuppressWarnings("static-method") @Test public void testWidthMinimum()
     throws ConstraintError
   {
     final TestComponent c =
@@ -233,7 +235,7 @@ public class ComponentTest
     Assert.assertEquals(8, c.componentGetHeight());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testWidthMinimumAboveMaximum()
       throws ConstraintError
@@ -252,7 +254,7 @@ public class ComponentTest
     c.componentSetMinimumWidth(4);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testWidthMinimumTooLow0()
       throws ConstraintError
@@ -270,8 +272,10 @@ public class ComponentTest
     c.componentSetMinimumWidth(0);
   }
 
-  @Test public void testWidthResizeBehaviourIdentity()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testWidthResizeBehaviourIdentity()
+      throws ConstraintError
   {
     final TestComponent c =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
@@ -283,7 +287,7 @@ public class ComponentTest
     }
   }
 
-  @Test public void testXMaximum()
+  @SuppressWarnings("static-method") @Test public void testXMaximum()
     throws ConstraintError
   {
     TestComponent c = null;
@@ -302,8 +306,10 @@ public class ComponentTest
     Assert.assertEquals(23, c.componentGetMaximumPosition().getXI());
   }
 
-  @Test public void testXMaximumSameMinimum()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testXMaximumSameMinimum()
+      throws ConstraintError
   {
     TestComponent c = null;
 
@@ -322,7 +328,7 @@ public class ComponentTest
     Assert.assertEquals(23, c.componentGetMaximumPosition().getXI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testXMaximumUnderMinimum()
       throws ConstraintError
@@ -341,7 +347,7 @@ public class ComponentTest
     c.componentSetMaximumX(22);
   }
 
-  @Test public void testXMinimum()
+  @SuppressWarnings("static-method") @Test public void testXMinimum()
     throws ConstraintError
   {
     TestComponent c = null;
@@ -360,7 +366,7 @@ public class ComponentTest
     Assert.assertEquals(23, c.componentGetMinimumPosition().getXI());
   }
 
-  @Test public void testYMaximum()
+  @SuppressWarnings("static-method") @Test public void testYMaximum()
     throws ConstraintError
   {
     TestComponent c = null;
@@ -379,8 +385,10 @@ public class ComponentTest
     Assert.assertEquals(23, c.componentGetMaximumPosition().getYI());
   }
 
-  @Test public void testYMaximumSameMinimum()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testYMaximumSameMinimum()
+      throws ConstraintError
   {
     TestComponent c = null;
 
@@ -399,7 +407,7 @@ public class ComponentTest
     Assert.assertEquals(23, c.componentGetMaximumPosition().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testYMaximumUnderMinimum()
       throws ConstraintError
@@ -418,7 +426,7 @@ public class ComponentTest
     c.componentSetMaximumY(22);
   }
 
-  @Test public void testYMinimum()
+  @SuppressWarnings("static-method") @Test public void testYMinimum()
     throws ConstraintError
   {
     TestComponent c = null;
