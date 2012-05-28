@@ -51,21 +51,11 @@ public final class ContentPane extends Component
           context,
           size,
           theme.getFocusedWindowPaneBackgroundColor());
-        draw.renderRectangleEdge(
-          context,
-          size,
-          theme.getWindowEdgeWidth(),
-          theme.getFocusedWindowEdgeColor());
       } else {
         draw.renderRectangleFill(
           context,
           size,
           theme.getUnfocusedWindowPaneBackgroundColor());
-        draw.renderRectangleEdge(
-          context,
-          size,
-          theme.getWindowEdgeWidth(),
-          theme.getUnfocusedWindowEdgeColor());
       }
     } catch (final GLException e) {
       throw new GUIException(e);

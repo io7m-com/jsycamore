@@ -12,9 +12,7 @@ import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.geometry.ParentRelative;
-import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointReadable;
-import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorReadable2I;
 
 public final class Container extends Component
@@ -23,8 +21,8 @@ public final class Container extends Component
 
   public Container(
     final @Nonnull Component parent,
-    final @Nonnull Point<ParentRelative> position,
-    final @Nonnull VectorI2I size)
+    final @Nonnull PointReadable<ParentRelative> position,
+    final @Nonnull VectorReadable2I size)
     throws ConstraintError
   {
     super(parent, position, size);
