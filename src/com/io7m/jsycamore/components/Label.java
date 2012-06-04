@@ -48,9 +48,11 @@ public final class Label extends Component
       this.compiled_text = tr.textCompileLine(text);
       tr.textCacheUpload();
 
-      this.componentSetSize(new VectorI2I(
-        (int) this.compiled_text.getWidth(),
-        (int) this.compiled_text.getHeight()));
+      this.componentSetSize(
+        context,
+        new VectorI2I(
+          (int) this.compiled_text.getWidth(),
+          (int) this.compiled_text.getHeight()));
 
     } catch (final GLException e) {
       throw new GUIException(e);

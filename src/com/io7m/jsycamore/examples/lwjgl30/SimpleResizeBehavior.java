@@ -127,8 +127,8 @@ public final class SimpleResizeBehavior implements Runnable
         new VectorI2I(300, 200),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
@@ -149,8 +149,8 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeRightOfSameY(b1, 8, b0);
     b1.componentSetMinimumX(8);
     b1.componentSetMinimumY(8);
-    b1.componentSetMinimumWidth(64);
-    b1.componentSetMinimumHeight(32);
+    b1.componentSetMinimumWidth(ctx, 64);
+    b1.componentSetMinimumHeight(ctx, 32);
     b1.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b1.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
@@ -161,8 +161,8 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeBelowSameX(b2, 8, b0);
     b2.componentSetMinimumX(8);
     b2.componentSetMinimumY(8);
-    b2.componentSetMinimumWidth(64);
-    b2.componentSetMinimumHeight(32);
+    b2.componentSetMinimumWidth(ctx, 64);
+    b2.componentSetMinimumHeight(ctx, 32);
     b2.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b2.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
@@ -173,8 +173,8 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeRightOfSameY(b3, 8, b2);
     b3.componentSetMinimumX(8);
     b3.componentSetMinimumY(8);
-    b3.componentSetMinimumWidth(64);
-    b3.componentSetMinimumHeight(32);
+    b3.componentSetMinimumWidth(ctx, 64);
+    b3.componentSetMinimumHeight(ctx, 32);
     b3.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b3.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 

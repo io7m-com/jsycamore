@@ -76,8 +76,8 @@ public abstract class Window implements Comparable<Window>
     this.state = WindowState.WINDOW_OPEN;
     this.position = new Point<ScreenRelative>(position);
 
-    this.windowSetMinimumWidth(2);
-    this.windowSetMinimumHeight(2);
+    this.windowSetMinimumWidth(context, 2);
+    this.windowSetMinimumHeight(context, 2);
     this.resizeFramebuffer(context.contextGetGL(), this.windowGetSize());
   }
 
@@ -478,14 +478,13 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumHeight(
+    final @Nonnull GUIContext context,
     final int height)
     throws ConstraintError
   {
-    this.root.componentSetMinimumHeight(Constraints.constrainRange(
-      height,
-      2,
-      Integer.MAX_VALUE,
-      "Height"));
+    this.root.componentSetMinimumHeight(
+      context,
+      Constraints.constrainRange(height, 2, Integer.MAX_VALUE, "Height"));
   }
 
   /**
@@ -509,6 +508,7 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumSize(
+    final @Nonnull GUIContext context,
     final VectorReadable2I min_size)
     throws ConstraintError
   {
@@ -523,7 +523,7 @@ public abstract class Window implements Comparable<Window>
       2,
       Integer.MAX_VALUE,
       "Minimum height");
-    this.root.componentSetMinimumSize(min_size);
+    this.root.componentSetMinimumSize(context, min_size);
   }
 
   /**
@@ -536,14 +536,13 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumWidth(
+    final @Nonnull GUIContext context,
     final int width)
     throws ConstraintError
   {
-    this.root.componentSetMinimumWidth(Constraints.constrainRange(
-      width,
-      2,
-      Integer.MAX_VALUE,
-      "Width"));
+    this.root.componentSetMinimumWidth(
+      context,
+      Constraints.constrainRange(width, 2, Integer.MAX_VALUE, "Width"));
   }
 
   /**
@@ -584,7 +583,7 @@ public abstract class Window implements Comparable<Window>
       GUIException
   {
     Constraints.constrainNotNull(context, "GUI context");
-    this.root.componentSetSize(size);
+    this.root.componentSetSize(context, size);
 
     final Log log = context.contextGetComponentLog();
     log.debug("size " + this.windowGetSize());
