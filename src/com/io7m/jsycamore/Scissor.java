@@ -52,8 +52,8 @@ public class Scissor
     final int mx1 = Math.min(ox1, tx1);
     final int my1 = Math.min(oy1, ty1);
 
-    final int w = mx1 - mx0;
-    final int h = my1 - my0;
+    final int w = Math.max(0, mx1 - mx0);
+    final int h = Math.max(0, my1 - my0);
 
     final Point<ScissorRelative> p = new Point<ScissorRelative>(mx0, my0);
     final VectorI2I s = new VectorI2I(w, h);
