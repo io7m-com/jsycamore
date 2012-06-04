@@ -30,7 +30,8 @@ import com.io7m.jtensors.VectorReadable2I;
 public abstract class Component implements
   Comparable<Component>,
   GLResource,
-  MouseListener<Component>
+  MouseListener<Component>,
+  ResizeListener<Component>
 {
   /**
    * Type representing how a component behaves when its parent resizes.
@@ -870,11 +871,12 @@ public abstract class Component implements
    */
 
   public final void componentSetMaximumHeight(
+    final @CheckForNull GUIContext context,
     final int height)
     throws ConstraintError
   {
     this.invariantCheckSetMaximumHeight(height);
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -922,13 +924,14 @@ public abstract class Component implements
    */
 
   public final void componentSetMaximumSize(
+    final @CheckForNull GUIContext context,
     final @Nonnull VectorReadable2I max_size)
     throws ConstraintError
   {
     Constraints.constrainNotNull(max_size, "Maximum size");
     this.invariantCheckSetMaximumHeight(max_size.getYI());
     this.invariantCheckSetMaximumWidth(max_size.getXI());
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -948,11 +951,12 @@ public abstract class Component implements
    */
 
   public final void componentSetMaximumWidth(
+    final @CheckForNull GUIContext context,
     final int width)
     throws ConstraintError
   {
     this.invariantCheckSetMaximumWidth(width);
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -1018,11 +1022,12 @@ public abstract class Component implements
    */
 
   public final void componentSetMinimumHeight(
+    final @CheckForNull GUIContext context,
     final int height)
     throws ConstraintError
   {
     this.invariantCheckSetMinimumHeight(height);
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -1056,13 +1061,14 @@ public abstract class Component implements
    */
 
   public final void componentSetMinimumSize(
+    final @CheckForNull GUIContext context,
     final @Nonnull VectorReadable2I minimum_size)
     throws ConstraintError
   {
     Constraints.constrainNotNull(minimum_size, "Minimum size");
     this.invariantCheckSetMinimumWidth(minimum_size.getXI());
     this.invariantCheckSetMinimumHeight(minimum_size.getYI());
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -1079,11 +1085,12 @@ public abstract class Component implements
    */
 
   public final void componentSetMinimumWidth(
+    final @CheckForNull GUIContext context,
     final int width)
     throws ConstraintError
   {
     this.invariantCheckSetMinimumWidth(width);
-    this.componentSetSize(this.componentGetSize());
+    this.componentSetSize(context, this.componentGetSize());
   }
 
   /**
@@ -1170,6 +1177,7 @@ public abstract class Component implements
    */
 
   public final void componentSetSize(
+    final @CheckForNull GUIContext context,
     final @Nonnull VectorReadable2I new_size)
     throws ConstraintError
   {
@@ -1184,8 +1192,9 @@ public abstract class Component implements
         Math.max(new_size.getYI(), this.size_minimum.y),
         this.size_maximum.y);
 
-    final int delta_x = result_x - this.size_current.x;
-    final int delta_y = result_y - this.size_current.y;
+    final VectorM2I delta = new VectorM2I();
+    delta.x = result_x - this.size_current.x;
+    delta.y = result_y - this.size_current.y;
 
     this.size_current.x = result_x;
     this.size_current.y = result_y;
@@ -1193,7 +1202,7 @@ public abstract class Component implements
     this.size_unrestricted.y = new_size.getYI();
 
     for (final Component child : this.children) {
-      child.handleResizeBehaviour(delta_x, delta_y);
+      child.handleResizeBehaviour(context, delta);
     }
   }
 
@@ -1257,18 +1266,18 @@ public abstract class Component implements
   }
 
   private final void handleResizeBehaviour(
-    final int delta_x,
-    final int delta_y)
+    final @CheckForNull GUIContext context,
+    final @Nonnull VectorReadable2I delta)
+    throws ConstraintError
   {
-    final int previous_x = this.size_current.x;
-    final int previous_y = this.size_current.y;
+    final VectorM2I previous = new VectorM2I(this.size_current);
 
     switch (this.resize_width_behavior) {
       case BEHAVIOR_FIXED:
         break;
       case BEHAVIOR_MOVE:
       {
-        final int ux = this.position_unrestricted.getXI() + delta_x;
+        final int ux = this.position_unrestricted.getXI() + delta.getXI();
         final int cx =
           Math.max(
             this.position_minimum.getXI(),
@@ -1280,11 +1289,14 @@ public abstract class Component implements
       }
       case BEHAVIOR_RESIZE:
       {
-        this.size_unrestricted.x += delta_x;
-        this.size_current.x =
+        this.size_unrestricted.x += delta.getXI();
+
+        final int clamp_x =
           Math.max(
             this.size_minimum.x,
             Math.min(this.size_maximum.x, this.size_unrestricted.x));
+
+        this.size_current.x = clamp_x;
         break;
       }
     }
@@ -1294,7 +1306,7 @@ public abstract class Component implements
         break;
       case BEHAVIOR_MOVE:
       {
-        final int uy = this.position_unrestricted.getYI() + delta_y;
+        final int uy = this.position_unrestricted.getYI() + delta.getYI();
         final int cy =
           Math.max(
             this.position_minimum.getYI(),
@@ -1306,22 +1318,33 @@ public abstract class Component implements
       }
       case BEHAVIOR_RESIZE:
       {
-        this.size_unrestricted.y += delta_y;
-        this.size_current.y =
+        this.size_unrestricted.y += delta.getYI();
+
+        final int clamp_y =
           Math.max(
             this.size_minimum.y,
             Math.min(this.size_maximum.y, this.size_unrestricted.y));
+
+        this.size_current.y = clamp_y;
         break;
       }
     }
 
-    final int new_delta_x = this.size_current.x - previous_x;
-    final int new_delta_y = this.size_current.y - previous_y;
-    final boolean resized = (new_delta_x != 0) || (new_delta_y != 0);
+    final VectorM2I new_delta = new VectorM2I();
+    new_delta.x = this.size_current.x - previous.x;
+    new_delta.y = this.size_current.y - previous.y;
+    final boolean resized = (new_delta.x != 0) || (new_delta.y != 0);
 
     if (resized) {
+      this.resizeListenerOnResize(
+        context,
+        previous,
+        this.size_current,
+        new_delta,
+        this);
+
       for (final Component child : this.children) {
-        child.handleResizeBehaviour(new_delta_x, new_delta_y);
+        child.handleResizeBehaviour(context, new_delta);
       }
     }
   }
@@ -1481,5 +1504,19 @@ public abstract class Component implements
       GUIException
   {
     return false;
+  }
+
+  @Override public void resizeListenerOnResize(
+    final @CheckForNull GUIContext context,
+    final @Nonnull VectorReadable2I size_original,
+    final @Nonnull VectorReadable2I size_end,
+    final @Nonnull VectorReadable2I size_delta,
+    final @Nonnull Component actual)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(size_original, "Original size");
+    Constraints.constrainNotNull(size_end, "Current size");
+    Constraints.constrainNotNull(size_delta, "Size delta");
+    Constraints.constrainNotNull(actual, "Actual component");
   }
 }

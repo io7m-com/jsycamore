@@ -128,8 +128,8 @@ public final class SimpleDialog implements Runnable
         new VectorI2I(300, 128),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
     final ContentPane pane = this.window0.windowGetContentPane();
 

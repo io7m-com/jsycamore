@@ -126,8 +126,8 @@ public final class SimpleTextArea implements Runnable
         new VectorI2I(500, 300),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
     wp.setCanClose(false);
     wp.setCanResize(false);
@@ -140,8 +140,8 @@ public final class SimpleTextArea implements Runnable
         new VectorI2I(64, 64),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
     final ContentPane pane = this.window0.windowGetContentPane();
 

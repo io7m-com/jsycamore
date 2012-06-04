@@ -796,8 +796,8 @@ public final class StandardWindow extends Window
     super(context, position, size);
 
     Constraints.constrainNotNull(parameters, "Parameters");
-    this.windowSetMinimumWidth(parameters.getMinimumWidth());
-    this.windowSetMinimumHeight(parameters.getMinimumHeight());
+    this.windowSetMinimumWidth(context, parameters.getMinimumWidth());
+    this.windowSetMinimumHeight(context, parameters.getMinimumHeight());
 
     final Component root = this.windowGetRootPane();
     final VectorReadable2I root_size = root.componentGetSize();

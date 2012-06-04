@@ -23,14 +23,14 @@ public final class ComponentTest
     Assert.assertEquals(3, c.componentGetWidth());
     Assert.assertEquals(7, c.componentGetHeight());
 
-    c.componentSetMaximumHeight(8);
+    c.componentSetMaximumHeight(null, 8);
 
     Assert.assertEquals(Integer.MAX_VALUE, c.componentGetMaximumWidth());
     Assert.assertEquals(8, c.componentGetMaximumHeight());
     Assert.assertEquals(3, c.componentGetWidth());
     Assert.assertEquals(7, c.componentGetHeight());
 
-    c.componentSetMaximumSize(new VectorI2I(5, 9));
+    c.componentSetMaximumSize(null, new VectorI2I(5, 9));
 
     Assert.assertEquals(5, c.componentGetMaximumWidth());
     Assert.assertEquals(9, c.componentGetMaximumHeight());
@@ -48,13 +48,13 @@ public final class ComponentTest
     try {
       c =
         new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
-      c.componentSetMinimumHeight(4);
+      c.componentSetMinimumHeight(null, 4);
     } catch (final Exception e) {
       Assert.fail(e.getMessage());
     }
 
     assert c != null;
-    c.componentSetMaximumHeight(3);
+    c.componentSetMaximumHeight(null, 3);
   }
 
   @SuppressWarnings("static-method") @Test public
@@ -65,8 +65,8 @@ public final class ComponentTest
     TestComponent c = null;
 
     c = new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
-    c.componentSetMinimumHeight(4);
-    c.componentSetMaximumHeight(4);
+    c.componentSetMinimumHeight(null, 4);
+    c.componentSetMaximumHeight(null, 4);
   }
 
   @SuppressWarnings("static-method") @Test public void testHeightMinimum()
@@ -78,14 +78,14 @@ public final class ComponentTest
     Assert.assertEquals(3, c.componentGetWidth());
     Assert.assertEquals(7, c.componentGetHeight());
 
-    c.componentSetMinimumHeight(8);
+    c.componentSetMinimumHeight(null, 8);
 
     Assert.assertEquals(1, c.componentGetMinimumWidth());
     Assert.assertEquals(8, c.componentGetMinimumHeight());
     Assert.assertEquals(3, c.componentGetWidth());
     Assert.assertEquals(8, c.componentGetHeight());
 
-    c.componentSetMinimumSize(new VectorI2I(5, 8));
+    c.componentSetMinimumSize(null, new VectorI2I(5, 8));
 
     Assert.assertEquals(5, c.componentGetMinimumWidth());
     Assert.assertEquals(8, c.componentGetMinimumHeight());
@@ -103,13 +103,13 @@ public final class ComponentTest
     try {
       c =
         new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
-      c.componentSetMaximumHeight(4);
+      c.componentSetMaximumHeight(null, 4);
     } catch (final Exception e) {
       Assert.fail(e.getMessage());
     }
 
     assert c != null;
-    c.componentSetMinimumHeight(4);
+    c.componentSetMinimumHeight(null, 4);
   }
 
   @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
@@ -127,7 +127,7 @@ public final class ComponentTest
     }
 
     assert c != null;
-    c.componentSetMinimumHeight(0);
+    c.componentSetMinimumHeight(null, 0);
   }
 
   @SuppressWarnings("static-method") @Test public
@@ -220,14 +220,14 @@ public final class ComponentTest
     Assert.assertEquals(3, c.componentGetWidth());
     Assert.assertEquals(7, c.componentGetHeight());
 
-    c.componentSetMinimumWidth(4);
+    c.componentSetMinimumWidth(null, 4);
 
     Assert.assertEquals(4, c.componentGetMinimumWidth());
     Assert.assertEquals(1, c.componentGetMinimumHeight());
     Assert.assertEquals(4, c.componentGetWidth());
     Assert.assertEquals(7, c.componentGetHeight());
 
-    c.componentSetMinimumSize(new VectorI2I(5, 8));
+    c.componentSetMinimumSize(null, new VectorI2I(5, 8));
 
     Assert.assertEquals(5, c.componentGetMinimumWidth());
     Assert.assertEquals(8, c.componentGetMinimumHeight());
@@ -245,13 +245,13 @@ public final class ComponentTest
     try {
       c =
         new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(3, 7));
-      c.componentSetMaximumWidth(4);
+      c.componentSetMaximumWidth(null, 4);
     } catch (final Exception e) {
       Assert.fail(e.getMessage());
     }
 
     assert c != null;
-    c.componentSetMinimumWidth(4);
+    c.componentSetMinimumWidth(null, 4);
   }
 
   @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
@@ -269,7 +269,7 @@ public final class ComponentTest
     }
 
     assert c != null;
-    c.componentSetMinimumWidth(0);
+    c.componentSetMinimumWidth(null, 0);
   }
 
   @SuppressWarnings("static-method") @Test public
