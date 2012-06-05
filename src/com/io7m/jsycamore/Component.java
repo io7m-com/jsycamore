@@ -736,6 +736,15 @@ public abstract class Component implements
   }
 
   /**
+   * Return <code>true</code> iff this component has a parent component.
+   */
+
+  public final boolean componentHasParent()
+  {
+    return this.parent != null;
+  }
+
+  /**
    * Returns <code>true</code> iff this component is an ancestor of
    * <code>child</code>.
    * 
