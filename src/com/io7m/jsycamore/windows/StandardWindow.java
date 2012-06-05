@@ -16,6 +16,8 @@ import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractButton;
+import com.io7m.jsycamore.components.AbstractDragButton;
 import com.io7m.jsycamore.components.Container;
 import com.io7m.jsycamore.components.Label;
 import com.io7m.jsycamore.geometry.ParentRelative;
@@ -32,11 +34,8 @@ import com.io7m.jtensors.VectorReadable3F;
 
 public final class StandardWindow extends Window
 {
-  private static final class CloseBox extends Component
+  private static final class CloseBox extends AbstractButton
   {
-    private boolean pressed;
-    private boolean over;
-
     @SuppressWarnings("unused") public CloseBox(
       final @Nonnull GUIContext context,
       final @Nonnull Component parent,
@@ -44,139 +43,47 @@ public final class StandardWindow extends Window
       throws ConstraintError
     {
       super(parent, position, StandardWindow.CLOSE_BOX_SIZE);
-      this.pressed = false;
-      this.over = false;
     }
 
-    @Override public void componentRenderPostDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
+    @Override public void buttonListenerOnClick(
+      final @Nonnull Component button)
     {
-      // Unused.
+      final Window window = this.componentGetWindow();
+      if (window != null) {
+        window.windowSetWantClose();
+      }
     }
 
-    @Override public void componentRenderPreDescendants(
-      final @Nonnull GUIContext context)
+    @Override public void buttonRenderPost(
+      final GUIContext context)
       throws ConstraintError,
         GUIException
     {
       try {
         final DrawPrimitives draw = context.contextGetDrawPrimitives();
-        final Theme theme = context.contextGetTheme();
-        final VectorReadable2I size = this.componentGetSize();
-        final Window window = this.componentGetWindow();
 
-        final int edge_width = 1;
-        VectorReadable3F edge_color = null;
-        VectorReadable3F fill_color = null;
-
-        assert window != null;
-        if (window.windowIsFocused()) {
-          if (this.over) {
-            if (this.pressed) {
-              fill_color = theme.getFocusedComponentActiveBackgroundColor();
-              edge_color = theme.getFocusedComponentActiveEdgeColor();
-            } else {
-              fill_color = theme.getFocusedComponentOverBackgroundColor();
-              edge_color = theme.getFocusedComponentOverEdgeColor();
-            }
-          } else {
-            fill_color = theme.getFocusedComponentBackgroundColor();
-            edge_color = theme.getFocusedComponentEdgeColor();
-          }
-        } else {
-          fill_color = theme.getUnfocusedComponentBackgroundColor();
-          edge_color = theme.getUnfocusedComponentEdgeColor();
-        }
-
-        draw.renderRectangleFill(context, size, fill_color);
         draw.renderLine(
           context,
           StandardWindow.CLOSE_BOX_X_TOP_LEFT,
           StandardWindow.CLOSE_BOX_X_BOTTOM_RIGHT,
-          edge_color);
+          this.buttonGetCurrentEdgeColor());
         draw.renderLine(
           context,
           StandardWindow.CLOSE_BOX_X_BOTTOM_LEFT,
           StandardWindow.CLOSE_BOX_X_TOP_RIGHT,
-          edge_color);
-        draw.renderRectangleEdge(context, size, edge_width, edge_color);
+          this.buttonGetCurrentEdgeColor());
 
       } catch (final GLException e) {
         throw new GUIException(e);
       }
     }
 
-    @Override public boolean mouseListenerOnMouseClicked(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final int button,
-      final @Nonnull Component actual)
+    @Override public void buttonRenderPre(
+      final GUIContext context)
       throws ConstraintError,
         GUIException
     {
-      if (button == 0) {
-        this.pressed = true;
-      }
-      return true;
-    }
-
-    @Override public boolean mouseListenerOnMouseHeld(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position_initial,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position_current,
-      final int button,
-      final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
-    {
-      if (button == 0) {
-        this.over =
-          this.componentContainsScreenRelativePoint(mouse_position_current);
-        return true;
-      }
-      return false;
-    }
-
-    @Override public boolean mouseListenerOnMouseNoLongerOver(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position)
-      throws ConstraintError,
-        GUIException
-    {
-      this.over = false;
-      return false;
-    }
-
-    @Override public boolean mouseListenerOnMouseOver(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
-    {
-      this.over = true;
-      return true;
-    }
-
-    @Override public boolean mouseListenerOnMouseReleased(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final int button,
-      final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
-    {
-      if (button == 0) {
-        if (this.pressed && this.over) {
-          this.componentSetWindowClosing();
-        }
-
-        this.pressed = false;
-        return true;
-      }
-      return false;
+      // Unused.
     }
 
     @Override public void resourceDelete(
@@ -202,12 +109,10 @@ public final class StandardWindow extends Window
     }
   }
 
-  private static final class ResizeBox extends Component
+  private static final class ResizeBox extends AbstractDragButton
   {
-    private final @Nonnull VectorM2I window_delta = new VectorM2I();
-    private final @Nonnull VectorM2I window_start = new VectorM2I();
-    private boolean                  over;
-    private boolean                  pressed;
+    private final VectorM2I size_initial = new VectorM2I();
+    private final VectorM2I size_new     = new VectorM2I();
 
     @SuppressWarnings("unused") public ResizeBox(
       final @Nonnull GUIContext context,
@@ -216,56 +121,22 @@ public final class StandardWindow extends Window
       throws ConstraintError
     {
       super(parent, position, StandardWindow.RESIZE_BOX_OUTER_SIZE);
-      this.over = false;
-      this.pressed = false;
     }
 
-    @Override public void componentRenderPostDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
+    @Override public void buttonListenerOnClick(
+      final Component button)
     {
       // Unused.
     }
 
-    @Override public void componentRenderPreDescendants(
+    @Override public void buttonRenderPost(
       final @Nonnull GUIContext context)
       throws ConstraintError,
         GUIException
     {
       try {
         final DrawPrimitives draw = context.contextGetDrawPrimitives();
-        final Theme theme = context.contextGetTheme();
         final VectorReadable2I size = this.componentGetSize();
-        final Window window = this.componentGetWindow();
-        assert window != null;
-
-        final int edge_width = 1;
-        VectorReadable3F edge_color = null;
-        VectorReadable3F fill_color = null;
-
-        if (window.windowIsFocused()) {
-          if (this.over) {
-            if (this.pressed) {
-              edge_color = theme.getFocusedComponentActiveEdgeColor();
-              fill_color = theme.getFocusedComponentActiveBackgroundColor();
-            } else {
-              edge_color = theme.getFocusedComponentOverEdgeColor();
-              fill_color = theme.getFocusedComponentOverBackgroundColor();
-            }
-          } else {
-            fill_color = theme.getFocusedComponentBackgroundColor();
-            edge_color = theme.getFocusedComponentEdgeColor();
-          }
-        } else {
-          fill_color = theme.getUnfocusedComponentBackgroundColor();
-          edge_color = theme.getUnfocusedComponentEdgeColor();
-        }
-
-        assert fill_color != null;
-        assert edge_color != null;
-        draw.renderRectangleFill(context, size, fill_color);
-        draw.renderRectangleEdge(context, size, edge_width, edge_color);
 
         context.contextPushMatrixModelview();
         try {
@@ -279,8 +150,8 @@ public final class StandardWindow extends Window
           draw.renderRectangleEdge(
             context,
             StandardWindow.RESIZE_BOX_INNER_SIZE,
-            edge_width,
-            edge_color);
+            this.buttonGetCurrentEdgeWidth(),
+            this.buttonGetCurrentEdgeColor());
         } finally {
           context.contextPopMatrixModelview();
         }
@@ -290,97 +161,73 @@ public final class StandardWindow extends Window
       }
     }
 
-    @Override public boolean mouseListenerOnMouseClicked(
+    @Override public void buttonRenderPre(
+      final GUIContext context)
+    {
+      // Unused.
+    }
+
+    @Override public void dragListenerOnDrag(
       final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final int button,
-      final @Nonnull Component actual)
+      final @Nonnull PointReadable<ScreenRelative> start,
+      final @Nonnull PointReadable<ScreenRelative> current,
+      final @Nonnull Component initial)
       throws ConstraintError,
         GUIException
     {
-      if (button == 0) {
-        final Log log = context.contextGetComponentLog();
-        log.debug("clicked");
+      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
 
-        final Window window = this.componentGetWindow();
-        assert window != null;
+      final Log log = context.contextGetComponentLog();
+      log.debug("drag drag initial: " + this.dragGetComponentInitial());
+      log.debug("drag drag delta:   " + delta);
 
-        VectorM2I.copy(window.windowGetSize(), this.window_start);
-        VectorM2I.copy(VectorI2I.ZERO, this.window_delta);
-
-        this.pressed = true;
-        return true;
+      final Window window = this.componentGetWindow();
+      if (window != null) {
+        this.size_new.x = this.size_initial.x + delta.getXI();
+        this.size_new.y = this.size_initial.y + delta.getYI();
+        window.windowSetSize(context, this.size_new);
       }
-      return false;
     }
 
-    @Override public boolean mouseListenerOnMouseHeld(
+    @Override public void dragListenerOnRelease(
       final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position_initial,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position_current,
-      final int button,
+      final @Nonnull PointReadable<ScreenRelative> start,
+      final @Nonnull PointReadable<ScreenRelative> current,
+      final @Nonnull Component initial,
       final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
+      throws GUIException,
+        ConstraintError
     {
-      if (button == 0) {
-        final Log log = context.contextGetComponentLog();
-        log.debug("held initial " + mouse_position_initial);
-        log.debug("held current " + mouse_position_current);
+      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
 
-        this.window_delta.x =
-          this.window_start.x
-            + (mouse_position_current.getXI() - mouse_position_initial
-              .getXI());
-        this.window_delta.y =
-          this.window_start.y
-            + (mouse_position_current.getYI() - mouse_position_initial
-              .getYI());
+      final Log log = context.contextGetComponentLog();
+      log.debug("drag release initial: " + this.dragGetComponentInitial());
+      log.debug("drag release delta:   " + delta);
 
-        final Window window = this.componentGetWindow();
-        assert window != null;
-        window.windowSetSize(context, this.window_delta);
-        return true;
+      final Window window = this.componentGetWindow();
+      if (window != null) {
+        this.size_new.x = this.size_initial.x + delta.getXI();
+        this.size_new.y = this.size_initial.y + delta.getYI();
+        window.windowSetSize(context, this.size_new);
       }
-      return false;
     }
 
-    @Override public boolean mouseListenerOnMouseNoLongerOver(
+    @Override public void dragListenerOnStart(
       final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position)
-      throws ConstraintError,
-        GUIException
+      final @Nonnull PointReadable<ScreenRelative> start,
+      final @Nonnull Component initial)
+      throws ConstraintError
     {
-      this.over = false;
-      return false;
-    }
+      // Unused.
+      final Log log = context.contextGetComponentLog();
+      log.debug("drag start initial: " + this.dragGetComponentInitial());
+      log.debug("drag start delta:   " + this.dragGetDelta());
 
-    @Override public boolean mouseListenerOnMouseOver(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
-    {
-      this.over = true;
-      return true;
-    }
-
-    @Override public boolean mouseListenerOnMouseReleased(
-      final @Nonnull GUIContext context,
-      final @Nonnull PointReadable<ScreenRelative> mouse_position,
-      final int button,
-      final @Nonnull Component actual)
-      throws ConstraintError,
-        GUIException
-    {
-      if (button == 0) {
-        final Log log = context.contextGetComponentLog();
-        log.debug("released");
-        this.pressed = false;
-        return true;
+      final Window window = this.componentGetWindow();
+      if (window != null) {
+        final VectorReadable2I size = window.windowGetSize();
+        VectorM2I.copy(size, this.size_initial);
       }
-      return false;
     }
 
     @Override public void resourceDelete(

@@ -2,8 +2,10 @@ package com.io7m.jsycamore.components;
 
 import javax.annotation.Nonnull;
 
+import com.io7m.jsycamore.Component;
+
 public interface ButtonListener
 {
-  void onClick(
-    final @Nonnull Button button);
+  void buttonListenerOnClick(
+    final @Nonnull Component button);
 }

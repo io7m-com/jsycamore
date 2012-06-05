@@ -6,59 +6,71 @@ import javax.annotation.Nonnull;
 import com.io7m.jaux.Constraints;
 import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.GLException;
-import com.io7m.jcanephora.GLInterface;
 import com.io7m.jsycamore.Component;
-import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.DrawPrimitives;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.geometry.ParentRelative;
-import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jtensors.VectorReadable2I;
+import com.io7m.jtensors.VectorReadable3F;
 
-public final class Button extends Component
+public abstract class AbstractButton extends Component implements
+  ButtonListener
 {
   private boolean                      over;
   private boolean                      pressed;
-  private final @Nonnull Label         label;
   private @CheckForNull ButtonListener listener;
+  private final int                    edge_width = 1;
+  private VectorReadable3F             edge_color;
+  private VectorReadable3F             fill_color;
 
-  public Button(
-    final @Nonnull GUIContext context,
+  public AbstractButton(
     final @Nonnull Component parent,
     final @Nonnull PointReadable<ParentRelative> position,
-    final @Nonnull VectorReadable2I size,
-    final @Nonnull String text)
-    throws ConstraintError,
-      GUIException
+    final @Nonnull VectorReadable2I size)
+    throws ConstraintError
   {
     super(parent, position, size);
-
-    this.label =
-      new Label(context, this, PointConstants.PARENT_ORIGIN, size, text);
-    ComponentAlignment.setPositionContainerCenter(this.label);
   }
 
-  public Button(
-    final @Nonnull GUIContext context,
+  public AbstractButton(
     final @Nonnull PointReadable<ParentRelative> position,
-    final @Nonnull VectorReadable2I size,
-    final @Nonnull String text)
-    throws ConstraintError,
-      GUIException
+    final @Nonnull VectorReadable2I size)
+    throws ConstraintError
   {
     super(position, size);
-
-    this.label =
-      new Label(context, this, PointConstants.PARENT_ORIGIN, size, text);
-    ComponentAlignment.setPositionContainerCenter(this.label);
   }
 
-  @Override public void componentRenderPostDescendants(
+  public final @Nonnull VectorReadable3F buttonGetCurrentEdgeColor()
+  {
+    return this.edge_color;
+  }
+
+  public final int buttonGetCurrentEdgeWidth()
+  {
+    return this.edge_width;
+  }
+
+  public final @Nonnull VectorReadable3F buttonGetCurrentFillColor()
+  {
+    return this.fill_color;
+  }
+
+  public abstract void buttonRenderPost(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException;
+
+  public abstract void buttonRenderPre(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException;
+
+  @Override public final void componentRenderPostDescendants(
     final @Nonnull GUIContext context)
     throws ConstraintError,
       GUIException
@@ -66,7 +78,7 @@ public final class Button extends Component
     // Unused.
   }
 
-  @Override public void componentRenderPreDescendants(
+  @Override public final void componentRenderPreDescendants(
     final @Nonnull GUIContext context)
     throws ConstraintError,
       GUIException
@@ -76,59 +88,47 @@ public final class Button extends Component
       final Theme theme = context.contextGetTheme();
       final VectorReadable2I size = this.componentGetSize();
       final Window window = this.componentGetWindow();
-
       assert window != null;
+
       if (window.windowIsFocused()) {
         if (this.over) {
           if (this.pressed) {
-            draw.renderRectangleFill(
-              context,
-              size,
-              theme.getFocusedComponentActiveBackgroundColor());
-            draw.renderRectangleEdge(
-              context,
-              size,
-              theme.getWindowEdgeWidth(),
-              theme.getFocusedComponentActiveEdgeColor());
+            this.edge_color = theme.getFocusedComponentActiveEdgeColor();
+            this.fill_color =
+              theme.getFocusedComponentActiveBackgroundColor();
           } else {
-            draw.renderRectangleFill(
-              context,
-              size,
-              theme.getFocusedComponentOverBackgroundColor());
-            draw.renderRectangleEdge(
-              context,
-              size,
-              theme.getWindowEdgeWidth(),
-              theme.getFocusedComponentOverEdgeColor());
+            this.edge_color = theme.getFocusedComponentOverEdgeColor();
+            this.fill_color = theme.getFocusedComponentOverBackgroundColor();
           }
         } else {
-          draw.renderRectangleFill(
-            context,
-            size,
-            theme.getFocusedComponentBackgroundColor());
-          draw.renderRectangleEdge(
-            context,
-            size,
-            theme.getWindowEdgeWidth(),
-            theme.getFocusedComponentEdgeColor());
+          this.fill_color = theme.getFocusedComponentBackgroundColor();
+          this.edge_color = theme.getFocusedComponentEdgeColor();
         }
       } else {
-        draw.renderRectangleFill(
-          context,
-          size,
-          theme.getUnfocusedComponentBackgroundColor());
-        draw.renderRectangleEdge(
-          context,
-          size,
-          theme.getWindowEdgeWidth(),
-          theme.getUnfocusedComponentEdgeColor());
+        this.fill_color = theme.getUnfocusedComponentBackgroundColor();
+        this.edge_color = theme.getUnfocusedComponentEdgeColor();
       }
+
+      assert this.fill_color != null;
+      assert this.edge_color != null;
+
+      this.buttonRenderPre(context);
+
+      draw.renderRectangleFill(context, size, this.fill_color);
+      draw.renderRectangleEdge(
+        context,
+        size,
+        this.edge_width,
+        this.edge_color);
+
+      this.buttonRenderPost(context);
+
     } catch (final GLException e) {
       throw new GUIException(e);
     }
   }
 
-  @Override public boolean mouseListenerOnMouseClicked(
+  @Override public final boolean mouseListenerOnMouseClicked(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> mouse_position,
     final int button,
@@ -142,7 +142,7 @@ public final class Button extends Component
     return true;
   }
 
-  @Override public boolean mouseListenerOnMouseHeld(
+  @Override public final boolean mouseListenerOnMouseHeld(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> mouse_position_initial,
     final @Nonnull PointReadable<ScreenRelative> mouse_position_current,
@@ -159,7 +159,7 @@ public final class Button extends Component
     return false;
   }
 
-  @Override public boolean mouseListenerOnMouseNoLongerOver(
+  @Override public final boolean mouseListenerOnMouseNoLongerOver(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> mouse_position)
     throws ConstraintError,
@@ -170,7 +170,7 @@ public final class Button extends Component
     return false;
   }
 
-  @Override public boolean mouseListenerOnMouseOver(
+  @Override public final boolean mouseListenerOnMouseOver(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> mouse_position,
     final @Nonnull Component actual)
@@ -182,7 +182,7 @@ public final class Button extends Component
     return true;
   }
 
-  @Override public boolean mouseListenerOnMouseReleased(
+  @Override public final boolean mouseListenerOnMouseReleased(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ScreenRelative> mouse_position,
     final int button,
@@ -192,8 +192,12 @@ public final class Button extends Component
   {
     if (button == 0) {
       if (this.pressed && this.over) {
-        if (this.listener != null) {
-          this.listener.onClick(this);
+        try {
+          this.buttonListenerOnClick(this);
+          if (this.listener != null) {
+            this.listener.buttonListenerOnClick(this);
+          }
+        } finally {
           this.pressed = false;
           this.over = false;
         }
@@ -205,32 +209,10 @@ public final class Button extends Component
     return false;
   }
 
-  @Override public void resourceDelete(
-    final @Nonnull GLInterface gl)
-    throws ConstraintError,
-      GLException
-  {
-    // Unused.
-  }
-
-  @Override public boolean resourceIsDeleted()
-  {
-    return false;
-  }
-
-  public void setButtonListener(
+  public final void setButtonListener(
     final @Nonnull ButtonListener listener)
     throws ConstraintError
   {
     this.listener = Constraints.constrainNotNull(listener, "Listener");
-  }
-
-  @Override public String toString()
-  {
-    final StringBuilder builder = new StringBuilder();
-    builder.append("[Button ");
-    builder.append(this.label);
-    builder.append("]");
-    return builder.toString();
   }
 }
