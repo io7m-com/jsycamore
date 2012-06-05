@@ -18,8 +18,8 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Button;
 import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.LabelledButton;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
@@ -136,8 +136,8 @@ public final class SimpleScissored implements Runnable
 
     for (int y = -16; y <= 112; y += 32) {
       for (int x = -16; x <= 112; x += 32) {
-        final Button b =
-          new Button(
+        final LabelledButton b =
+          new LabelledButton(
             this.gui.getContext(),
             container,
             new Point<ParentRelative>(x, y),

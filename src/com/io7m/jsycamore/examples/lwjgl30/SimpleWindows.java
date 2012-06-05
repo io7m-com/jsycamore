@@ -173,6 +173,7 @@ public final class SimpleWindows implements Runnable
           this.window0.windowSetWantOpen();
           this.window1.windowSetWantOpen();
           this.window2.windowSetWantOpen();
+          this.window3.windowSetWantOpen();
         }
       }
     }

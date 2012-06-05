@@ -20,7 +20,7 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Button;
+import com.io7m.jsycamore.components.LabelledButton;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
@@ -132,20 +132,26 @@ public final class SimpleResizeBehavior implements Runnable
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
-    final Button b0 =
-      new Button(ctx, pane, new Point<ParentRelative>(16, 16), new VectorI2I(
-        64,
-        32), "B0");
+    final LabelledButton b0 =
+      new LabelledButton(
+        ctx,
+        pane,
+        new Point<ParentRelative>(16, 16),
+        new VectorI2I(64, 32),
+        "B0");
     ComponentAlignment.setPositionContainerTopLeft(b0, 8);
     b0.componentSetMinimumX(16);
     b0.componentSetMinimumY(16);
     b0.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b0.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
-    final Button b1 =
-      new Button(ctx, pane, PointConstants.PARENT_ORIGIN, new VectorI2I(
-        64,
-        32), "B1");
+    final LabelledButton b1 =
+      new LabelledButton(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B1");
     ComponentAlignment.setPositionRelativeRightOfSameY(b1, 8, b0);
     b1.componentSetMinimumX(8);
     b1.componentSetMinimumY(8);
@@ -154,10 +160,13 @@ public final class SimpleResizeBehavior implements Runnable
     b1.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b1.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
-    final Button b2 =
-      new Button(ctx, pane, PointConstants.PARENT_ORIGIN, new VectorI2I(
-        64,
-        32), "B2");
+    final LabelledButton b2 =
+      new LabelledButton(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B2");
     ComponentAlignment.setPositionRelativeBelowSameX(b2, 8, b0);
     b2.componentSetMinimumX(8);
     b2.componentSetMinimumY(8);
@@ -166,10 +175,13 @@ public final class SimpleResizeBehavior implements Runnable
     b2.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b2.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
-    final Button b3 =
-      new Button(ctx, pane, PointConstants.PARENT_ORIGIN, new VectorI2I(
-        64,
-        32), "B3");
+    final LabelledButton b3 =
+      new LabelledButton(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B3");
     ComponentAlignment.setPositionRelativeRightOfSameY(b3, 8, b2);
     b3.componentSetMinimumX(8);
     b3.componentSetMinimumY(8);
