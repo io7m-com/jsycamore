@@ -29,6 +29,14 @@ public final class Container extends Component
   }
 
   public Container(
+    final @Nonnull PointReadable<ParentRelative> position,
+    final @Nonnull VectorReadable2I size)
+    throws ConstraintError
+  {
+    super(position, size);
+  }
+
+  public Container(
     final @Nonnull Window parent,
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size)
