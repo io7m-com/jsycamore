@@ -37,6 +37,32 @@ public final class ScissorStackTest
     Assert.assertEquals(1, stack.size());
   }
 
+  @SuppressWarnings("static-method") @Test public void testIteration()
+    throws ConstraintError
+  {
+    final ScissorStack stack = new ScissorStack();
+    final Scissor s0 =
+      new Scissor(new Point<ScissorRelative>(0, 0), new VectorI2I(8, 8));
+    final Scissor s1 =
+      new Scissor(new Point<ScissorRelative>(1, 1), new VectorI2I(8, 8));
+    final Scissor s2 =
+      new Scissor(new Point<ScissorRelative>(2, 2), new VectorI2I(8, 8));
+    final Scissor s3 =
+      new Scissor(new Point<ScissorRelative>(3, 3), new VectorI2I(8, 8));
+
+    stack.push(s0);
+    stack.push(s1);
+    stack.push(s2);
+    stack.push(s3);
+
+    int index = 0;
+    for (final Scissor s : stack) {
+      Assert.assertEquals(index, s.getLowerX());
+      Assert.assertEquals(index, s.getLowerY());
+      ++index;
+    }
+  }
+
   @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testPeekEmpty()
