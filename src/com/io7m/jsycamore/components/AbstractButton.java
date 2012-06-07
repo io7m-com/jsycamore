@@ -28,7 +28,7 @@ public abstract class AbstractButton extends Component implements
   private VectorReadable3F             edge_color;
   private VectorReadable3F             fill_color;
 
-  public AbstractButton(
+  protected AbstractButton(
     final @Nonnull Component parent,
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size)
@@ -37,7 +37,7 @@ public abstract class AbstractButton extends Component implements
     super(parent, position, size);
   }
 
-  public AbstractButton(
+  protected AbstractButton(
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size)
     throws ConstraintError

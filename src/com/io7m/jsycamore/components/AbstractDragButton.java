@@ -33,7 +33,7 @@ public abstract class AbstractDragButton extends Component implements
   private final @Nonnull Point<ScreenRelative> drag_delta;
   private final @Nonnull Point<ParentRelative> position_initial;
 
-  public AbstractDragButton(
+  protected AbstractDragButton(
     final @Nonnull Component parent,
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size)
@@ -45,7 +45,7 @@ public abstract class AbstractDragButton extends Component implements
     this.position_initial = new Point<ParentRelative>(position);
   }
 
-  public AbstractDragButton(
+  protected AbstractDragButton(
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size)
     throws ConstraintError
