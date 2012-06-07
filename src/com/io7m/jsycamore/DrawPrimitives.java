@@ -772,33 +772,6 @@ public final class DrawPrimitives
   }
 
   /**
-   * Render a filled triangle consisting of points <code>{p0, p1, p2}</code>,
-   * using the color <code>color</code>.
-   * 
-   * @throws GLException
-   *           Iff an OpenGL error occurs.
-   * @throws ConstraintError
-   *           Iff an internal constraint error occurs.
-   */
-
-  public void renderTriangleFill(
-    final @Nonnull GUIContext context,
-    final @Nonnull VectorReadable2I p0,
-    final @Nonnull VectorReadable2I p1,
-    final @Nonnull VectorReadable2I p2,
-    final @Nonnull VectorReadable3F color)
-    throws GLException,
-      ConstraintError
-  {
-    this.color_cache.x = color.getXF();
-    this.color_cache.y = color.getYF();
-    this.color_cache.z = color.getZF();
-    this.color_cache.w = 1.0f;
-
-    this.renderTriangleFill(context, p0, p1, p2, this.color_cache);
-  }
-
-  /**
    * Render a filled triangle consisting of the points in <code>tri</code>,
    * using the color <code>color</code>.
    * 
@@ -826,6 +799,33 @@ public final class DrawPrimitives
       tri.getPoint1(),
       tri.getPoint2(),
       this.color_cache);
+  }
+
+  /**
+   * Render a filled triangle consisting of points <code>{p0, p1, p2}</code>,
+   * using the color <code>color</code>.
+   * 
+   * @throws GLException
+   *           Iff an OpenGL error occurs.
+   * @throws ConstraintError
+   *           Iff an internal constraint error occurs.
+   */
+
+  public void renderTriangleFill(
+    final @Nonnull GUIContext context,
+    final @Nonnull VectorReadable2I p0,
+    final @Nonnull VectorReadable2I p1,
+    final @Nonnull VectorReadable2I p2,
+    final @Nonnull VectorReadable3F color)
+    throws GLException,
+      ConstraintError
+  {
+    this.color_cache.x = color.getXF();
+    this.color_cache.y = color.getYF();
+    this.color_cache.z = color.getZF();
+    this.color_cache.w = 1.0f;
+
+    this.renderTriangleFill(context, p0, p1, p2, this.color_cache);
   }
 
   /**

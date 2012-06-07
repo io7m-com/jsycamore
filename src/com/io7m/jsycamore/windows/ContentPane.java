@@ -11,11 +11,12 @@ import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jtensors.VectorReadable2I;
 
-public final class ContentPane extends Component
+public final class ContentPane extends AbstractContainer
 {
   public ContentPane(
     final @Nonnull Component parent,
@@ -78,7 +79,7 @@ public final class ContentPane extends Component
   @Override public String toString()
   {
     final StringBuilder builder = new StringBuilder();
-    builder.append("[Container ");
+    builder.append("[ContentPane ");
     builder.append(this.componentGetID());
     builder.append("]");
     return builder.toString();
