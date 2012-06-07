@@ -20,7 +20,7 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.LabelledButton;
+import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
@@ -132,8 +132,8 @@ public final class SimpleResizeBehavior implements Runnable
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
-    final LabelledButton b0 =
-      new LabelledButton(
+    final ButtonLabelled b0 =
+      new ButtonLabelled(
         ctx,
         pane,
         new Point<ParentRelative>(16, 16),
@@ -145,8 +145,8 @@ public final class SimpleResizeBehavior implements Runnable
     b0.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b0.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
-    final LabelledButton b1 =
-      new LabelledButton(
+    final ButtonLabelled b1 =
+      new ButtonLabelled(
         ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
@@ -160,8 +160,8 @@ public final class SimpleResizeBehavior implements Runnable
     b1.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b1.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
-    final LabelledButton b2 =
-      new LabelledButton(
+    final ButtonLabelled b2 =
+      new ButtonLabelled(
         ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
@@ -175,8 +175,8 @@ public final class SimpleResizeBehavior implements Runnable
     b2.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b2.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
-    final LabelledButton b3 =
-      new LabelledButton(
+    final ButtonLabelled b3 =
+      new ButtonLabelled(
         ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
