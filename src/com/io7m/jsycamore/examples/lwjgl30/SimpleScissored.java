@@ -18,7 +18,7 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.LabelledButton;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
@@ -128,10 +128,11 @@ public final class SimpleScissored implements Runnable
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
-    final Container container =
-      new Container(pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        128,
-        128));
+    final ContainerThemed container =
+      new ContainerThemed(
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(128, 128));
     container.setDrawEdge(true);
 
     for (int y = -16; y <= 112; y += 32) {

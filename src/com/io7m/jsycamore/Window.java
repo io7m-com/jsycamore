@@ -17,7 +17,8 @@ import com.io7m.jcanephora.Texture2DRGBAStatic;
 import com.io7m.jcanephora.TextureFilter;
 import com.io7m.jcanephora.TextureWrap;
 import com.io7m.jlog.Log;
-import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.AbstractContainer;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
@@ -50,7 +51,7 @@ public abstract class Window implements Comparable<Window>
   }
 
   private final @Nonnull Point<ScreenRelative> position;
-  private final @Nonnull Container             root;
+  private final @Nonnull AbstractContainer     root;
   private final @Nonnull Long                  id;
   private @Nonnull Framebuffer                 framebuffer;
   private @Nonnull Texture2DRGBAStatic         framebuffer_texture;
@@ -71,7 +72,7 @@ public abstract class Window implements Comparable<Window>
     Constraints.constrainNotNull(size, "Size");
 
     this.id = Long.valueOf(Window.id_pool.incrementAndGet());
-    this.root = new Container(this, PointConstants.PARENT_ORIGIN, size);
+    this.root = new ContainerThemed(this, PointConstants.PARENT_ORIGIN, size);
     this.alpha = 1.0f;
     this.state = WindowState.WINDOW_OPEN;
     this.position = new Point<ScreenRelative>(position);
@@ -258,7 +259,7 @@ public abstract class Window implements Comparable<Window>
     return this.position;
   }
 
-  protected final @Nonnull Container windowGetRootPane()
+  protected final @Nonnull AbstractContainer windowGetRootPane()
   {
     return this.root;
   }
