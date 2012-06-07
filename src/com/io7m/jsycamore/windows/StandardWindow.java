@@ -17,9 +17,10 @@ import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.AbstractButton;
+import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.components.AbstractDragButton;
 import com.io7m.jsycamore.components.AbstractRepeatingButton;
-import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.Label;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
@@ -1048,7 +1049,7 @@ public final class StandardWindow extends Window
   }
 
   private final @Nonnull ContentPane                  content_pane;
-  private final @Nonnull Container                    main_pane;
+  private final @Nonnull AbstractContainer            main_pane;
   private final @Nonnull Titlebar                     titlebar;
   private final @CheckForNull ResizeBox               resize_box;
   private final @CheckForNull ScrollBarHorizontal     scrollbar_h;
@@ -1099,7 +1100,7 @@ public final class StandardWindow extends Window
       pane_size.y -= this.titlebar.componentGetHeight();
 
       this.main_pane =
-        new Container(root, PointConstants.PARENT_ORIGIN, pane_size);
+        new ContainerThemed(root, PointConstants.PARENT_ORIGIN, pane_size);
       this.main_pane
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
       this.main_pane
