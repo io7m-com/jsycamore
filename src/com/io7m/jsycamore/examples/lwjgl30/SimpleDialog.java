@@ -25,7 +25,7 @@ import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.ButtonListener;
 import com.io7m.jsycamore.components.Label;
-import com.io7m.jsycamore.components.LabelledButton;
+import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
@@ -147,8 +147,8 @@ public final class SimpleDialog implements Runnable
     l.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
     l.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
 
-    final LabelledButton b =
-      new LabelledButton(
+    final ButtonLabelled b =
+      new ButtonLabelled(
         ctx,
         pane,
         new Point<ParentRelative>(8, 8),

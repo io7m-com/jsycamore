@@ -14,11 +14,11 @@ import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jtensors.VectorReadable2I;
 
-public final class LabelledButton extends AbstractButton
+public final class ButtonLabelled extends AbstractButton
 {
   private final @Nonnull Label label;
 
-  public LabelledButton(
+  public ButtonLabelled(
     final @Nonnull GUIContext context,
     final @Nonnull Component parent,
     final @Nonnull PointReadable<ParentRelative> position,
@@ -34,7 +34,7 @@ public final class LabelledButton extends AbstractButton
     ComponentAlignment.setPositionContainerCenter(this.label);
   }
 
-  public LabelledButton(
+  public ButtonLabelled(
     final @Nonnull GUIContext context,
     final @Nonnull PointReadable<ParentRelative> position,
     final @Nonnull VectorReadable2I size,
