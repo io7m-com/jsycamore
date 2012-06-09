@@ -999,43 +999,7 @@ public final class Scrollable extends Component
       throws ConstraintError,
         GUIException
     {
-      try {
-        final DrawPrimitives draw = context.contextGetDrawPrimitives();
-        final Theme theme = context.contextGetTheme();
-        final VectorReadable2I size = this.componentGetSize();
-        final Window window = this.componentGetWindow();
-        assert window != null;
-
-        VectorReadable3F fill_color = null;
-        VectorReadable3F edge_color = null;
-        final int edge_width = 1;
-
-        if (window.windowIsFocused()) {
-          if (this.componentIsEnabled()) {
-            fill_color = theme.getFocusedComponentBackgroundColor();
-            edge_color = theme.getFocusedComponentEdgeColor();
-          } else {
-            fill_color = theme.getFocusedComponentDisabledBackgroundColor();
-            edge_color = theme.getFocusedComponentDisabledEdgeColor();
-          }
-        } else {
-          if (this.componentIsEnabled()) {
-            fill_color = theme.getUnfocusedComponentBackgroundColor();
-            edge_color = theme.getUnfocusedComponentEdgeColor();
-          } else {
-            fill_color = theme.getUnfocusedComponentDisabledBackgroundColor();
-            edge_color = theme.getUnfocusedComponentDisabledEdgeColor();
-          }
-        }
-
-        assert fill_color != null;
-        assert edge_color != null;
-        draw.renderRectangleFill(context, size, fill_color);
-        draw.renderRectangleEdge(context, size, edge_width, edge_color);
-
-      } catch (final GLException e) {
-        throw new GUIException(e);
-      }
+      // Unused.
     }
 
     public int getScrollbarHeight()
