@@ -81,6 +81,13 @@ public abstract class AbstractDragButton extends Component implements
     throws ConstraintError,
       GUIException;
 
+  private final void calculateDragDelta(
+    final @Nonnull PointReadable<ScreenRelative> mouse_position)
+  {
+    this.drag_delta.setXI(mouse_position.getXI() - this.drag_start.getXI());
+    this.drag_delta.setYI(mouse_position.getYI() - this.drag_start.getYI());
+  }
+
   @Override public final void componentRenderPostDescendants(
     final @Nonnull GUIContext context)
     throws ConstraintError,
@@ -185,6 +192,7 @@ public abstract class AbstractDragButton extends Component implements
         .getYI());
       this.drag_start.setXI(mouse_position.getXI());
       this.drag_start.setYI(mouse_position.getYI());
+      this.calculateDragDelta(mouse_position);
       this.dragListenerOnStart(context, mouse_position, this);
     }
     return true;
@@ -203,10 +211,7 @@ public abstract class AbstractDragButton extends Component implements
       this.over =
         this.componentContainsScreenRelativePoint(mouse_position_current);
 
-      this.drag_delta.setXI(mouse_position_current.getXI()
-        - this.drag_start.getXI());
-      this.drag_delta.setYI(mouse_position_current.getYI()
-        - this.drag_start.getYI());
+      this.calculateDragDelta(mouse_position_current);
 
       this.dragListenerOnDrag(
         context,
@@ -252,6 +257,8 @@ public abstract class AbstractDragButton extends Component implements
     if (button == 0) {
       if (this.pressed) {
         try {
+          this.calculateDragDelta(mouse_position);
+
           if (this.over) {
             this.buttonListenerOnClick(this);
             if (this.listener != null) {
