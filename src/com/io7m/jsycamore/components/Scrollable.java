@@ -359,8 +359,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // TODO Auto-generated method stub
-
+        // Unused.
       }
 
       @Override public void componentRenderPreDescendants(
@@ -1278,25 +1277,7 @@ public final class Scrollable extends Component
     }
   }
 
-  @Override public void componentRenderPostDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    // Unused.
-  }
-
-  @Override public void componentRenderPreDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    this.reconfigure(context);
-  }
-
-  private void reconfigure(
-    final @Nonnull GUIContext context)
-    throws ConstraintError
+  private void calculateSpans()
   {
     final Set<Component> children = this.content.componentGetChildren();
 
@@ -1323,6 +1304,29 @@ public final class Scrollable extends Component
 
     assert this.child_maximum_x >= this.child_minimum_x;
     assert this.child_maximum_y >= this.child_minimum_y;
+  }
+
+  @Override public void componentRenderPostDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    // Unused.
+  }
+
+  @Override public void componentRenderPreDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    this.reconfigure(context);
+  }
+
+  private void reconfigure(
+    final @Nonnull GUIContext context)
+    throws ConstraintError
+  {
+    this.calculateSpans();
 
     final int child_x_span = this.child_maximum_x - this.child_minimum_x;
     final int child_y_span = this.child_maximum_y - this.child_minimum_y;

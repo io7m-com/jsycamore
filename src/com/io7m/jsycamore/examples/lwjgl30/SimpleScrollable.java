@@ -2,6 +2,8 @@ package com.io7m.jsycamore.examples.lwjgl30;
 
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,30 +16,141 @@ import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
 import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jlog.Log;
+import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractDragButton;
 import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.Scrollable;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
+import com.io7m.jsycamore.geometry.PointConstants;
+import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
+import com.io7m.jtensors.VectorReadable2I;
 import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
 public final class SimpleScrollable implements Runnable
 {
+  private static class Draggable extends AbstractDragButton
+  {
+    Draggable(
+      final @Nonnull Component parent,
+      final @Nonnull PointReadable<ParentRelative> position,
+      final @Nonnull VectorReadable2I size)
+      throws ConstraintError
+    {
+      super(parent, position, size);
+    }
+
+    @Override public void buttonListenerOnClick(
+      final Component button)
+      throws GUIException,
+        ConstraintError
+    {
+      // Unused.
+    }
+
+    @Override public void buttonRenderPost(
+      final GUIContext context)
+      throws ConstraintError,
+        GUIException
+    {
+      // Unused.
+    }
+
+    @Override public void buttonRenderPre(
+      final GUIContext context)
+      throws ConstraintError,
+        GUIException
+    {
+      // Unused.
+    }
+
+    private void doDrag()
+      throws ConstraintError
+    {
+      final Point<ParentRelative> component_start =
+        this.dragGetComponentInitial();
+      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+
+      final Point<ParentRelative> new_pos = new Point<ParentRelative>();
+      new_pos.setXI(component_start.getXI() + delta.getXI());
+      new_pos.setYI(component_start.getYI() + delta.getYI());
+
+      this.componentSetPositionParentRelative(new_pos);
+    }
+
+    @Override public void dragListenerOnDrag(
+      final GUIContext context,
+      final PointReadable<ScreenRelative> start,
+      final PointReadable<ScreenRelative> current,
+      final Component initial)
+      throws ConstraintError,
+        GUIException
+    {
+      this.doDrag();
+    }
+
+    @Override public void dragListenerOnRelease(
+      final GUIContext context,
+      final PointReadable<ScreenRelative> start,
+      final PointReadable<ScreenRelative> current,
+      final Component initial,
+      final Component actual)
+      throws ConstraintError,
+        GUIException
+    {
+      this.doDrag();
+    }
+
+    @Override public void dragListenerOnStart(
+      final GUIContext context,
+      final PointReadable<ScreenRelative> start,
+      final Component initial)
+      throws ConstraintError,
+        GUIException
+    {
+      // Unused.
+    }
+
+    @Override public void resourceDelete(
+      final GLInterface gl)
+      throws ConstraintError,
+        GLException
+    {
+      // Unused.
+    }
+
+    @Override public boolean resourceIsDeleted()
+    {
+      return true;
+    }
+
+    @Override public String toString()
+    {
+      final StringBuilder builder = new StringBuilder();
+      builder.append("[Draggable ");
+      builder.append(this.componentGetID());
+      builder.append("]");
+      return builder.toString();
+    }
+  }
+
   private static final Point<ScreenRelative> viewport_position;
+
   private static final VectorM2I             viewport_size;
 
   static {
@@ -85,6 +198,7 @@ public final class SimpleScrollable implements Runnable
   private final GLInterface           gl;
   private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
+
   private final Window                window0;
 
   SimpleScrollable()
@@ -172,6 +286,12 @@ public final class SimpleScrollable implements Runnable
         32), "b3");
     b3.componentAttachToParent(container);
     ComponentAlignment.setPositionRelativeBelowSameX(b3, 8, b1);
+
+    final Draggable d =
+      new Draggable(container, PointConstants.PARENT_ORIGIN, new VectorI2I(
+        32,
+        32));
+    ComponentAlignment.setPositionContainerRight(d, 8);
 
     this.gui.windowAdd(this.window0);
   }
