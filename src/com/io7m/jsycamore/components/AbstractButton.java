@@ -149,11 +149,10 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (this.componentIsEnabled()) {
-      if (button == 0) {
-        this.pressed = true;
-      }
+    if (button == 0) {
+      this.pressed = true;
     }
+
     return true;
   }
 
@@ -166,13 +165,12 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (this.componentIsEnabled()) {
-      if (button == 0) {
-        this.over =
-          this.componentContainsScreenRelativePoint(mouse_position_current);
-        return true;
-      }
+    if (button == 0) {
+      this.over =
+        this.componentContainsScreenRelativePoint(mouse_position_current);
+      return true;
     }
+
     return false;
   }
 
@@ -207,24 +205,23 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (this.componentIsEnabled()) {
-      if (button == 0) {
-        if (this.pressed && this.over) {
-          try {
-            this.buttonListenerOnClick(this);
-            if (this.listener != null) {
-              this.listener.buttonListenerOnClick(this);
-            }
-          } finally {
-            this.pressed = false;
-            this.over = false;
+    if (button == 0) {
+      if (this.pressed && this.over) {
+        try {
+          this.buttonListenerOnClick(this);
+          if (this.listener != null) {
+            this.listener.buttonListenerOnClick(this);
           }
+        } finally {
+          this.pressed = false;
+          this.over = false;
         }
-
-        this.pressed = false;
-        return true;
       }
+
+      this.pressed = false;
+      return true;
     }
+
     return false;
   }
 

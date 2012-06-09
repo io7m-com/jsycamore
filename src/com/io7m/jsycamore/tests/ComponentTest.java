@@ -89,6 +89,59 @@ public final class ComponentTest
     Assert.assertTrue(c.componentIsEnabled());
   }
 
+  @SuppressWarnings("static-method") @Test public
+    void
+    testEnabledDescendant()
+      throws ConstraintError
+  {
+    final TestComponent p =
+      new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(32, 32));
+    final TestComponent c0 =
+      new TestComponent(
+        p,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(32, 32));
+    final TestComponent c1 =
+      new TestComponent(
+        p,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(32, 32));
+
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertTrue(c0.componentIsEnabled());
+    Assert.assertTrue(c1.componentIsEnabled());
+
+    c0.componentSetEnabled(false);
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertFalse(c0.componentIsEnabled());
+    Assert.assertTrue(c1.componentIsEnabled());
+
+    c0.componentSetEnabled(true);
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertTrue(c0.componentIsEnabled());
+    Assert.assertTrue(c1.componentIsEnabled());
+
+    c1.componentSetEnabled(false);
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertTrue(c0.componentIsEnabled());
+    Assert.assertFalse(c1.componentIsEnabled());
+
+    c1.componentSetEnabled(true);
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertTrue(c0.componentIsEnabled());
+    Assert.assertTrue(c1.componentIsEnabled());
+
+    p.componentSetEnabled(false);
+    Assert.assertFalse(p.componentIsEnabled());
+    Assert.assertFalse(c0.componentIsEnabled());
+    Assert.assertFalse(c1.componentIsEnabled());
+
+    p.componentSetEnabled(true);
+    Assert.assertTrue(p.componentIsEnabled());
+    Assert.assertTrue(c0.componentIsEnabled());
+    Assert.assertTrue(c1.componentIsEnabled());
+  }
+
   @SuppressWarnings("static-method") @Test public void testHeightMaximum()
     throws ConstraintError
   {
