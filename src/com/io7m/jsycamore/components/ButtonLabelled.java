@@ -13,6 +13,7 @@ import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jtensors.VectorReadable2I;
+import com.io7m.jtensors.VectorReadable3F;
 
 public final class ButtonLabelled extends AbstractButton
 {
@@ -64,7 +65,8 @@ public final class ButtonLabelled extends AbstractButton
   @Override public void buttonRenderPre(
     final @Nonnull GUIContext context)
   {
-    // Unused.
+    final VectorReadable3F color = this.buttonGetCurrentEdgeColor();
+    this.label.labelSetColor3f(color.getXF(), color.getYF(), color.getZF());
   }
 
   @Override public void resourceDelete(

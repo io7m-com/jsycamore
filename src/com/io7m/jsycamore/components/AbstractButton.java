@@ -91,22 +91,35 @@ public abstract class AbstractButton extends Component implements
       assert window != null;
 
       if (window.windowIsFocused()) {
-        if (this.over) {
-          if (this.pressed) {
-            this.edge_color = theme.getFocusedComponentActiveEdgeColor();
-            this.fill_color =
-              theme.getFocusedComponentActiveBackgroundColor();
+        if (this.componentIsEnabled()) {
+          if (this.over) {
+            if (this.pressed) {
+              this.edge_color = theme.getFocusedComponentActiveEdgeColor();
+              this.fill_color =
+                theme.getFocusedComponentActiveBackgroundColor();
+            } else {
+              this.edge_color = theme.getFocusedComponentOverEdgeColor();
+              this.fill_color =
+                theme.getFocusedComponentOverBackgroundColor();
+            }
           } else {
-            this.edge_color = theme.getFocusedComponentOverEdgeColor();
-            this.fill_color = theme.getFocusedComponentOverBackgroundColor();
+            this.fill_color = theme.getFocusedComponentBackgroundColor();
+            this.edge_color = theme.getFocusedComponentEdgeColor();
           }
         } else {
-          this.fill_color = theme.getFocusedComponentBackgroundColor();
-          this.edge_color = theme.getFocusedComponentEdgeColor();
+          this.fill_color =
+            theme.getFocusedComponentDisabledBackgroundColor();
+          this.edge_color = theme.getFocusedComponentDisabledEdgeColor();
         }
       } else {
-        this.fill_color = theme.getUnfocusedComponentBackgroundColor();
-        this.edge_color = theme.getUnfocusedComponentEdgeColor();
+        if (this.componentIsEnabled()) {
+          this.fill_color = theme.getUnfocusedComponentBackgroundColor();
+          this.edge_color = theme.getUnfocusedComponentEdgeColor();
+        } else {
+          this.fill_color =
+            theme.getUnfocusedComponentDisabledBackgroundColor();
+          this.edge_color = theme.getUnfocusedComponentDisabledEdgeColor();
+        }
       }
 
       assert this.fill_color != null;
@@ -136,8 +149,10 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (button == 0) {
-      this.pressed = true;
+    if (this.componentIsEnabled()) {
+      if (button == 0) {
+        this.pressed = true;
+      }
     }
     return true;
   }
@@ -151,10 +166,12 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (button == 0) {
-      this.over =
-        this.componentContainsScreenRelativePoint(mouse_position_current);
-      return true;
+    if (this.componentIsEnabled()) {
+      if (button == 0) {
+        this.over =
+          this.componentContainsScreenRelativePoint(mouse_position_current);
+        return true;
+      }
     }
     return false;
   }
@@ -190,21 +207,23 @@ public abstract class AbstractButton extends Component implements
     throws ConstraintError,
       GUIException
   {
-    if (button == 0) {
-      if (this.pressed && this.over) {
-        try {
-          this.buttonListenerOnClick(this);
-          if (this.listener != null) {
-            this.listener.buttonListenerOnClick(this);
+    if (this.componentIsEnabled()) {
+      if (button == 0) {
+        if (this.pressed && this.over) {
+          try {
+            this.buttonListenerOnClick(this);
+            if (this.listener != null) {
+              this.listener.buttonListenerOnClick(this);
+            }
+          } finally {
+            this.pressed = false;
+            this.over = false;
           }
-        } finally {
-          this.pressed = false;
-          this.over = false;
         }
-      }
 
-      this.pressed = false;
-      return true;
+        this.pressed = false;
+        return true;
+      }
     }
     return false;
   }
