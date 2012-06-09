@@ -77,6 +77,7 @@ public abstract class Component implements
   private @CheckForNull Component              parent;
   private @Nonnull ParentResizeBehavior        resize_width_behavior;
   private @Nonnull ParentResizeBehavior        resize_height_behavior;
+  private boolean                              enabled = true;
 
   protected Component(
     final @Nonnull Component parent,
@@ -776,6 +777,11 @@ public abstract class Component implements
     return this.componentIsAncestorOfInner(child.parent);
   }
 
+  public final boolean componentIsEnabled()
+  {
+    return this.enabled;
+  }
+
   @SuppressWarnings("static-method") public final
     boolean
     componentIsFocused()
@@ -839,6 +845,12 @@ public abstract class Component implements
     final @Nonnull GUIContext context)
     throws ConstraintError,
       GUIException;
+
+  public final void componentSetEnabled(
+    final boolean enabled_now)
+  {
+    this.enabled = enabled_now;
+  }
 
   /**
    * Set how this component behaves when the height of its parent changes.

@@ -77,6 +77,18 @@ public final class ComponentTest
     Assert.assertFalse(c2.componentIsAncestorOf(p));
   }
 
+  @SuppressWarnings("static-method") @Test public void testEnabled()
+    throws ConstraintError
+  {
+    final TestComponent c =
+      new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(32, 32));
+    Assert.assertTrue(c.componentIsEnabled());
+    c.componentSetEnabled(false);
+    Assert.assertFalse(c.componentIsEnabled());
+    c.componentSetEnabled(true);
+    Assert.assertTrue(c.componentIsEnabled());
+  }
+
   @SuppressWarnings("static-method") @Test public void testHeightMaximum()
     throws ConstraintError
   {
