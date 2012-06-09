@@ -95,9 +95,9 @@ public final class ButtonLabelled extends AbstractButton
   @Override public String toString()
   {
     final StringBuilder builder = new StringBuilder();
-    builder.append("[ButtonLabelled '");
+    builder.append("[ButtonLabelled ");
     builder.append(this.label);
-    builder.append("' ");
+    builder.append(" ");
     builder.append(this.componentGetID());
     builder.append("]");
     return builder.toString();
