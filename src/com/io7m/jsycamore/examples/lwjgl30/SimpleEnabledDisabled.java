@@ -52,7 +52,7 @@ public final class SimpleEnabledDisabled implements Runnable
     final String args[])
   {
     try {
-      Display.setTitle("SimpleButton");
+      Display.setTitle("SimpleEnabledDisabled");
       Display.setDisplayMode(new DisplayMode(
         SimpleEnabledDisabled.viewport_size.x,
         SimpleEnabledDisabled.viewport_size.y));
