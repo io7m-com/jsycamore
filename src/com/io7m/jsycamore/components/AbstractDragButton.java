@@ -177,6 +177,12 @@ public abstract class AbstractDragButton extends Component implements
   {
     if (button == 0) {
       this.pressed = true;
+      this.position_initial.setXI(this
+        .componentGetPositionParentRelative()
+        .getXI());
+      this.position_initial.setYI(this
+        .componentGetPositionParentRelative()
+        .getYI());
       this.drag_start.setXI(mouse_position.getXI());
       this.drag_start.setYI(mouse_position.getYI());
       this.dragListenerOnStart(context, mouse_position, this);
