@@ -2,6 +2,8 @@ package com.io7m.jsycamore.examples.lwjgl30;
 
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,13 +16,15 @@ import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
 import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jlog.Log;
-import com.io7m.jsycamore.Component.ParentResizeBehavior;
+import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.ButtonLabelled;
+import com.io7m.jsycamore.components.ButtonListener;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
@@ -117,8 +121,8 @@ public final class SimpleEnabledDisabled implements Runnable
     final GUIContext ctx = this.gui.getContext();
 
     final WindowParameters wp = new WindowParameters();
-    wp.setCanClose(true);
-    wp.setCanResize(true);
+    wp.setCanClose(false);
+    wp.setCanResize(false);
     wp.setTitle("Window 0");
 
     this.window0 =
@@ -133,68 +137,77 @@ public final class SimpleEnabledDisabled implements Runnable
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
+    final ContainerThemed container =
+      new ContainerThemed(pane, PointConstants.PARENT_ORIGIN, new VectorI2I(
+        156,
+        88));
+    ComponentAlignment.setPositionContainerTopLeft(container, 8);
+
     final ButtonLabelled b0 =
       new ButtonLabelled(
         ctx,
-        pane,
+        container,
         new Point<ParentRelative>(16, 16),
         new VectorI2I(64, 32),
         "B0");
     ComponentAlignment.setPositionContainerTopLeft(b0, 8);
-    b0.componentSetMinimumX(16);
-    b0.componentSetMinimumY(16);
-    b0.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
-    b0.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
     final ButtonLabelled b1 =
       new ButtonLabelled(
         ctx,
-        pane,
+        container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
         "B1");
     ComponentAlignment.setPositionRelativeRightOfSameY(b1, 8, b0);
-    b1.componentSetMinimumX(8);
-    b1.componentSetMinimumY(8);
-    b1.componentSetMinimumWidth(ctx, 64);
-    b1.componentSetMinimumHeight(ctx, 32);
-    b1.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
-    b1.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
     final ButtonLabelled b2 =
       new ButtonLabelled(
         ctx,
-        pane,
+        container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
         "B2");
     ComponentAlignment.setPositionRelativeBelowSameX(b2, 8, b0);
-    b2.componentSetMinimumX(8);
-    b2.componentSetMinimumY(8);
-    b2.componentSetMinimumWidth(ctx, 64);
-    b2.componentSetMinimumHeight(ctx, 32);
-    b2.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-    b2.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
     final ButtonLabelled b3 =
       new ButtonLabelled(
         ctx,
-        pane,
+        container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
         "B3");
     ComponentAlignment.setPositionRelativeRightOfSameY(b3, 8, b2);
-    b3.componentSetMinimumX(8);
-    b3.componentSetMinimumY(8);
-    b3.componentSetMinimumWidth(ctx, 64);
-    b3.componentSetMinimumHeight(ctx, 32);
-    b3.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-    b3.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
     b0.componentSetEnabled(false);
     b1.componentSetEnabled(true);
     b2.componentSetEnabled(false);
     b3.componentSetEnabled(true);
+
+    final ButtonLabelled toggle =
+      new ButtonLabelled(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "Disable");
+    ComponentAlignment.setPositionRelativeRightOfSameY(toggle, 8, container);
+
+    toggle.setButtonListener(new ButtonListener() {
+      @Override public void buttonListenerOnClick(
+        final @Nonnull Component button)
+        throws GUIException,
+          ConstraintError
+      {
+        if (container.componentIsEnabled()) {
+          container.componentSetEnabled(false);
+          toggle.setText(ctx, "Enable");
+        } else {
+          container.componentSetEnabled(true);
+          toggle.setText(ctx, "Disable");
+        }
+      }
+    });
 
     this.gui.windowAdd(this.window0);
   }

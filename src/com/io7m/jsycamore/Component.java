@@ -308,8 +308,12 @@ public abstract class Component implements
     final Log log = context.contextGetComponentLog();
     log.debug("on-mouse-clicked: " + this);
 
-    final boolean consumed =
-      this.mouseListenerOnMouseClicked(context, position, button, actual);
+    boolean consumed = true;
+    if (this.componentIsEnabled()) {
+      consumed =
+        this.mouseListenerOnMouseClicked(context, position, button, actual);
+    }
+
     if (consumed == false) {
       if (this.parent != null) {
         this.parent.componentEventOnMouseClicked(
@@ -333,13 +337,17 @@ public abstract class Component implements
     final Log log = context.contextGetComponentLog();
     log.debug("on-mouse-held: " + this);
 
-    final boolean consumed =
-      this.mouseListenerOnMouseHeld(
-        context,
-        position_first,
-        position_now,
-        button,
-        actual);
+    boolean consumed = true;
+    if (this.componentIsEnabled()) {
+      consumed =
+        this.mouseListenerOnMouseHeld(
+          context,
+          position_first,
+          position_now,
+          button,
+          actual);
+    }
+
     if (consumed == false) {
       if (this.parent != null) {
         this.parent.componentEventOnMouseHeld(
@@ -361,8 +369,11 @@ public abstract class Component implements
     final Log log = context.contextGetComponentLog();
     log.debug("on-mouse-no-longer-over: " + this);
 
-    final boolean consumed =
-      this.mouseListenerOnMouseNoLongerOver(context, position);
+    boolean consumed = true;
+    if (this.componentIsEnabled()) {
+      consumed = this.mouseListenerOnMouseNoLongerOver(context, position);
+    }
+
     if (consumed == false) {
       if (this.parent != null) {
         this.parent.componentEventOnMouseNoLongerOver(context, position);
@@ -380,8 +391,11 @@ public abstract class Component implements
     final Log log = context.contextGetComponentLog();
     log.debug("on-mouse-over: " + this);
 
-    final boolean consumed =
-      this.mouseListenerOnMouseOver(context, position, actual);
+    boolean consumed = true;
+    if (this.componentIsEnabled()) {
+      consumed = this.mouseListenerOnMouseOver(context, position, actual);
+    }
+
     if (consumed == false) {
       if (this.parent != null) {
         this.parent.componentEventOnMouseOver(context, position, actual);
@@ -400,8 +414,12 @@ public abstract class Component implements
     final Log log = context.contextGetComponentLog();
     log.debug("on-mouse-released: " + this);
 
-    final boolean consumed =
-      this.mouseListenerOnMouseReleased(context, position, button, actual);
+    boolean consumed = true;
+    if (this.componentIsEnabled()) {
+      consumed =
+        this.mouseListenerOnMouseReleased(context, position, button, actual);
+    }
+
     if (consumed == false) {
       if (this.parent != null) {
         this.parent.componentEventOnMouseReleased(
@@ -846,10 +864,18 @@ public abstract class Component implements
     throws ConstraintError,
       GUIException;
 
+  /**
+   * Enable/disable this component, and all descendants of the component.
+   */
+
   public final void componentSetEnabled(
     final boolean enabled_now)
   {
     this.enabled = enabled_now;
+
+    for (final Component child : this.children) {
+      child.componentSetEnabled(enabled_now);
+    }
   }
 
   /**

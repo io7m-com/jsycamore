@@ -81,4 +81,25 @@ public final class ButtonLabelled extends AbstractButton
   {
     return this.label.resourceIsDeleted();
   }
+
+  public void setText(
+    final @Nonnull GUIContext context,
+    final @Nonnull String text)
+    throws GUIException,
+      ConstraintError
+  {
+    this.label.labelSetText(context, text);
+    ComponentAlignment.setPositionContainerCenter(this.label);
+  }
+
+  @Override public String toString()
+  {
+    final StringBuilder builder = new StringBuilder();
+    builder.append("[ButtonLabelled '");
+    builder.append(this.label);
+    builder.append("' ");
+    builder.append(this.componentGetID());
+    builder.append("]");
+    return builder.toString();
+  }
 }
