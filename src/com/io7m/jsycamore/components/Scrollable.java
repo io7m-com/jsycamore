@@ -9,6 +9,7 @@ import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
 import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.ComponentAlignment;
+import com.io7m.jsycamore.ComponentLimits;
 import com.io7m.jsycamore.DrawPrimitives;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
@@ -466,8 +467,7 @@ public final class Scrollable extends Component
       this.thumb.componentSetMinimumWidth(
         context,
         Scrollable.SCROLLBAR_BUTTON_SIZE.getXI());
-      this.thumb.componentSetMinimumX(0);
-      this.thumb.componentSetMinimumY(0);
+      ComponentLimits.setMaximumXYContainer(ScrollBarHorizontal.this.thumb);
 
       this.button_right
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
@@ -527,6 +527,7 @@ public final class Scrollable extends Component
       this.thumb.componentSetSize(context, new VectorI2I(
         width,
         Scrollable.SCROLLBAR_BUTTON_SIZE.getYI()));
+      ComponentLimits.setMaximumXYContainer(this.thumb);
     }
 
     @Override public String toString()
@@ -875,8 +876,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // TODO Auto-generated method stub
-
+        // Unused.
       }
 
       @Override public void componentRenderPreDescendants(
@@ -968,8 +968,7 @@ public final class Scrollable extends Component
       this.thumb.componentSetMinimumHeight(
         context,
         Scrollable.SCROLLBAR_BUTTON_SIZE.getYI());
-      this.thumb.componentSetMinimumX(0);
-      this.thumb.componentSetMinimumY(0);
+      ComponentLimits.setMaximumXYContainer(this.thumb);
 
       this.button_down
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
@@ -1067,6 +1066,7 @@ public final class Scrollable extends Component
       this.thumb.componentSetSize(context, new VectorI2I(
         Scrollable.SCROLLBAR_BUTTON_SIZE.getXI(),
         height));
+      ComponentLimits.setMaximumXYContainer(this.thumb);
     }
 
     @Override public String toString()
