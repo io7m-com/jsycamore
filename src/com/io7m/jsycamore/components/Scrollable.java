@@ -16,6 +16,7 @@ import com.io7m.jsycamore.Theme;
 import com.io7m.jsycamore.Triangle;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.geometry.ParentRelative;
+import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScreenRelative;
@@ -287,6 +288,20 @@ public final class Scrollable extends Component
         ComponentAlignment.setPositionContainerCenter(this.ridges);
       }
 
+      private void doDrag()
+        throws ConstraintError
+      {
+        final Point<ParentRelative> component_start =
+          this.dragGetComponentInitial();
+        final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+
+        final Point<ParentRelative> new_pos = new Point<ParentRelative>();
+        new_pos.setXI(component_start.getXI() + delta.getXI());
+        new_pos.setYI(0);
+
+        this.componentSetPositionParentRelative(new_pos);
+      }
+
       @Override public void dragListenerOnDrag(
         final @Nonnull GUIContext context,
         final @Nonnull PointReadable<ScreenRelative> start,
@@ -295,7 +310,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // Unused.
+        this.doDrag();
       }
 
       @Override public void dragListenerOnRelease(
@@ -307,7 +322,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // Unused.
+        this.doDrag();
       }
 
       @Override public void dragListenerOnStart(
@@ -451,6 +466,8 @@ public final class Scrollable extends Component
       this.thumb.componentSetMinimumWidth(
         context,
         Scrollable.SCROLLBAR_BUTTON_SIZE.getXI());
+      this.thumb.componentSetMinimumX(0);
+      this.thumb.componentSetMinimumY(0);
 
       this.button_right
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
@@ -772,6 +789,20 @@ public final class Scrollable extends Component
         ComponentAlignment.setPositionContainerCenter(this.ridges);
       }
 
+      private void doDrag()
+        throws ConstraintError
+      {
+        final Point<ParentRelative> component_start =
+          this.dragGetComponentInitial();
+        final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+
+        final Point<ParentRelative> new_pos = new Point<ParentRelative>();
+        new_pos.setXI(0);
+        new_pos.setYI(component_start.getYI() + delta.getYI());
+
+        this.componentSetPositionParentRelative(new_pos);
+      }
+
       @Override public void dragListenerOnDrag(
         final @Nonnull GUIContext context,
         final @Nonnull PointReadable<ScreenRelative> start,
@@ -780,7 +811,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // Unused.
+        this.doDrag();
       }
 
       @Override public void dragListenerOnRelease(
@@ -792,7 +823,7 @@ public final class Scrollable extends Component
         throws ConstraintError,
           GUIException
       {
-        // Unused.
+        this.doDrag();
       }
 
       @Override public void dragListenerOnStart(
@@ -937,6 +968,8 @@ public final class Scrollable extends Component
       this.thumb.componentSetMinimumHeight(
         context,
         Scrollable.SCROLLBAR_BUTTON_SIZE.getYI());
+      this.thumb.componentSetMinimumX(0);
+      this.thumb.componentSetMinimumY(0);
 
       this.button_down
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
