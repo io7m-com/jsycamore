@@ -60,21 +60,23 @@ public abstract class Component implements
   static {
     id_pool = new AtomicLong(0);
   }
-  private final @Nonnull Long                  id;
-  private final @Nonnull TreeSet<Component>    children;
 
+  private final @Nonnull Long                  id;
+
+  private final @Nonnull TreeSet<Component>    children;
   private final @Nonnull Point<ParentRelative> position_unrestricted;
   private final @Nonnull Point<ParentRelative> position_current;
+
   private final @Nonnull Point<ParentRelative> position_minimum;
   private final @Nonnull Point<ParentRelative> position_maximum;
-
   private final @Nonnull VectorM2I             size_unrestricted;
   private final @Nonnull VectorM2I             size_current;
+
   private final @Nonnull VectorM2I             size_minimum;
   private final @Nonnull VectorM2I             size_maximum;
-
   private final @CheckForNull Window           window;
   private @CheckForNull Component              parent;
+
   private @Nonnull ParentResizeBehavior        resize_width_behavior;
   private @Nonnull ParentResizeBehavior        resize_height_behavior;
   private boolean                              enabled = true;
@@ -866,10 +868,13 @@ public abstract class Component implements
 
   /**
    * Enable/disable this component, and all descendants of the component.
+   * 
+   * @throws ConstraintError
    */
 
   public final void componentSetEnabled(
     final boolean enabled_now)
+    throws ConstraintError
   {
     this.enabled = enabled_now;
 
