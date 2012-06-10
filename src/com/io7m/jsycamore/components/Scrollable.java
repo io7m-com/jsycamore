@@ -248,7 +248,14 @@ public final class Scrollable extends Component
         }
       }
 
-      private final @Nonnull Ridges ridges;
+      private final @Nonnull Ridges                ridges;
+
+      /**
+       * Temporary buffers used whilst calculating new component positions.
+       */
+
+      private final @Nonnull Point<ParentRelative> saved_position;
+      private final @Nonnull Point<ParentRelative> new_position;
 
       public Thumb(
         final @Nonnull Component parent,
@@ -263,6 +270,9 @@ public final class Scrollable extends Component
             this,
             PointConstants.PARENT_ORIGIN,
             Scrollable.SCROLLBAR_BUTTON_SIZE);
+
+        this.saved_position = new Point<ParentRelative>();
+        this.new_position = new Point<ParentRelative>();
       }
 
       @Override public void buttonListenerOnClick(
@@ -289,25 +299,62 @@ public final class Scrollable extends Component
         ComponentAlignment.setPositionContainerCenter(this.ridges);
       }
 
-      private void doDrag()
+      @SuppressWarnings("synthetic-access") private void doDrag()
         throws ConstraintError
       {
-        this.doDragUpdateThumbPosition();
+        final int moved = this.doDragUpdateThumbPosition();
+        final int scroll = Scrollable.this.scaleThumbX(moved);
+        this.doDragUpdateChildren(scroll);
       }
 
-      private void doDragUpdateThumbPosition()
+      @SuppressWarnings("synthetic-access") private
+        void
+        doDragUpdateChildren(
+          final int scroll)
+          throws ConstraintError
+      {
+        final Set<Component> children =
+          Scrollable.this.content.componentGetChildren();
+
+        for (final Component child : children) {
+          final PointReadable<ParentRelative> current =
+            child.componentGetPositionParentRelative();
+          this.new_position.setXI(current.getXI() - scroll);
+          this.new_position.setYI(current.getYI());
+          child.componentSetPositionParentRelative(this.new_position);
+        }
+      }
+
+      private int doDragUpdateThumbPosition()
         throws ConstraintError
       {
+        /**
+         * Save the current position of the thumb.
+         */
+
+        final PointReadable<ParentRelative> position =
+          this.componentGetPositionParentRelative();
+        this.saved_position.setXI(position.getXI());
+        this.saved_position.setYI(position.getYI());
+
+        /**
+         * Retrieve the current drag delta (since the last time this function
+         * was called) and add it to the current position.
+         */
+
         final PointReadable<ScreenRelative> delta =
-          this.dragGetDeltaFromInitial();
-        final Point<ParentRelative> component_start =
-          this.dragGetComponentInitial();
+          this.dragGetDeltaFromPrevious();
+        this.new_position.setXI(this.saved_position.getXI() + delta.getXI());
+        this.new_position.setYI(this.saved_position.getYI());
+        this.componentSetPositionParentRelative(this.new_position);
 
-        final Point<ParentRelative> new_pos = new Point<ParentRelative>();
-        new_pos.setXI(component_start.getXI() + delta.getXI());
-        new_pos.setYI(0);
+        /**
+         * Return the amount that the thumb actually moved (due to
+         * minimum/maximum position constraints).
+         */
 
-        this.componentSetPositionParentRelative(new_pos);
+        return this.componentGetPositionParentRelative().getXI()
+          - this.saved_position.getXI();
       }
 
       @Override public void dragListenerOnDrag(
@@ -1340,6 +1387,20 @@ public final class Scrollable extends Component
     this.span_trough.y = this.scroll_v.getTroughHeight();
     this.span_pane.x = this.content.componentGetWidth();
     this.span_pane.y = this.content.componentGetHeight();
+  }
+
+  /**
+   * Scale a movement of <code>x</code> units by the thumb to a value in terms
+   * of the pane. In other words, a movement of <code>x</code> units should
+   * scroll the contents of the pane by <code>scaleThumbX(x)</code> units.
+   */
+
+  private int scaleThumbX(
+    final int x)
+  {
+    final double proportion =
+      (double) this.span_children.x / (double) this.span_trough.x;
+    return (int) (x * proportion);
   }
 
   /**
