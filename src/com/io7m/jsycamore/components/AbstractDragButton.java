@@ -30,7 +30,9 @@ public abstract class AbstractDragButton extends Component implements
   private @CheckForNull VectorReadable3F       fill_color;
   private @CheckForNull ButtonListener         listener;
   private final @Nonnull Point<ScreenRelative> drag_start;
-  private final @Nonnull Point<ScreenRelative> drag_delta;
+  private final @Nonnull Point<ScreenRelative> drag_delta_initial;
+  private final @Nonnull Point<ScreenRelative> drag_delta_previous;
+  private final @Nonnull Point<ScreenRelative> mouse_previous;
   private final @Nonnull Point<ParentRelative> position_initial;
 
   protected AbstractDragButton(
@@ -41,7 +43,9 @@ public abstract class AbstractDragButton extends Component implements
   {
     super(parent, position, size);
     this.drag_start = new Point<ScreenRelative>();
-    this.drag_delta = new Point<ScreenRelative>();
+    this.drag_delta_initial = new Point<ScreenRelative>();
+    this.drag_delta_previous = new Point<ScreenRelative>();
+    this.mouse_previous = new Point<ScreenRelative>();
     this.position_initial = new Point<ParentRelative>(position);
   }
 
@@ -52,7 +56,9 @@ public abstract class AbstractDragButton extends Component implements
   {
     super(position, size);
     this.drag_start = new Point<ScreenRelative>();
-    this.drag_delta = new Point<ScreenRelative>();
+    this.drag_delta_initial = new Point<ScreenRelative>();
+    this.drag_delta_previous = new Point<ScreenRelative>();
+    this.mouse_previous = new Point<ScreenRelative>();
     this.position_initial = new Point<ParentRelative>(position);
   }
 
@@ -81,11 +87,34 @@ public abstract class AbstractDragButton extends Component implements
     throws ConstraintError,
       GUIException;
 
-  private final void calculateDragDelta(
+  private final void dragBuffersInitialize(
     final @Nonnull PointReadable<ScreenRelative> mouse_position)
   {
-    this.drag_delta.setXI(mouse_position.getXI() - this.drag_start.getXI());
-    this.drag_delta.setYI(mouse_position.getYI() - this.drag_start.getYI());
+    this.position_initial.setXI(this
+      .componentGetPositionParentRelative()
+      .getXI());
+    this.position_initial.setYI(this
+      .componentGetPositionParentRelative()
+      .getYI());
+    this.drag_start.setXI(mouse_position.getXI());
+    this.drag_start.setYI(mouse_position.getYI());
+  }
+
+  private final void dragBuffersUpdate(
+    final @Nonnull PointReadable<ScreenRelative> mouse_position)
+  {
+    this.drag_delta_previous.setXI(mouse_position.getXI()
+      - this.mouse_previous.getXI());
+    this.drag_delta_previous.setYI(mouse_position.getYI()
+      - this.mouse_previous.getYI());
+
+    this.mouse_previous.setXI(mouse_position.getXI());
+    this.mouse_previous.setYI(mouse_position.getYI());
+
+    this.drag_delta_initial.setXI(mouse_position.getXI()
+      - this.drag_start.getXI());
+    this.drag_delta_initial.setYI(mouse_position.getYI()
+      - this.drag_start.getYI());
   }
 
   @Override public final void componentRenderPostDescendants(
@@ -164,12 +193,23 @@ public abstract class AbstractDragButton extends Component implements
     return this.position_initial;
   }
 
-  public final @Nonnull PointReadable<ScreenRelative> dragGetDelta()
+  public final @Nonnull
+    PointReadable<ScreenRelative>
+    dragGetDeltaFromPrevious()
   {
-    return this.drag_delta;
+    return this.drag_delta_previous;
   }
 
-  public final @Nonnull PointReadable<ScreenRelative> dragGetInitial()
+  public final @Nonnull
+    PointReadable<ScreenRelative>
+    dragGetDeltaFromInitial()
+  {
+    return this.drag_delta_initial;
+  }
+
+  public final @Nonnull
+    PointReadable<ScreenRelative>
+    dragGetInitialPosition()
   {
     return this.drag_start;
   }
@@ -184,15 +224,8 @@ public abstract class AbstractDragButton extends Component implements
   {
     if (button == 0) {
       this.pressed = true;
-      this.position_initial.setXI(this
-        .componentGetPositionParentRelative()
-        .getXI());
-      this.position_initial.setYI(this
-        .componentGetPositionParentRelative()
-        .getYI());
-      this.drag_start.setXI(mouse_position.getXI());
-      this.drag_start.setYI(mouse_position.getYI());
-      this.calculateDragDelta(mouse_position);
+      this.dragBuffersInitialize(mouse_position);
+      this.dragBuffersUpdate(mouse_position);
       this.dragListenerOnStart(context, mouse_position, this);
     }
     return true;
@@ -211,8 +244,7 @@ public abstract class AbstractDragButton extends Component implements
       this.over =
         this.componentContainsScreenRelativePoint(mouse_position_current);
 
-      this.calculateDragDelta(mouse_position_current);
-
+      this.dragBuffersUpdate(mouse_position_current);
       this.dragListenerOnDrag(
         context,
         mouse_position_initial,
@@ -257,7 +289,7 @@ public abstract class AbstractDragButton extends Component implements
     if (button == 0) {
       if (this.pressed) {
         try {
-          this.calculateDragDelta(mouse_position);
+          this.dragBuffersUpdate(mouse_position);
 
           if (this.over) {
             this.buttonListenerOnClick(this);

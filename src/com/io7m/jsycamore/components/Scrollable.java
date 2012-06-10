@@ -292,9 +292,16 @@ public final class Scrollable extends Component
       private void doDrag()
         throws ConstraintError
       {
+        this.doDragUpdateThumbPosition();
+      }
+
+      private void doDragUpdateThumbPosition()
+        throws ConstraintError
+      {
+        final PointReadable<ScreenRelative> delta =
+          this.dragGetDeltaFromInitial();
         final Point<ParentRelative> component_start =
           this.dragGetComponentInitial();
-        final PointReadable<ScreenRelative> delta = this.dragGetDelta();
 
         final Point<ParentRelative> new_pos = new Point<ParentRelative>();
         new_pos.setXI(component_start.getXI() + delta.getXI());
@@ -795,7 +802,8 @@ public final class Scrollable extends Component
       {
         final Point<ParentRelative> component_start =
           this.dragGetComponentInitial();
-        final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+        final PointReadable<ScreenRelative> delta =
+          this.dragGetDeltaFromInitial();
 
         final Point<ParentRelative> new_pos = new Point<ParentRelative>();
         new_pos.setXI(0);
@@ -1274,7 +1282,23 @@ public final class Scrollable extends Component
     }
   }
 
-  private void calculateSpans()
+  @Override public void componentRenderPostDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    // Unused.
+  }
+
+  @Override public void componentRenderPreDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    this.reconfigureThumb(context);
+  }
+
+  private void reconfigureCalculateSpans()
   {
     final Set<Component> children = this.content.componentGetChildren();
 
@@ -1303,27 +1327,11 @@ public final class Scrollable extends Component
     assert this.child_maximum_y >= this.child_minimum_y;
   }
 
-  @Override public void componentRenderPostDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    // Unused.
-  }
-
-  @Override public void componentRenderPreDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    this.reconfigure(context);
-  }
-
-  private void reconfigure(
+  private void reconfigureThumb(
     final @Nonnull GUIContext context)
     throws ConstraintError
   {
-    this.calculateSpans();
+    this.reconfigureCalculateSpans();
 
     final int child_x_span = this.child_maximum_x - this.child_minimum_x;
     final int child_y_span = this.child_maximum_y - this.child_minimum_y;

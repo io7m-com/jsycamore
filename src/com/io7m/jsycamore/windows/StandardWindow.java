@@ -177,7 +177,7 @@ public final class StandardWindow extends Window
       throws ConstraintError,
         GUIException
     {
-      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+      final PointReadable<ScreenRelative> delta = this.dragGetDeltaFromInitial();
 
       final Log log = context.contextGetComponentLog();
       log.debug("drag drag initial: " + this.dragGetComponentInitial());
@@ -200,7 +200,7 @@ public final class StandardWindow extends Window
       throws GUIException,
         ConstraintError
     {
-      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+      final PointReadable<ScreenRelative> delta = this.dragGetDeltaFromInitial();
 
       final Log log = context.contextGetComponentLog();
       log.debug("drag release initial: " + this.dragGetComponentInitial());
@@ -223,7 +223,7 @@ public final class StandardWindow extends Window
       // Unused.
       final Log log = context.contextGetComponentLog();
       log.debug("drag start initial: " + this.dragGetComponentInitial());
-      log.debug("drag start delta:   " + this.dragGetDelta());
+      log.debug("drag start delta:   " + this.dragGetDeltaFromInitial());
 
       final Window window = this.componentGetWindow();
       if (window != null) {

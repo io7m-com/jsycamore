@@ -84,7 +84,8 @@ public final class SimpleScrollable implements Runnable
     {
       final Point<ParentRelative> component_start =
         this.dragGetComponentInitial();
-      final PointReadable<ScreenRelative> delta = this.dragGetDelta();
+      final PointReadable<ScreenRelative> delta =
+        this.dragGetDeltaFromInitial();
 
       final Point<ParentRelative> new_pos = new Point<ParentRelative>();
       new_pos.setXI(component_start.getXI() + delta.getXI());
@@ -150,7 +151,6 @@ public final class SimpleScrollable implements Runnable
   }
 
   private static final Point<ScreenRelative> viewport_position;
-
   private static final VectorM2I             viewport_size;
 
   static {
