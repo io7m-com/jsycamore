@@ -508,7 +508,7 @@ public final class Scrollable extends Component
       // Unused.
     }
 
-    int getScrollbarWidth()
+    int getTroughWidth()
     {
       return this.trough.componentGetWidth();
     }
@@ -1010,7 +1010,7 @@ public final class Scrollable extends Component
       // Unused.
     }
 
-    public int getScrollbarHeight()
+    public int getTroughHeight()
     {
       return this.trough.componentGetHeight();
     }
@@ -1187,10 +1187,11 @@ public final class Scrollable extends Component
   private final @Nonnull ScrollBarHorizontal scroll_h;
   private final @Nonnull ScrollBarVertical   scroll_v;
 
-  private int                                child_minimum_x;
-  private int                                child_maximum_x;
-  private int                                child_minimum_y;
-  private int                                child_maximum_y;
+  private final @Nonnull VectorM2I           minimum_child = new VectorM2I();
+  private final @Nonnull VectorM2I           maximum_child = new VectorM2I();
+  private final @Nonnull VectorM2I           span_children = new VectorM2I();
+  private final @Nonnull VectorM2I           span_trough   = new VectorM2I();
+  private final @Nonnull VectorM2I           span_pane     = new VectorM2I();
 
   static final int                           H_SCROLLBAR_WIDTH;
   static final int                           V_SCROLLBAR_HEIGHT;
@@ -1295,77 +1296,135 @@ public final class Scrollable extends Component
     throws ConstraintError,
       GUIException
   {
-    this.reconfigureThumb(context);
+    this.reconfigureScrollbars(context);
   }
+
+  /**
+   * Determine the current "spans": the difference between the left edge of
+   * the leftmost child and the right edge of the rightmost child, the
+   * difference between the top edge of the top child and the bottom edge of
+   * the bottom child, etc...
+   */
 
   private void reconfigureCalculateSpans()
   {
     final Set<Component> children = this.content.componentGetChildren();
 
-    this.child_minimum_x = Integer.MAX_VALUE;
-    this.child_maximum_x = Integer.MIN_VALUE;
-    this.child_minimum_y = Integer.MAX_VALUE;
-    this.child_maximum_y = Integer.MIN_VALUE;
+    this.minimum_child.x = Integer.MAX_VALUE;
+    this.minimum_child.y = Integer.MAX_VALUE;
+    this.maximum_child.x = Integer.MIN_VALUE;
+    this.maximum_child.y = Integer.MIN_VALUE;
 
     for (final Component child : children) {
       final PointReadable<ParentRelative> pos =
         child.componentGetPositionParentRelative();
 
-      this.child_minimum_x = Math.min(this.child_minimum_x, pos.getXI());
-      this.child_maximum_x =
+      this.minimum_child.x = Math.min(this.minimum_child.x, pos.getXI());
+      this.maximum_child.x =
         Math.max(
-          this.child_maximum_x,
+          this.maximum_child.x,
           pos.getXI() + child.componentGetWidth());
-      this.child_minimum_y = Math.min(this.child_minimum_y, pos.getYI());
-      this.child_maximum_y =
+      this.minimum_child.y = Math.min(this.minimum_child.y, pos.getYI());
+      this.maximum_child.y =
         Math.max(
-          this.child_maximum_y,
+          this.maximum_child.y,
           pos.getYI() + child.componentGetHeight());
     }
 
-    assert this.child_maximum_x >= this.child_minimum_x;
-    assert this.child_maximum_y >= this.child_minimum_y;
+    assert this.maximum_child.x >= this.minimum_child.x;
+    assert this.maximum_child.y >= this.minimum_child.y;
+
+    this.span_children.x = this.maximum_child.x - this.minimum_child.x;
+    this.span_children.y = this.maximum_child.y - this.minimum_child.y;
+    this.span_trough.x = this.scroll_h.getTroughWidth();
+    this.span_trough.y = this.scroll_v.getTroughHeight();
+    this.span_pane.x = this.content.componentGetWidth();
+    this.span_pane.y = this.content.componentGetHeight();
   }
 
-  private void reconfigureThumb(
+  /**
+   * The height of the scrollbar thumb is equal to the proportion of the
+   * "child span" to the "pane span", multiplied by the height of the trough.
+   * In other words, if 50% of the child span is contained within the current
+   * pane span, the thumb height will be 50% of the height of the scrollbar
+   * trough.
+   */
+
+  private int reconfigureGetThumbHeight()
+  {
+    final double proportion =
+      (double) this.span_pane.y / (double) this.span_children.y;
+    return (int) (this.span_trough.y * proportion);
+  }
+
+  /**
+   * The width of the scrollbar thumb is equal to the proportion of the
+   * "child span" to the "pane span", multiplied by the width of the trough.
+   * In other words, if 50% of the child span is contained within the current
+   * pane span, the thumb width will be 50% of the width of the scrollbar
+   * trough.
+   */
+
+  private int reconfigureGetThumbWidth()
+  {
+    final double proportion =
+      (double) this.span_pane.x / (double) this.span_children.x;
+    return (int) (this.span_trough.x * proportion);
+  }
+
+  /**
+   * Activate/deactive the horizontal and vertical scrollbars based on whether
+   * or not the contents of the managed pane are within view. Resize the
+   * scrollbar thumbs based on how much of the pane is visible.
+   */
+
+  private void reconfigureScrollbars(
     final @Nonnull GUIContext context)
     throws ConstraintError
   {
     this.reconfigureCalculateSpans();
 
-    final int child_x_span = this.child_maximum_x - this.child_minimum_x;
-    final int child_y_span = this.child_maximum_y - this.child_minimum_y;
-    final int bar_x_span = this.scroll_h.getScrollbarWidth();
-    final int bar_y_span = this.scroll_v.getScrollbarHeight();
-    final int pane_x_span = this.content.componentGetWidth();
-    final int pane_y_span = this.content.componentGetHeight();
-
-    final boolean x_scroll =
-      (this.child_minimum_x < 0) || (this.child_maximum_x > pane_x_span);
-    final boolean y_scroll =
-      (this.child_minimum_y < 0) || (this.child_maximum_y > pane_y_span);
-
-    if (x_scroll) {
-      final double x_span_prop = (double) pane_x_span / (double) child_x_span;
-      final int thumb_width = (int) (bar_x_span * x_span_prop);
+    if (this.reconfigureShouldScrollX()) {
+      final int thumb_width = this.reconfigureGetThumbWidth();
       this.scroll_h.setThumbWidth(context, thumb_width);
       this.scroll_h.componentSetEnabled(true);
     } else {
-      this.scroll_h.setThumbWidth(context, this.scroll_h.getScrollbarWidth());
+      this.scroll_h.setThumbWidth(context, this.scroll_h.getTroughWidth());
       this.scroll_h.componentSetEnabled(false);
     }
 
-    if (y_scroll) {
-      final double y_span_prop = (double) pane_y_span / (double) child_y_span;
-      final int thumb_height = (int) (bar_y_span * y_span_prop);
+    if (this.reconfigureShouldScrollY()) {
+      final int thumb_height = this.reconfigureGetThumbHeight();
       this.scroll_v.setThumbHeight(context, thumb_height);
       this.scroll_v.componentSetEnabled(true);
     } else {
-      this.scroll_v.setThumbHeight(
-        context,
-        this.scroll_v.getScrollbarHeight());
+      this.scroll_v.setThumbHeight(context, this.scroll_v.getTroughHeight());
       this.scroll_v.componentSetEnabled(false);
     }
+  }
+
+  /**
+   * If the rightmost edge of the rightmost child is greater than the
+   * rightmost edge of the current span, or if the leftmost edge of the
+   * leftmost child is less than 0, the pane should scroll horizontally.
+   */
+
+  private boolean reconfigureShouldScrollX()
+  {
+    return (this.minimum_child.x < 0)
+      || (this.maximum_child.x > this.span_pane.x);
+  }
+
+  /**
+   * If the bottom edge of the bottom child is greater than the bottom edge of
+   * the current span, or if the top edge of the top child is less than 0, the
+   * pane should scroll vertically.
+   */
+
+  private boolean reconfigureShouldScrollY()
+  {
+    return (this.minimum_child.y < 0)
+      || (this.maximum_child.y > this.span_pane.y);
   }
 
   @Override public void resourceDelete(
