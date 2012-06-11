@@ -27,7 +27,6 @@ import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScissorRelative;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.geometry.WindowRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
@@ -238,7 +237,7 @@ public abstract class Window implements Comparable<Window>
    * Retrieve the content pane of the window.
    */
 
-  public abstract @Nonnull ContentPane windowGetContentPane();
+  public abstract @Nonnull AbstractContainer windowGetContentPane();
 
   /**
    * Retrieve the unique ID of the window.

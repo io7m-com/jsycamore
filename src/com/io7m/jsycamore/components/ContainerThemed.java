@@ -57,6 +57,27 @@ public final class ContainerThemed extends AbstractContainer
   {
     try {
       final DrawPrimitives draw = context.contextGetDrawPrimitives();
+      final VectorReadable2I size = this.componentGetSize();
+
+      if (this.edge) {
+        draw.renderRectangleEdge(
+          context,
+          size,
+          this.edge_width,
+          this.edge_color);
+      }
+    } catch (final GLException e) {
+      throw new GUIException(e);
+    }
+  }
+
+  @Override public void componentRenderPreDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    try {
+      final DrawPrimitives draw = context.contextGetDrawPrimitives();
       final Theme theme = context.contextGetTheme();
       final VectorReadable2I size = this.componentGetSize();
       final Window window = this.componentGetWindow();
@@ -77,24 +98,9 @@ public final class ContainerThemed extends AbstractContainer
         draw.renderRectangleFill(context, size, this.fill_color);
       }
 
-      if (this.edge) {
-        draw.renderRectangleEdge(
-          context,
-          size,
-          this.edge_width,
-          this.edge_color);
-      }
     } catch (final GLException e) {
       throw new GUIException(e);
     }
-  }
-
-  @Override public void componentRenderPreDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    // Unused.
   }
 
   @Override public void resourceDelete(
