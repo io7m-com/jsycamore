@@ -23,16 +23,15 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.components.AbstractDragButton;
 import com.io7m.jsycamore.components.ButtonLabelled;
-import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.Scrollable;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScreenRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
@@ -246,19 +245,30 @@ public final class SimpleScrollable implements Runnable
     this.window0.windowSetMinimumHeight(ctx, 96);
     this.window0.windowSetMinimumWidth(ctx, 96);
 
-    final ContentPane pane = this.window0.windowGetContentPane();
+    final AbstractContainer pane = this.window0.windowGetContentPane();
 
-    final ContainerThemed container =
-      new ContainerThemed(new Point<ParentRelative>(8, 8), new VectorM2I(
-        256,
-        256));
-    container.setDrawEdge(true);
+    /**
+     * XXX: This "size" adjustment should not be necessary. Find the cause and
+     * crush it!
+     */
 
-    final Scrollable s = new Scrollable(ctx, pane, container);
+    final VectorM2I size = new VectorM2I();
+    size.x = pane.componentGetSize().getXI() + 1;
+    size.y = pane.componentGetSize().getYI() + 1;
+
+    final Scrollable s =
+      new Scrollable(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        size,
+        new VectorI2I(1024, 1024));
     s.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     s.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     s.componentSetMinimumWidth(ctx, 64);
     s.componentSetMinimumHeight(ctx, 64);
+
+    final AbstractContainer container = s.scrollableGetContentPane();
 
     final ButtonLabelled b0 =
       new ButtonLabelled(ctx, new Point<ParentRelative>(8, 8), new VectorI2I(

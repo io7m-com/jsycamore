@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.components;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 
 import com.io7m.jaux.Constraints.ConstraintError;
@@ -299,33 +297,34 @@ public final class Scrollable extends Component
         ComponentAlignment.setPositionContainerCenter(this.ridges);
       }
 
-      @SuppressWarnings("synthetic-access") private void doDrag()
+      private void doDrag()
         throws ConstraintError
       {
-        final int moved = this.doDragUpdateThumbPosition();
-        final int scroll = Scrollable.this.scaleThumbX(moved);
-        this.doDragUpdateChildren(scroll);
+        this.doDragUpdateThumbPosition();
+        this.doDragMoveContentPane();
       }
 
       @SuppressWarnings("synthetic-access") private
         void
-        doDragUpdateChildren(
-          final int scroll)
+        doDragMoveContentPane()
           throws ConstraintError
       {
-        final Set<Component> children =
-          Scrollable.this.content.componentGetChildren();
+        final int x =
+          Scrollable.this.scaleTroughXToContentX(this
+            .componentGetPositionParentRelative()
+            .getXI());
 
-        for (final Component child : children) {
-          final PointReadable<ParentRelative> current =
-            child.componentGetPositionParentRelative();
-          this.new_position.setXI(current.getXI() - scroll);
-          this.new_position.setYI(current.getYI());
-          child.componentSetPositionParentRelative(this.new_position);
-        }
+        final PointReadable<ParentRelative> current =
+          Scrollable.this.content_pane.componentGetPositionParentRelative();
+
+        this.new_position.setXI(-x);
+        this.new_position.setYI(current.getYI());
+
+        Scrollable.this.content_pane
+          .componentSetPositionParentRelative(this.new_position);
       }
 
-      private int doDragUpdateThumbPosition()
+      private void doDragUpdateThumbPosition()
         throws ConstraintError
       {
         /**
@@ -347,14 +346,6 @@ public final class Scrollable extends Component
         this.new_position.setXI(this.saved_position.getXI() + delta.getXI());
         this.new_position.setYI(this.saved_position.getYI());
         this.componentSetPositionParentRelative(this.new_position);
-
-        /**
-         * Return the amount that the thumb actually moved (due to
-         * minimum/maximum position constraints).
-         */
-
-        return this.componentGetPositionParentRelative().getXI()
-          - this.saved_position.getXI();
       }
 
       @Override public void dragListenerOnDrag(
@@ -803,7 +794,14 @@ public final class Scrollable extends Component
         }
       }
 
-      private final Ridges ridges;
+      /**
+       * Temporary buffers used whilst calculating new component positions.
+       */
+
+      private final @Nonnull Point<ParentRelative> saved_position;
+      private final @Nonnull Point<ParentRelative> new_position;
+
+      private final Ridges                         ridges;
 
       public Thumb(
         final @Nonnull Component parent,
@@ -818,6 +816,9 @@ public final class Scrollable extends Component
             this,
             PointConstants.PARENT_ORIGIN,
             Scrollable.SCROLLBAR_BUTTON_SIZE);
+
+        this.saved_position = new Point<ParentRelative>();
+        this.new_position = new Point<ParentRelative>();
       }
 
       @Override public void buttonListenerOnClick(
@@ -847,16 +848,52 @@ public final class Scrollable extends Component
       private void doDrag()
         throws ConstraintError
       {
-        final Point<ParentRelative> component_start =
-          this.dragGetComponentInitial();
+        this.doDragUpdateThumbPosition();
+        this.doDragMoveContentPane();
+      }
+
+      @SuppressWarnings("synthetic-access") private
+        void
+        doDragMoveContentPane()
+          throws ConstraintError
+      {
+        final int y =
+          Scrollable.this.scaleTroughYToContentY(this
+            .componentGetPositionParentRelative()
+            .getYI());
+
+        final PointReadable<ParentRelative> current =
+          Scrollable.this.content_pane.componentGetPositionParentRelative();
+
+        this.new_position.setXI(current.getXI());
+        this.new_position.setYI(-y);
+
+        Scrollable.this.content_pane
+          .componentSetPositionParentRelative(this.new_position);
+      }
+
+      private void doDragUpdateThumbPosition()
+        throws ConstraintError
+      {
+        /**
+         * Save the current position of the thumb.
+         */
+
+        final PointReadable<ParentRelative> position =
+          this.componentGetPositionParentRelative();
+        this.saved_position.setXI(position.getXI());
+        this.saved_position.setYI(position.getYI());
+
+        /**
+         * Retrieve the current drag delta (since the last time this function
+         * was called) and add it to the current position.
+         */
+
         final PointReadable<ScreenRelative> delta =
-          this.dragGetDeltaFromInitial();
-
-        final Point<ParentRelative> new_pos = new Point<ParentRelative>();
-        new_pos.setXI(0);
-        new_pos.setYI(component_start.getYI() + delta.getYI());
-
-        this.componentSetPositionParentRelative(new_pos);
+          this.dragGetDeltaFromPrevious();
+        this.new_position.setXI(this.saved_position.getXI());
+        this.new_position.setYI(this.saved_position.getYI() + delta.getYI());
+        this.componentSetPositionParentRelative(this.new_position);
       }
 
       @Override public void dragListenerOnDrag(
@@ -1230,15 +1267,10 @@ public final class Scrollable extends Component
     }
   }
 
-  private final @Nonnull AbstractContainer   content;
   private final @Nonnull ScrollBarHorizontal scroll_h;
   private final @Nonnull ScrollBarVertical   scroll_v;
-
-  private final @Nonnull VectorM2I           minimum_child = new VectorM2I();
-  private final @Nonnull VectorM2I           maximum_child = new VectorM2I();
-  private final @Nonnull VectorM2I           span_children = new VectorM2I();
-  private final @Nonnull VectorM2I           span_trough   = new VectorM2I();
-  private final @Nonnull VectorM2I           span_pane     = new VectorM2I();
+  private final @Nonnull ContainerThemed     view_pane;
+  private final @Nonnull ContainerThemed     content_pane;
 
   static final int                           H_SCROLLBAR_WIDTH;
   static final int                           V_SCROLLBAR_HEIGHT;
@@ -1247,34 +1279,45 @@ public final class Scrollable extends Component
   public Scrollable(
     final @Nonnull GUIContext context,
     final @Nonnull Component parent,
-    final @Nonnull AbstractContainer content)
+    final @Nonnull PointReadable<ParentRelative> position,
+    final @Nonnull VectorReadable2I size,
+    final @Nonnull VectorReadable2I content_size)
     throws ConstraintError
   {
-    super(parent, content.componentGetPositionParentRelative(), content
-      .componentGetSize());
+    super(parent, position, size);
 
     {
       /*
-       * Take ownership of content area. Resize it and position.
+       * Initialize the view area (the "viewport" into the scrollable content
+       * area).
        */
 
-      final VectorM2I content_size =
-        new VectorM2I(content.componentGetSize());
-      content_size.y -= Scrollable.H_SCROLLBAR_WIDTH;
-      content_size.x -= Scrollable.V_SCROLLBAR_HEIGHT;
+      final VectorM2I view_size = new VectorM2I();
+      view_size.x = size.getXI() - Scrollable.H_SCROLLBAR_WIDTH;
+      view_size.y = size.getYI() - Scrollable.V_SCROLLBAR_HEIGHT;
 
-      this.content = content;
-      if (this.content.componentHasParent()) {
-        this.content.componentDetachFromParent();
-      }
-      this.content.componentAttachToParent(this);
-      this.content
-        .componentSetPositionParentRelative(PointConstants.PARENT_ORIGIN);
-      this.content.componentSetSize(context, content_size);
-      this.content
-        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-      this.content
+      this.view_pane =
+        new ContainerThemed(this, PointConstants.PARENT_ORIGIN, view_size);
+      this.view_pane.setDrawEdge(true);
+      this.view_pane.setDrawFill(false);
+      this.view_pane
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
+      this.view_pane
+        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
+    }
+
+    {
+      /*
+       * Initialize the scrollable content area.
+       */
+
+      this.content_pane =
+        new ContainerThemed(
+          this.view_pane,
+          PointConstants.PARENT_ORIGIN,
+          content_size);
+      this.content_pane.setDrawEdge(false);
+      this.content_pane.setDrawFill(false);
     }
 
     {
@@ -1300,7 +1343,7 @@ public final class Scrollable extends Component
       ComponentAlignment.setPositionRelativeBelowSameX(
         this.scroll_h,
         -1,
-        content);
+        this.view_pane);
     }
 
     {
@@ -1326,7 +1369,7 @@ public final class Scrollable extends Component
       ComponentAlignment.setPositionRelativeRightOfSameY(
         this.scroll_v,
         -1,
-        content);
+        this.view_pane);
     }
   }
 
@@ -1347,90 +1390,35 @@ public final class Scrollable extends Component
   }
 
   /**
-   * Determine the current "spans": the difference between the left edge of
-   * the leftmost child and the right edge of the rightmost child, the
-   * difference between the top edge of the top child and the bottom edge of
-   * the bottom child, etc...
-   */
-
-  private void reconfigureCalculateSpans()
-  {
-    final Set<Component> children = this.content.componentGetChildren();
-
-    this.minimum_child.x = Integer.MAX_VALUE;
-    this.minimum_child.y = Integer.MAX_VALUE;
-    this.maximum_child.x = Integer.MIN_VALUE;
-    this.maximum_child.y = Integer.MIN_VALUE;
-
-    for (final Component child : children) {
-      final PointReadable<ParentRelative> pos =
-        child.componentGetPositionParentRelative();
-
-      this.minimum_child.x = Math.min(this.minimum_child.x, pos.getXI());
-      this.maximum_child.x =
-        Math.max(
-          this.maximum_child.x,
-          pos.getXI() + child.componentGetWidth());
-      this.minimum_child.y = Math.min(this.minimum_child.y, pos.getYI());
-      this.maximum_child.y =
-        Math.max(
-          this.maximum_child.y,
-          pos.getYI() + child.componentGetHeight());
-    }
-
-    assert this.maximum_child.x >= this.minimum_child.x;
-    assert this.maximum_child.y >= this.minimum_child.y;
-
-    this.span_children.x = this.maximum_child.x - this.minimum_child.x;
-    this.span_children.y = this.maximum_child.y - this.minimum_child.y;
-    this.span_trough.x = this.scroll_h.getTroughWidth();
-    this.span_trough.y = this.scroll_v.getTroughHeight();
-    this.span_pane.x = this.content.componentGetWidth();
-    this.span_pane.y = this.content.componentGetHeight();
-  }
-
-  /**
-   * Scale a movement of <code>x</code> units by the thumb to a value in terms
-   * of the pane. In other words, a movement of <code>x</code> units should
-   * scroll the contents of the pane by <code>scaleThumbX(x)</code> units.
-   */
-
-  private int scaleThumbX(
-    final int x)
-  {
-    final double proportion =
-      (double) this.span_children.x / (double) this.span_trough.x;
-    return (int) (x * proportion);
-  }
-
-  /**
    * The height of the scrollbar thumb is equal to the proportion of the
-   * "child span" to the "pane span", multiplied by the height of the trough.
-   * In other words, if 50% of the child span is contained within the current
-   * pane span, the thumb height will be 50% of the height of the scrollbar
-   * trough.
+   * height of the content pane to the height of the view pane, multiplied by
+   * the height of the trough. In other words, if 50% of the content pane is
+   * contained within the current view pane, the thumb height will be 50% of
+   * the height of the scrollbar trough.
    */
 
   private int reconfigureGetThumbHeight()
   {
     final double proportion =
-      (double) this.span_pane.y / (double) this.span_children.y;
-    return (int) (this.span_trough.y * proportion);
+      (double) this.view_pane.componentGetHeight()
+        / (double) this.content_pane.componentGetHeight();
+    return (int) (this.scroll_v.getTroughHeight() * proportion);
   }
 
   /**
-   * The width of the scrollbar thumb is equal to the proportion of the
-   * "child span" to the "pane span", multiplied by the width of the trough.
-   * In other words, if 50% of the child span is contained within the current
-   * pane span, the thumb width will be 50% of the width of the scrollbar
-   * trough.
+   * The width of the scrollbar thumb is equal to the proportion of the width
+   * of the content pane to the height of the view pane, multiplied by the
+   * width of the trough. In other words, if 50% of the content pane is
+   * contained within the current view pane, the thumb width will be 50% of
+   * the width of the scrollbar trough.
    */
 
   private int reconfigureGetThumbWidth()
   {
     final double proportion =
-      (double) this.span_pane.x / (double) this.span_children.x;
-    return (int) (this.span_trough.x * proportion);
+      (double) this.view_pane.componentGetWidth()
+        / (double) this.content_pane.componentGetWidth();
+    return (int) (this.scroll_h.getTroughWidth() * proportion);
   }
 
   /**
@@ -1443,8 +1431,6 @@ public final class Scrollable extends Component
     final @Nonnull GUIContext context)
     throws ConstraintError
   {
-    this.reconfigureCalculateSpans();
-
     if (this.reconfigureShouldScrollX()) {
       final int thumb_width = this.reconfigureGetThumbWidth();
       this.scroll_h.setThumbWidth(context, thumb_width);
@@ -1464,28 +1450,26 @@ public final class Scrollable extends Component
     }
   }
 
-  /**
-   * If the rightmost edge of the rightmost child is greater than the
-   * rightmost edge of the current span, or if the leftmost edge of the
-   * leftmost child is less than 0, the pane should scroll horizontally.
-   */
-
   private boolean reconfigureShouldScrollX()
   {
-    return (this.minimum_child.x < 0)
-      || (this.maximum_child.x > this.span_pane.x);
-  }
+    final PointReadable<ParentRelative> position =
+      this.content_pane.componentGetPositionParentRelative();
+    final int x = position.getXI();
 
-  /**
-   * If the bottom edge of the bottom child is greater than the bottom edge of
-   * the current span, or if the top edge of the top child is less than 0, the
-   * pane should scroll vertically.
-   */
+    return (x < 0)
+      || ((x + this.content_pane.componentGetWidth()) > this.view_pane
+        .componentGetWidth());
+  }
 
   private boolean reconfigureShouldScrollY()
   {
-    return (this.minimum_child.y < 0)
-      || (this.maximum_child.y > this.span_pane.y);
+    final PointReadable<ParentRelative> position =
+      this.content_pane.componentGetPositionParentRelative();
+    final int y = position.getYI();
+
+    return (y < 0)
+      || ((y + this.content_pane.componentGetHeight()) > this.view_pane
+        .componentGetHeight());
   }
 
   @Override public void resourceDelete(
@@ -1499,6 +1483,29 @@ public final class Scrollable extends Component
   @Override public boolean resourceIsDeleted()
   {
     return true;
+  }
+
+  private int scaleTroughXToContentX(
+    final int x)
+  {
+    final double content_width = this.content_pane.componentGetWidth();
+    final double trough_width = this.scroll_h.getTroughWidth();
+    final double proportion = content_width / trough_width;
+    return (int) (x * proportion);
+  }
+
+  private int scaleTroughYToContentY(
+    final int y)
+  {
+    final double content_height = this.content_pane.componentGetWidth();
+    final double trough_height = this.scroll_h.getTroughWidth();
+    final double proportion = content_height / trough_height;
+    return (int) (y * proportion);
+  }
+
+  public @Nonnull AbstractContainer scrollableGetContentPane()
+  {
+    return this.content_pane;
   }
 
   @Override public String toString()

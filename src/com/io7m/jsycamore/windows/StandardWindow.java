@@ -19,7 +19,6 @@ import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.AbstractButton;
 import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.components.AbstractDragButton;
-import com.io7m.jsycamore.components.AbstractRepeatingButton;
 import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.Label;
 import com.io7m.jsycamore.geometry.ParentRelative;
@@ -177,7 +176,8 @@ public final class StandardWindow extends Window
       throws ConstraintError,
         GUIException
     {
-      final PointReadable<ScreenRelative> delta = this.dragGetDeltaFromInitial();
+      final PointReadable<ScreenRelative> delta =
+        this.dragGetDeltaFromInitial();
 
       final Log log = context.contextGetComponentLog();
       log.debug("drag drag initial: " + this.dragGetComponentInitial());
@@ -200,7 +200,8 @@ public final class StandardWindow extends Window
       throws GUIException,
         ConstraintError
     {
-      final PointReadable<ScreenRelative> delta = this.dragGetDeltaFromInitial();
+      final PointReadable<ScreenRelative> delta =
+        this.dragGetDeltaFromInitial();
 
       final Log log = context.contextGetComponentLog();
       log.debug("drag release initial: " + this.dragGetComponentInitial());
@@ -249,578 +250,6 @@ public final class StandardWindow extends Window
     {
       final StringBuilder builder = new StringBuilder();
       builder.append("[ResizeBox ");
-      builder.append(this.componentGetID());
-      builder.append("]");
-      return builder.toString();
-    }
-  }
-
-  private static final class ScrollBarHorizontal extends Component
-  {
-    private static final class ButtonLeft extends AbstractRepeatingButton
-    {
-      private static final VectorReadable2I TRI0_POINT_0;
-      private static final VectorReadable2I TRI0_POINT_1;
-      private static final VectorReadable2I TRI0_POINT_2;
-
-      private static final VectorReadable2I TRI1_POINT_0;
-      private static final VectorReadable2I TRI1_POINT_1;
-      private static final VectorReadable2I TRI1_POINT_2;
-
-      static {
-        final int x_offset = 5;
-
-        TRI0_POINT_0 = new VectorI2I(0 + x_offset, 7);
-        TRI0_POINT_1 = new VectorI2I(3 + x_offset, 7);
-        TRI0_POINT_2 = new VectorI2I(3 + x_offset, 3);
-
-        TRI1_POINT_0 = new VectorI2I(0 + x_offset, 6);
-        TRI1_POINT_1 = new VectorI2I(3 + x_offset, 10);
-        TRI1_POINT_2 = new VectorI2I(3 + x_offset, 6);
-      }
-
-      public ButtonLeft(
-        final @Nonnull ScrollBarHorizontal parent,
-        final @Nonnull PointReadable<ParentRelative> position,
-        final @Nonnull VectorReadable2I size)
-        throws ConstraintError
-      {
-        super(parent, position, size);
-      }
-
-      @Override public void buttonListenerOnClick(
-        final @Nonnull Component button)
-      {
-        // Unused.
-      }
-
-      @Override public void buttonRenderPost(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        try {
-          final DrawPrimitives draw = context.contextGetDrawPrimitives();
-
-          draw.renderTriangleFill(
-            context,
-            ButtonLeft.TRI0_POINT_0,
-            ButtonLeft.TRI0_POINT_1,
-            ButtonLeft.TRI0_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-          draw.renderTriangleFill(
-            context,
-            ButtonLeft.TRI1_POINT_0,
-            ButtonLeft.TRI1_POINT_1,
-            ButtonLeft.TRI1_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-
-        } catch (final GLException e) {
-          throw new GUIException(e);
-        }
-      }
-
-      @Override public void buttonRenderPre(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        // Unused.
-      }
-
-      @Override public void resourceDelete(
-        final @Nonnull GLInterface gl)
-        throws ConstraintError,
-          GLException
-      {
-        // Unused.
-      }
-
-      @Override public boolean resourceIsDeleted()
-      {
-        return true;
-      }
-
-      @Override public String toString()
-      {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("[ButtonLeft ");
-        builder.append(this.componentGetID());
-        builder.append("]");
-        return builder.toString();
-      }
-    }
-
-    private static final class ButtonRight extends AbstractRepeatingButton
-    {
-      private static final VectorReadable2I TRI0_POINT_0;
-      private static final VectorReadable2I TRI0_POINT_1;
-      private static final VectorReadable2I TRI0_POINT_2;
-
-      private static final VectorReadable2I TRI1_POINT_0;
-      private static final VectorReadable2I TRI1_POINT_1;
-      private static final VectorReadable2I TRI1_POINT_2;
-
-      static {
-        final int x_offset = 6;
-
-        TRI0_POINT_0 = new VectorI2I(0 + x_offset, 3);
-        TRI0_POINT_1 = new VectorI2I(0 + x_offset, 7);
-        TRI0_POINT_2 = new VectorI2I(4 + x_offset, 7);
-
-        TRI1_POINT_0 = new VectorI2I(0 + x_offset, 6);
-        TRI1_POINT_1 = new VectorI2I(0 + x_offset, 10);
-        TRI1_POINT_2 = new VectorI2I(4 + x_offset, 6);
-      }
-
-      public ButtonRight(
-        final @Nonnull ScrollBarHorizontal parent,
-        final @Nonnull PointReadable<ParentRelative> position,
-        final @Nonnull VectorReadable2I size)
-        throws ConstraintError
-      {
-        super(parent, position, size);
-      }
-
-      @Override public void buttonListenerOnClick(
-        final @Nonnull Component button)
-      {
-        // Unused.
-      }
-
-      @Override public void buttonRenderPost(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        try {
-          final DrawPrimitives draw = context.contextGetDrawPrimitives();
-
-          draw.renderTriangleFill(
-            context,
-            ButtonRight.TRI0_POINT_0,
-            ButtonRight.TRI0_POINT_1,
-            ButtonRight.TRI0_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-          draw.renderTriangleFill(
-            context,
-            ButtonRight.TRI1_POINT_0,
-            ButtonRight.TRI1_POINT_1,
-            ButtonRight.TRI1_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-
-        } catch (final GLException e) {
-          throw new GUIException(e);
-        }
-      }
-
-      @Override public void buttonRenderPre(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        // Unused.
-      }
-
-      @Override public void resourceDelete(
-        final @Nonnull GLInterface gl)
-        throws ConstraintError,
-          GLException
-      {
-        // Unused.
-      }
-
-      @Override public boolean resourceIsDeleted()
-      {
-        return true;
-      }
-
-      @Override public String toString()
-      {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("[ButtonRight ");
-        builder.append(this.componentGetID());
-        builder.append("]");
-        return builder.toString();
-      }
-    }
-
-    private final @Nonnull ButtonLeft  button_left;
-    private final @Nonnull ButtonRight button_right;
-
-    public ScrollBarHorizontal(
-      final @Nonnull Component component,
-      final @Nonnull PointReadable<ParentRelative> position,
-      final @Nonnull VectorReadable2I size)
-      throws ConstraintError
-    {
-      super(component, position, size);
-
-      this.button_left =
-        new ButtonLeft(
-          this,
-          PointConstants.PARENT_ORIGIN,
-          StandardWindow.SCROLLBAR_BUTTON_SIZE);
-      ComponentAlignment.setPositionContainerTopLeft(this.button_left, 0);
-
-      this.button_right =
-        new ButtonRight(
-          this,
-          PointConstants.PARENT_ORIGIN,
-          StandardWindow.SCROLLBAR_BUTTON_SIZE);
-      this.button_right
-        .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
-      ComponentAlignment.setPositionContainerTopRight(this.button_right, 0);
-    }
-
-    @Override public void componentRenderPostDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
-    {
-      // Unused.
-    }
-
-    @Override public void componentRenderPreDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
-    {
-      try {
-        final DrawPrimitives draw = context.contextGetDrawPrimitives();
-        final Theme theme = context.contextGetTheme();
-        final VectorReadable2I size = this.componentGetSize();
-        final Window window = this.componentGetWindow();
-        assert window != null;
-
-        VectorReadable3F fill_color = null;
-        VectorReadable3F edge_color = null;
-        final int edge_width = 1;
-
-        if (window.windowIsFocused()) {
-          fill_color = theme.getFocusedComponentBackgroundColor();
-          edge_color = theme.getFocusedComponentEdgeColor();
-        } else {
-          fill_color = theme.getUnfocusedComponentBackgroundColor();
-          edge_color = theme.getUnfocusedComponentEdgeColor();
-        }
-
-        assert fill_color != null;
-        assert edge_color != null;
-        draw.renderRectangleFill(context, size, fill_color);
-        draw.renderRectangleEdge(context, size, edge_width, edge_color);
-
-      } catch (final GLException e) {
-        throw new GUIException(e);
-      }
-    }
-
-    @Override public void resourceDelete(
-      final @Nonnull GLInterface gl)
-      throws ConstraintError,
-        GLException
-    {
-      // TODO Auto-generated method stub
-
-    }
-
-    @Override public boolean resourceIsDeleted()
-    {
-      // TODO Auto-generated method stub
-      return false;
-    }
-
-    @Override public String toString()
-    {
-      final StringBuilder builder = new StringBuilder();
-      builder.append("[ScrollBarHorizontal ");
-      builder.append(this.componentGetID());
-      builder.append("]");
-      return builder.toString();
-    }
-  }
-
-  private static final class ScrollBarVertical extends Component
-  {
-    private static final class ButtonDown extends AbstractRepeatingButton
-    {
-      private static final VectorReadable2I TRI0_POINT_0;
-      private static final VectorReadable2I TRI0_POINT_1;
-      private static final VectorReadable2I TRI0_POINT_2;
-
-      private static final VectorReadable2I TRI1_POINT_0;
-      private static final VectorReadable2I TRI1_POINT_1;
-      private static final VectorReadable2I TRI1_POINT_2;
-
-      static {
-        final int x_offset = 3;
-        final int y_offset = 6;
-
-        TRI0_POINT_0 = new VectorI2I(0 + x_offset, 0 + y_offset);
-        TRI0_POINT_1 = new VectorI2I(4 + x_offset, 3 + y_offset);
-        TRI0_POINT_2 = new VectorI2I(4 + x_offset, 0 + y_offset);
-
-        TRI1_POINT_0 = new VectorI2I(3 + x_offset, 0 + y_offset);
-        TRI1_POINT_1 = new VectorI2I(3 + x_offset, 3 + y_offset);
-        TRI1_POINT_2 = new VectorI2I(7 + x_offset, 0 + y_offset);
-      }
-
-      public ButtonDown(
-        final @Nonnull ScrollBarVertical parent,
-        final @Nonnull PointReadable<ParentRelative> position,
-        final @Nonnull VectorReadable2I size)
-        throws ConstraintError
-      {
-        super(parent, position, size);
-      }
-
-      @Override public void buttonListenerOnClick(
-        final @Nonnull Component button)
-      {
-        // Unused.
-      }
-
-      @Override public void buttonRenderPost(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        try {
-          final DrawPrimitives draw = context.contextGetDrawPrimitives();
-
-          draw.renderTriangleFill(
-            context,
-            ButtonDown.TRI0_POINT_0,
-            ButtonDown.TRI0_POINT_1,
-            ButtonDown.TRI0_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-          draw.renderTriangleFill(
-            context,
-            ButtonDown.TRI1_POINT_0,
-            ButtonDown.TRI1_POINT_1,
-            ButtonDown.TRI1_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-
-        } catch (final GLException e) {
-          throw new GUIException(e);
-        }
-      }
-
-      @Override public void buttonRenderPre(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        // Unused.
-      }
-
-      @Override public void resourceDelete(
-        final @Nonnull GLInterface gl)
-        throws ConstraintError,
-          GLException
-      {
-        // Unused.
-      }
-
-      @Override public boolean resourceIsDeleted()
-      {
-        return true;
-      }
-
-      @Override public String toString()
-      {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("[ButtonRight ");
-        builder.append(this.componentGetID());
-        builder.append("]");
-        return builder.toString();
-      }
-    }
-
-    private static final class ButtonUp extends AbstractRepeatingButton
-    {
-      private static final VectorReadable2I TRI0_POINT_0;
-      private static final VectorReadable2I TRI0_POINT_1;
-      private static final VectorReadable2I TRI0_POINT_2;
-
-      private static final VectorReadable2I TRI1_POINT_0;
-      private static final VectorReadable2I TRI1_POINT_1;
-      private static final VectorReadable2I TRI1_POINT_2;
-
-      static {
-        final int x_offset = 3;
-        final int y_offset = 5;
-
-        TRI0_POINT_0 = new VectorI2I(0 + x_offset, 3 + y_offset);
-        TRI0_POINT_1 = new VectorI2I(4 + x_offset, 3 + y_offset);
-        TRI0_POINT_2 = new VectorI2I(4 + x_offset, 0 + y_offset);
-
-        TRI1_POINT_0 = new VectorI2I(3 + x_offset, 3 + y_offset);
-        TRI1_POINT_1 = new VectorI2I(7 + x_offset, 3 + y_offset);
-        TRI1_POINT_2 = new VectorI2I(3 + x_offset, 0 + y_offset);
-      }
-
-      public ButtonUp(
-        final @Nonnull ScrollBarVertical parent,
-        final @Nonnull PointReadable<ParentRelative> position,
-        final @Nonnull VectorReadable2I size)
-        throws ConstraintError
-      {
-        super(parent, position, size);
-      }
-
-      @Override public void buttonListenerOnClick(
-        final @Nonnull Component button)
-      {
-        // Unused.
-      }
-
-      @Override public void buttonRenderPost(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        try {
-          final DrawPrimitives draw = context.contextGetDrawPrimitives();
-
-          draw.renderTriangleFill(
-            context,
-            ButtonUp.TRI0_POINT_0,
-            ButtonUp.TRI0_POINT_1,
-            ButtonUp.TRI0_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-          draw.renderTriangleFill(
-            context,
-            ButtonUp.TRI1_POINT_0,
-            ButtonUp.TRI1_POINT_1,
-            ButtonUp.TRI1_POINT_2,
-            this.buttonGetCurrentEdgeColor());
-
-        } catch (final GLException e) {
-          throw new GUIException(e);
-        }
-      }
-
-      @Override public void buttonRenderPre(
-        final @Nonnull GUIContext context)
-        throws ConstraintError,
-          GUIException
-      {
-        // Unused.
-      }
-
-      @Override public void resourceDelete(
-        final @Nonnull GLInterface gl)
-        throws ConstraintError,
-          GLException
-      {
-        // Unused.
-      }
-
-      @Override public boolean resourceIsDeleted()
-      {
-        return true;
-      }
-
-      @Override public String toString()
-      {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("[ButtonUp ");
-        builder.append(this.componentGetID());
-        builder.append("]");
-        return builder.toString();
-      }
-    }
-
-    private final @Nonnull ButtonUp   button_up;
-    private final @Nonnull ButtonDown button_down;
-
-    public ScrollBarVertical(
-      final @Nonnull Component component,
-      final @Nonnull PointReadable<ParentRelative> position,
-      final @Nonnull VectorReadable2I size)
-      throws ConstraintError
-    {
-      super(component, position, size);
-
-      this.button_up =
-        new ButtonUp(
-          this,
-          PointConstants.PARENT_ORIGIN,
-          StandardWindow.SCROLLBAR_BUTTON_SIZE);
-      ComponentAlignment.setPositionContainerTopLeft(this.button_up, 0);
-
-      this.button_down =
-        new ButtonDown(
-          this,
-          PointConstants.PARENT_ORIGIN,
-          StandardWindow.SCROLLBAR_BUTTON_SIZE);
-      this.button_down
-        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
-      ComponentAlignment.setPositionContainerBottomRight(this.button_down, 0);
-    }
-
-    @Override public void componentRenderPostDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
-    {
-      // Unused.
-    }
-
-    @Override public void componentRenderPreDescendants(
-      final @Nonnull GUIContext context)
-      throws ConstraintError,
-        GUIException
-    {
-      try {
-        final DrawPrimitives draw = context.contextGetDrawPrimitives();
-        final Theme theme = context.contextGetTheme();
-        final VectorReadable2I size = this.componentGetSize();
-        final Window window = this.componentGetWindow();
-        assert window != null;
-
-        VectorReadable3F fill_color = null;
-        VectorReadable3F edge_color = null;
-        final int edge_width = 1;
-
-        if (window.windowIsFocused()) {
-          fill_color = theme.getFocusedComponentBackgroundColor();
-          edge_color = theme.getFocusedComponentEdgeColor();
-        } else {
-          fill_color = theme.getUnfocusedComponentBackgroundColor();
-          edge_color = theme.getUnfocusedComponentEdgeColor();
-        }
-
-        assert fill_color != null;
-        assert edge_color != null;
-        draw.renderRectangleFill(context, size, fill_color);
-        draw.renderRectangleEdge(context, size, edge_width, edge_color);
-
-      } catch (final GLException e) {
-        throw new GUIException(e);
-      }
-    }
-
-    @Override public void resourceDelete(
-      final @Nonnull GLInterface gl)
-      throws ConstraintError,
-        GLException
-    {
-      // TODO Auto-generated method stub
-
-    }
-
-    @Override public boolean resourceIsDeleted()
-    {
-      // TODO Auto-generated method stub
-      return false;
-    }
-
-    @Override public String toString()
-    {
-      final StringBuilder builder = new StringBuilder();
-      builder.append("[ScrollBarVertical ");
       builder.append(this.componentGetID());
       builder.append("]");
       return builder.toString();
@@ -1027,9 +456,6 @@ public final class StandardWindow extends Window
   static final @Nonnull VectorI2I                     RESIZE_BOX_OUTER_SIZE;
   static final @Nonnull VectorI2I                     RESIZE_BOX_INNER_SIZE;
   static final @Nonnull PointReadable<ParentRelative> TITLEBAR_LABEL_OFFSET;
-  static final int                                    V_SCROLLBAR_WIDTH;
-  static final int                                    H_SCROLLBAR_HEIGHT;
-  static final @Nonnull VectorReadable2I              SCROLLBAR_BUTTON_SIZE;
 
   static {
     CLOSE_BOX_SIZE = new VectorI2I(12, 12);
@@ -1040,20 +466,11 @@ public final class StandardWindow extends Window
     RESIZE_BOX_INNER_SIZE = new VectorI2I(8, 8);
     RESIZE_BOX_OUTER_SIZE = new VectorI2I(14, 14);
     TITLEBAR_LABEL_OFFSET = new Point<ParentRelative>(4, 0);
-    V_SCROLLBAR_WIDTH = StandardWindow.RESIZE_BOX_OUTER_SIZE.x;
-    H_SCROLLBAR_HEIGHT = StandardWindow.RESIZE_BOX_OUTER_SIZE.y;
-    SCROLLBAR_BUTTON_SIZE =
-      new VectorI2I(
-        StandardWindow.V_SCROLLBAR_WIDTH,
-        StandardWindow.H_SCROLLBAR_HEIGHT);
   }
 
-  private final @Nonnull ContentPane                  content_pane;
-  private final @Nonnull AbstractContainer            main_pane;
+  private final @Nonnull ContainerThemed              content_pane;
   private final @Nonnull Titlebar                     titlebar;
   private final @CheckForNull ResizeBox               resize_box;
-  private final @CheckForNull ScrollBarHorizontal     scrollbar_h;
-  private final @CheckForNull ScrollBarVertical       scrollbar_v;
 
   public StandardWindow(
     final @Nonnull GUIContext context,
@@ -1099,40 +516,19 @@ public final class StandardWindow extends Window
       pane_size.y = root_size.getYI();
       pane_size.y -= this.titlebar.componentGetHeight();
 
-      this.main_pane =
+      this.content_pane =
         new ContainerThemed(root, PointConstants.PARENT_ORIGIN, pane_size);
-      this.main_pane
+      this.content_pane
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-      this.main_pane
+      this.content_pane
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
       ComponentAlignment.setPositionRelativeBelowSameX(
-        this.main_pane,
+        this.content_pane,
         0,
         this.titlebar);
-    }
 
-    /*
-     * Initialize main pane (the pane that holds everything but the titlebar).
-     */
-
-    {
-      final VectorM2I pane_size =
-        new VectorM2I(this.main_pane.componentGetSize());
-
-      if (parameters.getCanResize()) {
-        pane_size.x -= StandardWindow.V_SCROLLBAR_WIDTH;
-        pane_size.y -= StandardWindow.H_SCROLLBAR_HEIGHT;
-      }
-
-      this.content_pane =
-        new ContentPane(
-          this.main_pane,
-          PointConstants.PARENT_ORIGIN,
-          pane_size);
-      this.content_pane
-        .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-      this.content_pane
-        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
+      this.content_pane.setDrawFill(true);
+      this.content_pane.setDrawEdge(false);
     }
 
     /*
@@ -1141,57 +537,17 @@ public final class StandardWindow extends Window
 
     if (parameters.getCanResize()) {
       this.resize_box =
-        new ResizeBox(context, this.main_pane, PointConstants.PARENT_ORIGIN);
+        new ResizeBox(
+          context,
+          this.content_pane,
+          PointConstants.PARENT_ORIGIN);
       this.resize_box
         .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
       this.resize_box
         .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
       ComponentAlignment.setPositionContainerBottomRight(this.resize_box, 0);
-
-      /*
-       * Initialize horizontal scrollbar.
-       */
-
-      final VectorM2I scroll_h_size = new VectorM2I();
-      scroll_h_size.x = root.componentGetWidth();
-      scroll_h_size.x -= this.resize_box.componentGetWidth();
-      scroll_h_size.y = StandardWindow.H_SCROLLBAR_HEIGHT;
-
-      this.scrollbar_h =
-        new ScrollBarHorizontal(
-          this.main_pane,
-          PointConstants.PARENT_ORIGIN,
-          scroll_h_size);
-      this.scrollbar_h
-        .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-      this.scrollbar_h
-        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
-      ComponentAlignment.setPositionContainerBottomLeft(this.scrollbar_h, 0);
-
-      /*
-       * Initialize vertical scrollbar.
-       */
-
-      final VectorM2I scroll_v_size = new VectorM2I();
-      scroll_v_size.x = StandardWindow.V_SCROLLBAR_WIDTH;
-      scroll_v_size.y = this.main_pane.componentGetHeight();
-      scroll_v_size.y -= this.resize_box.componentGetHeight();
-
-      this.scrollbar_v =
-        new ScrollBarVertical(
-          this.main_pane,
-          PointConstants.PARENT_ORIGIN,
-          scroll_v_size);
-      this.scrollbar_v
-        .componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
-      this.scrollbar_v
-        .componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-      ComponentAlignment.setPositionContainerTopRight(this.scrollbar_v, 0);
-
     } else {
       this.resize_box = null;
-      this.scrollbar_h = null;
-      this.scrollbar_v = null;
     }
   }
 
@@ -1204,7 +560,7 @@ public final class StandardWindow extends Window
     return builder.toString();
   }
 
-  @Override public @Nonnull ContentPane windowGetContentPane()
+  @Override public @Nonnull AbstractContainer windowGetContentPane()
   {
     return this.content_pane;
   }

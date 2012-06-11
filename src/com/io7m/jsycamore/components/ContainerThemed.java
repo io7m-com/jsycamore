@@ -19,7 +19,7 @@ import com.io7m.jtensors.VectorReadable3F;
 public final class ContainerThemed extends AbstractContainer
 {
   private boolean          edge       = true;
-  private final boolean    fill       = false;
+  private boolean          fill       = false;
   private final int        edge_width = 1;
   private VectorReadable3F edge_color;
   private VectorReadable3F fill_color;
@@ -57,6 +57,27 @@ public final class ContainerThemed extends AbstractContainer
   {
     try {
       final DrawPrimitives draw = context.contextGetDrawPrimitives();
+      final VectorReadable2I size = this.componentGetSize();
+
+      if (this.edge) {
+        draw.renderRectangleEdge(
+          context,
+          size,
+          this.edge_width,
+          this.edge_color);
+      }
+    } catch (final GLException e) {
+      throw new GUIException(e);
+    }
+  }
+
+  @Override public void componentRenderPreDescendants(
+    final @Nonnull GUIContext context)
+    throws ConstraintError,
+      GUIException
+  {
+    try {
+      final DrawPrimitives draw = context.contextGetDrawPrimitives();
       final Theme theme = context.contextGetTheme();
       final VectorReadable2I size = this.componentGetSize();
       final Window window = this.componentGetWindow();
@@ -77,24 +98,9 @@ public final class ContainerThemed extends AbstractContainer
         draw.renderRectangleFill(context, size, this.fill_color);
       }
 
-      if (this.edge) {
-        draw.renderRectangleEdge(
-          context,
-          size,
-          this.edge_width,
-          this.edge_color);
-      }
     } catch (final GLException e) {
       throw new GUIException(e);
     }
-  }
-
-  @Override public void componentRenderPreDescendants(
-    final @Nonnull GUIContext context)
-    throws ConstraintError,
-      GUIException
-  {
-    // Unused.
   }
 
   @Override public void resourceDelete(
@@ -114,6 +120,12 @@ public final class ContainerThemed extends AbstractContainer
     final boolean on)
   {
     this.edge = on;
+  }
+
+  public void setDrawFill(
+    final boolean on)
+  {
+    this.fill = on;
   }
 
   @Override public String toString()
