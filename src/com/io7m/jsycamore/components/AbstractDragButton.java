@@ -87,36 +87,6 @@ public abstract class AbstractDragButton extends Component implements
     throws ConstraintError,
       GUIException;
 
-  private final void dragBuffersInitialize(
-    final @Nonnull PointReadable<ScreenRelative> mouse_position)
-  {
-    this.position_initial.setXI(this
-      .componentGetPositionParentRelative()
-      .getXI());
-    this.position_initial.setYI(this
-      .componentGetPositionParentRelative()
-      .getYI());
-    this.drag_start.setXI(mouse_position.getXI());
-    this.drag_start.setYI(mouse_position.getYI());
-  }
-
-  private final void dragBuffersUpdate(
-    final @Nonnull PointReadable<ScreenRelative> mouse_position)
-  {
-    this.drag_delta_previous.setXI(mouse_position.getXI()
-      - this.mouse_previous.getXI());
-    this.drag_delta_previous.setYI(mouse_position.getYI()
-      - this.mouse_previous.getYI());
-
-    this.mouse_previous.setXI(mouse_position.getXI());
-    this.mouse_previous.setYI(mouse_position.getYI());
-
-    this.drag_delta_initial.setXI(mouse_position.getXI()
-      - this.drag_start.getXI());
-    this.drag_delta_initial.setYI(mouse_position.getYI()
-      - this.drag_start.getYI());
-  }
-
   @Override public final void componentRenderPostDescendants(
     final @Nonnull GUIContext context)
     throws ConstraintError,
@@ -188,6 +158,36 @@ public abstract class AbstractDragButton extends Component implements
     }
   }
 
+  private final void dragBuffersInitialize(
+    final @Nonnull PointReadable<ScreenRelative> mouse_position)
+  {
+    this.position_initial.setXI(this
+      .componentGetPositionParentRelative()
+      .getXI());
+    this.position_initial.setYI(this
+      .componentGetPositionParentRelative()
+      .getYI());
+    this.drag_start.setXI(mouse_position.getXI());
+    this.drag_start.setYI(mouse_position.getYI());
+  }
+
+  private final void dragBuffersUpdate(
+    final @Nonnull PointReadable<ScreenRelative> mouse_position)
+  {
+    this.drag_delta_previous.setXI(mouse_position.getXI()
+      - this.mouse_previous.getXI());
+    this.drag_delta_previous.setYI(mouse_position.getYI()
+      - this.mouse_previous.getYI());
+
+    this.mouse_previous.setXI(mouse_position.getXI());
+    this.mouse_previous.setYI(mouse_position.getYI());
+
+    this.drag_delta_initial.setXI(mouse_position.getXI()
+      - this.drag_start.getXI());
+    this.drag_delta_initial.setYI(mouse_position.getYI()
+      - this.drag_start.getYI());
+  }
+
   public final @Nonnull Point<ParentRelative> dragGetComponentInitial()
   {
     return this.position_initial;
@@ -195,16 +195,16 @@ public abstract class AbstractDragButton extends Component implements
 
   public final @Nonnull
     PointReadable<ScreenRelative>
-    dragGetDeltaFromPrevious()
+    dragGetDeltaFromInitial()
   {
-    return this.drag_delta_previous;
+    return this.drag_delta_initial;
   }
 
   public final @Nonnull
     PointReadable<ScreenRelative>
-    dragGetDeltaFromInitial()
+    dragGetDeltaFromPrevious()
   {
-    return this.drag_delta_initial;
+    return this.drag_delta_previous;
   }
 
   public final @Nonnull

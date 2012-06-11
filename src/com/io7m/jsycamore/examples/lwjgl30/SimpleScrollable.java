@@ -23,9 +23,9 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.components.AbstractDragButton;
 import com.io7m.jsycamore.components.ButtonLabelled;
-import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.components.Scrollable;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
@@ -248,17 +248,19 @@ public final class SimpleScrollable implements Runnable
 
     final ContentPane pane = this.window0.windowGetContentPane();
 
-    final ContainerThemed container =
-      new ContainerThemed(new Point<ParentRelative>(8, 8), new VectorM2I(
-        256,
-        256));
-    container.setDrawEdge(true);
-
-    final Scrollable s = new Scrollable(ctx, pane, container);
+    final Scrollable s =
+      new Scrollable(
+        ctx,
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(256, 256),
+        new VectorI2I(1024, 1024));
     s.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     s.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     s.componentSetMinimumWidth(ctx, 64);
     s.componentSetMinimumHeight(ctx, 64);
+
+    final AbstractContainer container = s.scrollableGetContentPane();
 
     final ButtonLabelled b0 =
       new ButtonLabelled(ctx, new Point<ParentRelative>(8, 8), new VectorI2I(
