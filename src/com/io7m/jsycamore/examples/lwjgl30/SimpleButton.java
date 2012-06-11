@@ -20,11 +20,11 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
+import com.io7m.jsycamore.components.AbstractContainer;
 import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
@@ -129,7 +129,7 @@ public final class SimpleButton implements Runnable
     this.window0.windowSetMinimumHeight(ctx, 96);
     this.window0.windowSetMinimumWidth(ctx, 96);
 
-    final ContentPane pane = this.window0.windowGetContentPane();
+    final AbstractContainer pane = this.window0.windowGetContentPane();
     final ButtonLabelled b =
       new ButtonLabelled(
         ctx,
