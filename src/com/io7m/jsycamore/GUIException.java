@@ -21,6 +21,8 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import com.io7m.jaux.PropertyUtils.ValueIncorrectType;
+import com.io7m.jaux.PropertyUtils.ValueNotFound;
 import com.io7m.jcanephora.GLCompileException;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jpismo.TextCacheException;
@@ -60,10 +62,67 @@ public final class GUIException extends Exception
     GUI_TEXT_CACHE_ERROR,
 
     /** Font format error */
-    GUI_FONT_FORMAT_ERROR
+    GUI_FONT_FORMAT_ERROR,
+
+    /** Required value not found in theme file */
+    GUI_THEME_VALUE_NOT_FOUND,
+
+    /** Theme value has incorrect type */
+    GUI_THEME_VALUE_INCORRECT_TYPE,
+
+    /** Theme version not supported */
+    GUI_THEME_BAD_VERSION
   }
 
-  private static final long        serialVersionUID = 8167795456664986779L;
+  private static final long serialVersionUID = 8167795456664986779L;
+
+  static @Nonnull GUIException themeBadVersion(
+    final long got,
+    final int expected)
+  {
+    final StringBuilder b = new StringBuilder();
+    b.append("bad theme version: expected '");
+    b.append(expected);
+    b.append("' but got '");
+    b.append(got);
+    b.append("'");
+    return new GUIException(ErrorCode.GUI_THEME_BAD_VERSION, new Exception(
+      b.toString()));
+  }
+
+  static @Nonnull GUIException themeFloatNormalRange(
+    final @Nonnull String key,
+    final float actual)
+  {
+    final StringBuilder b = new StringBuilder();
+
+    b.append("bad color format: ");
+    b.append(key);
+    b
+      .append(": components must be in the range [0.0 .. 1.0] inclusive, not '");
+    b.append(actual);
+    b.append("'");
+    return new GUIException(
+      ErrorCode.GUI_THEME_VALUE_INCORRECT_TYPE,
+      new Exception(b.toString()));
+  }
+
+  static @Nonnull GUIException themeWanted3F(
+    final @Nonnull String key,
+    final @Nonnull String got)
+  {
+    final StringBuilder b = new StringBuilder();
+    b.append("bad color format: ");
+    b.append(key);
+    b.append(": expected a three-element vector of real values for key '");
+    b.append("' but got '");
+    b.append(got);
+    b.append("'");
+    return new GUIException(
+      ErrorCode.GUI_THEME_VALUE_INCORRECT_TYPE,
+      new Exception(b.toString()));
+  }
+
   private final @Nonnull ErrorCode code;
 
   private final @Nonnull Throwable exception;
@@ -111,6 +170,18 @@ public final class GUIException extends Exception
     final TextCacheException e)
   {
     this(ErrorCode.GUI_TEXT_CACHE_ERROR, e);
+  }
+
+  public GUIException(
+    final ValueIncorrectType e)
+  {
+    this(ErrorCode.GUI_THEME_VALUE_INCORRECT_TYPE, e);
+  }
+
+  public GUIException(
+    final ValueNotFound e)
+  {
+    this(ErrorCode.GUI_THEME_VALUE_NOT_FOUND, e);
   }
 
   public @Nonnull ErrorCode getErrorCode()

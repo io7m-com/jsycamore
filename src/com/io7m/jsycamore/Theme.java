@@ -1,9 +1,15 @@
 package com.io7m.jsycamore;
 
+import java.util.Properties;
+
 import javax.annotation.Nonnull;
 
 import com.io7m.jaux.Constraints;
 import com.io7m.jaux.Constraints.ConstraintError;
+import com.io7m.jaux.PropertyUtils;
+import com.io7m.jaux.PropertyUtils.ValueIncorrectType;
+import com.io7m.jaux.PropertyUtils.ValueNotFound;
+import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3F;
 
@@ -13,35 +19,223 @@ import com.io7m.jtensors.VectorReadable3F;
 
 public final class Theme
 {
-  private int                      window_edge_width;
+  public static @Nonnull Theme loadThemeFromProperties(
+    final @Nonnull Properties p)
+    throws ConstraintError,
+      GUIException
+  {
+    try {
+      Constraints.constrainNotNull(p, "Properties");
 
+      final long v = PropertyUtils.getInteger(p, "jsycamore.theme.version");
+      if (v != Version.THEME_VERSION) {
+        throw GUIException.themeBadVersion(v, Version.THEME_VERSION);
+      }
+
+      final Theme t = new Theme();
+
+      /**
+       * Focused.
+       */
+
+      t.setBoundsColor(Theme.parseV3F(p, "bounds_color"));
+      t.setFailsafeColor(Theme.parseV3F(p, "failsafe_color"));
+      t.setFocusedComponentActiveBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.component.active_background_color"));
+      t.setFocusedComponentActiveEdgeColor(Theme.parseV3F(
+        p,
+        "focused.component.active_edge_color"));
+      t.setFocusedComponentBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.component.background_color"));
+      t.setFocusedComponentEdgeColor(Theme.parseV3F(
+        p,
+        "focused.component.edge_color"));
+      t.setFocusedComponentDisabledBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.component.disabled_background_color"));
+      t.setFocusedComponentDisabledEdgeColor(Theme.parseV3F(
+        p,
+        "focused.component.disabled_edge_color"));
+      t.setFocusedWindowEdgeColor(Theme.parseV3F(
+        p,
+        "focused.window.edge_color"));
+      t.setFocusedWindowTitlebarBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.window.titlebar.background_color"));
+      t.setFocusedWindowTitlebarTextColor(Theme.parseV3F(
+        p,
+        "focused.window.titlebar.text_color"));
+      t.setFocusedComponentOverBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.component.over_background_color"));
+      t.setFocusedComponentOverEdgeColor(Theme.parseV3F(
+        p,
+        "focused.component.over_edge_color"));
+      t.setFocusedTextAreaForegroundColor(Theme.parseV3F(
+        p,
+        "focused.text_area.foreground_color"));
+      t.setFocusedTextAreaBackgroundColor(Theme.parseV3F(
+        p,
+        "focused.text_area.background_color"));
+      t.setFocusedComponentEdgeColor(Theme.parseV3F(
+        p,
+        "focused.component.edge_color"));
+
+      /**
+       * Unfocused.
+       */
+
+      t.setUnfocusedComponentBackgroundColor(Theme.parseV3F(
+        p,
+        "unfocused.component.background_color"));
+      t.setUnfocusedComponentEdgeColor(Theme.parseV3F(
+        p,
+        "unfocused.component.edge_color"));
+      t.setUnfocusedComponentDisabledBackgroundColor(Theme.parseV3F(
+        p,
+        "unfocused.component.disabled_background_color"));
+      t.setUnfocusedComponentDisabledEdgeColor(Theme.parseV3F(
+        p,
+        "unfocused.component.disabled_edge_color"));
+      t.setUnfocusedWindowEdgeColor(Theme.parseV3F(
+        p,
+        "unfocused.window.edge_color"));
+      t.setUnfocusedWindowTitlebarBackgroundColor(Theme.parseV3F(
+        p,
+        "unfocused.window.titlebar.background_color"));
+      t.setUnfocusedWindowTitlebarTextColor(Theme.parseV3F(
+        p,
+        "unfocused.window.titlebar.text_color"));
+      t.setUnfocusedTextAreaForegroundColor(Theme.parseV3F(
+        p,
+        "unfocused.text_area.foreground_color"));
+      t.setUnfocusedTextAreaBackgroundColor(Theme.parseV3F(
+        p,
+        "unfocused.text_area.background_color"));
+      t.setUnfocusedComponentEdgeColor(Theme.parseV3F(
+        p,
+        "unfocused.component.edge_color"));
+
+      t.setWindowEdgeWidth((int) Theme.parseInt(p, "window.edge_width"));
+
+      return t;
+    } catch (final ValueNotFound e) {
+      throw new GUIException(e);
+    } catch (final ValueIncorrectType e) {
+      throw new GUIException(e);
+    }
+  }
+
+  private static long parseInt(
+    final @Nonnull Properties p,
+    final @Nonnull String key)
+    throws ValueNotFound,
+      ConstraintError,
+      ValueIncorrectType
+  {
+    final StringBuilder b = new StringBuilder();
+    b.append("jsycamore.theme.");
+    b.append(key);
+    return Theme.parseIntActual(p, b.toString());
+  }
+
+  private static long parseIntActual(
+    final @Nonnull Properties p,
+    final @Nonnull String key)
+    throws ValueNotFound,
+      ConstraintError,
+      ValueIncorrectType
+  {
+    return PropertyUtils.getInteger(p, key);
+  }
+
+  private static float parseNormalReal(
+    final @Nonnull String key,
+    final @Nonnull String value)
+    throws GUIException
+  {
+    final float r = Float.parseFloat(value);
+    if ((r < 0.0) || (r > 1.0)) {
+      throw GUIException.themeFloatNormalRange(key, r);
+    }
+    return r;
+  }
+
+  private static VectorReadable3F parseV3F(
+    final @Nonnull Properties p,
+    final @Nonnull String key)
+    throws GUIException,
+      ValueNotFound,
+      ConstraintError,
+      ValueIncorrectType
+  {
+    final StringBuilder b = new StringBuilder();
+    b.append("jsycamore.theme.");
+    b.append(key);
+    return Theme.parseV3FActual(p, b.toString());
+  }
+
+  private static VectorReadable3F parseV3FActual(
+    final @Nonnull Properties p,
+    final @Nonnull String key)
+    throws ValueNotFound,
+      ConstraintError,
+      ValueIncorrectType,
+      GUIException
+  {
+    final String value = PropertyUtils.getString(p, key);
+    final String[] components = value.split("\\s+");
+
+    if (components.length != 3) {
+      throw new ValueIncorrectType(
+        key,
+        "a three element vector of real values");
+    }
+
+    try {
+      final float r = Theme.parseNormalReal(key, components[0]);
+      final float g = Theme.parseNormalReal(key, components[1]);
+      final float b = Theme.parseNormalReal(key, components[2]);
+      return new VectorI3F(r, g, b);
+    } catch (final NumberFormatException e) {
+      throw GUIException.themeWanted3F(key, value);
+    }
+  }
+
+  private int                      window_edge_width;
   private final @Nonnull VectorM3F focused_window_edge_color;
-  private final @Nonnull VectorM3F focused_window_pane_background_color;
   private final @Nonnull VectorM3F focused_window_titlebar_background_color;
   private final @Nonnull VectorM3F focused_window_titlebar_text_color;
   private final @Nonnull VectorM3F focused_component_edge_color;
   private final @Nonnull VectorM3F focused_component_background_color;
   private final @Nonnull VectorM3F focused_component_over_background_color;
   private final @Nonnull VectorM3F focused_component_over_edge_color;
+
   private final @Nonnull VectorM3F focused_component_active_background_color;
   private final @Nonnull VectorM3F focused_component_active_edge_color;
   private final @Nonnull VectorM3F focused_component_disabled_background_color;
   private final @Nonnull VectorM3F focused_component_disabled_edge_color;
   private final @Nonnull VectorM3F focused_text_area_background_color;
   private final @Nonnull VectorM3F focused_text_area_foreground_color;
-
   private final @Nonnull VectorM3F unfocused_window_edge_color;
-  private final @Nonnull VectorM3F unfocused_window_pane_background_color;
   private final @Nonnull VectorM3F unfocused_window_titlebar_background_color;
   private final @Nonnull VectorM3F unfocused_window_titlebar_text_color;
+
   private final @Nonnull VectorM3F unfocused_component_edge_color;
   private final @Nonnull VectorM3F unfocused_component_background_color;
+
   private final @Nonnull VectorM3F unfocused_component_disabled_edge_color;
+
   private final @Nonnull VectorM3F unfocused_component_disabled_background_color;
+
   private final @Nonnull VectorM3F unfocused_text_area_background_color;
+
   private final @Nonnull VectorM3F unfocused_text_area_foreground_color;
 
   private final @Nonnull VectorM3F failsafe_color;
+
   private final @Nonnull VectorM3F bounds_color;
 
   Theme()
@@ -49,7 +243,6 @@ public final class Theme
     this.window_edge_width = 1;
 
     this.focused_window_edge_color = new VectorM3F();
-    this.focused_window_pane_background_color = new VectorM3F();
     this.focused_window_titlebar_background_color = new VectorM3F();
     this.focused_window_titlebar_text_color = new VectorM3F();
     this.focused_component_background_color = new VectorM3F();
@@ -64,7 +257,6 @@ public final class Theme
     this.focused_text_area_foreground_color = new VectorM3F();
 
     this.unfocused_window_edge_color = new VectorM3F();
-    this.unfocused_window_pane_background_color = new VectorM3F();
     this.unfocused_window_titlebar_background_color = new VectorM3F();
     this.unfocused_window_titlebar_text_color = new VectorM3F();
     this.unfocused_component_background_color = new VectorM3F();
@@ -145,11 +337,6 @@ public final class Theme
     return this.focused_window_edge_color;
   }
 
-  public @Nonnull VectorReadable3F getFocusedWindowPaneBackgroundColor()
-  {
-    return this.focused_window_pane_background_color;
-  }
-
   public @Nonnull VectorReadable3F getFocusedWindowTitlebarBackgroundColor()
   {
     return this.focused_window_titlebar_background_color;
@@ -195,11 +382,6 @@ public final class Theme
   public @Nonnull VectorReadable3F getUnfocusedWindowEdgeColor()
   {
     return this.unfocused_window_edge_color;
-  }
-
-  public @Nonnull VectorReadable3F getUnfocusedWindowPaneBackgroundColor()
-  {
-    return this.unfocused_window_pane_background_color;
   }
 
   public @Nonnull
@@ -399,6 +581,14 @@ public final class Theme
     this.focused_component_over_edge_color.z = b;
   }
 
+  public void setFocusedTextAreaBackgroundColor(
+    final @Nonnull VectorReadable3F color)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(color, "Color");
+    VectorM3F.copy(color, this.focused_text_area_background_color);
+  }
+
   public void setFocusedTextAreaBackgroundColor3f(
     final float r,
     final float g,
@@ -409,12 +599,12 @@ public final class Theme
     this.focused_text_area_background_color.z = b;
   }
 
-  public void setFocusedTextAreaBackgroundColor3f(
+  public void setFocusedTextAreaForegroundColor(
     final @Nonnull VectorReadable3F color)
     throws ConstraintError
   {
     Constraints.constrainNotNull(color, "Color");
-    VectorM3F.copy(color, this.focused_text_area_background_color);
+    VectorM3F.copy(color, this.focused_text_area_foreground_color);
   }
 
   public void setFocusedTextAreaForegroundColor3f(
@@ -425,14 +615,6 @@ public final class Theme
     this.focused_text_area_foreground_color.x = r;
     this.focused_text_area_foreground_color.y = g;
     this.focused_text_area_foreground_color.z = b;
-  }
-
-  public void setFocusedTextAreaForegroundColor3f(
-    final @Nonnull VectorReadable3F color)
-    throws ConstraintError
-  {
-    Constraints.constrainNotNull(color, "Color");
-    VectorM3F.copy(color, this.focused_text_area_foreground_color);
   }
 
   public void setFocusedWindowEdgeColor(
@@ -451,24 +633,6 @@ public final class Theme
     this.focused_window_edge_color.x = r;
     this.focused_window_edge_color.y = g;
     this.focused_window_edge_color.z = b;
-  }
-
-  public void setFocusedWindowPaneBackgroundColor(
-    final @Nonnull VectorReadable3F color)
-    throws ConstraintError
-  {
-    Constraints.constrainNotNull(color, "Color");
-    VectorM3F.copy(color, this.focused_window_pane_background_color);
-  }
-
-  public void setFocusedWindowPaneBackgroundColor3f(
-    final float r,
-    final float g,
-    final float b)
-  {
-    this.focused_window_pane_background_color.x = r;
-    this.focused_window_pane_background_color.y = g;
-    this.focused_window_pane_background_color.z = b;
   }
 
   public void setFocusedWindowTitlebarBackgroundColor(
@@ -611,24 +775,6 @@ public final class Theme
     this.unfocused_window_edge_color.x = r;
     this.unfocused_window_edge_color.y = g;
     this.unfocused_window_edge_color.z = b;
-  }
-
-  public void setUnfocusedWindowPaneBackgroundColor(
-    final @Nonnull VectorReadable3F color)
-    throws ConstraintError
-  {
-    Constraints.constrainNotNull(color, "Color");
-    VectorM3F.copy(color, this.unfocused_window_pane_background_color);
-  }
-
-  public void setUnfocusedWindowPaneBackgroundColor3f(
-    final float r,
-    final float g,
-    final float b)
-  {
-    this.unfocused_window_pane_background_color.x = r;
-    this.unfocused_window_pane_background_color.y = g;
-    this.unfocused_window_pane_background_color.z = b;
   }
 
   public void setUnfocusedWindowTitlebarBackgroundColor(
