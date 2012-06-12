@@ -796,6 +796,10 @@ public abstract class Component implements
     return this.componentIsAncestorOfInner(child.parent);
   }
 
+  /**
+   * Returns <code>true</code> iff this component is enabled.
+   */
+
   public final boolean componentIsEnabled()
   {
     return this.enabled;
