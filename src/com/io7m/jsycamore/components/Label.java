@@ -2,6 +2,7 @@ package com.io7m.jsycamore.components;
 
 import javax.annotation.Nonnull;
 
+import com.io7m.jaux.Constraints;
 import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
@@ -48,9 +49,11 @@ public final class Label extends Component
       this.compiled_text = tr.textCompileLine(text);
       tr.textCacheUpload();
 
-      this.componentSetSize(new VectorI2I(
-        (int) this.compiled_text.getWidth(),
-        (int) this.compiled_text.getHeight()));
+      this.componentSetSize(
+        context,
+        new VectorI2I(
+          (int) this.compiled_text.getWidth(),
+          (int) this.compiled_text.getHeight()));
 
     } catch (final GLException e) {
       throw new GUIException(e);
@@ -94,6 +97,43 @@ public final class Label extends Component
     this.color.x = r;
     this.color.y = g;
     this.color.z = b;
+  }
+
+  public void labelSetText(
+    final @Nonnull GUIContext context,
+    final @Nonnull String new_text)
+    throws GUIException,
+      ConstraintError
+  {
+    try {
+      Constraints.constrainNotNull(context, "GUI context");
+      Constraints.constrainNotNull(new_text, "Text");
+
+      final TextRenderer tr = context.contextGetTextRendererMedium();
+      final GLInterface gl = context.contextGetGL();
+
+      final CompiledText old_ct = this.compiled_text;
+      final CompiledText new_ct = tr.textCompileLine(new_text);
+      tr.textCacheUpload();
+
+      this.compiled_text = new_ct;
+      this.text.setLength(0);
+      this.text.append(new_text);
+
+      if (old_ct != null) {
+        old_ct.resourceDelete(gl);
+      }
+
+      this.componentSetSize(
+        context,
+        new VectorI2I(
+          (int) this.compiled_text.getWidth(),
+          (int) this.compiled_text.getHeight()));
+    } catch (final TextCacheException e) {
+      throw new GUIException(e);
+    } catch (final GLException e) {
+      throw new GUIException(e);
+    }
   }
 
   @Override public void resourceDelete(

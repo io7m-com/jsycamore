@@ -25,7 +25,7 @@ import com.io7m.jtensors.VectorReadable2I;
 
 public final class TextArea extends Component
 {
-  private final class TextAreaActual extends Component
+  private static final class TextAreaActual extends Component
   {
     private final @Nonnull ArrayList<String> lines;
     private @Nonnull CompiledText            text;

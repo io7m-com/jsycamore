@@ -317,6 +317,13 @@ public final class GUI
           this.component_over = over;
           over.componentEventOnMouseOver(this.context, position, over);
         }
+      } else {
+        if (this.component_over != null) {
+          this.component_over.componentEventOnMouseNoLongerOver(
+            this.context,
+            position);
+          this.component_over = null;
+        }
       }
     }
 

@@ -9,9 +9,9 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jsycamore.MatrixM4x4FStack;
 import com.io7m.jtensors.MatrixM4x4F;
 
-public class MatrixM4x4FStackTest
+public final class MatrixM4x4FStackTest
 {
-  @Test public void testInitial()
+  @SuppressWarnings("static-method") @Test public void testInitial()
     throws ConstraintError
   {
     final MatrixM4x4F m1 = new MatrixM4x4F();
@@ -28,29 +28,37 @@ public class MatrixM4x4FStackTest
     }
   }
 
-  @Test(expected = ConstraintError.class) public void testPeekEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPeekEmpty()
+      throws ConstraintError
   {
     final MatrixM4x4FStack stack = new MatrixM4x4FStack();
     stack.peek();
   }
 
-  @Test(expected = ConstraintError.class) public void testPopEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPopEmpty()
+      throws ConstraintError
   {
     final MatrixM4x4FStack stack = new MatrixM4x4FStack();
     stack.pop();
   }
 
-  @Test(expected = ConstraintError.class) public void testPushCopyEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPushCopyEmpty()
+      throws ConstraintError
   {
     final MatrixM4x4FStack stack = new MatrixM4x4FStack();
     stack.pushCopy();
   }
 
-  @Test public void testPushCopyPopIdentity()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testPushCopyPopIdentity()
+      throws ConstraintError
   {
     final MatrixM4x4FStack stack = new MatrixM4x4FStack();
     Assert.assertEquals(0, stack.size());
@@ -64,7 +72,7 @@ public class MatrixM4x4FStackTest
     Assert.assertEquals(0, stack.size());
   }
 
-  @Test public void testPushPopIdentity()
+  @SuppressWarnings("static-method") @Test public void testPushPopIdentity()
     throws ConstraintError
   {
     final MatrixM4x4FStack stack = new MatrixM4x4FStack();

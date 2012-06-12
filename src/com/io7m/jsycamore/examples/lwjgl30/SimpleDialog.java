@@ -2,6 +2,8 @@ package com.io7m.jsycamore.examples.lwjgl30;
 
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,19 +16,20 @@ import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
 import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jlog.Log;
+import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Button;
+import com.io7m.jsycamore.components.AbstractContainer;
+import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.components.ButtonListener;
 import com.io7m.jsycamore.components.Label;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
@@ -128,10 +131,10 @@ public final class SimpleDialog implements Runnable
         new VectorI2I(300, 128),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
-    final ContentPane pane = this.window0.windowGetContentPane();
+    final AbstractContainer pane = this.window0.windowGetContentPane();
 
     final Label l =
       new Label(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
@@ -144,13 +147,16 @@ public final class SimpleDialog implements Runnable
     l.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
     l.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_MOVE);
 
-    final Button b =
-      new Button(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        64,
-        24), "Close");
+    final ButtonLabelled b =
+      new ButtonLabelled(
+        ctx,
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(64, 24),
+        "Close");
     b.setButtonListener(new ButtonListener() {
-      @Override public void onClick(
-        final Button button)
+      @Override public void buttonListenerOnClick(
+        final @Nonnull Component button)
       {
         final Window window = button.componentGetWindow();
         if (window != null) {

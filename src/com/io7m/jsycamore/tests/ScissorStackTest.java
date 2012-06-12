@@ -13,9 +13,9 @@ import com.io7m.jsycamore.geometry.ScissorRelative;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorReadable2I;
 
-public class ScissorStackTest
+public final class ScissorStackTest
 {
-  @Test public void testInitial()
+  @SuppressWarnings("static-method") @Test public void testInitial()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
@@ -37,21 +37,51 @@ public class ScissorStackTest
     Assert.assertEquals(1, stack.size());
   }
 
-  @Test(expected = ConstraintError.class) public void testPeekEmpty()
+  @SuppressWarnings("static-method") @Test public void testIteration()
     throws ConstraintError
+  {
+    final ScissorStack stack = new ScissorStack();
+    final Scissor s0 =
+      new Scissor(new Point<ScissorRelative>(0, 0), new VectorI2I(8, 8));
+    final Scissor s1 =
+      new Scissor(new Point<ScissorRelative>(1, 1), new VectorI2I(8, 8));
+    final Scissor s2 =
+      new Scissor(new Point<ScissorRelative>(2, 2), new VectorI2I(8, 8));
+    final Scissor s3 =
+      new Scissor(new Point<ScissorRelative>(3, 3), new VectorI2I(8, 8));
+
+    stack.push(s0);
+    stack.push(s1);
+    stack.push(s2);
+    stack.push(s3);
+
+    int index = 0;
+    for (final Scissor s : stack) {
+      Assert.assertEquals(index, s.getLowerX());
+      Assert.assertEquals(index, s.getLowerY());
+      ++index;
+    }
+  }
+
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPeekEmpty()
+      throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
     stack.peek();
   }
 
-  @Test(expected = ConstraintError.class) public void testPopEmpty()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testPopEmpty()
+      throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
     stack.pop();
   }
 
-  @Test public void testPushNarrowing()
+  @SuppressWarnings("static-method") @Test public void testPushNarrowing()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();
@@ -83,7 +113,7 @@ public class ScissorStackTest
     Assert.assertEquals(460, k1_siz.getYI());
   }
 
-  @Test public void testPushPopIdentity()
+  @SuppressWarnings("static-method") @Test public void testPushPopIdentity()
     throws ConstraintError
   {
     final ScissorStack stack = new ScissorStack();

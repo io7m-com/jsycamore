@@ -18,12 +18,12 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Button;
-import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.AbstractContainer;
+import com.io7m.jsycamore.components.ButtonLabelled;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
@@ -126,18 +126,19 @@ public final class SimpleScissored implements Runnable
         wp);
     this.window0.windowSetAlpha(0.98f);
 
-    final ContentPane pane = this.window0.windowGetContentPane();
+    final AbstractContainer pane = this.window0.windowGetContentPane();
 
-    final Container container =
-      new Container(pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        128,
-        128));
+    final ContainerThemed container =
+      new ContainerThemed(
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(128, 128));
     container.setDrawEdge(true);
 
     for (int y = -16; y <= 112; y += 32) {
       for (int x = -16; x <= 112; x += 32) {
-        final Button b =
-          new Button(
+        final ButtonLabelled b =
+          new ButtonLabelled(
             this.gui.getContext(),
             container,
             new Point<ParentRelative>(x, y),
