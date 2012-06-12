@@ -1,5 +1,7 @@
 package com.io7m.jsycamore;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.annotation.Nonnull;
@@ -12,6 +14,8 @@ import com.io7m.jaux.PropertyUtils.ValueNotFound;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM3F;
 import com.io7m.jtensors.VectorReadable3F;
+import com.io7m.jvvfs.FilesystemAPI;
+import com.io7m.jvvfs.FilesystemError;
 
 /**
  * Type specifying the basic color scheme used by windows and components.
@@ -19,6 +23,135 @@ import com.io7m.jtensors.VectorReadable3F;
 
 public final class Theme
 {
+  /**
+   * Copy the theme referenced by <code>source</code> to the theme referenced
+   * by <code>target</code>, replacing the contents entirely.
+   * 
+   * @param source
+   *          The source theme.
+   * @param target
+   *          The target theme.
+   * @throws ConstraintError
+   *           Iff <code>source == null || target == null</code>.
+   */
+
+  public static void copy(
+    final @Nonnull Theme source,
+    final @Nonnull Theme target)
+    throws ConstraintError
+  {
+    Constraints.constrainNotNull(source, "Source theme");
+    Constraints.constrainNotNull(target, "Target theme");
+
+    target.setBoundsColor(source.getBoundsColor());
+    target.setFailsafeColor(source.getFailsafeColor());
+
+    /**
+     * Focused.
+     */
+
+    target.setFocusedComponentActiveBackgroundColor(source
+      .getFocusedComponentActiveBackgroundColor());
+    target.setFocusedComponentActiveEdgeColor(source
+      .getFocusedComponentActiveEdgeColor());
+    target.setFocusedComponentBackgroundColor(source
+      .getFocusedComponentBackgroundColor());
+    target.setFocusedComponentDisabledBackgroundColor(source
+      .getFocusedComponentDisabledBackgroundColor());
+    target.setFocusedComponentDisabledEdgeColor(source
+      .getFocusedComponentDisabledEdgeColor());
+    target
+      .setFocusedComponentEdgeColor(source.getFocusedComponentEdgeColor());
+    target.setFocusedComponentOverBackgroundColor(source
+      .getFocusedComponentOverBackgroundColor());
+    target.setFocusedComponentOverEdgeColor(source
+      .getFocusedComponentOverEdgeColor());
+    target.setFocusedTextAreaBackgroundColor(source
+      .getFocusedTextAreaBackgroundColor());
+    target.setFocusedTextAreaForegroundColor(source
+      .getFocusedTextAreaForegroundColor());
+    target.setFocusedWindowEdgeColor(source.getFocusedWindowEdgeColor());
+    target.setFocusedWindowTitlebarBackgroundColor(source
+      .getFocusedWindowTitlebarBackgroundColor());
+    target.setFocusedWindowTitlebarTextColor(source
+      .getFocusedWindowTitlebarTextColor());
+
+    /**
+     * Unfocused.
+     */
+
+    target.setUnfocusedComponentBackgroundColor(source
+      .getUnfocusedComponentBackgroundColor());
+    target.setUnfocusedComponentDisabledBackgroundColor(source
+      .getUnfocusedComponentDisabledBackgroundColor());
+    target.setUnfocusedComponentDisabledEdgeColor(source
+      .getUnfocusedComponentDisabledEdgeColor());
+    target.setUnfocusedComponentEdgeColor(source
+      .getUnfocusedComponentEdgeColor());
+    target.setUnfocusedTextAreaBackgroundColor(source
+      .getUnfocusedTextAreaBackgroundColor());
+    target.setUnfocusedTextAreaForegroundColor(source
+      .getUnfocusedTextAreaForegroundColor());
+    target.setUnfocusedWindowEdgeColor(source.getUnfocusedWindowEdgeColor());
+    target.setUnfocusedWindowTitlebarBackgroundColor(source
+      .getUnfocusedWindowTitlebarBackgroundColor());
+    target.setUnfocusedWindowTitlebarTextColor(source
+      .getUnfocusedWindowTitlebarTextColor());
+
+    target.setWindowEdgeWidth(source.getWindowEdgeWidth());
+  }
+
+  /**
+   * Load the theme named <code>name</code> from the filesystem referenced by
+   * <code>fs</code>. The theme will be loaded from the file
+   * <code>name.thm</code>, from the directory <code>/sycamore/themes</code>
+   * in the filesystem.
+   */
+
+  public static @Nonnull Theme loadThemeFromFilesystem(
+    final @Nonnull FilesystemAPI fs,
+    final @Nonnull String name)
+    throws ConstraintError,
+      GUIException
+  {
+    final StringBuilder path = new StringBuilder();
+    path.append("/sycamore/themes/");
+    path.append(name);
+    path.append(".thm");
+
+    InputStream theme_stream = null;
+    try {
+      theme_stream = fs.openFile(path.toString());
+      final Properties props = new Properties();
+      props.load(theme_stream);
+      return Theme.loadThemeFromProperties(props);
+
+    } catch (final FilesystemError e) {
+      throw new GUIException(e);
+    } catch (final IOException e) {
+      throw new GUIException(e);
+    } finally {
+      try {
+        if (theme_stream != null) {
+          theme_stream.close();
+        }
+      } catch (final IOException e) {
+        throw new GUIException(e);
+      }
+    }
+  }
+
+  /**
+   * Load the theme contained within <code>p</code>.
+   * 
+   * @param p
+   *          Properties containing a theme specification.
+   * @throws ConstraintError
+   *           Iff <code>p == null</code>.
+   * @throws GUIException
+   *           If a theme is in some way invalid.
+   */
+
   public static @Nonnull Theme loadThemeFromProperties(
     final @Nonnull Properties p)
     throws ConstraintError,
@@ -211,8 +344,8 @@ public final class Theme
   private final @Nonnull VectorM3F focused_component_edge_color;
   private final @Nonnull VectorM3F focused_component_background_color;
   private final @Nonnull VectorM3F focused_component_over_background_color;
-  private final @Nonnull VectorM3F focused_component_over_edge_color;
 
+  private final @Nonnull VectorM3F focused_component_over_edge_color;
   private final @Nonnull VectorM3F focused_component_active_background_color;
   private final @Nonnull VectorM3F focused_component_active_edge_color;
   private final @Nonnull VectorM3F focused_component_disabled_background_color;
@@ -221,19 +354,15 @@ public final class Theme
   private final @Nonnull VectorM3F focused_text_area_foreground_color;
   private final @Nonnull VectorM3F unfocused_window_edge_color;
   private final @Nonnull VectorM3F unfocused_window_titlebar_background_color;
-  private final @Nonnull VectorM3F unfocused_window_titlebar_text_color;
 
+  private final @Nonnull VectorM3F unfocused_window_titlebar_text_color;
   private final @Nonnull VectorM3F unfocused_component_edge_color;
   private final @Nonnull VectorM3F unfocused_component_background_color;
-
   private final @Nonnull VectorM3F unfocused_component_disabled_edge_color;
-
   private final @Nonnull VectorM3F unfocused_component_disabled_background_color;
-
   private final @Nonnull VectorM3F unfocused_text_area_background_color;
 
   private final @Nonnull VectorM3F unfocused_text_area_foreground_color;
-
   private final @Nonnull VectorM3F failsafe_color;
 
   private final @Nonnull VectorM3F bounds_color;

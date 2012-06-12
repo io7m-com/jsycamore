@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -117,7 +116,7 @@ public final class GUIContext
       "/sycamore/shaders/text.f"));
     this.shader_text.compile(fs, gl);
 
-    this.theme = this.loadTheme("mars");
+    this.theme = Theme.loadThemeFromFilesystem(this.filesystem, "mars");
 
     final InputStream fi =
       this.filesystem.openFile("/sycamore/fonts/dejavu-sans.ttf");
@@ -394,28 +393,23 @@ public final class GUIContext
     }
   }
 
-  private final @Nonnull Theme loadTheme(
-    final @Nonnull String name)
-    throws FilesystemError,
-      ConstraintError,
-      IOException,
-      GUIException
-  {
-    final StringBuilder path = new StringBuilder();
-    path.append("/sycamore/themes/");
-    path.append(name);
-    path.append(".thm");
+  /**
+   * Replace the current theme with the theme specified by
+   * <code>new_theme</code>. The contents of the current theme are replaced
+   * with the contents of <code>new_theme</code>, so be aware that the
+   * function will replace data that might be referenced elsewhere (by saving
+   * the result of {@link GUIContext#contextGetTheme()}, for example).
+   * 
+   * @param new_theme
+   *          The new theme.
+   * @throws ConstraintError
+   *           Iff <code>theme == null</code>.
+   */
 
-    InputStream theme_stream = null;
-    try {
-      theme_stream = this.filesystem.openFile("/sycamore/themes/mars.thm");
-      final Properties props = new Properties();
-      props.load(theme_stream);
-      return Theme.loadThemeFromProperties(props);
-    } finally {
-      if (theme_stream != null) {
-        theme_stream.close();
-      }
-    }
+  public void useTheme(
+    final @Nonnull Theme new_theme)
+    throws ConstraintError
+  {
+    Theme.copy(new_theme, this.theme);
   }
 }
