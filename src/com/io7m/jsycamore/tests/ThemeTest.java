@@ -1,5 +1,7 @@
 package com.io7m.jsycamore.tests;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.junit.Assert;
@@ -92,6 +94,677 @@ public class ThemeTest
     }
 
     Assert.fail("unreachable");
+  }
+
+  @Test public void testCopy()
+    throws GUIException,
+      ConstraintError,
+      IOException
+  {
+    final FileInputStream stream_w =
+      new FileInputStream("resources/themes/debug_white.thm");
+    final FileInputStream stream_b =
+      new FileInputStream("resources/themes/debug_black.thm");
+
+    final Properties p_w = new Properties();
+    final Properties p_b = new Properties();
+
+    p_w.load(stream_w);
+    p_b.load(stream_b);
+
+    final Theme t_w = Theme.loadThemeFromProperties(p_w);
+    final Theme t_b = Theme.loadThemeFromProperties(p_b);
+
+    /**
+     * White.
+     */
+
+    /**
+     * Focused.
+     */
+
+    {
+      final VectorReadable3F v = t_w.getBoundsColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFailsafeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedComponentActiveBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentActiveEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentOverEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentOverBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(1.0f, v.getZF()));
+    }
+
+    {
+      final int i = t_w.getWindowEdgeWidth();
+      Assert.assertEquals(1, i);
+    }
+
+    /**
+     * Black.
+     */
+
+    /**
+     * Unfocused.
+     */
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getUnfocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getUnfocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final int i = t_b.getWindowEdgeWidth();
+      Assert.assertEquals(2, i);
+    }
+
+    /**
+     * Focused.
+     */
+
+    {
+      final VectorReadable3F v = t_b.getBoundsColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFailsafeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getFocusedComponentActiveBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentActiveEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentOverEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentOverBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getFocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getFocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getFocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    /**
+     * Unfocused.
+     */
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getUnfocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_b.getUnfocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_b.getUnfocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final int i = t_b.getWindowEdgeWidth();
+      Assert.assertEquals(2, i);
+    }
+
+    /**
+     * Copy black -> white.
+     */
+
+    Theme.copy(t_b, t_w);
+
+    /**
+     * Unfocused.
+     */
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getUnfocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getUnfocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final int i = t_w.getWindowEdgeWidth();
+      Assert.assertEquals(2, i);
+    }
+
+    /**
+     * Focused.
+     */
+
+    {
+      final VectorReadable3F v = t_w.getBoundsColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFailsafeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedComponentActiveBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentActiveEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentOverEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentOverBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getFocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getFocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    /**
+     * Unfocused.
+     */
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getUnfocusedComponentDisabledBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedComponentDisabledEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedTextAreaBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedTextAreaForegroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedWindowEdgeColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v =
+        t_w.getUnfocusedWindowTitlebarBackgroundColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final VectorReadable3F v = t_w.getUnfocusedWindowTitlebarTextColor();
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getXF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getYF()));
+      Assert.assertTrue(ThemeTest.fequal(0.0f, v.getZF()));
+    }
+
+    {
+      final int i = t_w.getWindowEdgeWidth();
+      Assert.assertEquals(2, i);
+    }
   }
 
   @Test public void testValidComplete()
