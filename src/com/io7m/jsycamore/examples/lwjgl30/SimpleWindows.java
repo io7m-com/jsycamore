@@ -82,6 +82,7 @@ public final class SimpleWindows implements Runnable
   private final Window                window1;
   private final Window                window2;
   private final Window                window3;
+  private final static float          WINDOW_ALPHA = 0.98f;
 
   SimpleWindows()
     throws GLException,
@@ -92,6 +93,7 @@ public final class SimpleWindows implements Runnable
     final Properties p = new Properties();
     p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
     p.put("com.io7m.jsycamore.logs.example", "true");
+    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
     p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
     p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
 
@@ -120,7 +122,7 @@ public final class SimpleWindows implements Runnable
       new StandardWindow(ctx, new Point<ScreenRelative>(4, 4), new VectorI2I(
         300,
         200), wp);
-    this.window0.windowSetAlpha(0.98f);
+    this.window0.windowSetAlpha(SimpleWindows.WINDOW_ALPHA);
 
     wp.setCanClose(true);
     wp.setCanResize(false);
@@ -131,7 +133,7 @@ public final class SimpleWindows implements Runnable
         new Point<ScreenRelative>(4 + 320, 4),
         new VectorI2I(300, 200),
         wp);
-    this.window1.windowSetAlpha(0.98f);
+    this.window1.windowSetAlpha(SimpleWindows.WINDOW_ALPHA);
 
     wp.setCanClose(false);
     wp.setCanResize(true);
@@ -142,7 +144,7 @@ public final class SimpleWindows implements Runnable
         new Point<ScreenRelative>(4, 4 + 220),
         new VectorI2I(300, 200),
         wp);
-    this.window2.windowSetAlpha(0.98f);
+    this.window2.windowSetAlpha(SimpleWindows.WINDOW_ALPHA);
 
     wp.setCanClose(true);
     wp.setCanResize(true);
@@ -153,7 +155,7 @@ public final class SimpleWindows implements Runnable
         new Point<ScreenRelative>(4 + 320, 4 + 220),
         new VectorI2I(300, 200),
         wp);
-    this.window3.windowSetAlpha(0.98f);
+    this.window3.windowSetAlpha(SimpleWindows.WINDOW_ALPHA);
 
     this.gui.windowAdd(this.window0);
     this.gui.windowAdd(this.window1);
@@ -171,6 +173,7 @@ public final class SimpleWindows implements Runnable
           this.window0.windowSetWantOpen();
           this.window1.windowSetWantOpen();
           this.window2.windowSetWantOpen();
+          this.window3.windowSetWantOpen();
         }
       }
     }

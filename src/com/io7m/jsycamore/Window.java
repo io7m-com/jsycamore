@@ -17,7 +17,8 @@ import com.io7m.jcanephora.Texture2DRGBAStatic;
 import com.io7m.jcanephora.TextureFilter;
 import com.io7m.jcanephora.TextureWrap;
 import com.io7m.jlog.Log;
-import com.io7m.jsycamore.components.Container;
+import com.io7m.jsycamore.components.AbstractContainer;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
@@ -26,10 +27,10 @@ import com.io7m.jsycamore.geometry.PointReadable;
 import com.io7m.jsycamore.geometry.ScissorRelative;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.geometry.WindowRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
+import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2I;
 
 /**
@@ -49,7 +50,7 @@ public abstract class Window implements Comparable<Window>
   }
 
   private final @Nonnull Point<ScreenRelative> position;
-  private final @Nonnull Container             root;
+  private final @Nonnull AbstractContainer     root;
   private final @Nonnull Long                  id;
   private @Nonnull Framebuffer                 framebuffer;
   private @Nonnull Texture2DRGBAStatic         framebuffer_texture;
@@ -70,13 +71,13 @@ public abstract class Window implements Comparable<Window>
     Constraints.constrainNotNull(size, "Size");
 
     this.id = Long.valueOf(Window.id_pool.incrementAndGet());
-    this.root = new Container(this, PointConstants.PARENT_ORIGIN, size);
+    this.root = new ContainerThemed(this, PointConstants.PARENT_ORIGIN, size);
     this.alpha = 1.0f;
     this.state = WindowState.WINDOW_OPEN;
     this.position = new Point<ScreenRelative>(position);
 
-    this.windowSetMinimumWidth(2);
-    this.windowSetMinimumHeight(2);
+    this.windowSetMinimumWidth(context, 2);
+    this.windowSetMinimumHeight(context, 2);
     this.resizeFramebuffer(context.contextGetGL(), this.windowGetSize());
   }
 
@@ -236,7 +237,7 @@ public abstract class Window implements Comparable<Window>
    * Retrieve the content pane of the window.
    */
 
-  public abstract @Nonnull ContentPane windowGetContentPane();
+  public abstract @Nonnull AbstractContainer windowGetContentPane();
 
   /**
    * Retrieve the unique ID of the window.
@@ -257,7 +258,7 @@ public abstract class Window implements Comparable<Window>
     return this.position;
   }
 
-  protected final @Nonnull Container windowGetRootPane()
+  protected final @Nonnull AbstractContainer windowGetRootPane()
   {
     return this.root;
   }
@@ -293,6 +294,7 @@ public abstract class Window implements Comparable<Window>
   {
     try {
       final DrawPrimitives draw = context.contextGetDrawPrimitives();
+      final Theme theme = context.contextGetTheme();
       final Point<ScreenRelative> window_pos = this.windowGetPosition();
       final Log log = context.contextGetRendererLog();
       log.debug("actual " + this);
@@ -323,6 +325,24 @@ public abstract class Window implements Comparable<Window>
           this.windowGetSize(),
           this.alpha,
           this.framebuffer_texture);
+
+        final VectorM2I size = new VectorM2I(this.windowGetSize());
+        size.y = size.y + 1;
+
+        if (this.windowIsFocused()) {
+          draw.renderRectangleEdge(
+            context,
+            size,
+            theme.getWindowEdgeWidth(),
+            theme.getFocusedWindowEdgeColor());
+        } else {
+          draw.renderRectangleEdge(
+            context,
+            size,
+            theme.getWindowEdgeWidth(),
+            theme.getUnfocusedWindowEdgeColor());
+        }
+
       } finally {
         context.contextPopMatrixModelview();
       }
@@ -458,14 +478,13 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumHeight(
+    final @Nonnull GUIContext context,
     final int height)
     throws ConstraintError
   {
-    this.root.componentSetMinimumHeight(Constraints.constrainRange(
-      height,
-      2,
-      Integer.MAX_VALUE,
-      "Height"));
+    this.root.componentSetMinimumHeight(
+      context,
+      Constraints.constrainRange(height, 2, Integer.MAX_VALUE, "Height"));
   }
 
   /**
@@ -489,6 +508,7 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumSize(
+    final @Nonnull GUIContext context,
     final VectorReadable2I min_size)
     throws ConstraintError
   {
@@ -503,7 +523,7 @@ public abstract class Window implements Comparable<Window>
       2,
       Integer.MAX_VALUE,
       "Minimum height");
-    this.root.componentSetMinimumSize(min_size);
+    this.root.componentSetMinimumSize(context, min_size);
   }
 
   /**
@@ -516,14 +536,13 @@ public abstract class Window implements Comparable<Window>
    */
 
   public final void windowSetMinimumWidth(
+    final @Nonnull GUIContext context,
     final int width)
     throws ConstraintError
   {
-    this.root.componentSetMinimumWidth(Constraints.constrainRange(
-      width,
-      2,
-      Integer.MAX_VALUE,
-      "Width"));
+    this.root.componentSetMinimumWidth(
+      context,
+      Constraints.constrainRange(width, 2, Integer.MAX_VALUE, "Width"));
   }
 
   /**
@@ -564,7 +583,7 @@ public abstract class Window implements Comparable<Window>
       GUIException
   {
     Constraints.constrainNotNull(context, "GUI context");
-    this.root.componentSetSize(size);
+    this.root.componentSetSize(context, size);
 
     final Log log = context.contextGetComponentLog();
     log.debug("size " + this.windowGetSize());

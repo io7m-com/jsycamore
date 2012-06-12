@@ -11,9 +11,9 @@ import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jtensors.VectorI2I;
 
-public class ComponentAlignmentTest
+public final class ComponentAlignmentTest
 {
-  @Test public void testContainerBottom()
+  @SuppressWarnings("static-method") @Test public void testContainerBottom()
     throws ConstraintError
   {
     final TestComponent container =
@@ -35,8 +35,10 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test public void testContainerBottomCenter()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testContainerBottomCenter()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -59,7 +61,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerBottomCenterNull()
       throws ConstraintError
@@ -67,8 +69,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerBottomCenter(null, 16);
   }
 
-  @Test public void testContainerBottomLeft()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testContainerBottomLeft()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -89,7 +93,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerBottomLeftNull()
       throws ConstraintError
@@ -97,7 +101,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerBottomLeft(null, 16);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerBottomNull()
       throws ConstraintError
@@ -105,8 +109,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerBottom(null, 16);
   }
 
-  @Test public void testContainerBottomRight()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testContainerBottomRight()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -129,7 +135,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerBottomRightNull()
       throws ConstraintError
@@ -137,7 +143,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerBottomRight(null, 16);
   }
 
-  @Test public void testContainerLeft()
+  @SuppressWarnings("static-method") @Test public void testContainerLeft()
     throws ConstraintError
   {
     final TestComponent container =
@@ -157,13 +163,15 @@ public class ComponentAlignmentTest
     Assert.assertEquals(0, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public void testContainerLeftNull()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testContainerLeftNull()
+      throws ConstraintError
   {
     ComponentAlignment.setPositionContainerLeft(null, 16);
   }
 
-  @Test public void testContainerRight()
+  @SuppressWarnings("static-method") @Test public void testContainerRight()
     throws ConstraintError
   {
     final TestComponent container =
@@ -185,7 +193,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(0, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerRightNull()
       throws ConstraintError
@@ -193,7 +201,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerRight(null, 16);
   }
 
-  @Test public void testContainerTop()
+  @SuppressWarnings("static-method") @Test public void testContainerTop()
     throws ConstraintError
   {
     final TestComponent container =
@@ -213,8 +221,10 @@ public class ComponentAlignmentTest
     Assert.assertEquals(16, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test public void testContainerTopCenter()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testContainerTopCenter()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -235,7 +245,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(16, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerTopCenterNull()
       throws ConstraintError
@@ -243,7 +253,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerTopCenter(null, 16);
   }
 
-  @Test public void testContainerTopLeft()
+  @SuppressWarnings("static-method") @Test public void testContainerTopLeft()
     throws ConstraintError
   {
     final TestComponent container =
@@ -263,7 +273,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(16, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerTopLeftNull()
       throws ConstraintError
@@ -271,14 +281,18 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerTopLeft(null, 16);
   }
 
-  @Test(expected = ConstraintError.class) public void testContainerTopNull()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
+    void
+    testContainerTopNull()
+      throws ConstraintError
   {
     ComponentAlignment.setPositionContainerTop(null, 16);
   }
 
-  @Test public void testContainerTopRight()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testContainerTopRight()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -299,7 +313,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(16, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testContainerTopRightNull()
       throws ConstraintError
@@ -307,7 +321,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionContainerTopRight(null, 16);
   }
 
-  @Test public void testRelativeAbove()
+  @SuppressWarnings("static-method") @Test public void testRelativeAbove()
     throws ConstraintError
   {
     final TestComponent container =
@@ -336,7 +350,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeAboveNull0()
       throws ConstraintError
@@ -344,7 +358,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeAbove(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeAboveNull1()
       throws ConstraintError
@@ -355,8 +369,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeAbove(c0, 16, null);
   }
 
-  @Test public void testRelativeAboveSameX()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testRelativeAboveSameX()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -384,7 +400,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeAboveSameXNull0()
       throws ConstraintError
@@ -392,7 +408,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeAboveSameX(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeAboveSameXNull1()
       throws ConstraintError
@@ -403,7 +419,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeAboveSameX(c0, 16, null);
   }
 
-  @Test public void testRelativeBelow()
+  @SuppressWarnings("static-method") @Test public void testRelativeBelow()
     throws ConstraintError
   {
     final TestComponent container =
@@ -432,7 +448,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeBelowNull0()
       throws ConstraintError
@@ -440,7 +456,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeBelow(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeBelowNull1()
       throws ConstraintError
@@ -451,8 +467,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeBelow(c0, 16, null);
   }
 
-  @Test public void testRelativeBelowSameX()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testRelativeBelowSameX()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -480,7 +498,7 @@ public class ComponentAlignmentTest
       .getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeBelowSameXNull0()
       throws ConstraintError
@@ -488,7 +506,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeBelowSameX(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeBelowSameXNull1()
       throws ConstraintError
@@ -499,7 +517,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeBelowSameX(c0, 16, null);
   }
 
-  @Test public void testRelativeLeftOf()
+  @SuppressWarnings("static-method") @Test public void testRelativeLeftOf()
     throws ConstraintError
   {
     final TestComponent container =
@@ -528,7 +546,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(32, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeLeftOfNull0()
       throws ConstraintError
@@ -536,7 +554,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeLeftOf(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeLeftOfNull1()
       throws ConstraintError
@@ -547,8 +565,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeLeftOf(c0, 16, null);
   }
 
-  @Test public void testRelativeLeftOfSameY()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testRelativeLeftOfSameY()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -576,7 +596,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(64, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeLeftOfSameYNull0()
       throws ConstraintError
@@ -584,7 +604,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeLeftOfSameY(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeLeftOfSameYNull1()
       throws ConstraintError
@@ -595,7 +615,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeLeftOfSameY(c0, 16, null);
   }
 
-  @Test public void testRelativeRightOf()
+  @SuppressWarnings("static-method") @Test public void testRelativeRightOf()
     throws ConstraintError
   {
     final TestComponent container =
@@ -624,7 +644,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(32, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeRightOfNull0()
       throws ConstraintError
@@ -632,7 +652,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeRightOf(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeRightOfNull1()
       throws ConstraintError
@@ -643,8 +663,10 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeRightOf(c0, 16, null);
   }
 
-  @Test public void testRelativeRightOfSameY()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testRelativeRightOfSameY()
+      throws ConstraintError
   {
     final TestComponent container =
       new TestComponent(PointConstants.PARENT_ORIGIN, new VectorI2I(128, 128));
@@ -672,7 +694,7 @@ public class ComponentAlignmentTest
     Assert.assertEquals(64, c0.componentGetPositionParentRelative().getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeRightOfSameYNull0()
       throws ConstraintError
@@ -680,7 +702,7 @@ public class ComponentAlignmentTest
     ComponentAlignment.setPositionRelativeRightOfSameY(null, 16, null);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testRelativeRightOfSameYNull1()
       throws ConstraintError

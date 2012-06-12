@@ -20,11 +20,11 @@ import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
-import com.io7m.jsycamore.components.Button;
+import com.io7m.jsycamore.components.AbstractContainer;
+import com.io7m.jsycamore.components.ButtonLabelled;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
-import com.io7m.jsycamore.windows.ContentPane;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
@@ -126,14 +126,17 @@ public final class SimpleButton implements Runnable
         new VectorI2I(300, 200),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(96);
-    this.window0.windowSetMinimumWidth(96);
+    this.window0.windowSetMinimumHeight(ctx, 96);
+    this.window0.windowSetMinimumWidth(ctx, 96);
 
-    final ContentPane pane = this.window0.windowGetContentPane();
-    final Button b =
-      new Button(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        64,
-        32), "Hello");
+    final AbstractContainer pane = this.window0.windowGetContentPane();
+    final ButtonLabelled b =
+      new ButtonLabelled(
+        ctx,
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(64, 32),
+        "Hello");
     ComponentAlignment.setPositionContainerCenter(b);
     b.componentSetMinimumX(8);
     b.componentSetMinimumY(8);

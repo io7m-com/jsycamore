@@ -6,9 +6,9 @@ import org.junit.Test;
 import com.io7m.jsycamore.geometry.Point;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 
-public class PointTest
+public final class PointTest
 {
-  @Test public void testSetIdentity()
+  @SuppressWarnings("static-method") @Test public void testSetIdentity()
   {
     final Point<ScreenRelative> p = new Point<ScreenRelative>();
 
@@ -21,7 +21,7 @@ public class PointTest
     Assert.assertEquals(71, p.getYI());
   }
 
-  @Test public void testString()
+  @SuppressWarnings("static-method") @Test public void testString()
   {
     final Point<ScreenRelative> p = new Point<ScreenRelative>();
 
@@ -31,14 +31,14 @@ public class PointTest
     Assert.assertEquals("[Point 23 71]", p.toString());
   }
 
-  @Test public void testZero()
+  @SuppressWarnings("static-method") @Test public void testZero()
   {
     final Point<ScreenRelative> p = new Point<ScreenRelative>();
     Assert.assertEquals(0, p.getXI());
     Assert.assertEquals(0, p.getYI());
   }
 
-  @Test public void testZeroCopy()
+  @SuppressWarnings("static-method") @Test public void testZeroCopy()
   {
     final Point<ScreenRelative> p0 = new Point<ScreenRelative>(23, 23);
     Assert.assertEquals(23, p0.getXI());

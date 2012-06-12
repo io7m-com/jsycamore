@@ -81,12 +81,6 @@ public final class ScissorStack implements Iterable<Scissor>
     if (this.regions.size() > 0) {
       final Scissor existing = this.regions.peek();
       final Scissor intersection = next.clipAgainst(existing);
-
-      assert intersection.getLowerX() >= existing.getLowerX();
-      assert intersection.getLowerY() >= existing.getLowerY();
-      assert intersection.getUpperX() <= existing.getUpperX();
-      assert intersection.getUpperY() <= existing.getUpperY();
-
       this.regions.push(intersection);
       return intersection;
     }

@@ -12,9 +12,9 @@ import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.geometry.WindowRelative;
 import com.io7m.jtensors.VectorM2I;
 
-public class PointConversionTest
+public final class PointConversionTest
 {
-  @Test public void testAbsoluteToWindow()
+  @SuppressWarnings("static-method") @Test public void testAbsoluteToWindow()
     throws ConstraintError
   {
     final Point<ScreenRelative> p0 = new Point<ScreenRelative>(64, 64);
@@ -25,7 +25,7 @@ public class PointConversionTest
     Assert.assertEquals(2, w.getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testAbsoluteToWindowNull0()
       throws ConstraintError
@@ -34,7 +34,7 @@ public class PointConversionTest
     PointConversion.screenToWindow(null, p1);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testAbsoluteToWindowNull1()
       throws ConstraintError
@@ -43,8 +43,10 @@ public class PointConversionTest
     PointConversion.screenToWindow(p0, null);
   }
 
-  @Test public void testScreenScissorIdentity()
-    throws ConstraintError
+  @SuppressWarnings("static-method") @Test public
+    void
+    testScreenScissorIdentity()
+      throws ConstraintError
   {
     final Point<ScreenRelative> point = new Point<ScreenRelative>(64, 64);
     final VectorM2I size = new VectorM2I(640, 480);
@@ -64,7 +66,7 @@ public class PointConversionTest
     Assert.assertEquals(64, scr.getYI());
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testScreenToScissorNull0()
       throws ConstraintError
@@ -73,7 +75,7 @@ public class PointConversionTest
     PointConversion.screenToScissor(null, p0);
   }
 
-  @Test(expected = ConstraintError.class) public
+  @SuppressWarnings("static-method") @Test(expected = ConstraintError.class) public
     void
     testScreenToScissorNull1()
       throws ConstraintError
