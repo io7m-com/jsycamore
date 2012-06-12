@@ -55,7 +55,7 @@ public final class SimpleThemes implements Runnable
     final String args[])
   {
     try {
-      Display.setTitle("SimpleEnabledDisabled");
+      Display.setTitle("SimpleThemes");
       Display.setDisplayMode(new DisplayMode(
         SimpleThemes.viewport_size.x,
         SimpleThemes.viewport_size.y));
