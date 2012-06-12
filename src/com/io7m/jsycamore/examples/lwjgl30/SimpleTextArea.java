@@ -147,8 +147,8 @@ public final class SimpleTextArea implements Runnable
 
     final TextArea t =
       new TextArea(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        pane.componentGetWidth() - 16,
-        pane.componentGetHeight() - 16));
+        pane.componentGetWidth() - 24,
+        pane.componentGetHeight() - 24));
     t.componentSetMinimumX(8);
     t.componentSetMinimumY(8);
     t.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
