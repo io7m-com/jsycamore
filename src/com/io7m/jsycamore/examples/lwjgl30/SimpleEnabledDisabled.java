@@ -2,6 +2,8 @@ package com.io7m.jsycamore.examples.lwjgl30;
 
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,15 +16,19 @@ import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
 import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jlog.Log;
-import com.io7m.jsycamore.Component.ParentResizeBehavior;
+import com.io7m.jsycamore.Component;
+import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
 import com.io7m.jsycamore.Window;
 import com.io7m.jsycamore.components.AbstractContainer;
-import com.io7m.jsycamore.components.TextArea;
+import com.io7m.jsycamore.components.ButtonLabelled;
+import com.io7m.jsycamore.components.ButtonListener;
+import com.io7m.jsycamore.components.ContainerThemed;
 import com.io7m.jsycamore.geometry.ParentRelative;
 import com.io7m.jsycamore.geometry.Point;
+import com.io7m.jsycamore.geometry.PointConstants;
 import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
@@ -32,7 +38,7 @@ import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
-public final class SimpleTextArea implements Runnable
+public final class SimpleEnabledDisabled implements Runnable
 {
   private static final Point<ScreenRelative> viewport_position;
   private static final VectorM2I             viewport_size;
@@ -46,13 +52,13 @@ public final class SimpleTextArea implements Runnable
     final String args[])
   {
     try {
-      Display.setTitle("SimpleTextArea");
+      Display.setTitle("SimpleEnabledDisabled");
       Display.setDisplayMode(new DisplayMode(
-        SimpleTextArea.viewport_size.x,
-        SimpleTextArea.viewport_size.y));
+        SimpleEnabledDisabled.viewport_size.x,
+        SimpleEnabledDisabled.viewport_size.y));
       Display.create();
 
-      final SimpleTextArea sw = new SimpleTextArea();
+      final SimpleEnabledDisabled sw = new SimpleEnabledDisabled();
       sw.run();
     } catch (final LWJGLException e) {
       // TODO Auto-generated catch block
@@ -85,7 +91,7 @@ public final class SimpleTextArea implements Runnable
   private final Window                window0;
   private final Window                window1;
 
-  SimpleTextArea()
+  SimpleEnabledDisabled()
     throws GLException,
       ConstraintError,
       FilesystemError,
@@ -94,6 +100,7 @@ public final class SimpleTextArea implements Runnable
     final Properties p = new Properties();
     p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
     p.put("com.io7m.jsycamore.logs.example", "true");
+    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
     p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
     p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
 
@@ -107,8 +114,8 @@ public final class SimpleTextArea implements Runnable
     this.mouse_position = new Point<ScreenRelative>();
     this.gui =
       new GUI(
-        SimpleTextArea.viewport_position,
-        SimpleTextArea.viewport_size,
+        SimpleEnabledDisabled.viewport_position,
+        SimpleEnabledDisabled.viewport_size,
         this.gl,
         this.fs,
         this.log);
@@ -116,14 +123,14 @@ public final class SimpleTextArea implements Runnable
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
-    wp.setCanResize(true);
-    wp.setTitle("Text");
+    wp.setCanResize(false);
+    wp.setTitle("Window 0");
 
     this.window0 =
       new StandardWindow(
         ctx,
-        new Point<ScreenRelative>(96, 96),
-        new VectorI2I(500, 300),
+        new Point<ScreenRelative>(64, 64),
+        new VectorI2I(300, 200),
         wp);
     this.window0.windowSetAlpha(0.98f);
     this.window0.windowSetMinimumHeight(ctx, 96);
@@ -140,32 +147,83 @@ public final class SimpleTextArea implements Runnable
         new VectorI2I(64, 64),
         wp);
     this.window1.windowSetAlpha(0.98f);
-    this.window1.windowSetMinimumHeight(ctx, 64);
-    this.window1.windowSetMinimumWidth(ctx, 64);
 
     final AbstractContainer pane = this.window0.windowGetContentPane();
 
-    final TextArea t =
-      new TextArea(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        pane.componentGetWidth() - 24,
-        pane.componentGetHeight() - 24));
-    t.componentSetMinimumX(8);
-    t.componentSetMinimumY(8);
-    t.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-    t.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
-    t.textAreaAddLine(
-      this.gui.getContext(),
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-    t.textAreaAddLine(ctx, "Nullam sed ultricies velit.");
-    t.textAreaAddLine(
-      ctx,
-      "Aliquam ut risus metus, sit amet dignissim risus.");
-    t.textAreaAddLine(
-      ctx,
-      "Nullam urna enim, mollis a dictum eget, pretium nec tortor.");
+    final ContainerThemed container =
+      new ContainerThemed(pane, PointConstants.PARENT_ORIGIN, new VectorI2I(
+        156,
+        88));
+    ComponentAlignment.setPositionContainerTopLeft(container, 8);
 
-    this.gui.windowAdd(this.window1);
+    final ButtonLabelled b0 =
+      new ButtonLabelled(
+        ctx,
+        container,
+        new Point<ParentRelative>(16, 16),
+        new VectorI2I(64, 32),
+        "B0");
+    ComponentAlignment.setPositionContainerTopLeft(b0, 8);
+
+    final ButtonLabelled b1 =
+      new ButtonLabelled(
+        ctx,
+        container,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B1");
+    ComponentAlignment.setPositionRelativeRightOfSameY(b1, 8, b0);
+
+    final ButtonLabelled b2 =
+      new ButtonLabelled(
+        ctx,
+        container,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B2");
+    ComponentAlignment.setPositionRelativeBelowSameX(b2, 8, b0);
+
+    final ButtonLabelled b3 =
+      new ButtonLabelled(
+        ctx,
+        container,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "B3");
+    ComponentAlignment.setPositionRelativeRightOfSameY(b3, 8, b2);
+
+    b0.componentSetEnabled(false);
+    b1.componentSetEnabled(true);
+    b2.componentSetEnabled(false);
+    b3.componentSetEnabled(true);
+
+    final ButtonLabelled toggle =
+      new ButtonLabelled(
+        ctx,
+        pane,
+        PointConstants.PARENT_ORIGIN,
+        new VectorI2I(64, 32),
+        "Disable");
+    ComponentAlignment.setPositionRelativeRightOfSameY(toggle, 8, container);
+
+    toggle.setButtonListener(new ButtonListener() {
+      @Override public void buttonListenerOnClick(
+        final @Nonnull Component button)
+        throws GUIException,
+          ConstraintError
+      {
+        if (container.componentIsEnabled()) {
+          container.componentSetEnabled(false);
+          toggle.setText(ctx, "Enable");
+        } else {
+          container.componentSetEnabled(true);
+          toggle.setText(ctx, "Disable");
+        }
+      }
+    });
+
     this.gui.windowAdd(this.window0);
+    this.gui.windowAdd(this.window1);
   }
 
   private void input()
