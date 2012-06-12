@@ -504,10 +504,9 @@ public abstract class Component implements
   /**
    * Retrieve the maximum height to which this component can be resized.
    * 
-   * @see Component#componentSetMinimumWidth(int)
-   * @see Component#componentSetMaximumWidth(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumHeight(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final int componentGetMaximumHeight()
@@ -533,10 +532,10 @@ public abstract class Component implements
   /**
    * Retrieve the maximum width to which this component can be resized.
    * 
-   * @see Component#componentSetMinimumWidth(int)
-   * @see Component#componentSetMaximumWidth(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumWidth(GUIContext, int)
+   * @see Component#componentSetMaximumWidth(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final int componentGetMaximumWidth()
@@ -579,10 +578,10 @@ public abstract class Component implements
   /**
    * Retrieve the minimum height to which this component can be resized.
    * 
-   * @see Component#componentSetMinimumHeight(int)
-   * @see Component#componentSetMaximumHeight(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumHeight(GUIContext, int)
+   * @see Component#componentSetMaximumHeight(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final int componentGetMinimumHeight()
@@ -608,10 +607,10 @@ public abstract class Component implements
   /**
    * Retrieve the minimum width to which this component can be resized.
    * 
-   * @see Component#componentSetMinimumWidth(int)
-   * @see Component#componentSetMaximumWidth(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumWidth(GUIContext, int)
+   * @see Component#componentSetMaximumWidth(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final int componentGetMinimumWidth()
@@ -639,10 +638,10 @@ public abstract class Component implements
    * Retrieve the minimum Y position to which this component can be moved, in
    * parent-relative coordinates.
    * 
-   * @see Component#componentSetMinimumWidth(int)
-   * @see Component#componentSetMaximumWidth(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumWidth(GUIContext, int)
+   * @see Component#componentSetMaximumWidth(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final int componentGetMinimumY()
@@ -997,9 +996,9 @@ public abstract class Component implements
    *           </li>
    *           </ul>
    * 
-   * @see Component#componentSetMinimumWidth(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumWidth(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final void componentSetMaximumWidth(
@@ -1068,9 +1067,9 @@ public abstract class Component implements
    *           </li>
    *           </ul>
    * 
-   * @see Component#componentSetMinimumHeight(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumHeight(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final void componentSetMinimumHeight(
@@ -1108,8 +1107,9 @@ public abstract class Component implements
    * 
    * @throws ConstraintError
    *           If <code>minimum_size == null</code> or any of the constraints
-   *           on {@link Component#componentSetMinimumHeight(int)} or
-   *           {@link Component#componentSetMinimumWidth(int)} are violated.
+   *           on {@link Component#componentSetMinimumHeight(GUIContext, int)}
+   *           or {@link Component#componentSetMinimumWidth(GUIContext, int)}
+   *           are violated.
    */
 
   public final void componentSetMinimumSize(
@@ -1131,9 +1131,9 @@ public abstract class Component implements
    *           <code>0 < height <= this.componentGetMaximumWidth() == false</code>
    *           .
    * 
-   * @see Component#componentSetMinimumHeight(int)
-   * @see Component#componentSetMinimumSize(VectorReadable2I)
-   * @see Component#componentSetMaximumSize(VectorReadable2I)
+   * @see Component#componentSetMinimumHeight(GUIContext, int)
+   * @see Component#componentSetMinimumSize(GUIContext, VectorReadable2I)
+   * @see Component#componentSetMaximumSize(GUIContext, VectorReadable2I)
    */
 
   public final void componentSetMinimumWidth(
