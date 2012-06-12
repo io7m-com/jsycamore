@@ -486,7 +486,7 @@ public final class StandardWindow extends Window
     this.windowSetMinimumWidth(context, parameters.getMinimumWidth());
     this.windowSetMinimumHeight(context, parameters.getMinimumHeight());
 
-    final Component root = this.windowGetRootPane();
+    final AbstractContainer root = this.windowGetRootPane();
     final VectorReadable2I root_size = root.componentGetSize();
 
     {
