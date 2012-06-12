@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -67,7 +68,8 @@ public final class GUIContext
       GLException,
       FontFormatException,
       IOException,
-      FilesystemError
+      FilesystemError,
+      GUIException
   {
     this.gl = Constraints.constrainNotNull(gl, "OpenGL interface");
     this.filesystem =
@@ -92,6 +94,8 @@ public final class GUIContext
     this.matrix_modelview_stack.push(new MatrixM4x4F());
     this.scissor_stack = new ScissorStack();
 
+    this.shader_current = null;
+
     this.shader_flat = new GUIShader("shader-flat", base_log);
     this.shader_flat.addVertexShader(new PathVirtual(
       "/sycamore/shaders/flat.v"));
@@ -113,36 +117,7 @@ public final class GUIContext
       "/sycamore/shaders/text.f"));
     this.shader_text.compile(fs, gl);
 
-    this.shader_current = null;
-
-    this.theme = new Theme();
-    this.theme.setBoundsColor3f(1, 1, 0);
-    this.theme.setFailsafeColor3f(1, 0, 1);
-    this.theme.setWindowEdgeWidth(1);
-
-    this.theme.setFocusedWindowEdgeColor3f(1, 1, 1);
-    this.theme.setFocusedWindowPaneBackgroundColor3f(0.1f, 0.1f, 0.1f);
-    this.theme.setFocusedWindowTitlebarBackgroundColor3f(0.8f, 0.0f, 0.0f);
-    this.theme.setFocusedWindowTitlebarTextColor3f(1.0f, 1.0f, 1.0f);
-    this.theme.setFocusedComponentBackgroundColor3f(0.2f, 0.2f, 0.2f);
-    this.theme.setFocusedComponentEdgeColor3f(0.8f, 0.8f, 0.8f);
-    this.theme.setFocusedComponentOverBackgroundColor3f(0.5f, 0.5f, 0.5f);
-    this.theme.setFocusedComponentOverEdgeColor3f(0.8f, 0.8f, 0.8f);
-    this.theme.setFocusedComponentActiveBackgroundColor3f(0.9f, 0.9f, 0.9f);
-    this.theme.setFocusedComponentActiveEdgeColor3f(0.8f, 0.8f, 0.8f);
-    this.theme.setFocusedTextAreaBackgroundColor3f(0.7f, 0.7f, 0.7f);
-    this.theme.setFocusedTextAreaForegroundColor3f(0.1f, 0.1f, 0.1f);
-    this.theme.setFocusedComponentDisabledBackgroundColor3f(0.3f, 0.3f, 0.3f);
-    this.theme.setFocusedComponentDisabledEdgeColor3f(0.5f, 0.5f, 0.5f);
-
-    this.theme.setUnfocusedWindowEdgeColor3f(0.8f, 0.8f, 0.8f);
-    this.theme.setUnfocusedWindowPaneBackgroundColor3f(0.2f, 0.2f, 0.2f);
-    this.theme.setUnfocusedWindowTitlebarBackgroundColor3f(0.6f, 0.3f, 0.3f);
-    this.theme.setUnfocusedWindowTitlebarTextColor3f(0.6f, 0.6f, 0.6f);
-    this.theme.setUnfocusedComponentBackgroundColor3f(0.3f, 0.3f, 0.3f);
-    this.theme.setUnfocusedComponentEdgeColor3f(0.5f, 0.5f, 0.5f);
-    this.theme.setUnfocusedTextAreaBackgroundColor3f(0.7f, 0.7f, 0.7f);
-    this.theme.setUnfocusedTextAreaForegroundColor3f(0.5f, 0.5f, 0.5f);
+    this.theme = this.loadTheme("mars");
 
     final InputStream fi =
       this.filesystem.openFile("/sycamore/fonts/dejavu-sans.ttf");
@@ -416,6 +391,31 @@ public final class GUIContext
     if (this.shader_current != null) {
       this.rlog.debug("shader unbind: " + this.shader_current);
       this.shader_current.deactivate(this.gl);
+    }
+  }
+
+  private final @Nonnull Theme loadTheme(
+    final @Nonnull String name)
+    throws FilesystemError,
+      ConstraintError,
+      IOException,
+      GUIException
+  {
+    final StringBuilder path = new StringBuilder();
+    path.append("/sycamore/themes/");
+    path.append(name);
+    path.append(".thm");
+
+    InputStream theme_stream = null;
+    try {
+      theme_stream = this.filesystem.openFile("/sycamore/themes/mars.thm");
+      final Properties props = new Properties();
+      props.load(theme_stream);
+      return Theme.loadThemeFromProperties(props);
+    } finally {
+      if (theme_stream != null) {
+        theme_stream.close();
+      }
     }
   }
 }
