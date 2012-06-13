@@ -281,7 +281,7 @@ public final class StandardWindow extends Window
       this.label =
         new Label(
           context,
-          parent,
+          this,
           StandardWindow.TITLEBAR_LABEL_OFFSET,
           size,
           title);
@@ -465,7 +465,7 @@ public final class StandardWindow extends Window
     CLOSE_BOX_X_TOP_RIGHT = new VectorI2I(9, 3);
     RESIZE_BOX_INNER_SIZE = new VectorI2I(8, 8);
     RESIZE_BOX_OUTER_SIZE = new VectorI2I(14, 14);
-    TITLEBAR_LABEL_OFFSET = new Point<ParentRelative>(4, 0);
+    TITLEBAR_LABEL_OFFSET = new Point<ParentRelative>(4, 1);
   }
 
   private final @Nonnull ContainerThemed              content_pane;
