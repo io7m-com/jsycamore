@@ -50,7 +50,7 @@ public abstract class Window implements Comparable<Window>
   }
 
   private final @Nonnull Point<ScreenRelative> position;
-  private final @Nonnull AbstractContainer     root;
+  private final @Nonnull ContainerThemed       root;
   private final @Nonnull Long                  id;
   private @Nonnull Framebuffer                 framebuffer;
   private @Nonnull Texture2DRGBAStatic         framebuffer_texture;
@@ -72,6 +72,9 @@ public abstract class Window implements Comparable<Window>
 
     this.id = Long.valueOf(Window.id_pool.incrementAndGet());
     this.root = new ContainerThemed(this, PointConstants.PARENT_ORIGIN, size);
+    this.root.setDrawEdge(false);
+    this.root.setDrawFill(false);
+
     this.alpha = 1.0f;
     this.state = WindowState.WINDOW_OPEN;
     this.position = new Point<ScreenRelative>(position);
