@@ -1,6 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
 import java.util.Stack;
 
 import org.lwjgl.LWJGLException;
@@ -11,9 +10,7 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jcanephora.ProjectionMatrix;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
@@ -28,7 +25,6 @@ import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -73,11 +69,10 @@ public final class SimpleScissor implements Runnable
   }
 
   private final GUI              gui;
-  private final Log              log;
   private final GLInterface      gl;
-  private final Filesystem       fs;
   private final ScissorStack     scissor_stack;
   private final Stack<VectorI3F> color_stack;
+  private final GUIContext       ctx;
 
   SimpleScissor()
     throws GLException,
@@ -85,25 +80,14 @@ public final class SimpleScissor implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleScissor.viewport_position,
-        SimpleScissor.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
+        SimpleScissor.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     this.color_stack = new Stack<VectorI3F>();
     this.scissor_stack = new ScissorStack();

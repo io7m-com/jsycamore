@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import javax.annotation.Nonnull;
 
 import org.lwjgl.LWJGLException;
@@ -14,8 +12,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.ComponentAlignment;
@@ -37,7 +33,7 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
+import com.io7m.jvvfs.FilesystemAPI;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -87,12 +83,12 @@ public final class SimpleThemes implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                example_window;
   private final Window                theme_window;
+  private final GUIContext            ctx;
+  private final FilesystemAPI         fs;
 
   SimpleThemes()
     throws GLException,
@@ -100,29 +96,17 @@ public final class SimpleThemes implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleThemes.viewport_position,
-        SimpleThemes.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleThemes.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
+    this.fs = this.ctx.contextGetFilesystem();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
@@ -136,13 +120,13 @@ public final class SimpleThemes implements Runnable
 
       this.example_window =
         new StandardWindow(
-          ctx,
+          this.ctx,
           new Point<ScreenRelative>(32, 32),
           new VectorI2I(280, 192),
           wp);
       this.example_window.windowSetAlpha(0.98f);
-      this.example_window.windowSetMinimumHeight(ctx, 96);
-      this.example_window.windowSetMinimumWidth(ctx, 96);
+      this.example_window.windowSetMinimumHeight(this.ctx, 96);
+      this.example_window.windowSetMinimumWidth(this.ctx, 96);
 
       final AbstractContainer pane =
         this.example_window.windowGetContentPane();
@@ -155,17 +139,14 @@ public final class SimpleThemes implements Runnable
       ComponentAlignment.setPositionContainerTopLeft(container, 8);
 
       final ButtonLabelled b0 =
-        new ButtonLabelled(
-          ctx,
-          container,
-          new Point<ParentRelative>(16, 16),
-          new VectorI2I(64, 32),
-          "B0");
+        new ButtonLabelled(this.ctx, container, new Point<ParentRelative>(
+          16,
+          16), new VectorI2I(64, 32), "B0");
       ComponentAlignment.setPositionContainerTopLeft(b0, 8);
 
       final ButtonLabelled b1 =
         new ButtonLabelled(
-          ctx,
+          this.ctx,
           container,
           PointConstants.PARENT_ORIGIN,
           new VectorI2I(64, 32),
@@ -174,7 +155,7 @@ public final class SimpleThemes implements Runnable
 
       final ButtonLabelled b2 =
         new ButtonLabelled(
-          ctx,
+          this.ctx,
           container,
           PointConstants.PARENT_ORIGIN,
           new VectorI2I(64, 32),
@@ -183,7 +164,7 @@ public final class SimpleThemes implements Runnable
 
       final ButtonLabelled b3 =
         new ButtonLabelled(
-          ctx,
+          this.ctx,
           container,
           PointConstants.PARENT_ORIGIN,
           new VectorI2I(64, 32),
@@ -197,7 +178,7 @@ public final class SimpleThemes implements Runnable
 
       final ButtonLabelled toggle =
         new ButtonLabelled(
-          ctx,
+          this.ctx,
           pane,
           PointConstants.PARENT_ORIGIN,
           new VectorI2I(64, 32),
@@ -206,24 +187,26 @@ public final class SimpleThemes implements Runnable
         .setPositionRelativeRightOfSameY(toggle, 8, container);
 
       toggle.setButtonListener(new ButtonListener() {
-        @Override public void buttonListenerOnClick(
-          final @Nonnull Component button)
-          throws GUIException,
-            ConstraintError
+        @SuppressWarnings("synthetic-access") @Override public
+          void
+          buttonListenerOnClick(
+            final @Nonnull Component button)
+            throws GUIException,
+              ConstraintError
         {
           if (container.componentIsEnabled()) {
             container.componentSetEnabled(false);
-            toggle.setText(ctx, "Enable");
+            toggle.setText(SimpleThemes.this.ctx, "Enable");
           } else {
             container.componentSetEnabled(true);
-            toggle.setText(ctx, "Disable");
+            toggle.setText(SimpleThemes.this.ctx, "Disable");
           }
         }
       });
 
       final TextArea t =
         new TextArea(
-          ctx,
+          this.ctx,
           pane,
           new Point<ParentRelative>(8, 8),
           new VectorI2I(pane.componentGetWidth() - 16, 64));
@@ -235,12 +218,12 @@ public final class SimpleThemes implements Runnable
       t.textAreaAddLine(
         this.gui.getContext(),
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-      t.textAreaAddLine(ctx, "Nullam sed ultricies velit.");
+      t.textAreaAddLine(this.ctx, "Nullam sed ultricies velit.");
       t.textAreaAddLine(
-        ctx,
+        this.ctx,
         "Aliquam ut risus metus, sit amet dignissim risus.");
       t.textAreaAddLine(
-        ctx,
+        this.ctx,
         "Nullam urna enim, mollis a dictum eget, pretium nec tortor.");
 
       ComponentAlignment.setPositionRelativeBelowSameX(t, 8, container);
@@ -257,7 +240,7 @@ public final class SimpleThemes implements Runnable
 
       this.theme_window =
         new StandardWindow(
-          ctx,
+          this.ctx,
           new Point<ScreenRelative>(8, 8),
           new VectorI2I(128, 128),
           wp);
@@ -267,12 +250,9 @@ public final class SimpleThemes implements Runnable
         this.theme_window.windowGetContentPane();
 
       final ButtonLabelled b0 =
-        new ButtonLabelled(
-          ctx,
-          container,
-          new Point<ParentRelative>(8, 8),
-          new VectorI2I(64, 32),
-          "mars");
+        new ButtonLabelled(this.ctx, container, new Point<ParentRelative>(
+          8,
+          8), new VectorI2I(64, 32), "mars");
       ComponentAlignment.setPositionContainerTopLeft(b0, 8);
 
       b0.setButtonListener(new ButtonListener() {
@@ -283,7 +263,7 @@ public final class SimpleThemes implements Runnable
             throws GUIException,
               ConstraintError
         {
-          final Theme current = ctx.contextGetTheme();
+          final Theme current = SimpleThemes.this.ctx.contextGetTheme();
           final Theme replace =
             Theme.loadThemeFromFilesystem(SimpleThemes.this.fs, "mars");
           Theme.copy(replace, current);
@@ -291,12 +271,9 @@ public final class SimpleThemes implements Runnable
       });
 
       final ButtonLabelled b1 =
-        new ButtonLabelled(
-          ctx,
-          container,
-          new Point<ParentRelative>(8, 8),
-          new VectorI2I(64, 32),
-          "banana");
+        new ButtonLabelled(this.ctx, container, new Point<ParentRelative>(
+          8,
+          8), new VectorI2I(64, 32), "banana");
 
       b1.setButtonListener(new ButtonListener() {
         @SuppressWarnings("synthetic-access") @Override public
@@ -306,7 +283,7 @@ public final class SimpleThemes implements Runnable
             throws GUIException,
               ConstraintError
         {
-          final Theme current = ctx.contextGetTheme();
+          final Theme current = SimpleThemes.this.ctx.contextGetTheme();
           final Theme replace =
             Theme.loadThemeFromFilesystem(SimpleThemes.this.fs, "banana");
           Theme.copy(replace, current);

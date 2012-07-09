@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -10,9 +8,7 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jcanephora.ProjectionMatrix;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.DrawPrimitives;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
@@ -23,7 +19,6 @@ import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -68,9 +63,8 @@ public final class SimpleTriangles implements Runnable
   }
 
   private final GUI         gui;
-  private final Log         log;
   private final GLInterface gl;
-  private final Filesystem  fs;
+  private final GUIContext  ctx;
 
   SimpleTriangles()
     throws GLException,
@@ -78,25 +72,15 @@ public final class SimpleTriangles implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
 
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleTriangles.viewport_position,
-        SimpleTriangles.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
+        SimpleTriangles.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
   }
 
   private void render()

@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +10,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
@@ -30,7 +26,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -80,11 +75,10 @@ public final class SimpleResizeBehavior implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
+  private final GUIContext            ctx;
 
   SimpleResizeBehavior()
     throws GLException,
@@ -92,28 +86,16 @@ public final class SimpleResizeBehavior implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleResizeBehavior.viewport_position,
-        SimpleResizeBehavior.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleResizeBehavior.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(true);
@@ -122,19 +104,19 @@ public final class SimpleResizeBehavior implements Runnable
 
     this.window0 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(300, 200),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(ctx, 96);
-    this.window0.windowSetMinimumWidth(ctx, 96);
+    this.window0.windowSetMinimumHeight(this.ctx, 96);
+    this.window0.windowSetMinimumWidth(this.ctx, 96);
 
     final AbstractContainer pane = this.window0.windowGetContentPane();
 
     final ButtonLabelled b0 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         new Point<ParentRelative>(16, 16),
         new VectorI2I(64, 32),
@@ -147,7 +129,7 @@ public final class SimpleResizeBehavior implements Runnable
 
     final ButtonLabelled b1 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -155,14 +137,14 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeRightOfSameY(b1, 8, b0);
     b1.componentSetMinimumX(8);
     b1.componentSetMinimumY(8);
-    b1.componentSetMinimumWidth(ctx, 64);
-    b1.componentSetMinimumHeight(ctx, 32);
+    b1.componentSetMinimumWidth(this.ctx, 64);
+    b1.componentSetMinimumHeight(this.ctx, 32);
     b1.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
     b1.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 
     final ButtonLabelled b2 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -170,14 +152,14 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeBelowSameX(b2, 8, b0);
     b2.componentSetMinimumX(8);
     b2.componentSetMinimumY(8);
-    b2.componentSetMinimumWidth(ctx, 64);
-    b2.componentSetMinimumHeight(ctx, 32);
+    b2.componentSetMinimumWidth(this.ctx, 64);
+    b2.componentSetMinimumHeight(this.ctx, 32);
     b2.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b2.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_FIXED);
 
     final ButtonLabelled b3 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -185,8 +167,8 @@ public final class SimpleResizeBehavior implements Runnable
     ComponentAlignment.setPositionRelativeRightOfSameY(b3, 8, b2);
     b3.componentSetMinimumX(8);
     b3.componentSetMinimumY(8);
-    b3.componentSetMinimumWidth(ctx, 64);
-    b3.componentSetMinimumHeight(ctx, 32);
+    b3.componentSetMinimumWidth(this.ctx, 64);
+    b3.componentSetMinimumHeight(this.ctx, 32);
     b3.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
     b3.componentSetWidthResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
 

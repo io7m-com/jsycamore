@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +10,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
@@ -24,7 +20,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -74,14 +69,13 @@ public final class SimpleWindows implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
   private final Window                window1;
   private final Window                window2;
   private final Window                window3;
+  private final GUIContext            ctx;
   private final static float          WINDOW_ALPHA = 0.98f;
 
   SimpleWindows()
@@ -90,38 +84,28 @@ public final class SimpleWindows implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleWindows.viewport_position,
-        SimpleWindows.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleWindows.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
+
     final WindowParameters wp = new WindowParameters();
 
     wp.setCanClose(false);
     wp.setCanResize(false);
     wp.setTitle("Window 0");
     this.window0 =
-      new StandardWindow(ctx, new Point<ScreenRelative>(4, 4), new VectorI2I(
-        300,
-        200), wp);
+      new StandardWindow(
+        this.ctx,
+        new Point<ScreenRelative>(4, 4),
+        new VectorI2I(300, 200),
+        wp);
     this.window0.windowSetAlpha(SimpleWindows.WINDOW_ALPHA);
 
     wp.setCanClose(true);
@@ -129,7 +113,7 @@ public final class SimpleWindows implements Runnable
     wp.setTitle("Window 1");
     this.window1 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(4 + 320, 4),
         new VectorI2I(300, 200),
         wp);
@@ -140,7 +124,7 @@ public final class SimpleWindows implements Runnable
     wp.setTitle("Window 2");
     this.window2 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(4, 4 + 220),
         new VectorI2I(300, 200),
         wp);
@@ -151,7 +135,7 @@ public final class SimpleWindows implements Runnable
     wp.setTitle("Window 3");
     this.window3 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(4 + 320, 4 + 220),
         new VectorI2I(300, 200),
         wp);

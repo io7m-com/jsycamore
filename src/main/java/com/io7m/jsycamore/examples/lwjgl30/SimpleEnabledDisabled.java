@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import javax.annotation.Nonnull;
 
 import org.lwjgl.LWJGLException;
@@ -14,8 +12,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.ComponentAlignment;
 import com.io7m.jsycamore.GUI;
@@ -34,7 +30,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -84,12 +79,11 @@ public final class SimpleEnabledDisabled implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
   private final Window                window1;
+  private final GUIContext            ctx;
 
   SimpleEnabledDisabled()
     throws GLException,
@@ -97,29 +91,16 @@ public final class SimpleEnabledDisabled implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.gl30", "false");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleEnabledDisabled.viewport_position,
-        SimpleEnabledDisabled.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleEnabledDisabled.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
@@ -128,13 +109,13 @@ public final class SimpleEnabledDisabled implements Runnable
 
     this.window0 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(300, 200),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(ctx, 96);
-    this.window0.windowSetMinimumWidth(ctx, 96);
+    this.window0.windowSetMinimumHeight(this.ctx, 96);
+    this.window0.windowSetMinimumWidth(this.ctx, 96);
 
     wp.setCanClose(false);
     wp.setCanResize(false);
@@ -142,7 +123,7 @@ public final class SimpleEnabledDisabled implements Runnable
 
     this.window1 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(64, 64),
         wp);
@@ -157,17 +138,14 @@ public final class SimpleEnabledDisabled implements Runnable
     ComponentAlignment.setPositionContainerTopLeft(container, 8);
 
     final ButtonLabelled b0 =
-      new ButtonLabelled(
-        ctx,
-        container,
-        new Point<ParentRelative>(16, 16),
-        new VectorI2I(64, 32),
-        "B0");
+      new ButtonLabelled(this.ctx, container, new Point<ParentRelative>(
+        16,
+        16), new VectorI2I(64, 32), "B0");
     ComponentAlignment.setPositionContainerTopLeft(b0, 8);
 
     final ButtonLabelled b1 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -176,7 +154,7 @@ public final class SimpleEnabledDisabled implements Runnable
 
     final ButtonLabelled b2 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -185,7 +163,7 @@ public final class SimpleEnabledDisabled implements Runnable
 
     final ButtonLabelled b3 =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         container,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -199,7 +177,7 @@ public final class SimpleEnabledDisabled implements Runnable
 
     final ButtonLabelled toggle =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         PointConstants.PARENT_ORIGIN,
         new VectorI2I(64, 32),
@@ -207,17 +185,19 @@ public final class SimpleEnabledDisabled implements Runnable
     ComponentAlignment.setPositionRelativeRightOfSameY(toggle, 8, container);
 
     toggle.setButtonListener(new ButtonListener() {
-      @Override public void buttonListenerOnClick(
-        final @Nonnull Component button)
-        throws GUIException,
-          ConstraintError
+      @SuppressWarnings("synthetic-access") @Override public
+        void
+        buttonListenerOnClick(
+          final @Nonnull Component button)
+          throws GUIException,
+            ConstraintError
       {
         if (container.componentIsEnabled()) {
           container.componentSetEnabled(false);
-          toggle.setText(ctx, "Enable");
+          toggle.setText(SimpleEnabledDisabled.this.ctx, "Enable");
         } else {
           container.componentSetEnabled(true);
-          toggle.setText(ctx, "Disable");
+          toggle.setText(SimpleEnabledDisabled.this.ctx, "Disable");
         }
       }
     });
