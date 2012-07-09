@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jaux"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jcanephora"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jexternals"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jlog"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jpismo"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jrpack"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jtensors"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jtimeline"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/io7m-jvvfs"/>
-	<classpathentry kind="lib" path="/io7m-jexternals/findbugs/annotations.jar"/>
-	<classpathentry kind="lib" path="/io7m-jexternals/findbugs/jsr305.jar"/>
-	<classpathentry kind="lib" path="/io7m-jexternals/junit/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="/io7m-jexternals/lwjgl/lwjgl-2.8.3/jar/lwjgl.jar">
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="io7m-jexternals/lwjgl/lwjgl-2.8.3/native/linux"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
