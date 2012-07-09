@@ -29,7 +29,6 @@ import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorM4F;
 import com.io7m.jvvfs.FilesystemAPI;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleQuads implements Runnable
 {
@@ -89,8 +88,6 @@ public final class SimpleQuads implements Runnable
   {
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleQuads.viewport_position,
         SimpleQuads.viewport_size);
     this.ctx = this.gui.getContext();

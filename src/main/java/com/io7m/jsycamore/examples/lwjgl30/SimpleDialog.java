@@ -31,7 +31,6 @@ import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleDialog implements Runnable
 {
@@ -94,8 +93,6 @@ public final class SimpleDialog implements Runnable
 
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleDialog.viewport_position,
         SimpleDialog.viewport_size);
     this.ctx = this.gui.getContext();
