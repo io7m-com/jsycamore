@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import javax.annotation.Nonnull;
 
 import org.lwjgl.LWJGLException;
@@ -14,8 +12,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.Component;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.ComponentAlignment;
@@ -34,7 +30,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -84,11 +79,10 @@ public final class SimpleDialog implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
+  private final GUIContext            ctx;
 
   SimpleDialog()
     throws GLException,
@@ -96,28 +90,16 @@ public final class SimpleDialog implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleDialog.viewport_position,
-        SimpleDialog.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleDialog.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
@@ -126,20 +108,23 @@ public final class SimpleDialog implements Runnable
 
     this.window0 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(300, 128),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(ctx, 96);
-    this.window0.windowSetMinimumWidth(ctx, 96);
+    this.window0.windowSetMinimumHeight(this.ctx, 96);
+    this.window0.windowSetMinimumWidth(this.ctx, 96);
 
     final AbstractContainer pane = this.window0.windowGetContentPane();
 
     final Label l =
-      new Label(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        64,
-        24), "This is a very friendly greeting.");
+      new Label(
+        this.ctx,
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(64, 24),
+        "This is a very friendly greeting.");
 
     ComponentAlignment.setPositionContainerTopLeft(l, 8);
     l.componentSetMinimumX(8);
@@ -149,7 +134,7 @@ public final class SimpleDialog implements Runnable
 
     final ButtonLabelled b =
       new ButtonLabelled(
-        ctx,
+        this.ctx,
         pane,
         new Point<ParentRelative>(8, 8),
         new VectorI2I(64, 24),

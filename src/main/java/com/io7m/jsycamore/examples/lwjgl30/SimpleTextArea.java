@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +10,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.Component.ParentResizeBehavior;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
@@ -28,7 +24,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -78,12 +73,11 @@ public final class SimpleTextArea implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
   private final Window                window1;
+  private final GUIContext            ctx;
 
   SimpleTextArea()
     throws GLException,
@@ -91,28 +85,16 @@ public final class SimpleTextArea implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleTextArea.viewport_position,
-        SimpleTextArea.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleTextArea.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
@@ -121,13 +103,13 @@ public final class SimpleTextArea implements Runnable
 
     this.window0 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(96, 96),
         new VectorI2I(500, 300),
         wp);
     this.window0.windowSetAlpha(0.98f);
-    this.window0.windowSetMinimumHeight(ctx, 96);
-    this.window0.windowSetMinimumWidth(ctx, 96);
+    this.window0.windowSetMinimumHeight(this.ctx, 96);
+    this.window0.windowSetMinimumWidth(this.ctx, 96);
 
     wp.setCanClose(false);
     wp.setCanResize(false);
@@ -135,20 +117,24 @@ public final class SimpleTextArea implements Runnable
 
     this.window1 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(64, 64),
         wp);
     this.window1.windowSetAlpha(0.98f);
-    this.window1.windowSetMinimumHeight(ctx, 64);
-    this.window1.windowSetMinimumWidth(ctx, 64);
+    this.window1.windowSetMinimumHeight(this.ctx, 64);
+    this.window1.windowSetMinimumWidth(this.ctx, 64);
 
     final AbstractContainer pane = this.window0.windowGetContentPane();
 
     final TextArea t =
-      new TextArea(ctx, pane, new Point<ParentRelative>(8, 8), new VectorI2I(
-        pane.componentGetWidth() - 24,
-        pane.componentGetHeight() - 24));
+      new TextArea(
+        this.ctx,
+        pane,
+        new Point<ParentRelative>(8, 8),
+        new VectorI2I(
+          pane.componentGetWidth() - 24,
+          pane.componentGetHeight() - 24));
     t.componentSetMinimumX(8);
     t.componentSetMinimumY(8);
     t.componentSetHeightResizeBehavior(ParentResizeBehavior.BEHAVIOR_RESIZE);
@@ -156,12 +142,12 @@ public final class SimpleTextArea implements Runnable
     t.textAreaAddLine(
       this.gui.getContext(),
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-    t.textAreaAddLine(ctx, "Nullam sed ultricies velit.");
+    t.textAreaAddLine(this.ctx, "Nullam sed ultricies velit.");
     t.textAreaAddLine(
-      ctx,
+      this.ctx,
       "Aliquam ut risus metus, sit amet dignissim risus.");
     t.textAreaAddLine(
-      ctx,
+      this.ctx,
       "Nullam urna enim, mollis a dictum eget, pretium nec tortor.");
 
     this.gui.windowAdd(this.window1);

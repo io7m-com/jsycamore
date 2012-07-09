@@ -1,7 +1,5 @@
 package com.io7m.jsycamore.examples.lwjgl30;
 
-import java.util.Properties;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +10,6 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
 import com.io7m.jsycamore.GUIException;
@@ -28,7 +24,6 @@ import com.io7m.jsycamore.windows.StandardWindow;
 import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
-import com.io7m.jvvfs.Filesystem;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -78,11 +73,10 @@ public final class SimpleScissored implements Runnable
   }
 
   private final GUI                   gui;
-  private final Log                   log;
   private final GLInterface           gl;
-  private final Filesystem            fs;
   private final Point<ScreenRelative> mouse_position;
   private final Window                window0;
+  private final GUIContext            ctx;
 
   SimpleScissored()
     throws GLException,
@@ -90,28 +84,16 @@ public final class SimpleScissored implements Runnable
       FilesystemError,
       GUIException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-    p.put("com.io7m.jsycamore.logs.example.jsycamore.renderer", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.mouse_position = new Point<ScreenRelative>();
+
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleScissored.viewport_position,
-        SimpleScissored.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
-    final GUIContext ctx = this.gui.getContext();
+        SimpleScissored.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
 
     final WindowParameters wp = new WindowParameters();
     wp.setCanClose(false);
@@ -120,7 +102,7 @@ public final class SimpleScissored implements Runnable
 
     this.window0 =
       new StandardWindow(
-        ctx,
+        this.ctx,
         new Point<ScreenRelative>(64, 64),
         new VectorI2I(300, 200),
         wp);

@@ -3,7 +3,6 @@ package com.io7m.jsycamore.examples.lwjgl30;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
@@ -15,12 +14,10 @@ import com.io7m.jaux.Constraints.ConstraintError;
 import com.io7m.jcanephora.BlendFunction;
 import com.io7m.jcanephora.GLException;
 import com.io7m.jcanephora.GLInterface;
-import com.io7m.jcanephora.GLInterfaceLWJGL30;
 import com.io7m.jcanephora.ProjectionMatrix;
 import com.io7m.jcanephora.Texture2DRGBAStatic;
 import com.io7m.jcanephora.TextureFilter;
 import com.io7m.jcanephora.TextureWrap;
-import com.io7m.jlog.Log;
 import com.io7m.jsycamore.DrawPrimitives;
 import com.io7m.jsycamore.GUI;
 import com.io7m.jsycamore.GUIContext;
@@ -30,7 +27,7 @@ import com.io7m.jsycamore.geometry.ScreenRelative;
 import com.io7m.jtensors.MatrixM4x4F;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorM4F;
-import com.io7m.jvvfs.Filesystem;
+import com.io7m.jvvfs.FilesystemAPI;
 import com.io7m.jvvfs.FilesystemError;
 import com.io7m.jvvfs.PathReal;
 
@@ -78,10 +75,10 @@ public final class SimpleQuads implements Runnable
   }
 
   private final GUI           gui;
-  private final Log           log;
   private final GLInterface   gl;
-  private final Filesystem    fs;
   private Texture2DRGBAStatic texture;
+  private final GUIContext    ctx;
+  private final FilesystemAPI fs;
 
   SimpleQuads()
     throws GLException,
@@ -90,25 +87,15 @@ public final class SimpleQuads implements Runnable
       GUIException,
       IOException
   {
-    final Properties p = new Properties();
-    p.put("com.io7m.jsycamore.level", "LOG_DEBUG");
-    p.put("com.io7m.jsycamore.logs.example", "true");
-    p.put("com.io7m.jsycamore.logs.example.filesystem", "false");
-
-    this.log = new Log(p, "com.io7m.jsycamore", "example");
-    this.gl = new GLInterfaceLWJGL30(this.log);
-
-    this.fs = new Filesystem(this.log, new PathReal("."));
-    this.fs.createDirectory("/sycamore");
-    this.fs.mount("resources", "/sycamore");
-
     this.gui =
-      new GUI(
+      SetupGUI.setupGUI(
+        new PathReal("src/main"),
+        "resources",
         SimpleQuads.viewport_position,
-        SimpleQuads.viewport_size,
-        this.gl,
-        this.fs,
-        this.log);
+        SimpleQuads.viewport_size);
+    this.ctx = this.gui.getContext();
+    this.gl = this.ctx.contextGetGL();
+    this.fs = this.ctx.contextGetFilesystem();
 
     {
       final InputStream is = this.fs.openFile("/sycamore/images/wheat.png");
