@@ -102,9 +102,11 @@ public class ThemeTest
       IOException
   {
     final FileInputStream stream_w =
-      new FileInputStream("src/main/resources/themes/debug_white.thm");
+      new FileInputStream(
+        "src/main/resources/sycamore/themes/debug_white.thm");
     final FileInputStream stream_b =
-      new FileInputStream("src/main/resources/themes/debug_black.thm");
+      new FileInputStream(
+        "src/main/resources/sycamore/themes/debug_black.thm");
 
     final Properties p_w = new Properties();
     final Properties p_b = new Properties();
