@@ -26,7 +26,6 @@ import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2I;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleScissor implements Runnable
 {
@@ -82,8 +81,6 @@ public final class SimpleScissor implements Runnable
   {
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleScissor.viewport_position,
         SimpleScissor.viewport_size);
     this.ctx = this.gui.getContext();

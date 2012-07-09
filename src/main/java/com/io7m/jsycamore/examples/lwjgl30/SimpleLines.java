@@ -20,7 +20,6 @@ import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleLines implements Runnable
 {
@@ -74,8 +73,6 @@ public final class SimpleLines implements Runnable
   {
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleLines.viewport_position,
         SimpleLines.viewport_size);
     this.ctx = this.gui.getContext();

@@ -34,7 +34,6 @@ import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2I;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleScrollable implements Runnable
 {
@@ -204,8 +203,6 @@ public final class SimpleScrollable implements Runnable
 
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleScrollable.viewport_position,
         SimpleScrollable.viewport_size);
     this.ctx = this.gui.getContext();

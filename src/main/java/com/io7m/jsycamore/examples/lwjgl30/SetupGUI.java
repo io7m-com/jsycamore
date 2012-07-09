@@ -20,8 +20,6 @@ import com.io7m.jvvfs.PathReal;
 final class SetupGUI
 {
   static GUI setupGUI(
-    final @Nonnull PathReal resource_dir,
-    final @Nonnull String archive_name,
     final @Nonnull Point<ScreenRelative> viewport_position,
     final @Nonnull VectorReadable2I viewport_size)
     throws GLException,
@@ -38,6 +36,8 @@ final class SetupGUI
     final Log log = new Log(p, "com.io7m.jsycamore", "example");
     final GLInterfaceLWJGL30 gl = new GLInterfaceLWJGL30(log);
 
+    final PathReal resource_dir = new PathReal("src/main/resources");
+    final String archive_name = "sycamore";
     final Filesystem fs = new Filesystem(log, resource_dir);
     fs.createDirectory("/sycamore");
     fs.mount(archive_name, "/sycamore");

@@ -27,7 +27,6 @@ import com.io7m.jsycamore.windows.WindowParameters;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.VectorM2I;
 import com.io7m.jvvfs.FilesystemError;
-import com.io7m.jvvfs.PathReal;
 
 public final class SimpleResizeBehavior implements Runnable
 {
@@ -90,8 +89,6 @@ public final class SimpleResizeBehavior implements Runnable
 
     this.gui =
       SetupGUI.setupGUI(
-        new PathReal("src/main"),
-        "resources",
         SimpleResizeBehavior.viewport_position,
         SimpleResizeBehavior.viewport_size);
     this.ctx = this.gui.getContext();
