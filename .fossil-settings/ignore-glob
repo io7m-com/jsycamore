@@ -2,6 +2,9 @@ bin
 build
 doc-out
 ext
+io7m-jsycamore-core/target
+io7m-jsycamore-jogl/target
+io7m-jsycamore-lwjgl/target
 javadoc
 target
 tmp

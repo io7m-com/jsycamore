@@ -1,0 +1,29 @@
+jsycamore.theme.version = 1
+
+jsycamore.theme.bounds_color      = 1.0 1.0 1.0
+jsycamore.theme.failsafe_color    = 1.0 1.0 1.0
+jsycamore.theme.window.edge_width = 1
+
+jsycamore.theme.focused.window.edge_color                   = 1.0 1.0 1.0
+jsycamore.theme.focused.component.active_background_color   = 1.0 1.0 1.0
+jsycamore.theme.focused.component.active_edge_color         = 1.0 1.0 1.0
+jsycamore.theme.focused.component.background_color          = 1.0 1.0 1.0
+jsycamore.theme.focused.component.edge_color                = 1.0 1.0 1.0
+jsycamore.theme.focused.component.disabled_background_color = 1.0 1.0 1.0
+jsycamore.theme.focused.component.disabled_edge_color       = 1.0 1.0 1.0
+jsycamore.theme.focused.component.over_edge_color           = 1.0 1.0 1.0
+jsycamore.theme.focused.component.over_background_color     = 1.0 1.0 1.0
+jsycamore.theme.focused.text_area.foreground_color          = 1.0 1.0 1.0
+jsycamore.theme.focused.text_area.background_color          = 1.0 1.0 1.0
+jsycamore.theme.focused.window.titlebar.background_color    = 1.0 1.0 1.0
+jsycamore.theme.focused.window.titlebar.text_color          = 1.0 1.0 1.0
+
+jsycamore.theme.unfocused.window.edge_color                   = 1.0 1.0 1.0
+jsycamore.theme.unfocused.component.background_color          = 1.0 1.0 1.0
+jsycamore.theme.unfocused.component.edge_color                = 1.0 1.0 1.0
+jsycamore.theme.unfocused.text_area.foreground_color          = 1.0 1.0 1.0
+jsycamore.theme.unfocused.text_area.background_color          = 1.0 1.0 1.0
+jsycamore.theme.unfocused.window.titlebar.background_color    = 1.0 1.0 1.0
+jsycamore.theme.unfocused.window.titlebar.text_color          = 1.0 1.0 1.0
+jsycamore.theme.unfocused.component.disabled_background_color = 1.0 1.0 1.0
+jsycamore.theme.unfocused.component.disabled_edge_color       = 1.0 1.0 1.0
