@@ -14,10 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
-
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.core;
 
+/**
+ * The parent-component-relative coordinate space.
+ */
+
+public interface SySpaceParentRelativeType extends SySpaceType
+{
+  // No value-level representation.
+}

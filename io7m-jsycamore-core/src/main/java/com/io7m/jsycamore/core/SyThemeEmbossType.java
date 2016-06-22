@@ -14,10 +14,39 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
-
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.core;
 
+import com.io7m.jtensors.VectorI3F;
+import org.immutables.value.Value;
+
+import java.util.OptionalInt;
+
+@SyImmutableStyleType
+@Value.Immutable
+@Value.Modifiable
+public interface SyThemeEmbossType
+{
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F light() {
+    return new VectorI3F(0.4f, 0.4f, 0.4f);
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F dark() {
+    return new VectorI3F(0.1f, 0.1f, 0.1f);
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default int lightWidth() {
+    return 2;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default int darkWidth() {
+    return 2;
+  }
+}

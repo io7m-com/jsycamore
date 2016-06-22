@@ -14,10 +14,34 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
-
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.core;
 
+import com.io7m.jtensors.VectorI3F;
+import org.immutables.value.Value;
+
+@SyImmutableStyleType
+@Value.Immutable
+@Value.Modifiable
+public interface SyThemeWindowTitleBarType
+{
+  @Value.Parameter
+  @Value.Default
+  default int height()
+  {
+    return 16;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F colorActive()
+  {
+    return new VectorI3F(0.3f, 0.3f, 0.3f);
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F colorInactive()
+  {
+    return new VectorI3F(0.3f, 0.3f, 0.3f);
+  }
+}

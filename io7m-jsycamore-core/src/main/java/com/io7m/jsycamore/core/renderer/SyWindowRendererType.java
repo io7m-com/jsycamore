@@ -14,10 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
+package com.io7m.jsycamore.core.renderer;
 
-@com.io7m.jnull.NonNullByDefault
-package com.io7m.jsycamore.core;
+import com.io7m.jsycamore.core.SyWindowType;
 
+public interface SyWindowRendererType<I, O>
+{
+  O render(I input, SyWindowType window);
+}

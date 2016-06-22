@@ -14,10 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
-
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.core;
 
+import org.immutables.value.Value;
+
+@SyImmutableStyleType
+@Value.Immutable
+@Value.Modifiable
+public interface SyThemeWindowType
+{
+  @Value.Parameter
+  SyThemeWindowTitleBarType titleBar();
+}

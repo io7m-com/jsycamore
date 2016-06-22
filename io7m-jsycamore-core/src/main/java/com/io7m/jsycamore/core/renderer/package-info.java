@@ -15,9 +15,9 @@
  */
 
 /**
- * Core types and functions.
+ * Renderers.
  */
 
 @com.io7m.jnull.NonNullByDefault
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.renderer;
 

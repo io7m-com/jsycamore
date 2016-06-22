@@ -14,10 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Core types and functions.
- */
-
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.core;
 
+/**
+ * The viewport-relative coordinate space.
+ */
+
+public interface SySpaceViewportType extends SySpaceType
+{
+  // No value-level representation.
+}
