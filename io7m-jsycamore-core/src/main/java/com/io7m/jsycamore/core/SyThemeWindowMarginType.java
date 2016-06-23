@@ -18,14 +18,94 @@ package com.io7m.jsycamore.core;
 
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
+import org.valid4j.Assertive;
 
 import java.util.Optional;
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
 public interface SyThemeWindowMarginType
 {
+  @Value.Check
+  default void checkPreconditions()
+  {
+    if (this.embossActive().isPresent()) {
+      switch (this.topLeftStyle()) {
+        case MARGIN_CORNER_NONE: {
+          break;
+        }
+        case MARGIN_CORNER_L_PIECE: {
+          Assertive.require(
+            this.topHeight() > 0,
+            "An embossed top-left L corner requires a non-zero top margin");
+          Assertive.require(
+            this.leftWidth() > 0,
+            "An embossed top-left L corner requires a non-zero left margin");
+          break;
+        }
+        case MARGIN_CORNER_BOX: {
+          break;
+        }
+      }
+
+      switch (this.topRightStyle()) {
+        case MARGIN_CORNER_NONE: {
+          break;
+        }
+        case MARGIN_CORNER_L_PIECE: {
+          Assertive.require(
+            this.topHeight() > 0,
+            "An embossed top-right L corner requires a non-zero top margin");
+          Assertive.require(
+            this.rightWidth() > 0,
+            "An embossed top-right L corner requires a non-zero right margin");
+          break;
+        }
+        case MARGIN_CORNER_BOX: {
+          break;
+        }
+      }
+
+      switch (this.bottomLeftStyle()) {
+        case MARGIN_CORNER_NONE: {
+          break;
+        }
+        case MARGIN_CORNER_L_PIECE: {
+          Assertive.require(
+            this.bottomHeight() > 0,
+            "An embossed bottom-left L corner requires a non-zero bottom margin");
+          Assertive.require(
+            this.leftWidth() > 0,
+            "An embossed bottom-left L corner requires a non-zero left margin");
+          break;
+        }
+        case MARGIN_CORNER_BOX: {
+          break;
+        }
+      }
+
+      switch (this.bottomRightStyle()) {
+        case MARGIN_CORNER_NONE: {
+          break;
+        }
+        case MARGIN_CORNER_L_PIECE: {
+          Assertive.require(
+            this.bottomHeight() > 0,
+            "An embossed bottom-right L corner requires a non-zero bottom margin");
+          Assertive.require(
+            this.rightWidth() > 0,
+            "An embossed bottom-right L corner requires a non-zero right margin");
+          break;
+        }
+        case MARGIN_CORNER_BOX: {
+          break;
+        }
+      }
+    }
+
+
+  }
+
   @Value.Parameter
   @Value.Default
   default int leftWidth()

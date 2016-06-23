@@ -23,8 +23,6 @@ import com.io7m.jtensors.parameterized.PVector2IType;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
-import java.util.Optional;
-
 /**
  * The default implementation of the {@link SyWindowType} type.
  */
@@ -40,9 +38,30 @@ public final class SyWindow implements SyWindowType
   private boolean active;
   private String text;
 
-  private final class Titlebar
+  private SyWindow(final SyThemeType in_theme)
   {
-    private int height;
+    NullCheck.notNull(in_theme);
+
+    this.to_string = "[SyWindow " + this.hashCode() + "]";
+    this.position = new PVectorM2I<>();
+    this.size = new VectorM2I();
+    this.components = new SyGraph<>(SyComponentLink::new);
+    this.titlebar = new Titlebar();
+    this.text = "";
+    this.themeReload(in_theme);
+  }
+
+  /**
+   * Create a new window.
+   *
+   * @param in_theme A reference to the current theme
+   *
+   * @return A new window
+   */
+
+  public static SyWindowType create(final SyThemeType in_theme)
+  {
+    return new SyWindow(in_theme);
   }
 
   public String text()
@@ -65,19 +84,6 @@ public final class SyWindow implements SyWindowType
     this.active = in_active;
   }
 
-  private SyWindow(final SyThemeType in_theme)
-  {
-    NullCheck.notNull(in_theme);
-
-    this.to_string = "[SyWindow " + this.hashCode() + "]";
-    this.position = new PVectorM2I<>();
-    this.size = new VectorM2I();
-    this.components = new SyGraph<>(SyComponentLink::new);
-    this.titlebar = new Titlebar();
-    this.text = "";
-    this.themeReload(in_theme);
-  }
-
   @Override
   public String toString()
   {
@@ -87,19 +93,6 @@ public final class SyWindow implements SyWindowType
   private void themeReload(final SyThemeType new_theme)
   {
     this.theme = new_theme;
-  }
-
-  /**
-   * Create a new window.
-   *
-   * @param in_theme A reference to the current theme
-   *
-   * @return A new window
-   */
-
-  public static SyWindowType create(final SyThemeType in_theme)
-  {
-    return new SyWindow(in_theme);
   }
 
   @Override
@@ -147,5 +140,10 @@ public final class SyWindow implements SyWindowType
   public PVectorReadable2IType<SySpaceViewportType> position()
   {
     return this.position;
+  }
+
+  private final class Titlebar
+  {
+    private int height;
   }
 }

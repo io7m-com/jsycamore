@@ -54,6 +54,14 @@ public final class SyWindowRendererAWT implements
   private final SyEmbossed embossed;
   private final WeakHashMap<String, Font> font_cache;
 
+  private SyWindowRendererAWT()
+  {
+    this.draw_rect = new RoundRectangle2D.Double();
+    this.poly = new Polygon();
+    this.embossed = new SyEmbossed();
+    this.font_cache = new WeakHashMap<>();
+  }
+
   /**
    * @return A new renderer
    */
@@ -63,12 +71,13 @@ public final class SyWindowRendererAWT implements
     return new SyWindowRendererAWT();
   }
 
-  private SyWindowRendererAWT()
+  private static Color toColor(
+    final VectorReadable3FType color)
   {
-    this.draw_rect = new RoundRectangle2D.Double();
-    this.poly = new Polygon();
-    this.embossed = new SyEmbossed();
-    this.font_cache = new WeakHashMap<>();
+    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
+    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
+    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
+    return new Color(r, g, b);
   }
 
   @Override
@@ -102,7 +111,6 @@ public final class SyWindowRendererAWT implements
       (double) window_size.getYI(),
       0.0,
       0.0);
-
     graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
 
     this.renderMargin(input, graphics, window);
@@ -344,6 +352,9 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case MARGIN_CORNER_L_PIECE: {
+        Assertive.require(left_width > 0);
+        Assertive.require(top_height > 0);
+
         top_left_caps = true;
         top_left_len += cap_length;
         left_y = top_left_len;
@@ -363,6 +374,9 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case MARGIN_CORNER_L_PIECE: {
+        Assertive.require(right_width > 0);
+        Assertive.require(top_height > 0);
+
         top_right_caps = true;
         top_right_len += cap_length;
         right_height -= top_right_len;
@@ -381,6 +395,9 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case MARGIN_CORNER_L_PIECE: {
+        Assertive.require(left_width > 0);
+        Assertive.require(bottom_height > 0);
+
         bottom_left_caps = true;
         bottom_left_len += cap_length;
         left_height -= bottom_left_len;
@@ -399,6 +416,9 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case MARGIN_CORNER_L_PIECE: {
+        Assertive.require(right_width > 0);
+        Assertive.require(bottom_height > 0);
+
         bottom_right_caps = true;
         bottom_right_len += cap_length;
         right_height -= bottom_right_len;
@@ -414,145 +434,160 @@ public final class SyWindowRendererAWT implements
      * Left margin.
      */
 
-    this.embossed.rectangle(
-      graphics,
-      0,
-      left_y,
-      left_width,
-      left_height,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill);
+    if (left_width > 0) {
+      this.embossed.rectangle(
+        graphics,
+        0,
+        left_y,
+        left_width,
+        left_height,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill);
+    }
 
     /**
      * Right margin.
      */
 
-    this.embossed.rectangle(
-      graphics,
-      window_width - right_width,
-      right_y,
-      right_width,
-      right_height,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill);
+    if (right_width > 0) {
+      this.embossed.rectangle(
+        graphics,
+        window_width - right_width,
+        right_y,
+        right_width,
+        right_height,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill);
+    }
 
     /**
      * Top margin.
      */
 
-    this.embossed.rectangle(
-      graphics,
-      top_x,
-      0,
-      top_width,
-      top_height,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill);
+    if (top_height > 0) {
+      this.embossed.rectangle(
+        graphics,
+        top_x,
+        0,
+        top_width,
+        top_height,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill);
+    }
 
     /**
      * Bottom margin.
      */
 
-    this.embossed.rectangle(
-      graphics,
-      bottom_x,
-      bottom_y,
-      bottom_width,
-      bottom_height,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill);
+    if (bottom_height > 0) {
+      this.embossed.rectangle(
+        graphics,
+        bottom_x,
+        bottom_y,
+        bottom_width,
+        bottom_height,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill);
+    }
 
     /**
      * Corners.
      */
 
-    this.embossed.drawEmbossedL(
-      graphics,
-      SyEmbossed.LShape.L_SHAPE_NW,
-      0,
-      0,
-      left_width,
-      top_height,
-      top_left_len,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill,
-      top_left_caps);
+    if (top_height > 0 && left_width > 0) {
+      final int thickness_of_horizontal = top_height;
+      final int thickness_of_vertical = left_width;
+      this.embossed.drawEmbossedL(
+        graphics,
+        SyEmbossed.LShape.L_SHAPE_NW,
+        0,
+        0,
+        thickness_of_horizontal,
+        thickness_of_vertical,
+        top_left_len,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill,
+        top_left_caps);
+    }
 
-    this.embossed.drawEmbossedL(
-      graphics,
-      SyEmbossed.LShape.L_SHAPE_NE,
-      window_width - top_right_len,
-      0,
-      right_width,
-      top_height,
-      top_right_len,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill,
-      top_right_caps);
+    if (top_height > 0 && right_width > 0) {
+      final int thickness_of_horizontal = top_height;
+      final int thickness_of_vertical = right_width;
+      this.embossed.drawEmbossedL(
+        graphics,
+        SyEmbossed.LShape.L_SHAPE_NE,
+        window_width - top_right_len,
+        0,
+        thickness_of_horizontal,
+        thickness_of_vertical,
+        top_right_len,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill,
+        top_right_caps);
+    }
 
-    this.embossed.drawEmbossedL(
-      graphics,
-      SyEmbossed.LShape.L_SHAPE_SW,
-      0,
-      window_height - bottom_left_len,
-      left_width,
-      bottom_height,
-      bottom_left_len,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill,
-      bottom_left_caps);
+    if (bottom_height > 0 && left_width > 0) {
+      final int thickness_of_horizontal = bottom_height;
+      final int thickness_of_vertical = left_width;
+      this.embossed.drawEmbossedL(
+        graphics,
+        SyEmbossed.LShape.L_SHAPE_SW,
+        0,
+        window_height - bottom_left_len,
+        thickness_of_horizontal,
+        thickness_of_vertical,
+        bottom_left_len,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill,
+        bottom_left_caps);
+    }
 
-    this.embossed.drawEmbossedL(
-      graphics,
-      SyEmbossed.LShape.L_SHAPE_SE,
-      window_width - bottom_right_len,
-      window_height - bottom_right_len,
-      right_width,
-      bottom_height,
-      bottom_right_len,
-      emboss_size,
-      e_left,
-      e_right,
-      e_top,
-      e_bottom,
-      eo_fill,
-      bottom_right_caps);
-  }
-
-  private static Color toColor(
-    final VectorReadable3FType color)
-  {
-    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
-    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
-    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
-    return new Color(r, g, b);
+    if (bottom_height > 0 && right_width > 0) {
+      final int thickness_of_horizontal = bottom_height;
+      final int thickness_of_vertical = right_width;
+      this.embossed.drawEmbossedL(
+        graphics,
+        SyEmbossed.LShape.L_SHAPE_SE,
+        window_width - bottom_right_len,
+        window_height - bottom_right_len,
+        thickness_of_horizontal,
+        thickness_of_vertical,
+        bottom_right_len,
+        emboss_size,
+        e_left,
+        e_right,
+        e_top,
+        e_bottom,
+        eo_fill,
+        bottom_right_caps);
+    }
   }
 }

@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
@@ -27,8 +26,8 @@ import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 public interface SyWindowType
 {
   /**
-   * Retrieve the position of the window. This is the very top left corner
-   * of the window's bounding box.
+   * Retrieve the position of the window. This is the very top left corner of
+   * the window's bounding box.
    *
    * @return The position of the window
    */
@@ -42,9 +41,9 @@ public interface SyWindowType
   SyGraph<SyComponentType, SyComponentLink> components();
 
   /**
-   * Retrieve the size of the bounds of the window. This is the absolute
-   * maximum bounding box size and is therefore useful for allocating images
-   * that will contain the rendered window.
+   * Retrieve the size of the bounds of the window. This is the absolute maximum
+   * bounding box size and is therefore useful for allocating images that will
+   * contain the rendered window.
    *
    * @return The bounds of the window
    */
@@ -59,7 +58,8 @@ public interface SyWindowType
 
   /**
    * Set the size of the window.
-   * @param width The lightWidth
+   *
+   * @param width  The lightWidth
    * @param height The height
    */
 
