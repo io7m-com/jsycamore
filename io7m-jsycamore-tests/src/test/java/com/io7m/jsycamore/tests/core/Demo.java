@@ -70,7 +70,7 @@ public final class Demo
 
     final SyThemeEmboss.Builder theme_margin_emboss_active_b =
       SyThemeEmboss.builder();
-    theme_margin_emboss_active_b.setSize(3);
+    theme_margin_emboss_active_b.setSize(1);
     theme_margin_emboss_active_b.setColorTop(
       new VectorI3F(0.95f, 0.95f, 0.95f));
     theme_margin_emboss_active_b.setColorLeft(
@@ -78,10 +78,10 @@ public final class Demo
 
     final SyThemeWindowMargin.Builder theme_margin_b =
       SyThemeWindowMargin.builder();
-    theme_margin_b.setBottomHeight(15);
-    theme_margin_b.setTopHeight(15);
-    theme_margin_b.setLeftWidth(0);
-    theme_margin_b.setRightWidth(0);
+    theme_margin_b.setBottomHeight(5);
+    theme_margin_b.setTopHeight(4);
+    theme_margin_b.setLeftWidth(4);
+    theme_margin_b.setRightWidth(4);
 
     theme_margin_b.setTopLeftStyle(
       SyThemeWindowMarginCorner.MARGIN_CORNER_NONE);
