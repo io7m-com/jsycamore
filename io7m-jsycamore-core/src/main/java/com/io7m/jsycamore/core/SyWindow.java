@@ -37,10 +37,32 @@ public final class SyWindow implements SyWindowType
   private SyGraph<SyComponentType, SyComponentLink> components;
   private VectorM2I size;
   private SyThemeType theme;
+  private boolean active;
+  private String text;
 
   private final class Titlebar
   {
     private int height;
+  }
+
+  public String text()
+  {
+    return this.text;
+  }
+
+  public void setText(final String in_text)
+  {
+    this.text = NullCheck.notNull(in_text);
+  }
+
+  public boolean active()
+  {
+    return this.active;
+  }
+
+  public void setActive(final boolean in_active)
+  {
+    this.active = in_active;
   }
 
   private SyWindow(final SyThemeType in_theme)
@@ -52,6 +74,7 @@ public final class SyWindow implements SyWindowType
     this.size = new VectorM2I();
     this.components = new SyGraph<>(SyComponentLink::new);
     this.titlebar = new Titlebar();
+    this.text = "";
     this.themeReload(in_theme);
   }
 
@@ -102,7 +125,21 @@ public final class SyWindow implements SyWindowType
     final int width,
     final int height)
   {
-    this.size.set2I(Math.max(2, width), Math.max(2, height));
+    final SyThemeWindowType window_theme = this.theme.windowTheme();
+
+    int deco_width = 0;
+    deco_width += window_theme.margin().leftWidth();
+    deco_width += window_theme.margin().rightWidth();
+
+    int deco_height = 0;
+    deco_height += window_theme.titleBar().height();
+    deco_height += window_theme.margin().topHeight();
+    deco_height += window_theme.margin().bottomHeight();
+
+    this.size.set2I(
+      Math.max(deco_width + 2, width - deco_width),
+      Math.max(deco_height + 2, height - deco_height));
+
     // XXX: Notify top-level components
   }
 

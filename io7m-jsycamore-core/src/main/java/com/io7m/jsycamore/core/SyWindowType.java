@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jnull.NullCheck;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
@@ -65,4 +66,12 @@ public interface SyWindowType
   void setSize(
     int width,
     int height);
+
+  boolean active();
+
+  void setActive(final boolean in_active);
+
+  String text();
+
+  void setText(final String in_text);
 }

@@ -16,9 +16,12 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.core.SyThemeAlignment;
 import com.io7m.jsycamore.core.SyThemeEmboss;
 import com.io7m.jsycamore.core.SyThemeMutable;
 import com.io7m.jsycamore.core.SyThemeWindow;
+import com.io7m.jsycamore.core.SyThemeWindowMargin;
+import com.io7m.jsycamore.core.SyThemeWindowMarginCorner;
 import com.io7m.jsycamore.core.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.core.SyWindow;
 import com.io7m.jsycamore.core.SyWindowType;
@@ -44,15 +47,63 @@ public final class Demo
     throws Exception
   {
     final BufferedImage bi = new BufferedImage(
-      800, 600, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+      320 + 32, 240 + 32, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
     final SyThemeMutable theme = SyThemeMutable.create();
+    theme.setMainBackgroundColor(new VectorI3F(0.8f, 0.8f, 0.8f));
 
-    theme.setMainBackgroundColor(new VectorI3F(0.3f, 0.3f, 0.3f));
-    theme.setWindowTheme(SyThemeWindow.of(SyThemeWindowTitleBar.of(16, VectorI3F.ZERO, VectorI3F.ZERO)));
+    final SyThemeEmboss.Builder theme_titlebar_emboss_active_b =
+      SyThemeEmboss.builder();
+    theme_titlebar_emboss_active_b.setSize(1);
+    theme_titlebar_emboss_active_b.setColorTop(
+      new VectorI3F(0.95f, 0.95f, 0.95f));
+    theme_titlebar_emboss_active_b.setColorLeft(
+      new VectorI3F(0.90f, 0.90f, 0.90f));
+
+    final SyThemeWindowTitleBar.Builder theme_titlebar_b =
+      SyThemeWindowTitleBar.builder();
+    theme_titlebar_b.setHeight(18);
+    theme_titlebar_b.setColorActive(new VectorI3F(0.8f, 0.8f, 0.8f));
+    theme_titlebar_b.setEmbossActive(
+      Optional.of(theme_titlebar_emboss_active_b.build()));
+    theme_titlebar_b.setTextAlignment(SyThemeAlignment.ALIGN_CENTER);
+
+    final SyThemeEmboss.Builder theme_margin_emboss_active_b =
+      SyThemeEmboss.builder();
+    theme_margin_emboss_active_b.setSize(1);
+    theme_margin_emboss_active_b.setColorTop(
+      new VectorI3F(0.95f, 0.95f, 0.95f));
+    theme_margin_emboss_active_b.setColorLeft(
+      new VectorI3F(0.90f, 0.90f, 0.90f));
+
+    final SyThemeWindowMargin.Builder theme_margin_b =
+      SyThemeWindowMargin.builder();
+    theme_margin_b.setBottomHeight(5);
+    theme_margin_b.setTopHeight(5);
+    theme_margin_b.setLeftWidth(5);
+    theme_margin_b.setRightWidth(5);
+
+    theme_margin_b.setTopLeftStyle(
+      SyThemeWindowMarginCorner.MARGIN_CORNER_L_PIECE);
+    theme_margin_b.setTopRightStyle(
+      SyThemeWindowMarginCorner.MARGIN_CORNER_L_PIECE);
+    theme_margin_b.setBottomLeftStyle(
+      SyThemeWindowMarginCorner.MARGIN_CORNER_L_PIECE);
+    theme_margin_b.setBottomRightStyle(
+      SyThemeWindowMarginCorner.MARGIN_CORNER_L_PIECE);
+
+    theme_margin_b.setEmbossActive(
+      Optional.of(theme_margin_emboss_active_b.build()));
+
+    theme.setWindowTheme(
+      SyThemeWindow.of(
+        theme_titlebar_b.build(),
+        theme_margin_b.build()));
 
     final SyWindowType win = SyWindow.create(theme);
-    win.setSize(640, 480);
+    win.setSize(320, 240);
+    win.setActive(true);
+    win.setText("File Manager - sys$starlet_c");
 
     final SyWindowRendererType<BufferedImage, BufferedImage> r =
       SyWindowRendererAWT.create();

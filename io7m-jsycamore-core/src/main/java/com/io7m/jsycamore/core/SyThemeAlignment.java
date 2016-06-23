@@ -16,46 +16,9 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jtensors.VectorI3F;
-import org.immutables.value.Value;
-
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeEmbossType
+public enum SyThemeAlignment
 {
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorTop()
-  {
-    return new VectorI3F(0.9f, 0.9f, 0.9f);
-  }
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorBottom()
-  {
-    return new VectorI3F(0.4f, 0.4f, 0.4f);
-  }
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorLeft()
-  {
-    return new VectorI3F(0.7f, 0.7f, 0.7f);
-  }
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorRight()
-  {
-    return new VectorI3F(0.5f, 0.5f, 0.5f);
-  }
-
-  @Value.Parameter
-  @Value.Default
-  default int size()
-  {
-    return 2;
-  }
+  ALIGN_LEFT,
+  ALIGN_RIGHT,
+  ALIGN_CENTER
 }

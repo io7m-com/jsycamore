@@ -19,6 +19,9 @@ package com.io7m.jsycamore.core;
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
+import javax.swing.GroupLayout;
+import java.util.Optional;
+
 @SyImmutableStyleType
 @Value.Immutable
 @Value.Modifiable
@@ -43,5 +46,23 @@ public interface SyThemeWindowTitleBarType
   default VectorI3F colorInactive()
   {
     return new VectorI3F(0.3f, 0.3f, 0.3f);
+  }
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> embossActive();
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> embossInactive();
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeAlignment textAlignment() {
+    return SyThemeAlignment.ALIGN_CENTER;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default String textFont() {
+    return "Monospaced 10";
   }
 }

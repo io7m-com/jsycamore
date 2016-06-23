@@ -25,4 +25,7 @@ public interface SyThemeWindowType
 {
   @Value.Parameter
   SyThemeWindowTitleBarType titleBar();
+
+  @Value.Parameter
+  SyThemeWindowMarginType margin();
 }

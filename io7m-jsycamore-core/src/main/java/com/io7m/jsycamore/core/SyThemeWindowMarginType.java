@@ -28,28 +28,28 @@ public interface SyThemeWindowMarginType
 {
   @Value.Parameter
   @Value.Default
-  default int marginLeft()
+  default int leftWidth()
   {
     return 16;
   }
 
   @Value.Parameter
   @Value.Default
-  default int marginRight()
+  default int rightWidth()
   {
     return 16;
   }
 
   @Value.Parameter
   @Value.Default
-  default int marginTop()
+  default int topHeight()
   {
     return 16;
   }
 
   @Value.Parameter
   @Value.Default
-  default int marginBottom()
+  default int bottomHeight()
   {
     return 16;
   }
@@ -62,15 +62,43 @@ public interface SyThemeWindowMarginType
 
   @Value.Parameter
   @Value.Default
+  default SyThemeWindowMarginCorner bottomLeftStyle()
+  {
+    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeWindowMarginCorner bottomRightStyle()
+  {
+    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeWindowMarginCorner topLeftStyle()
+  {
+    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeWindowMarginCorner topRightStyle()
+  {
+    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+  }
+
+  @Value.Parameter
+  @Value.Default
   default VectorI3F colorActive()
   {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
+    return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
 
   @Value.Parameter
   @Value.Default
   default VectorI3F colorInactive()
   {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
+    return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
 }
