@@ -149,83 +149,6 @@ public final class SyEmbossed
     }
   }
 
-  public void drawEndCap(
-    final Graphics2D graphics,
-    final Cap cap,
-    final int x,
-    final int y,
-    final int width,
-    final int height,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
-  {
-    NullCheck.notNull(graphics);
-    NullCheck.notNull(cap);
-    NullCheck.notNull(left);
-    NullCheck.notNull(right);
-    NullCheck.notNull(top);
-    NullCheck.notNull(bottom);
-    NullCheck.notNull(fill);
-
-    Assertive.require(width > 0, "Widths must be positive");
-    Assertive.require(height > 0, "Heights must be positive");
-    Assertive.require(emboss_size > 0, "Embossed area size must be positive");
-
-    final AffineTransform old_transform = graphics.getTransform();
-    final Shape old_clip = graphics.getClip();
-    final Paint old_paint = graphics.getPaint();
-
-    try {
-      graphics.clipRect(x, y, width, height);
-      graphics.translate(x, y);
-
-      switch (cap) {
-        case CAP_NORTH: {
-          graphics.setPaint(left);
-          graphics.fillRect(0, 0, emboss_size, height);
-          graphics.setPaint(right);
-          graphics.fillRect(width - emboss_size, 0, emboss_size, height);
-
-          if (fill.isPresent()) {
-            final Paint fill_actual = fill.get();
-            graphics.setPaint(fill_actual);
-            graphics.fillRect(
-              emboss_size,
-              0,
-              width - (emboss_size * 2),
-              height);
-          }
-
-          this.drawEmbossedCapN(graphics, width, emboss_size, top);
-          break;
-        }
-        case CAP_SOUTH: {
-
-          break;
-        }
-        case CAP_WEST: {
-          graphics.setPaint(Color.MAGENTA);
-          graphics.fillRect(0, 0, 32, 32);
-          break;
-        }
-        case CAP_EAST: {
-          graphics.setPaint(Color.GREEN);
-          graphics.fillRect(0, 0, 32, 32);
-          break;
-        }
-      }
-
-    } finally {
-      graphics.setTransform(old_transform);
-      graphics.setClip(old_clip);
-      graphics.setPaint(old_paint);
-    }
-  }
-
   /**
    * <p>Render an embossed L shape.</p>
    *
@@ -1190,13 +1113,4 @@ public final class SyEmbossed
 
     L_SHAPE_SE
   }
-
-  public enum Cap
-  {
-    CAP_NORTH,
-    CAP_SOUTH,
-    CAP_WEST,
-    CAP_EAST
-  }
-
 }
