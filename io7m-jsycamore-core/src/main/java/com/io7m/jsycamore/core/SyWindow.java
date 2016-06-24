@@ -25,6 +25,8 @@ import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
+import java.util.Optional;
+
 /**
  * The default implementation of the {@link SyWindowType} type.
  */
@@ -141,22 +143,30 @@ public final class SyWindow implements SyWindowType
     final int width,
     final int height)
   {
-    final int clamp_width = Math.max(width, 2);
-    final int clamp_height = Math.max(height, 2);
-
     final SyThemeWindowType window_theme = this.theme.windowTheme();
     final SyThemeWindowFrameType frame_theme = window_theme.frame();
     final SyThemeWindowTitleBarType title_theme = window_theme.titleBar();
 
-    int title_x = 0;
-    int title_y = 0;
-    int title_width = clamp_width;
+    final Optional<SyThemeOutlineType> window_outline = window_theme.outline();
+    final int outline_size;
+    if (window_outline.isPresent()) {
+      outline_size = 1;
+    } else {
+      outline_size = 0;
+    }
+
+    final int clamp_width = Math.max(width, 2);
+    final int clamp_height = Math.max(height, 2);
+
+    int title_x = outline_size;
+    int title_y = outline_size;
+    int title_width = clamp_width - (outline_size * 2);
     final int title_height = title_theme.height();
 
-    final int frame_x = 0;
-    int frame_y = 0;
-    final int frame_width = clamp_width;
-    int frame_height = clamp_height;
+    final int frame_x = outline_size;
+    int frame_y = outline_size;
+    final int frame_width = clamp_width - (outline_size * 2);
+    int frame_height = clamp_height - (outline_size * 2);
 
     final int frame_left = frame_theme.leftWidth();
     final int frame_right = frame_theme.rightWidth();
@@ -164,7 +174,7 @@ public final class SyWindow implements SyWindowType
     final String text_font = title_theme.textFont();
     switch (title_theme.verticalPlacement()) {
       case PLACEMENT_TOP_INSIDE_FRAME: {
-        title_y = frame_theme.topHeight();
+        title_y = frame_theme.topHeight() + outline_size;
 
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
@@ -172,10 +182,11 @@ public final class SyWindow implements SyWindowType
 
             switch (title_theme.horizontalAlignment()) {
               case ALIGN_LEFT: {
+                title_x = frame_left + outline_size;
                 break;
               }
               case ALIGN_RIGHT: {
-                title_x = clamp_width - title_width;
+                title_x = (clamp_width - title_width) - (frame_right + outline_size);
                 break;
               }
               case ALIGN_CENTER: {
@@ -187,7 +198,7 @@ public final class SyWindow implements SyWindowType
           }
           case WIDTH_RESIZE_INSIDE_FRAME: {
             title_width = frame_width - (frame_left + frame_right);
-            title_x = frame_left;
+            title_x += frame_left;
             break;
           }
           case WIDTH_RESIZE_TO_WINDOW: {
@@ -258,7 +269,7 @@ public final class SyWindow implements SyWindowType
                 break;
               }
               case ALIGN_RIGHT: {
-                title_x = clamp_width - title_width;
+                title_x = clamp_width - title_width - outline_size;
                 break;
               }
               case ALIGN_CENTER: {

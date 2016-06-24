@@ -20,11 +20,13 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyThemeEmbossType;
+import com.io7m.jsycamore.core.SyThemeOutlineType;
 import com.io7m.jsycamore.core.SyThemeType;
 import com.io7m.jsycamore.core.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.SyThemeWindowType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
@@ -98,7 +100,96 @@ public final class SyWindowRendererAWT implements
     graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
     this.renderFrame(graphics, window);
     this.renderTitlebar(graphics, window);
+    this.renderOutline(graphics, window);
     return input;
+  }
+
+  private void renderOutline(
+    final Graphics2D graphics,
+    final SyWindowType window)
+  {
+    final AffineTransform old_transform = graphics.getTransform();
+    final Shape old_clip = graphics.getClip();
+
+    try {
+      if (window.active()) {
+        this.renderOutlineActive(graphics, window);
+      } else {
+        this.renderOutlineInactive(graphics, window);
+      }
+    } finally {
+      graphics.setTransform(old_transform);
+      graphics.setClip(old_clip);
+    }
+  }
+
+  private void renderOutlineInactive(
+    final Graphics2D graphics,
+    final SyWindowType window)
+  {
+    final SyThemeType theme = window.theme();
+    final SyThemeWindowType window_theme = theme.windowTheme();
+    final Optional<SyThemeOutlineType> outline_opt = window_theme.outline();
+    if (outline_opt.isPresent()) {
+      this.renderOutlineActual(
+        graphics, window, outline_opt.get().colorInactive());
+    }
+  }
+
+  private void renderOutlineActual(
+    final Graphics2D graphics,
+    final SyWindowType window,
+    final VectorReadable3FType color)
+  {
+    final SyThemeType theme = window.theme();
+    final SyThemeWindowType window_theme = theme.windowTheme();
+    final SyThemeWindowTitleBarType title_theme = window_theme.titleBar();
+    final VectorReadable2IType size = window.bounds();
+
+    graphics.setPaint(SyWindowRendererAWT.toColor(color));
+
+    final int max_y = size.getYI() - 1;
+    final int max_x = size.getXI() - 1;
+    switch (title_theme.verticalPlacement()) {
+      case PLACEMENT_TOP_INSIDE_FRAME:
+      case PLACEMENT_TOP_OVERLAP_FRAME: {
+        graphics.drawRect(0, 0, max_x, max_y);
+        break;
+      }
+      case PLACEMENT_TOP_ABOVE_FRAME: {
+        final PVectorReadable2IType<SySpaceWindowRelativeType> title_size =
+          window.titlebarBounds();
+        final PVectorReadable2IType<SySpaceWindowRelativeType> title_pos =
+          window.titlebarPosition();
+
+        final int title_min_x = title_pos.getXI() - 1;
+        final int title_max_x = title_min_x + title_size.getXI() + 1;
+        final int title_height = title_size.getYI();
+        graphics.drawLine(0, title_height, title_min_x, title_height);
+        graphics.drawLine(title_min_x, title_height, title_min_x, 0);
+        graphics.drawLine(title_min_x, 0, title_max_x, 0);
+        graphics.drawLine(title_max_x, 0, title_max_x, title_height);
+        graphics.drawLine(title_max_x, title_height, max_x, title_height);
+
+        graphics.drawLine(max_x, title_height, max_x, max_y);
+        graphics.drawLine(0, max_y, max_x, max_y);
+        graphics.drawLine(0, title_height, 0, max_y);
+        break;
+      }
+    }
+  }
+
+  private void renderOutlineActive(
+    final Graphics2D graphics,
+    final SyWindowType window)
+  {
+    final SyThemeType theme = window.theme();
+    final SyThemeWindowType window_theme = theme.windowTheme();
+    final Optional<SyThemeOutlineType> outline_opt = window_theme.outline();
+    if (outline_opt.isPresent()) {
+      this.renderOutlineActual(
+        graphics, window, outline_opt.get().colorActive());
+    }
   }
 
   private void renderTitlebar(

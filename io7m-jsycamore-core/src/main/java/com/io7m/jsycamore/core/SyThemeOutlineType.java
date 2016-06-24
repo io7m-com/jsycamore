@@ -16,21 +16,24 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
-
-import java.util.Optional;
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public interface SyThemeOutlineType
 {
   @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
+  @Value.Default
+  default VectorI3F colorActive()
+  {
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
 
   @Value.Parameter
-  SyThemeWindowFrameType frame();
-
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  @Value.Default
+  default VectorI3F colorInactive()
+  {
+    return new VectorI3F(0.2f, 0.2f, 0.2f);
+  }
 }
