@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.core;
 
-public enum SyThemeWindowMarginCorner
+public enum SyThemeWindowTitlebarWidthBehavior
 {
-  MARGIN_CORNER_NONE,
-  MARGIN_CORNER_L_PIECE,
-  MARGIN_CORNER_BOX
+  WIDTH_RESIZE_TO_CONTENT,
+  WIDTH_RESIZE_INSIDE_FRAME,
+  WIDTH_RESIZE_TO_WINDOW
 }

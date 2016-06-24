@@ -16,16 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
-import org.immutables.value.Value;
+import java.awt.Font;
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public interface SyTextMeasurementType
 {
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
+  int measureText(
+    String font,
+    String text);
 
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
+  Font decodeFont(String font);
 }

@@ -16,13 +16,16 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.core.SyTextMeasurement;
 import com.io7m.jsycamore.core.SyThemeAlignment;
 import com.io7m.jsycamore.core.SyThemeEmboss;
 import com.io7m.jsycamore.core.SyThemeMutable;
 import com.io7m.jsycamore.core.SyThemeWindow;
-import com.io7m.jsycamore.core.SyThemeWindowMargin;
-import com.io7m.jsycamore.core.SyThemeWindowMarginCorner;
+import com.io7m.jsycamore.core.SyThemeWindowFrameCorner;
+import com.io7m.jsycamore.core.SyThemeWindowFrame;
 import com.io7m.jsycamore.core.SyThemeWindowTitleBar;
+import com.io7m.jsycamore.core.SyThemeWindowTitlebarVerticalPlacement;
+import com.io7m.jsycamore.core.SyThemeWindowTitlebarWidthBehavior;
 import com.io7m.jsycamore.core.SyWindow;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
@@ -34,7 +37,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public final class Demo
 {
@@ -56,57 +58,74 @@ public final class Demo
       SyThemeEmboss.builder();
     theme_titlebar_emboss_active_b.setSize(1);
     theme_titlebar_emboss_active_b.setColorTop(
-      new VectorI3F(0.95f, 0.95f, 0.95f));
+      new VectorI3F(0.3f, 0.3f, 0.8f));
     theme_titlebar_emboss_active_b.setColorLeft(
-      new VectorI3F(0.90f, 0.90f, 0.90f));
+      new VectorI3F(0.3f, 0.3f, 0.8f));
+    theme_titlebar_emboss_active_b.setColorRight(
+      new VectorI3F(0.1f, 0.1f, 0.5f));
+    theme_titlebar_emboss_active_b.setColorBottom(
+      new VectorI3F(0.1f, 0.1f, 0.5f));
 
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
+    theme_titlebar_b.setTextFont("Monospaced 10");
     theme_titlebar_b.setHeight(18);
-    theme_titlebar_b.setColorActive(new VectorI3F(0.8f, 0.8f, 0.8f));
+    theme_titlebar_b.setColorActive(
+      new VectorI3F(0.2f, 0.2f, 0.6f));
+    theme_titlebar_b.setTextColorActive(
+      new VectorI3F(1.0f, 1.0f, 1.0f));
     theme_titlebar_b.setEmbossActive(
       Optional.of(theme_titlebar_emboss_active_b.build()));
-    theme_titlebar_b.setTextAlignment(SyThemeAlignment.ALIGN_CENTER);
+    theme_titlebar_b.setEmbossInactive(
+      Optional.empty());
+    theme_titlebar_b.setTextAlignment(
+      SyThemeAlignment.ALIGN_LEFT);
+    theme_titlebar_b.setVerticalPlacement(
+      SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_ABOVE_FRAME);
+    theme_titlebar_b.setHorizontalAlignment(
+      SyThemeAlignment.ALIGN_LEFT);
+    theme_titlebar_b.setWidthBehavior(
+      SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_TO_WINDOW);
 
-    final SyThemeEmboss.Builder theme_margin_emboss_active_b =
+    final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
-    theme_margin_emboss_active_b.setSize(1);
-    theme_margin_emboss_active_b.setColorTop(
+    theme_frame_emboss_active_b.setSize(1);
+    theme_frame_emboss_active_b.setColorTop(
       new VectorI3F(0.95f, 0.95f, 0.95f));
-    theme_margin_emboss_active_b.setColorLeft(
+    theme_frame_emboss_active_b.setColorLeft(
       new VectorI3F(0.90f, 0.90f, 0.90f));
 
-    final SyThemeWindowMargin.Builder theme_margin_b =
-      SyThemeWindowMargin.builder();
-    theme_margin_b.setBottomHeight(5);
-    theme_margin_b.setTopHeight(4);
-    theme_margin_b.setLeftWidth(4);
-    theme_margin_b.setRightWidth(4);
+    final SyThemeWindowFrame.Builder theme_frame_b =
+      SyThemeWindowFrame.builder();
+    theme_frame_b.setBottomHeight(3);
+    theme_frame_b.setTopHeight(3);
+    theme_frame_b.setLeftWidth(3);
+    theme_frame_b.setRightWidth(3);
 
-    theme_margin_b.setTopLeftStyle(
-      SyThemeWindowMarginCorner.MARGIN_CORNER_NONE);
-    theme_margin_b.setTopRightStyle(
-      SyThemeWindowMarginCorner.MARGIN_CORNER_NONE);
-    theme_margin_b.setBottomLeftStyle(
-      SyThemeWindowMarginCorner.MARGIN_CORNER_NONE);
-    theme_margin_b.setBottomRightStyle(
-      SyThemeWindowMarginCorner.MARGIN_CORNER_NONE);
+    theme_frame_b.setTopLeftStyle(
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
+    theme_frame_b.setTopRightStyle(
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
+    theme_frame_b.setBottomLeftStyle(
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
+    theme_frame_b.setBottomRightStyle(
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
 
-    theme_margin_b.setEmbossActive(
-      Optional.of(theme_margin_emboss_active_b.build()));
+    theme_frame_b.setEmbossActive(Optional.empty());
+    theme_frame_b.setEmbossInactive(Optional.empty());
 
     theme.setWindowTheme(
       SyThemeWindow.of(
         theme_titlebar_b.build(),
-        theme_margin_b.build()));
+        theme_frame_b.build()));
 
-    final SyWindowType win = SyWindow.create(theme);
-    win.setSize(320, 240);
-    win.setActive(true);
+    final SyWindowType win = SyWindow.create(SyTextMeasurement.get(), theme);
+    win.setBounds(320, 240);
+    win.setActive(false);
     win.setText("File Manager - sys$starlet_c");
 
     final SyWindowRendererType<BufferedImage, BufferedImage> r =
-      SyWindowRendererAWT.create();
+      SyWindowRendererAWT.create(SyTextMeasurement.get());
 
     r.render(bi, win);
     ImageIO.write(bi, "PNG", new File("/tmp/window.png"));

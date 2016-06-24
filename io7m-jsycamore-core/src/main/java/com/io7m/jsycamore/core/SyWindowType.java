@@ -48,7 +48,7 @@ public interface SyWindowType
    * @return The bounds of the window
    */
 
-  VectorReadable2IType size();
+  VectorReadable2IType bounds();
 
   /**
    * @return The current theme
@@ -63,9 +63,17 @@ public interface SyWindowType
    * @param height The height
    */
 
-  void setSize(
+  void setBounds(
     int width,
     int height);
+
+  PVectorReadable2IType<SySpaceWindowRelativeType> framePosition();
+
+  PVectorReadable2IType<SySpaceWindowRelativeType> frameBounds();
+
+  PVectorReadable2IType<SySpaceWindowRelativeType> titlebarPosition();
+
+  PVectorReadable2IType<SySpaceWindowRelativeType> titlebarBounds();
 
   boolean active();
 

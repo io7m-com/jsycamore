@@ -34,6 +34,41 @@ public interface SyThemeWindowTitleBarType
 
   @Value.Parameter
   @Value.Default
+  default SyThemeWindowTitlebarWidthBehavior widthBehavior()
+  {
+    return SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeWindowTitlebarVerticalPlacement verticalPlacement()
+  {
+    return SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemeAlignment horizontalAlignment()
+  {
+    return SyThemeAlignment.ALIGN_CENTER;
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F textColorActive()
+  {
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F textColorInactive()
+  {
+    return new VectorI3F(0.2f, 0.2f, 0.2f);
+  }
+
+  @Value.Parameter
+  @Value.Default
   default VectorI3F colorActive()
   {
     return new VectorI3F(0.3f, 0.3f, 0.3f);

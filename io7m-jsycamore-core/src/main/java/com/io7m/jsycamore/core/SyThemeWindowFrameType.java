@@ -24,80 +24,80 @@ import java.util.Optional;
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemeWindowMarginType
+public interface SyThemeWindowFrameType
 {
   @Value.Check
   default void checkPreconditions()
   {
     if (this.embossActive().isPresent()) {
       switch (this.topLeftStyle()) {
-        case MARGIN_CORNER_NONE: {
+        case FRAME_CORNER_NONE: {
           break;
         }
-        case MARGIN_CORNER_L_PIECE: {
+        case FRAME_CORNER_L_PIECE: {
           Assertive.require(
             this.topHeight() > 0,
-            "An embossed top-left L corner requires a non-zero top margin");
+            "An embossed top-left L corner requires a non-zero top frame");
           Assertive.require(
             this.leftWidth() > 0,
-            "An embossed top-left L corner requires a non-zero left margin");
+            "An embossed top-left L corner requires a non-zero left frame");
           break;
         }
-        case MARGIN_CORNER_BOX: {
+        case FRAME_CORNER_BOX: {
           break;
         }
       }
 
       switch (this.topRightStyle()) {
-        case MARGIN_CORNER_NONE: {
+        case FRAME_CORNER_NONE: {
           break;
         }
-        case MARGIN_CORNER_L_PIECE: {
+        case FRAME_CORNER_L_PIECE: {
           Assertive.require(
             this.topHeight() > 0,
-            "An embossed top-right L corner requires a non-zero top margin");
+            "An embossed top-right L corner requires a non-zero top frame");
           Assertive.require(
             this.rightWidth() > 0,
-            "An embossed top-right L corner requires a non-zero right margin");
+            "An embossed top-right L corner requires a non-zero right frame");
           break;
         }
-        case MARGIN_CORNER_BOX: {
+        case FRAME_CORNER_BOX: {
           break;
         }
       }
 
       switch (this.bottomLeftStyle()) {
-        case MARGIN_CORNER_NONE: {
+        case FRAME_CORNER_NONE: {
           break;
         }
-        case MARGIN_CORNER_L_PIECE: {
+        case FRAME_CORNER_L_PIECE: {
           Assertive.require(
             this.bottomHeight() > 0,
-            "An embossed bottom-left L corner requires a non-zero bottom margin");
+            "An embossed bottom-left L corner requires a non-zero bottom frame");
           Assertive.require(
             this.leftWidth() > 0,
-            "An embossed bottom-left L corner requires a non-zero left margin");
+            "An embossed bottom-left L corner requires a non-zero left frame");
           break;
         }
-        case MARGIN_CORNER_BOX: {
+        case FRAME_CORNER_BOX: {
           break;
         }
       }
 
       switch (this.bottomRightStyle()) {
-        case MARGIN_CORNER_NONE: {
+        case FRAME_CORNER_NONE: {
           break;
         }
-        case MARGIN_CORNER_L_PIECE: {
+        case FRAME_CORNER_L_PIECE: {
           Assertive.require(
             this.bottomHeight() > 0,
-            "An embossed bottom-right L corner requires a non-zero bottom margin");
+            "An embossed bottom-right L corner requires a non-zero bottom frame");
           Assertive.require(
             this.rightWidth() > 0,
-            "An embossed bottom-right L corner requires a non-zero right margin");
+            "An embossed bottom-right L corner requires a non-zero right frame");
           break;
         }
-        case MARGIN_CORNER_BOX: {
+        case FRAME_CORNER_BOX: {
           break;
         }
       }
@@ -142,30 +142,30 @@ public interface SyThemeWindowMarginType
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowMarginCorner bottomLeftStyle()
+  default SyThemeWindowFrameCorner bottomLeftStyle()
   {
-    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowMarginCorner bottomRightStyle()
+  default SyThemeWindowFrameCorner bottomRightStyle()
   {
-    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowMarginCorner topLeftStyle()
+  default SyThemeWindowFrameCorner topLeftStyle()
   {
-    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowMarginCorner topRightStyle()
+  default SyThemeWindowFrameCorner topRightStyle()
   {
-    return SyThemeWindowMarginCorner.MARGIN_CORNER_NONE;
+    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
   @Value.Parameter

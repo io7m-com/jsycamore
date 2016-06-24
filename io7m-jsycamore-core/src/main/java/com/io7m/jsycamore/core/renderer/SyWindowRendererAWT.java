@@ -17,58 +17,55 @@
 package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyThemeEmbossType;
 import com.io7m.jsycamore.core.SyThemeType;
-import com.io7m.jsycamore.core.SyThemeWindowMarginType;
+import com.io7m.jsycamore.core.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.SyThemeWindowType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.junreachable.UnimplementedCodeException;
+import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
-import java.util.WeakHashMap;
 
 /**
  * A simple software renderer that renders a window to an image.
  */
 
+@NotThreadSafe
 public final class SyWindowRendererAWT implements
   SyWindowRendererType<BufferedImage, BufferedImage>
 {
-  private final RoundRectangle2D.Double draw_rect;
-  private final Polygon poly;
   private final SyEmbossed embossed;
-  private final WeakHashMap<String, Font> font_cache;
+  private final SyTextMeasurementType measurement;
 
-  private SyWindowRendererAWT()
+  private SyWindowRendererAWT(
+    final SyTextMeasurementType in_measurement)
   {
-    this.draw_rect = new RoundRectangle2D.Double();
-    this.poly = new Polygon();
+    this.measurement = NullCheck.notNull(in_measurement);
     this.embossed = new SyEmbossed();
-    this.font_cache = new WeakHashMap<>();
   }
 
   /**
    * @return A new renderer
    */
 
-  public static SyWindowRendererType<BufferedImage, BufferedImage> create()
+  public static SyWindowRendererType<BufferedImage, BufferedImage> create(
+    final SyTextMeasurementType in_measurement)
   {
-    return new SyWindowRendererAWT();
+    return new SyWindowRendererAWT(in_measurement);
   }
 
   private static Color toColor(
@@ -88,7 +85,7 @@ public final class SyWindowRendererAWT implements
     NullCheck.notNull(input);
     NullCheck.notNull(window);
 
-    final VectorReadable2IType window_size = window.size();
+    final VectorReadable2IType window_size = window.bounds();
     Assertive.require(input.getWidth() >= window_size.getXI());
     Assertive.require(input.getHeight() >= window_size.getYI());
 
@@ -98,28 +95,13 @@ public final class SyWindowRendererAWT implements
     graphics.setRenderingHint(
       RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-
-    final Color window_color =
-      SyWindowRendererAWT.toColor(theme.mainBackgroundColor());
-
-    this.draw_rect.setRoundRect(
-      0.0,
-      0.0,
-      (double) window_size.getXI(),
-      (double) window_size.getYI(),
-      0.0,
-      0.0);
     graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
-
-    this.renderMargin(input, graphics, window);
-    this.renderTitlebar(input, graphics, window);
+    this.renderFrame(graphics, window);
+    this.renderTitlebar(graphics, window);
     return input;
   }
 
   private void renderTitlebar(
-    final BufferedImage input,
     final Graphics2D graphics,
     final SyWindowType window)
   {
@@ -128,9 +110,9 @@ public final class SyWindowRendererAWT implements
 
     try {
       if (window.active()) {
-        this.renderTitlebarActive(input, graphics, window);
+        this.renderTitlebarActive(graphics, window);
       } else {
-        this.renderTitlebarInactive(input, graphics, window);
+        this.renderTitlebarInactive(graphics, window);
       }
     } finally {
       graphics.setTransform(old_transform);
@@ -139,28 +121,54 @@ public final class SyWindowRendererAWT implements
   }
 
   private void renderTitlebarInactive(
-    final BufferedImage input,
-    final Graphics2D graphics,
-    final SyWindowType window)
-  {
-    throw new UnimplementedCodeException();
-  }
-
-  private void renderTitlebarActive(
-    final BufferedImage input,
     final Graphics2D graphics,
     final SyWindowType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
     final SyThemeWindowTitleBarType titlebar = window_theme.titleBar();
-    final SyThemeWindowMarginType margin = window_theme.margin();
-    final VectorReadable2IType window_size = window.size();
+    this.renderTitleBarActual(
+      graphics,
+      window,
+      titlebar,
+      titlebar.colorInactive(),
+      titlebar.embossInactive(),
+      titlebar.textColorInactive());
+  }
 
-    final int x = margin.leftWidth();
-    final int y = margin.topHeight();
-    final int w = window_size.getXI() - (x + margin.rightWidth());
-    final int h = titlebar.height();
+  private void renderTitlebarActive(
+    final Graphics2D graphics,
+    final SyWindowType window)
+  {
+    final SyThemeType theme = window.theme();
+    final SyThemeWindowType window_theme = theme.windowTheme();
+    final SyThemeWindowTitleBarType titlebar = window_theme.titleBar();
+    this.renderTitleBarActual(
+      graphics,
+      window,
+      titlebar,
+      titlebar.colorActive(),
+      titlebar.embossActive(),
+      titlebar.textColorActive());
+  }
+
+  private void renderTitleBarActual(
+    final Graphics2D graphics,
+    final SyWindowType window,
+    final SyThemeWindowTitleBarType titlebar,
+    final VectorReadable3FType titlebar_color,
+    final Optional<SyThemeEmbossType> emboss_opt,
+    final VectorReadable3FType text_color)
+  {
+    final PVectorReadable2IType<SySpaceWindowRelativeType> bar_pos =
+      window.titlebarPosition();
+    final PVectorReadable2IType<SySpaceWindowRelativeType> bar_size =
+      window.titlebarBounds();
+
+    final int x = bar_pos.getXI();
+    final int y = bar_pos.getYI();
+    final int w = bar_size.getXI();
+    final int h = bar_size.getYI();
     graphics.clipRect(x, y, w, h);
     graphics.translate(x, y);
 
@@ -168,9 +176,9 @@ public final class SyWindowRendererAWT implements
      * Render actual bar.
      */
 
-    final Color fill = SyWindowRendererAWT.toColor(titlebar.colorActive());
+    final Color fill = SyWindowRendererAWT.toColor(titlebar_color);
     final Optional<Paint> fill_opt = Optional.of(fill);
-    final Optional<SyThemeEmbossType> emboss_opt = titlebar.embossActive();
+
     if (emboss_opt.isPresent()) {
       final SyThemeEmbossType emboss = emboss_opt.get();
       final Paint left = SyWindowRendererAWT.toColor(emboss.colorLeft());
@@ -200,21 +208,21 @@ public final class SyWindowRendererAWT implements
      */
 
     {
-      graphics.setFont(
-        this.font_cache.computeIfAbsent(titlebar.textFont(), Font::decode));
+      final String text_font = titlebar.textFont();
+      final String text = window.text();
 
-      final FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
-      final int text_width = metrics.stringWidth(window.text());
+      final int text_width = this.measurement.measureText(text_font, text);
+      final int space_width = this.measurement.measureText(text_font, " ");
 
       int text_x = 0;
       final int text_y = (titlebar.height() / 4) * 3;
       switch (titlebar.textAlignment()) {
         case ALIGN_LEFT: {
-          text_x = metrics.stringWidth(" ");
+          text_x = space_width;
           break;
         }
         case ALIGN_RIGHT: {
-          text_x = w - (text_width + metrics.stringWidth(" "));
+          text_x = w - (text_width + space_width);
           break;
         }
         case ALIGN_CENTER: {
@@ -223,13 +231,14 @@ public final class SyWindowRendererAWT implements
         }
       }
 
-      graphics.setPaint(Color.BLACK);
-      graphics.drawString(window.text(), text_x, text_y);
+      final Color text_paint = SyWindowRendererAWT.toColor(text_color);
+      graphics.setFont(this.measurement.decodeFont(text_font));
+      graphics.setPaint(text_paint);
+      graphics.drawString(text, text_x, text_y);
     }
   }
 
-  private void renderMargin(
-    final BufferedImage input,
+  private void renderFrame(
     final Graphics2D graphics,
     final SyWindowType window)
   {
@@ -238,9 +247,9 @@ public final class SyWindowRendererAWT implements
 
     try {
       if (window.active()) {
-        this.renderMarginActive(input, graphics, window);
+        this.renderFrameActive(graphics, window);
       } else {
-        this.renderMarginInactive(input, graphics, window);
+        this.renderFrameInactive(graphics, window);
       }
     } finally {
       graphics.setTransform(old_transform);
@@ -248,97 +257,111 @@ public final class SyWindowRendererAWT implements
     }
   }
 
-  private void renderMarginInactive(
-    final BufferedImage input,
+  private void renderFrameInactive(
     final Graphics2D graphics,
     final SyWindowType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowMarginType margin_theme = window_theme.margin();
-    final VectorReadable2IType window_size = window.size();
+    final SyThemeWindowFrameType frame_theme = window_theme.frame();
 
-    final Optional<SyThemeEmbossType> emboss_opt = margin_theme.embossInactive();
+    final Optional<SyThemeEmbossType> emboss_opt = frame_theme.embossInactive();
     if (emboss_opt.isPresent()) {
       final SyThemeEmbossType emboss = emboss_opt.get();
-      this.renderMarginInactiveEmbossed(
-        graphics, margin_theme, window_size, emboss,
-        SyWindowRendererAWT.toColor(margin_theme.colorInactive()));
+      this.renderFrameEmbossedActual(
+        graphics,
+        window_theme.titleBar(),
+        frame_theme,
+        window,
+        emboss,
+        SyWindowRendererAWT.toColor(emboss.colorTop()),
+        SyWindowRendererAWT.toColor(emboss.colorLeft()),
+        SyWindowRendererAWT.toColor(emboss.colorRight()),
+        SyWindowRendererAWT.toColor(emboss.colorBottom()),
+        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorInactive())));
     } else {
-      throw new UnimplementedCodeException();
+      this.renderFrameUnembossedActual(
+        graphics,
+        window_theme.titleBar(),
+        frame_theme,
+        window,
+        SyWindowRendererAWT.toColor(frame_theme.colorInactive()));
     }
   }
 
-  private void renderMarginInactiveEmbossed(
-    final Graphics2D graphics,
-    final SyThemeWindowMarginType margin_theme,
-    final VectorReadable2IType window_size,
-    final SyThemeEmbossType emboss,
-    final Color color)
-  {
-    throw new UnimplementedCodeException();
-  }
-
-  private void renderMarginActive(
-    final BufferedImage input,
+  private void renderFrameActive(
     final Graphics2D graphics,
     final SyWindowType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowMarginType margin_theme = window_theme.margin();
-    final VectorReadable2IType window_size = window.size();
+    final SyThemeWindowFrameType frame_theme = window_theme.frame();
 
-    final Optional<SyThemeEmbossType> emboss_opt = margin_theme.embossActive();
+    final Optional<SyThemeEmbossType> emboss_opt = frame_theme.embossActive();
     if (emboss_opt.isPresent()) {
       final SyThemeEmbossType emboss = emboss_opt.get();
-      this.renderMarginActiveEmbossed(
-        graphics, window_theme.titleBar(), margin_theme, window_size, emboss,
-        SyWindowRendererAWT.toColor(margin_theme.colorActive()));
+      this.renderFrameEmbossedActual(
+        graphics,
+        window_theme.titleBar(),
+        frame_theme,
+        window,
+        emboss,
+        SyWindowRendererAWT.toColor(emboss.colorTop()),
+        SyWindowRendererAWT.toColor(emboss.colorLeft()),
+        SyWindowRendererAWT.toColor(emboss.colorRight()),
+        SyWindowRendererAWT.toColor(emboss.colorBottom()),
+        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorActive())));
     } else {
-      throw new UnimplementedCodeException();
+      this.renderFrameUnembossedActual(
+        graphics,
+        window_theme.titleBar(),
+        frame_theme,
+        window,
+        SyWindowRendererAWT.toColor(frame_theme.colorActive()));
     }
   }
 
-  private void renderMarginActiveEmbossed(
+  private void renderFrameEmbossedActual(
     final Graphics2D graphics,
     final SyThemeWindowTitleBarType titlebar_theme,
-    final SyThemeWindowMarginType margin_theme,
-    final VectorReadable2IType window_size,
+    final SyThemeWindowFrameType frame_theme,
+    final SyWindowType window,
     final SyThemeEmbossType emboss,
-    final Paint e_fill)
+    final Color e_top,
+    final Color e_left,
+    final Color e_right,
+    final Color e_bottom,
+    final Optional<Paint> eo_fill)
   {
-    final Optional<Paint> eo_fill =
-      Optional.of(e_fill);
-    final Color e_top =
-      SyWindowRendererAWT.toColor(emboss.colorTop());
-    final Color e_left =
-      SyWindowRendererAWT.toColor(emboss.colorLeft());
-    final Color e_right =
-      SyWindowRendererAWT.toColor(emboss.colorRight());
-    final Color e_bottom =
-      SyWindowRendererAWT.toColor(emboss.colorBottom());
+    final int left_width = frame_theme.leftWidth();
+    final int right_width = frame_theme.rightWidth();
+    final int top_height = frame_theme.topHeight();
+    final int bottom_height = frame_theme.bottomHeight();
 
-    final int left_width = margin_theme.leftWidth();
-    final int right_width = margin_theme.rightWidth();
-    final int top_height = margin_theme.topHeight();
-    final int bottom_height = margin_theme.bottomHeight();
+    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_position =
+      window.framePosition();
+    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
+      window.frameBounds();
+
+    final int frame_x = frame_position.getXI();
+    final int frame_y = frame_position.getYI();
+    final int frame_width = frame_size.getXI();
+    final int frame_height = frame_size.getYI();
+    graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
+    graphics.translate(frame_x, frame_y);
 
     int top_left_len = Math.max(left_width, top_height);
     int top_right_len = Math.max(right_width, top_height);
     int bottom_right_len = Math.max(right_width, bottom_height);
     int bottom_left_len = Math.max(left_width, bottom_height);
 
-    final int window_width = window_size.getXI();
-    final int window_height = window_size.getYI();
-
-    int top_width = window_width;
-    int bottom_width = window_width;
-    int left_height = window_height;
-    int right_height = window_height;
+    int top_width = frame_width;
+    int bottom_width = frame_width;
+    int left_height = frame_height;
+    int right_height = frame_height;
 
     int bottom_x = 0;
-    final int bottom_y = window_height - bottom_height;
+    final int bottom_y = frame_height - bottom_height;
     int left_y = 0;
     int right_y = 0;
     int top_x = 0;
@@ -347,11 +370,11 @@ public final class SyWindowRendererAWT implements
     final int emboss_size = emboss.size();
 
     boolean top_left_caps = false;
-    switch (margin_theme.topLeftStyle()) {
-      case MARGIN_CORNER_NONE: {
+    switch (frame_theme.topLeftStyle()) {
+      case FRAME_CORNER_NONE: {
         break;
       }
-      case MARGIN_CORNER_L_PIECE: {
+      case FRAME_CORNER_L_PIECE: {
         Assertive.require(left_width > 0);
         Assertive.require(top_height > 0);
 
@@ -363,17 +386,17 @@ public final class SyWindowRendererAWT implements
         top_width -= top_left_len;
         break;
       }
-      case MARGIN_CORNER_BOX: {
+      case FRAME_CORNER_BOX: {
         break;
       }
     }
 
     boolean top_right_caps = false;
-    switch (margin_theme.topRightStyle()) {
-      case MARGIN_CORNER_NONE: {
+    switch (frame_theme.topRightStyle()) {
+      case FRAME_CORNER_NONE: {
         break;
       }
-      case MARGIN_CORNER_L_PIECE: {
+      case FRAME_CORNER_L_PIECE: {
         Assertive.require(right_width > 0);
         Assertive.require(top_height > 0);
 
@@ -384,17 +407,17 @@ public final class SyWindowRendererAWT implements
         top_width -= top_right_len;
         break;
       }
-      case MARGIN_CORNER_BOX: {
+      case FRAME_CORNER_BOX: {
         break;
       }
     }
 
     boolean bottom_left_caps = false;
-    switch (margin_theme.bottomLeftStyle()) {
-      case MARGIN_CORNER_NONE: {
+    switch (frame_theme.bottomLeftStyle()) {
+      case FRAME_CORNER_NONE: {
         break;
       }
-      case MARGIN_CORNER_L_PIECE: {
+      case FRAME_CORNER_L_PIECE: {
         Assertive.require(left_width > 0);
         Assertive.require(bottom_height > 0);
 
@@ -405,17 +428,17 @@ public final class SyWindowRendererAWT implements
         bottom_width -= bottom_left_len;
         break;
       }
-      case MARGIN_CORNER_BOX: {
+      case FRAME_CORNER_BOX: {
         break;
       }
     }
 
     boolean bottom_right_caps = false;
-    switch (margin_theme.bottomRightStyle()) {
-      case MARGIN_CORNER_NONE: {
+    switch (frame_theme.bottomRightStyle()) {
+      case FRAME_CORNER_NONE: {
         break;
       }
-      case MARGIN_CORNER_L_PIECE: {
+      case FRAME_CORNER_L_PIECE: {
         Assertive.require(right_width > 0);
         Assertive.require(bottom_height > 0);
 
@@ -425,13 +448,13 @@ public final class SyWindowRendererAWT implements
         bottom_width -= bottom_right_len;
         break;
       }
-      case MARGIN_CORNER_BOX: {
+      case FRAME_CORNER_BOX: {
         break;
       }
     }
 
     /**
-     * Left margin.
+     * Left frame.
      */
 
     if (left_width > 0) {
@@ -450,13 +473,13 @@ public final class SyWindowRendererAWT implements
     }
 
     /**
-     * Right margin.
+     * Right frame.
      */
 
     if (right_width > 0) {
       this.embossed.rectangle(
         graphics,
-        window_width - right_width,
+        frame_width - right_width,
         right_y,
         right_width,
         right_height,
@@ -469,7 +492,7 @@ public final class SyWindowRendererAWT implements
     }
 
     /**
-     * Top margin.
+     * Top frame.
      */
 
     if (top_height > 0) {
@@ -488,7 +511,7 @@ public final class SyWindowRendererAWT implements
     }
 
     /**
-     * Bottom margin.
+     * Bottom frame.
      */
 
     if (bottom_height > 0) {
@@ -536,7 +559,7 @@ public final class SyWindowRendererAWT implements
       this.embossed.drawEmbossedL(
         graphics,
         SyEmbossed.LShape.L_SHAPE_NE,
-        window_width - top_right_len,
+        frame_width - top_right_len,
         0,
         thickness_of_horizontal,
         thickness_of_vertical,
@@ -557,7 +580,7 @@ public final class SyWindowRendererAWT implements
         graphics,
         SyEmbossed.LShape.L_SHAPE_SW,
         0,
-        window_height - bottom_left_len,
+        frame_height - bottom_left_len,
         thickness_of_horizontal,
         thickness_of_vertical,
         bottom_left_len,
@@ -576,8 +599,8 @@ public final class SyWindowRendererAWT implements
       this.embossed.drawEmbossedL(
         graphics,
         SyEmbossed.LShape.L_SHAPE_SE,
-        window_width - bottom_right_len,
-        window_height - bottom_right_len,
+        frame_width - bottom_right_len,
+        frame_height - bottom_right_len,
         thickness_of_horizontal,
         thickness_of_vertical,
         bottom_right_len,
@@ -588,6 +611,108 @@ public final class SyWindowRendererAWT implements
         e_bottom,
         eo_fill,
         bottom_right_caps);
+    }
+  }
+
+  private void renderFrameUnembossedActual(
+    final Graphics2D graphics,
+    final SyThemeWindowTitleBarType titlebar_theme,
+    final SyThemeWindowFrameType frame_theme,
+    final SyWindowType window,
+    final Paint fill)
+  {
+    final int left_width = frame_theme.leftWidth();
+    final int right_width = frame_theme.rightWidth();
+    final int top_height = frame_theme.topHeight();
+    final int bottom_height = frame_theme.bottomHeight();
+
+    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_position =
+      window.framePosition();
+    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
+      window.frameBounds();
+
+    final int frame_x = frame_position.getXI();
+    final int frame_y = frame_position.getYI();
+    final int frame_width = frame_size.getXI();
+    final int frame_height = frame_size.getYI();
+    graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
+    graphics.translate(frame_x, frame_y);
+
+    final int top_left_len = Math.max(left_width, top_height);
+    final int top_right_len = Math.max(right_width, top_height);
+    final int bottom_right_len = Math.max(right_width, bottom_height);
+    final int bottom_left_len = Math.max(left_width, bottom_height);
+
+    final int top_width = frame_width;
+    final int bottom_width = frame_width;
+    final int left_height = frame_height;
+    final int right_height = frame_height;
+
+    final int bottom_x = 0;
+    final int bottom_y = frame_height - bottom_height;
+    final int left_y = 0;
+    final int right_y = 0;
+    final int top_x = 0;
+
+    /**
+     * Left frame.
+     */
+
+    if (left_width > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(0, left_y, left_width, left_height);
+    }
+
+    /**
+     * Right frame.
+     */
+
+    if (right_width > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(
+        frame_width - right_width, right_y, right_width, right_height);
+    }
+
+    /**
+     * Top frame.
+     */
+
+    if (top_height > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(top_x, 0, top_width, top_height);
+    }
+
+    /**
+     * Bottom frame.
+     */
+
+    if (bottom_height > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(bottom_x, bottom_y, bottom_width, bottom_height);
+    }
+
+    /**
+     * Corners.
+     */
+
+    if (top_height > 0 && left_width > 0) {
+      final int thickness_of_horizontal = top_height;
+      final int thickness_of_vertical = left_width;
+    }
+
+    if (top_height > 0 && right_width > 0) {
+      final int thickness_of_horizontal = top_height;
+      final int thickness_of_vertical = right_width;
+    }
+
+    if (bottom_height > 0 && left_width > 0) {
+      final int thickness_of_horizontal = bottom_height;
+      final int thickness_of_vertical = left_width;
+    }
+
+    if (bottom_height > 0 && right_width > 0) {
+      final int thickness_of_horizontal = bottom_height;
+      final int thickness_of_vertical = right_width;
     }
   }
 }

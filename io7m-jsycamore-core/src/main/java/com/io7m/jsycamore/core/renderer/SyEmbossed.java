@@ -19,7 +19,6 @@ package com.io7m.jsycamore.core.renderer;
 import com.io7m.jnull.NullCheck;
 import org.valid4j.Assertive;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Polygon;

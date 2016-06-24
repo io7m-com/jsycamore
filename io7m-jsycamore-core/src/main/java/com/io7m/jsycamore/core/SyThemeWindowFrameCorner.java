@@ -16,16 +16,9 @@
 
 package com.io7m.jsycamore.core;
 
-import org.immutables.value.Value;
-
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public enum SyThemeWindowFrameCorner
 {
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
-
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
+  FRAME_CORNER_NONE,
+  FRAME_CORNER_L_PIECE,
+  FRAME_CORNER_BOX
 }

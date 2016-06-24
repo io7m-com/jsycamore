@@ -16,16 +16,9 @@
 
 package com.io7m.jsycamore.core;
 
-import org.immutables.value.Value;
-
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public enum SyThemeWindowTitlebarVerticalPlacement
 {
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
-
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
+  PLACEMENT_TOP_INSIDE_FRAME,
+  PLACEMENT_TOP_OVERLAP_FRAME,
+  PLACEMENT_TOP_ABOVE_FRAME
 }
