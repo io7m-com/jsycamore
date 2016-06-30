@@ -36,6 +36,6 @@ public final class SyThemeDefault
 
   public static SyThemeType get()
   {
-    return SyThemeMotive.create().build();
+    return SyThemeMotive.builder().build();
   }
 }

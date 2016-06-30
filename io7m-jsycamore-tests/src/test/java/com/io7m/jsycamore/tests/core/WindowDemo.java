@@ -25,6 +25,8 @@ import com.io7m.jsycamore.core.renderer.SyGUIRendererAWTInefficient;
 import com.io7m.jsycamore.core.renderer.SyGUIRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +80,8 @@ public final class WindowDemo implements Runnable
 
   private WindowDemo()
   {
-    this.gui = SyGUI.create("main");
+    final SyThemeType theme = SyThemeBee.builder().build();
+    this.gui = SyGUI.createWithTheme("main", theme);
     this.window0 = this.gui.windowCreate(320, 240, "Files");
     this.window1 = this.gui.windowCreate(300, 240, "Other");
     this.window1.setPosition(100, 100);
@@ -124,7 +127,7 @@ public final class WindowDemo implements Runnable
       {
         this.position.set2I(e.getX(), e.getY());
         WindowDemo.this.gui.onMouseUp(
-          this.position, SyMouseButton.ofIndex(e.getButton()));
+          this.position, SyMouseButton.ofIndex(e.getButton() - 1));
         canvas.repaint();
       }
 
@@ -133,7 +136,7 @@ public final class WindowDemo implements Runnable
       {
         this.position.set2I(e.getX(), e.getY());
         WindowDemo.this.gui.onMouseDown(
-          this.position, SyMouseButton.ofIndex(e.getButton()));
+          this.position, SyMouseButton.ofIndex(e.getButton() - 1));
         canvas.repaint();
       }
     };

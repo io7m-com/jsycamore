@@ -34,18 +34,18 @@ import com.io7m.junreachable.UnreachableCodeException;
 import java.util.Optional;
 
 /**
- * A 1980s style workstation theme.
+ * A 1990s style multimedia theme.
  */
 
-public final class SyThemeMotive
+public final class SyThemeBee
 {
-  private SyThemeMotive()
+  private SyThemeBee()
   {
     throw new UnreachableCodeException();
   }
 
   /**
-   * Create a theme builder based on the given input values.
+   * Create a theme based on the given input values.
    *
    * @param spec The theme-specific input values
    *
@@ -53,41 +53,41 @@ public final class SyThemeMotive
    */
 
   public static SyTheme.Builder builderFrom(
-    final SyThemeMotiveSpecificationType spec)
+    final SyThemeBeeSpecificationType spec)
   {
     NullCheck.notNull(spec);
 
     final SyTheme.Builder theme = SyTheme.builder();
 
-    final VectorI3F color_active_lighter =
-      VectorI3F.scale(spec.colorActive(), spec.colorLightFactor());
-    final VectorI3F color_active_darker =
-      VectorI3F.scale(spec.colorActive(), spec.colorDarkFactor());
+    final VectorI3F title_color_active_lighter =
+      VectorI3F.scale(spec.titlebarColorActive(), spec.colorLightFactor());
+    final VectorI3F title_color_active_darker =
+      VectorI3F.scale(spec.titlebarColorActive(), spec.colorDarkFactor());
 
-    final float average =
-      (spec.colorActive().getXF()
-        + spec.colorActive().getYF()
-        + spec.colorActive().getZF()) / 3.0f;
+    final VectorI3F frame_color_lighter =
+      VectorI3F.scale(spec.frameColor(), spec.colorLightFactor());
+    final VectorI3F frame_color_darker =
+      VectorI3F.scale(spec.frameColor(), spec.colorDarkFactor());
 
-    final VectorI3F color_inactive_base =
-      new VectorI3F(average, average, average);
+    final VectorI3F title_color_inactive_base =
+      spec.titlebarColorInactive();
     final VectorI3F color_inactive_lighter =
-      VectorI3F.scale(color_inactive_base, spec.colorLightFactor());
+      VectorI3F.scale(title_color_inactive_base, spec.colorLightFactor());
     final VectorI3F color_inactive_darker =
-      VectorI3F.scale(color_inactive_base, spec.colorDarkFactor());
+      VectorI3F.scale(title_color_inactive_base, spec.colorDarkFactor());
 
     final VectorI3F text_color_active =
-      new VectorI3F(1.0f, 1.0f, 1.0f);
+      spec.titlebarTextColorActive();
     final VectorI3F text_color_inactive =
-      VectorI3F.scale(text_color_active, 0.6f);
+      spec.titlebarTextColorInactive();
 
     final SyThemeEmboss.Builder theme_titlebar_emboss_active_b =
       SyThemeEmboss.builder();
     theme_titlebar_emboss_active_b.setSize(1);
-    theme_titlebar_emboss_active_b.setColorTop(color_active_lighter);
-    theme_titlebar_emboss_active_b.setColorLeft(color_active_lighter);
-    theme_titlebar_emboss_active_b.setColorRight(color_active_darker);
-    theme_titlebar_emboss_active_b.setColorBottom(color_active_darker);
+    theme_titlebar_emboss_active_b.setColorTop(title_color_active_lighter);
+    theme_titlebar_emboss_active_b.setColorLeft(title_color_active_lighter);
+    theme_titlebar_emboss_active_b.setColorRight(title_color_active_darker);
+    theme_titlebar_emboss_active_b.setColorBottom(title_color_active_darker);
 
     final SyThemeEmboss.Builder theme_titlebar_emboss_inactive_b =
       SyThemeEmboss.builder();
@@ -101,8 +101,8 @@ public final class SyThemeMotive
       SyThemeWindowTitleBar.builder();
     theme_titlebar_b.setTextFont("Monospaced 10");
     theme_titlebar_b.setHeight(18);
-    theme_titlebar_b.setColorActive(spec.colorActive());
-    theme_titlebar_b.setColorInactive(color_inactive_base);
+    theme_titlebar_b.setColorActive(spec.titlebarColorActive());
+    theme_titlebar_b.setColorInactive(title_color_inactive_base);
     theme_titlebar_b.setTextColorActive(text_color_active);
     theme_titlebar_b.setTextColorInactive(text_color_inactive);
     theme_titlebar_b.setEmbossActive(
@@ -112,45 +112,45 @@ public final class SyThemeMotive
     theme_titlebar_b.setTextAlignment(
       SyThemeAlignment.ALIGN_CENTER);
     theme_titlebar_b.setVerticalPlacement(
-      SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME);
+      SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_ABOVE_FRAME);
     theme_titlebar_b.setHorizontalAlignment(
       SyThemeAlignment.ALIGN_LEFT);
     theme_titlebar_b.setWidthBehavior(
-      SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME);
+      SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_TO_CONTENT);
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
     theme_frame_emboss_active_b.setSize(1);
-    theme_frame_emboss_active_b.setColorTop(color_active_lighter);
-    theme_frame_emboss_active_b.setColorLeft(color_active_lighter);
-    theme_frame_emboss_active_b.setColorRight(color_active_darker);
-    theme_frame_emboss_active_b.setColorBottom(color_active_darker);
+    theme_frame_emboss_active_b.setColorTop(frame_color_lighter);
+    theme_frame_emboss_active_b.setColorLeft(frame_color_lighter);
+    theme_frame_emboss_active_b.setColorRight(frame_color_darker);
+    theme_frame_emboss_active_b.setColorBottom(frame_color_darker);
 
     final SyThemeEmboss.Builder theme_frame_emboss_inactive_b =
       SyThemeEmboss.builder();
     theme_frame_emboss_inactive_b.setSize(1);
-    theme_frame_emboss_inactive_b.setColorTop(color_inactive_lighter);
-    theme_frame_emboss_inactive_b.setColorLeft(color_inactive_lighter);
-    theme_frame_emboss_inactive_b.setColorRight(color_inactive_darker);
-    theme_frame_emboss_inactive_b.setColorBottom(color_inactive_darker);
+    theme_frame_emboss_inactive_b.setColorTop(frame_color_lighter);
+    theme_frame_emboss_inactive_b.setColorLeft(frame_color_lighter);
+    theme_frame_emboss_inactive_b.setColorRight(frame_color_darker);
+    theme_frame_emboss_inactive_b.setColorBottom(frame_color_darker);
 
     final SyThemeWindowFrame.Builder theme_frame_b =
       SyThemeWindowFrame.builder();
-    theme_frame_b.setBottomHeight(5);
-    theme_frame_b.setTopHeight(5);
-    theme_frame_b.setLeftWidth(5);
-    theme_frame_b.setRightWidth(5);
-    theme_frame_b.setColorActive(spec.colorActive());
-    theme_frame_b.setColorInactive(color_inactive_base);
+    theme_frame_b.setBottomHeight(3);
+    theme_frame_b.setTopHeight(3);
+    theme_frame_b.setLeftWidth(3);
+    theme_frame_b.setRightWidth(3);
+    theme_frame_b.setColorActive(spec.frameColor());
+    theme_frame_b.setColorInactive(spec.frameColor());
 
     theme_frame_b.setTopLeftStyle(
-      SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
     theme_frame_b.setTopRightStyle(
-      SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
     theme_frame_b.setBottomLeftStyle(
-      SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
     theme_frame_b.setBottomRightStyle(
-      SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
+      SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
 
     theme_frame_b.setEmbossActive(theme_frame_emboss_active_b.build());
     theme_frame_b.setEmbossInactive(theme_frame_emboss_inactive_b.build());
@@ -178,7 +178,7 @@ public final class SyThemeMotive
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeMotive.builderFrom(
-      SyThemeMotiveSpecification.builder().build());
+    return SyThemeBee.builderFrom(
+      SyThemeBeeSpecification.builder().build());
   }
 }

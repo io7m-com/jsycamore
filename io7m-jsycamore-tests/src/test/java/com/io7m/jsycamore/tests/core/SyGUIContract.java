@@ -63,7 +63,7 @@ public abstract class SyGUIContract
   @Test
   public final void testCreateWithTheme()
   {
-    final SyTheme theme = SyThemeMotive.create().build();
+    final SyTheme theme = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", theme);
     Assert.assertEquals("main", g.name());
     Assert.assertEquals(theme, g.theme());
@@ -174,7 +174,7 @@ public abstract class SyGUIContract
 
   @Test public final void testWindowMouseOverTitlebar()
   {
-    final SyTheme t = SyThemeMotive.create().build();
+    final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
 
@@ -195,7 +195,7 @@ public abstract class SyGUIContract
 
   @Test public final void testWindowMouseOverTitlebarDragLeftButton()
   {
-    final SyTheme t = SyThemeMotive.create().build();
+    final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
 
@@ -228,7 +228,7 @@ public abstract class SyGUIContract
 
   @Test public final void testWindowClickNothing()
   {
-    final SyTheme t = SyThemeMotive.create().build();
+    final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
 
@@ -247,7 +247,7 @@ public abstract class SyGUIContract
 
   @Test public final void testWindowMouseOverTitlebarDragRightButton()
   {
-    final SyTheme t = SyThemeMotive.create().build();
+    final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
 
