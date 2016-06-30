@@ -14,36 +14,39 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
-import java.awt.Font;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI3F;
+import org.immutables.value.Value;
 
 /**
- * The type of text measurement interfaces.
+ * An outline specification.
  */
 
-public interface SyTextMeasurementType
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyThemeOutlineType
 {
   /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * @return The color of the outline when the element is active
    */
 
-  int measureText(
-    String font,
-    String text);
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F colorActive()
+  {
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
 
   /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
+   * @return The color of the outline when the element is inactive
    */
 
-  Font decodeFont(String font);
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F colorInactive()
+  {
+    return new VectorI3F(0.2f, 0.2f, 0.2f);
+  }
 }

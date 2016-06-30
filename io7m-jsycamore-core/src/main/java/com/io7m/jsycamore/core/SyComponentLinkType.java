@@ -16,34 +16,19 @@
 
 package com.io7m.jsycamore.core;
 
-import java.awt.Font;
-
 /**
- * The type of text measurement interfaces.
+ * <p>The type of component links.</p>
+ *
+ * <p>A link from component {@code source} to component {@code target} marks
+ * {@code target} as being a child of {@code source}. Components have exactly
+ * one parent. </p>
  */
 
-public interface SyTextMeasurementType
+public interface SyComponentLinkType extends SyComponentLinkReadableType
 {
-  /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
-   */
+  @Override
+  SyComponentType source();
 
-  int measureText(
-    String font,
-    String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
+  @Override
+  SyComponentType target();
 }

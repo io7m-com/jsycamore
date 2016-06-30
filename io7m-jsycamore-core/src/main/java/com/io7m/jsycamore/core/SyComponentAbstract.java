@@ -22,11 +22,18 @@ import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVector2IType;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * The default abstract implementation of the {@link SyComponentType}
+ * interface.
+ */
+
+@NotThreadSafe
 public abstract class SyComponentAbstract implements SyComponentType
 {
   private SyParentResizeBehavior resize_width;
@@ -117,7 +124,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final PVectorReadable2IType<SySpaceParentRelativeType> position()
+  public final PVectorReadable2IType<SySpaceParentRelativeType> positionParentRelative()
   {
     return this.position;
   }

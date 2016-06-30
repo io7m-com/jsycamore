@@ -16,9 +16,15 @@
 
 package com.io7m.jsycamore.core;
 
-public enum SyThemeAlignment
+/**
+ * The type of objects that can appear in GUIs.
+ */
+
+public interface SyGUIElementType
 {
-  ALIGN_LEFT,
-  ALIGN_RIGHT,
-  ALIGN_CENTER
+  /**
+   * @return The GUI with which this element is associated
+   */
+
+  SyGUIType gui();
 }

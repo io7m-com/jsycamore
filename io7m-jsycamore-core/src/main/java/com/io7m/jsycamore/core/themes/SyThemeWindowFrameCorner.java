@@ -14,47 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jtensors.VectorI3F;
-import org.immutables.value.Value;
+/**
+ * The type of window frame corners.
+ */
 
-@SyImmutableStyleType
-@Value.Immutable
-public interface SyThemeEmbossType
+public enum SyThemeWindowFrameCorner
 {
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorTop()
-  {
-    return new VectorI3F(0.9f, 0.9f, 0.9f);
-  }
+  /**
+   * The frame corner has no particular style.
+   */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorBottom()
-  {
-    return new VectorI3F(0.4f, 0.4f, 0.4f);
-  }
+  FRAME_CORNER_NONE,
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorLeft()
-  {
-    return new VectorI3F(0.7f, 0.7f, 0.7f);
-  }
+  /**
+   * The frame corner is an L-shaped section.
+   */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorRight()
-  {
-    return new VectorI3F(0.5f, 0.5f, 0.5f);
-  }
+  FRAME_CORNER_L_PIECE,
 
-  @Value.Parameter
-  @Value.Default
-  default int size()
-  {
-    return 2;
-  }
+  /**
+   * The frame corner is a box.
+   */
+
+  FRAME_CORNER_BOX
 }

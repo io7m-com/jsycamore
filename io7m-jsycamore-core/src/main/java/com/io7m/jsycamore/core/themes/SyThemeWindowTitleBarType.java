@@ -14,23 +14,36 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
 import java.util.Optional;
 
+/**
+ * The style applied to a window titlebar.
+ */
+
 @SyImmutableStyleType
 @Value.Immutable
 public interface SyThemeWindowTitleBarType
 {
+  /**
+   * @return The titlebar height
+   */
+
   @Value.Parameter
   @Value.Default
   default int height()
   {
     return 16;
   }
+
+  /**
+   * @return The titlebar width behavior
+   */
 
   @Value.Parameter
   @Value.Default
@@ -39,12 +52,20 @@ public interface SyThemeWindowTitleBarType
     return SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME;
   }
 
+  /**
+   * @return The titlebar vertical placement
+   */
+
   @Value.Parameter
   @Value.Default
   default SyThemeWindowTitlebarVerticalPlacement verticalPlacement()
   {
     return SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME;
   }
+
+  /**
+   * @return The titlebar horizontal alignment
+   */
 
   @Value.Parameter
   @Value.Default
@@ -53,12 +74,20 @@ public interface SyThemeWindowTitleBarType
     return SyThemeAlignment.ALIGN_CENTER;
   }
 
+  /**
+   * @return The titlebar text color when the window is active
+   */
+
   @Value.Parameter
   @Value.Default
   default VectorI3F textColorActive()
   {
     return new VectorI3F(0.0f, 0.0f, 0.0f);
   }
+
+  /**
+   * @return The titlebar text color when the window is not active
+   */
 
   @Value.Parameter
   @Value.Default
@@ -67,12 +96,20 @@ public interface SyThemeWindowTitleBarType
     return new VectorI3F(0.2f, 0.2f, 0.2f);
   }
 
+  /**
+   * @return The titlebar color when the window is active
+   */
+
   @Value.Parameter
   @Value.Default
   default VectorI3F colorActive()
   {
     return new VectorI3F(0.3f, 0.3f, 0.3f);
   }
+
+  /**
+   * @return The titlebar color when the window is inactive
+   */
 
   @Value.Parameter
   @Value.Default
@@ -81,11 +118,25 @@ public interface SyThemeWindowTitleBarType
     return new VectorI3F(0.3f, 0.3f, 0.3f);
   }
 
+  /**
+   * @return The titlebar emboss style that will be used when the window is
+   * active
+   */
+
   @Value.Parameter
   Optional<SyThemeEmbossType> embossActive();
 
+  /**
+   * @return The titlebar emboss style that will be used when the window is
+   * inactive
+   */
+
   @Value.Parameter
   Optional<SyThemeEmbossType> embossInactive();
+
+  /**
+   * @return The titlebar title text alignment
+   */
 
   @Value.Parameter
   @Value.Default
@@ -93,6 +144,10 @@ public interface SyThemeWindowTitleBarType
   {
     return SyThemeAlignment.ALIGN_CENTER;
   }
+
+  /**
+   * @return The titlebar text font
+   */
 
   @Value.Parameter
   @Value.Default

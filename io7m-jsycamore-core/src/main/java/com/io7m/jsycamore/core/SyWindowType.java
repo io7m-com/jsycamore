@@ -16,46 +16,12 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
-
 /**
  * The type of windows.
  */
 
-public interface SyWindowType
+public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
 {
-  /**
-   * Retrieve the position of the window. This is the very top left corner of
-   * the window's bounding box.
-   *
-   * @return The position of the window
-   */
-
-  PVectorReadable2IType<SySpaceViewportType> position();
-
-  /**
-   * @return The tree of components owned by the window
-   */
-
-  SyGraph<SyComponentType, SyComponentLink> components();
-
-  /**
-   * Retrieve the size of the bounds of the window. This is the absolute maximum
-   * bounding box size and is therefore useful for allocating images that will
-   * contain the rendered window.
-   *
-   * @return The bounds of the window
-   */
-
-  VectorReadable2IType bounds();
-
-  /**
-   * @return The current theme
-   */
-
-  SyThemeType theme();
-
   /**
    * Set the size of the window.
    *
@@ -67,19 +33,14 @@ public interface SyWindowType
     int width,
     int height);
 
-  PVectorReadable2IType<SySpaceWindowRelativeType> framePosition();
+  /**
+   * Set the position of the window, in viewport-relative coordinates.
+   *
+   * @param x The {@code x} value
+   * @param y The {@code y} value
+   */
 
-  PVectorReadable2IType<SySpaceWindowRelativeType> frameBounds();
-
-  PVectorReadable2IType<SySpaceWindowRelativeType> titlebarPosition();
-
-  PVectorReadable2IType<SySpaceWindowRelativeType> titlebarBounds();
-
-  boolean active();
-
-  void setActive(final boolean in_active);
-
-  String text();
-
-  void setText(final String in_text);
+  void setPosition(
+    int x,
+    int y);
 }

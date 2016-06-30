@@ -16,9 +16,21 @@
 
 package com.io7m.jsycamore.core;
 
-public enum SyThemeWindowFrameCorner
+/**
+ * The event interface exposed by windows.
+ */
+
+public interface SyWindowEventsType
 {
-  FRAME_CORNER_NONE,
-  FRAME_CORNER_L_PIECE,
-  FRAME_CORNER_BOX
+  /**
+   * The window now has focus.
+   */
+
+  void onWindowGainsFocus();
+
+  /**
+   * The window no longer has focus.
+   */
+
+  void onWindowLosesFocus();
 }

@@ -14,23 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes.provided;
 
-import org.immutables.value.Value;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.junreachable.UnreachableCodeException;
 
-import java.util.Optional;
+/**
+ * The default theme.
+ */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public final class SyThemeDefault
 {
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
+  private SyThemeDefault()
+  {
+    throw new UnreachableCodeException();
+  }
 
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
+  /**
+   * @return The default theme
+   */
 
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  public static SyThemeType get()
+  {
+    return SyThemeMotive.create().build();
+  }
 }

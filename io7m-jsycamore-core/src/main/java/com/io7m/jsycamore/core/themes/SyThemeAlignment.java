@@ -14,26 +14,32 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jtensors.VectorI3F;
-import org.immutables.value.Value;
+import net.jcip.annotations.Immutable;
 
-@SyImmutableStyleType
-@Value.Immutable
-public interface SyThemeOutlineType
+/**
+ * An alignment specification for an object.
+ */
+
+@Immutable
+public enum SyThemeAlignment
 {
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
+  /**
+   * The object will be left-aligned within its parent.
+   */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.2f, 0.2f, 0.2f);
-  }
+  ALIGN_LEFT,
+
+  /**
+   * The object will be right-aligned within its parent.
+   */
+
+  ALIGN_RIGHT,
+
+  /**
+   * The object will be centered within its parent.
+   */
+
+  ALIGN_CENTER
 }

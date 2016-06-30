@@ -16,34 +16,22 @@
 
 package com.io7m.jsycamore.core;
 
-import java.awt.Font;
-
 /**
- * The type of text measurement interfaces.
+ * The parent event interface exposed by components.
  */
 
-public interface SyTextMeasurementType
+public interface SyComponentParentEventsType
 {
   /**
-   * Measure the size of the given text using the given font.
+   * The parent of this component was resized.
    *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * @param graph   The graph to which this component belongs
+   * @param delta_x The change in the lightWidth
+   * @param delta_y The change in the height
    */
 
-  int measureText(
-    String font,
-    String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
+  void onParentResized(
+    SyGraph<SyComponentType, SyComponentLink> graph,
+    int delta_x,
+    int delta_y);
 }

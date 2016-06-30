@@ -14,18 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 import org.valid4j.Assertive;
 
 import java.util.Optional;
 
+/**
+ * The type of window frame theme parameters.
+ */
+
 @SyImmutableStyleType
 @Value.Immutable
 public interface SyThemeWindowFrameType
 {
+  /**
+   * Check the preconditions for the parameters.
+   */
+
   @Value.Check
   default void checkPreconditions()
   {
@@ -106,12 +115,20 @@ public interface SyThemeWindowFrameType
 
   }
 
+  /**
+   * @return The width of the left edge of window frames
+   */
+
   @Value.Parameter
   @Value.Default
   default int leftWidth()
   {
     return 16;
   }
+
+  /**
+   * @return The width of the right edge of window frames
+   */
 
   @Value.Parameter
   @Value.Default
@@ -120,12 +137,20 @@ public interface SyThemeWindowFrameType
     return 16;
   }
 
+  /**
+   * @return The width of the top edge of window frames
+   */
+
   @Value.Parameter
   @Value.Default
   default int topHeight()
   {
     return 16;
   }
+
+  /**
+   * @return The width of the bottom edge of window frames
+   */
 
   @Value.Parameter
   @Value.Default
@@ -134,11 +159,23 @@ public interface SyThemeWindowFrameType
     return 16;
   }
 
+  /**
+   * @return The embossing used when windows are active
+   */
+
   @Value.Parameter
   Optional<SyThemeEmbossType> embossActive();
 
+  /**
+   * @return The embossing used when windows are inactive
+   */
+
   @Value.Parameter
   Optional<SyThemeEmbossType> embossInactive();
+
+  /**
+   * @return The style used for the bottom left frame corner
+   */
 
   @Value.Parameter
   @Value.Default
@@ -147,12 +184,20 @@ public interface SyThemeWindowFrameType
     return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
+  /**
+   * @return The style used for the bottom right frame corner
+   */
+
   @Value.Parameter
   @Value.Default
   default SyThemeWindowFrameCorner bottomRightStyle()
   {
     return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
+
+  /**
+   * @return The style used for the top left frame corner
+   */
 
   @Value.Parameter
   @Value.Default
@@ -161,6 +206,10 @@ public interface SyThemeWindowFrameType
     return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
+  /**
+   * @return The style used for the top right frame corner
+   */
+
   @Value.Parameter
   @Value.Default
   default SyThemeWindowFrameCorner topRightStyle()
@@ -168,12 +217,20 @@ public interface SyThemeWindowFrameType
     return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
   }
 
+  /**
+   * @return The base color used for active window frames
+   */
+
   @Value.Parameter
   @Value.Default
   default VectorI3F colorActive()
   {
     return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
+
+  /**
+   * @return The base color used for inactive window frames
+   */
 
   @Value.Parameter
   @Value.Default

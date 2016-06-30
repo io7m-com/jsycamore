@@ -14,36 +14,30 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import java.awt.Font;
+package com.io7m.jsycamore.core.themes;
 
 /**
- * The type of text measurement interfaces.
+ * The vertical placement of window titlebars.
  */
 
-public interface SyTextMeasurementType
+public enum SyThemeWindowTitlebarVerticalPlacement
 {
   /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * The titlebar will be placed at the top of the window, inside the frame.
    */
 
-  int measureText(
-    String font,
-    String text);
+  PLACEMENT_TOP_INSIDE_FRAME,
 
   /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
+   * The titlebar will be placed at the top of the window, overlapping the
+   * frame.
    */
 
-  Font decodeFont(String font);
+  PLACEMENT_TOP_OVERLAP_FRAME,
+
+  /**
+   * The titlebar will be placed at the top of the window, above the frame.
+   */
+
+  PLACEMENT_TOP_ABOVE_FRAME
 }

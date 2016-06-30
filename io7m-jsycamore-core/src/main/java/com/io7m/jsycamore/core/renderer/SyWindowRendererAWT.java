@@ -17,16 +17,19 @@
 package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyComponentReadableType;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
-import com.io7m.jsycamore.core.SyThemeEmbossType;
-import com.io7m.jsycamore.core.SyThemeOutlineType;
-import com.io7m.jsycamore.core.SyThemeType;
-import com.io7m.jsycamore.core.SyThemeWindowFrameType;
-import com.io7m.jsycamore.core.SyThemeWindowTitleBarType;
-import com.io7m.jsycamore.core.SyThemeWindowType;
+import com.io7m.jsycamore.core.SyWindowReadableType;
+import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jtensors.VectorI3F;
+import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
+import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
@@ -61,6 +64,8 @@ public final class SyWindowRendererAWT implements
   }
 
   /**
+   * @param in_measurement A text measurement interface
+   *
    * @return A new renderer
    */
 
@@ -112,7 +117,7 @@ public final class SyWindowRendererAWT implements
     final Shape old_clip = graphics.getClip();
 
     try {
-      if (window.active()) {
+      if (window.focused()) {
         this.renderOutlineActive(graphics, window);
       } else {
         this.renderOutlineInactive(graphics, window);
@@ -138,7 +143,7 @@ public final class SyWindowRendererAWT implements
 
   private void renderOutlineActual(
     final Graphics2D graphics,
-    final SyWindowType window,
+    final SyWindowReadableType window,
     final VectorReadable3FType color)
   {
     final SyThemeType theme = window.theme();
@@ -157,10 +162,11 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case PLACEMENT_TOP_ABOVE_FRAME: {
-        final PVectorReadable2IType<SySpaceWindowRelativeType> title_size =
-          window.titlebarBounds();
-        final PVectorReadable2IType<SySpaceWindowRelativeType> title_pos =
-          window.titlebarPosition();
+        final SyComponentReadableType titlebar = window.titlebar();
+        final VectorReadable2IType title_size =
+          titlebar.size();
+        final PVectorReadable2IType<SySpaceParentRelativeType> title_pos =
+          titlebar.positionParentRelative();
 
         final int title_min_x = title_pos.getXI() - 1;
         final int title_max_x = title_min_x + title_size.getXI() + 1;
@@ -200,7 +206,7 @@ public final class SyWindowRendererAWT implements
     final Shape old_clip = graphics.getClip();
 
     try {
-      if (window.active()) {
+      if (window.focused()) {
         this.renderTitlebarActive(graphics, window);
       } else {
         this.renderTitlebarInactive(graphics, window);
@@ -245,16 +251,17 @@ public final class SyWindowRendererAWT implements
 
   private void renderTitleBarActual(
     final Graphics2D graphics,
-    final SyWindowType window,
-    final SyThemeWindowTitleBarType titlebar,
+    final SyWindowReadableType window,
+    final SyThemeWindowTitleBarType titlebar_theme,
     final VectorReadable3FType titlebar_color,
     final Optional<SyThemeEmbossType> emboss_opt,
     final VectorReadable3FType text_color)
   {
-    final PVectorReadable2IType<SySpaceWindowRelativeType> bar_pos =
-      window.titlebarPosition();
-    final PVectorReadable2IType<SySpaceWindowRelativeType> bar_size =
-      window.titlebarBounds();
+    final SyWindowTitlebarType titlebar = window.titlebar();
+    final PVectorReadable2IType<SySpaceParentRelativeType> bar_pos =
+      titlebar.positionParentRelative();
+    final VectorReadable2IType bar_size =
+      titlebar.size();
 
     final int x = bar_pos.getXI();
     final int y = bar_pos.getYI();
@@ -299,15 +306,15 @@ public final class SyWindowRendererAWT implements
      */
 
     {
-      final String text_font = titlebar.textFont();
-      final String text = window.text();
+      final String text_font = titlebar_theme.textFont();
+      final String text = titlebar.text();
 
       final int text_width = this.measurement.measureText(text_font, text);
       final int space_width = this.measurement.measureText(text_font, " ");
 
       int text_x = 0;
-      final int text_y = (titlebar.height() / 4) * 3;
-      switch (titlebar.textAlignment()) {
+      final int text_y = (titlebar_theme.height() / 4) * 3;
+      switch (titlebar_theme.textAlignment()) {
         case ALIGN_LEFT: {
           text_x = space_width;
           break;
@@ -337,7 +344,7 @@ public final class SyWindowRendererAWT implements
     final Shape old_clip = graphics.getClip();
 
     try {
-      if (window.active()) {
+      if (window.focused()) {
         this.renderFrameActive(graphics, window);
       } else {
         this.renderFrameInactive(graphics, window);
@@ -416,12 +423,12 @@ public final class SyWindowRendererAWT implements
     final Graphics2D graphics,
     final SyThemeWindowTitleBarType titlebar_theme,
     final SyThemeWindowFrameType frame_theme,
-    final SyWindowType window,
+    final SyWindowReadableType window,
     final SyThemeEmbossType emboss,
-    final Color e_top,
-    final Color e_left,
-    final Color e_right,
-    final Color e_bottom,
+    final Paint e_top,
+    final Paint e_left,
+    final Paint e_right,
+    final Paint e_bottom,
     final Optional<Paint> eo_fill)
   {
     final int left_width = frame_theme.leftWidth();
@@ -709,7 +716,7 @@ public final class SyWindowRendererAWT implements
     final Graphics2D graphics,
     final SyThemeWindowTitleBarType titlebar_theme,
     final SyThemeWindowFrameType frame_theme,
-    final SyWindowType window,
+    final SyWindowReadableType window,
     final Paint fill)
   {
     final int left_width = frame_theme.leftWidth();
@@ -728,11 +735,6 @@ public final class SyWindowRendererAWT implements
     final int frame_height = frame_size.getYI();
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
     graphics.translate(frame_x, frame_y);
-
-    final int top_left_len = Math.max(left_width, top_height);
-    final int top_right_len = Math.max(right_width, top_height);
-    final int bottom_right_len = Math.max(right_width, bottom_height);
-    final int bottom_left_len = Math.max(left_width, bottom_height);
 
     final int top_width = frame_width;
     final int bottom_width = frame_width;

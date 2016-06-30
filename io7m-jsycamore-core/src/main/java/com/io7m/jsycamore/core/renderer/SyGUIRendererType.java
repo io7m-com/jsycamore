@@ -14,30 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.renderer;
 
-import com.io7m.jtensors.VectorI3F;
-import org.immutables.value.Value;
+import com.io7m.jsycamore.core.SyGUIType;
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeType
+/**
+ * The type of GUI renderers.
+ *
+ * @param <I> The type of input data
+ * @param <O> The type of output data
+ */
+
+public interface SyGUIRendererType<I, O>
 {
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F mainBackgroundColor()
-  {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
-  }
+  /**
+   * Render the given GUI.
+   *
+   * @param input The input data
+   * @param ui    The GUI
+   *
+   * @return A rendered output
+   */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F mainForegroundColor()
-  {
-    return new VectorI3F(1.0f, 1.0f, 1.0f);
-  }
-
-  @Value.Parameter
-  SyThemeWindowType windowTheme();
+  O render(
+    I input,
+    SyGUIType ui);
 }

@@ -16,49 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
-
 /**
  * The type of components.
  */
 
-public interface SyComponentType
+public interface SyComponentType extends SyComponentParentEventsType,
+  SyComponentMouseEventsType, SyComponentReadableType
 {
-  /**
-   * @return This component's lightWidth resize behavior.
-   */
-
-  SyParentResizeBehavior resizeBehaviorWidth();
-
-  /**
-   * @return This component's height resize behavior.
-   */
-
-  SyParentResizeBehavior resizeBehaviourHeight();
-
-  /**
-   * @return The position of the component
-   */
-
-  PVectorReadable2IType<SySpaceParentRelativeType> position();
-
-  /**
-   * @return The size of the component
-   */
-
-  VectorReadable2IType size();
-
-  /**
-   * The parent of this component was resized.
-   *
-   * @param graph   The graph to which this component belongs
-   * @param delta_x The change in the lightWidth
-   * @param delta_y The change in the height
-   */
-
-  void onParentResized(
-    SyGraph<SyComponentType, SyComponentLink> graph,
-    int delta_x,
-    int delta_y);
+  @Override
+  SyWindowType window();
 }

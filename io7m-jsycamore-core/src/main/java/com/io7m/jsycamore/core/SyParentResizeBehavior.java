@@ -16,10 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * Type representing how a component behaves when its parent resizes.
  */
 
+@Immutable
 public enum SyParentResizeBehavior
 {
   /**

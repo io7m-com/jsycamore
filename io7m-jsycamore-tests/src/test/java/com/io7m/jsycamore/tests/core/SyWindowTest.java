@@ -14,36 +14,22 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.tests.core;
 
-import java.awt.Font;
+import com.io7m.jsycamore.core.SyGUI;
+import com.io7m.jsycamore.core.SyGUIType;
+import com.io7m.jsycamore.core.SyWindowAbstract;
+import com.io7m.jsycamore.core.SyWindowType;
 
-/**
- * The type of text measurement interfaces.
- */
-
-public interface SyTextMeasurementType
+public final class SyWindowTest extends SyWindowContract
 {
-  /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
-   */
-
-  int measureText(
-    String font,
-    String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
+  @Override
+  protected SyWindowType create(
+    final int width,
+    final int height,
+    final String title)
+  {
+    final SyGUIType g = SyGUI.create("main");
+    return g.windowCreate(width, height, title);
+  }
 }

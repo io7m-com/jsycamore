@@ -17,11 +17,24 @@
 package com.io7m.jsycamore.core;
 
 import com.io7m.jnull.NullCheck;
+import net.jcip.annotations.Immutable;
 
-public final class SyComponentLink
+/**
+ * The default implementation of the {@link SyComponentLinkType} interface.
+ */
+
+@Immutable
+public final class SyComponentLink implements SyComponentLinkType
 {
   private final SyComponentType source;
   private final SyComponentType target;
+
+  /**
+   * Construct a new link from {@code in_source} to {@code in_target}.
+   *
+   * @param in_source The parent component
+   * @param in_target The child component
+   */
 
   public SyComponentLink(
     final SyComponentType in_source,
@@ -31,11 +44,13 @@ public final class SyComponentLink
     this.target = NullCheck.notNull(in_target);
   }
 
+  @Override
   public SyComponentType source()
   {
     return this.source;
   }
 
+  @Override
   public SyComponentType target()
   {
     return this.target;

@@ -16,15 +16,472 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
+import com.io7m.jtensors.parameterized.PVectorM2I;
+import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jtensors.parameterized.PVectorWritable2IType;
+import net.jcip.annotations.NotThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.valid4j.Assertive;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
+/**
+ * The default implementation of the {@link SyGUIType} interface.
+ */
+
+@NotThreadSafe
 public final class SyGUI implements SyGUIType
 {
-  private SyGUI()
-  {
+  private static final Logger LOG;
 
+  static {
+    LOG = LoggerFactory.getLogger(SyGUI.class);
   }
 
-  public static SyGUIType create()
+  private final SyTextMeasurementType text_measurement;
+  private final String name;
+  private final Map<SyMouseButton, MouseState> mouse_button_states;
+  private final Set<SyWindowType> windows_closed;
+  private final Set<SyWindowType> windows_open;
+  private final List<SyWindowType> windows_open_order;
+  private final List<SyWindowType> windows_open_order_view;
+  private Optional<SyComponentType> component_over;
+  private SyThemeType theme;
+
+  private SyGUI(
+    final String in_name,
+    final SyTextMeasurementType in_text_measurement,
+    final SyThemeType in_theme)
   {
-    return new SyGUI();
+    this.name = NullCheck.notNull(in_name);
+    this.text_measurement = NullCheck.notNull(in_text_measurement);
+    this.theme = NullCheck.notNull(in_theme);
+
+    this.component_over = Optional.empty();
+    this.mouse_button_states = new EnumMap<>(SyMouseButton.class);
+    this.windows_closed = new HashSet<>(32);
+    this.windows_open = new HashSet<>(32);
+    this.windows_open_order = new LinkedList<>();
+    this.windows_open_order_view =
+      Collections.unmodifiableList(this.windows_open_order);
+  }
+
+  /**
+   * Create a new GUI.
+   *
+   * @param in_name The GUI name, for debugging purposes
+   *
+   * @return A new GUI
+   */
+
+  public static SyGUIType create(final String in_name)
+  {
+    return SyGUI.createWithTheme(in_name, SyThemeDefault.get());
+  }
+
+  /**
+   * Create a new GUI.
+   *
+   * @param in_name  The GUI name, for debugging purposes
+   * @param in_theme The default theme
+   *
+   * @return A new GUI
+   */
+
+  public static SyGUIType createWithTheme(
+    final String in_name,
+    final SyThemeType in_theme)
+  {
+    return new SyGUI(in_name, SyTextMeasurement.create(), in_theme);
+  }
+
+  @Override
+  public SyWindowType windowCreate(
+    final int width,
+    final int height,
+    final String title)
+  {
+    NullCheck.notNull(title);
+
+    final SyWindowType w = new Window(width, height, title);
+    if (!this.windows_open_order.isEmpty()) {
+      final SyWindowType current = this.windows_open_order.get(0);
+      current.onWindowLosesFocus();
+    }
+
+    this.windows_open.add(w);
+    this.windows_open_order.add(0, w);
+    w.onWindowGainsFocus();
+    return w;
+  }
+
+  @Override
+  public List<SyWindowType> windowsOpenOrdered()
+  {
+    return this.windows_open_order_view;
+  }
+
+  private void checkGUI(final SyGUIElementType e)
+  {
+    NullCheck.notNull(e);
+    if (!Objects.equals(e.gui(), this)) {
+      final StringBuilder sb = new StringBuilder(128);
+      sb.append("Attempted to use a GUI element in the wrong GUI context.");
+      sb.append(System.lineSeparator());
+      sb.append("  Element:     ");
+      sb.append(e);
+      sb.append(System.lineSeparator());
+      sb.append("  Element GUI: ");
+      sb.append(e.gui());
+      sb.append(System.lineSeparator());
+      sb.append("  Current GUI: ");
+      sb.append(this);
+      sb.append(System.lineSeparator());
+      throw new IllegalArgumentException(sb.toString());
+    }
+  }
+
+  @Override
+  public String toString()
+  {
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[SyGUI ");
+    sb.append(this.name);
+    sb.append("]");
+    return sb.toString();
+  }
+
+  @Override
+  public boolean windowIsFocused(final SyWindowType w)
+  {
+    this.checkGUI(w);
+    return !this.windows_open_order.isEmpty()
+      && Objects.equals(this.windows_open_order.get(0), w);
+  }
+
+  @Override
+  public void windowFocus(final SyWindowType w)
+  {
+    this.checkGUI(w);
+    this.windowFocusActual(w);
+  }
+
+  @Override
+  public SyThemeType theme()
+  {
+    return this.theme;
+  }
+
+  @Override
+  public SyTextMeasurementType textMeasurement()
+  {
+    return this.text_measurement;
+  }
+
+  @Override
+  public String name()
+  {
+    return this.name;
+  }
+
+  private boolean mouseAnyButtonsAreDown()
+  {
+    final Set<Map.Entry<SyMouseButton, MouseState>> entries =
+      this.mouse_button_states.entrySet();
+    final Iterator<Map.Entry<SyMouseButton, MouseState>> iter =
+      entries.iterator();
+
+    while (iter.hasNext()) {
+      final Map.Entry<SyMouseButton, MouseState> entry = iter.next();
+      final MouseState state = entry.getValue();
+      if (MouseButtonState.MOUSE_STATE_DOWN == state.state) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Override
+  public Optional<SyComponentType> onMouseMoved(
+    final PVectorReadable2IType<SySpaceViewportType> position)
+  {
+    NullCheck.notNull(position);
+
+    /*
+     * If the mouse button is down, the selected component is delivered a
+     * "mouse held" event. Otherwise, the component under the cursor is
+     * delivered a "mouse over" event.
+     */
+
+    if (this.mouseAnyButtonsAreDown()) {
+      final Set<Map.Entry<SyMouseButton, MouseState>> entries =
+        this.mouse_button_states.entrySet();
+      final Iterator<Map.Entry<SyMouseButton, MouseState>> iter =
+        entries.iterator();
+
+      while (iter.hasNext()) {
+        final Map.Entry<SyMouseButton, MouseState> entry = iter.next();
+        final MouseState state = entry.getValue();
+
+        if (state.state == MouseButtonState.MOUSE_STATE_DOWN) {
+          if (state.component_clicked_last.isPresent()) {
+            final SyComponentType component = state.component_clicked_last.get();
+            SyGUI.LOG.trace("onMouseHeld: {}", component);
+            component.onMouseHeld(
+              state.position_clicked_last,
+              position,
+              entry.getKey(),
+              component);
+          }
+        }
+      }
+    } else {
+
+      final Optional<SyWindowType> window_opt = this.windowForPosition(position);
+      if (window_opt.isPresent()) {
+        final SyWindowType window = window_opt.get();
+
+        final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
+        window.transformViewportRelative(position, w_position);
+        final Optional<SyComponentType> currently_over_opt =
+          window.componentForPosition(w_position);
+
+        if (this.component_over.isPresent()) {
+          if (!this.component_over.equals(currently_over_opt)) {
+            final SyComponentType previous = this.component_over.get();
+            SyGUI.LOG.trace("onMouseNoLongerOver: {}", previous);
+            previous.onMouseNoLongerOver();
+            this.component_over = Optional.empty();
+          }
+        }
+
+        if (currently_over_opt.isPresent()) {
+          this.component_over = currently_over_opt;
+          final SyComponentType current = currently_over_opt.get();
+          SyGUI.LOG.trace("onMouseOver: {}", current);
+          current.onMouseOver(position, current);
+        }
+      } else {
+        if (this.component_over.isPresent()) {
+          final SyComponentType previous = this.component_over.get();
+          SyGUI.LOG.trace("onMouseNoLongerOver: {}", previous);
+          previous.onMouseNoLongerOver();
+          this.component_over = Optional.empty();
+        }
+      }
+    }
+
+    return this.component_over;
+  }
+
+  @Override
+  public Optional<SyComponentType> onMouseDown(
+    final PVectorReadable2IType<SySpaceViewportType> position,
+    final SyMouseButton button)
+  {
+    NullCheck.notNull(position);
+    NullCheck.notNull(button);
+
+    /**
+     * Find out which window the mouse cursor is over, if any.
+     */
+
+    final Optional<SyWindowType> window_opt = this.windowForPosition(position);
+    if (!window_opt.isPresent()) {
+      return Optional.empty();
+    }
+
+    /**
+     * Focus the window.
+     */
+
+    final SyWindowType window = window_opt.get();
+    this.windowFocusActual(window);
+
+    /*
+     * If the mouse was previously up, then the mouse is now being clicked.
+     * Keep a reference to the clicked component, and send it a
+     * "mouse clicked" event.
+     */
+
+    final MouseState state = this.mouseGetState(button);
+    switch (state.state) {
+      case MOUSE_STATE_UP: {
+
+        /**
+         * Find out exactly which component was clicked.
+         */
+
+        final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
+        window.transformViewportRelative(position, w_position);
+
+        final Optional<SyComponentType> component_opt =
+          window.componentForPosition(w_position);
+
+        /**
+         * Deliver a "mouse was pressed" event to the component.
+         */
+
+        if (component_opt.isPresent()) {
+          state.state = MouseButtonState.MOUSE_STATE_DOWN;
+          state.component_clicked_last = component_opt;
+          PVectorM2I.copy(position, state.position_clicked_last);
+
+          if (state.component_clicked_last.isPresent()) {
+            final SyComponentType component = component_opt.get();
+            SyGUI.LOG.trace("onMousePressed: {}", component);
+            component.onMousePressed(position, button, component);
+          }
+        }
+
+        return state.component_clicked_last;
+      }
+
+      case MOUSE_STATE_DOWN: {
+        SyGUI.LOG.error("mouse button {} is already down", button);
+        break;
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  private MouseState mouseGetState(final SyMouseButton button)
+  {
+
+    final MouseState state = this.mouse_button_states.get(button);
+    if (state == null) {
+      final MouseState mouse_state = new MouseState();
+      this.mouse_button_states.put(button, mouse_state);
+      return mouse_state;
+    }
+
+    return state;
+  }
+
+  private void windowFocusActual(final SyWindowType window)
+  {
+    SyGUI.LOG.debug("windowFocusActual: {}", window);
+
+    Assertive.require(this.windows_open.contains(window));
+    Assertive.require(!this.windows_closed.contains(window));
+    final int index = this.windows_open_order.indexOf(window);
+    Assertive.require(index >= 0);
+    this.windows_open_order.remove(index);
+    this.windows_open_order.add(0, window);
+  }
+
+  private Optional<SyWindowType> windowForPosition(
+    final PVectorReadable2IType<SySpaceViewportType> position)
+  {
+    NullCheck.notNull(position);
+
+    final Iterator<SyWindowType> window_iter =
+      this.windows_open_order.iterator();
+
+    while (window_iter.hasNext()) {
+      final SyWindowType window = window_iter.next();
+      final boolean contains = window.containsViewportRelative(position);
+
+      if (SyGUI.LOG.isTraceEnabled()) {
+        SyGUI.LOG.trace(
+          "windowForPosition: {} {} {}",
+          window, position, Boolean.valueOf(contains));
+      }
+
+      if (contains) {
+        return Optional.of(window);
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  @Override
+  public Optional<SyComponentType> onMouseUp(
+    final PVectorReadable2IType<SySpaceViewportType> position,
+    final SyMouseButton button)
+  {
+    NullCheck.notNull(position);
+    NullCheck.notNull(button);
+
+    final MouseState state = this.mouseGetState(button);
+
+    /*
+     * If the mouse button was previously down, then the mouse button is now
+     * being released. The component that was originally clicked receives a
+     * "mouse released" event. The mouse is assumed to have moved on "release"
+     * in order to deliver an "over" event, if any, to any relevant component.
+     */
+
+    switch (state.state) {
+      case MOUSE_STATE_UP: {
+        SyGUI.LOG.error("mouse button {} is already up", button);
+        break;
+      }
+      case MOUSE_STATE_DOWN: {
+        state.state = MouseButtonState.MOUSE_STATE_UP;
+
+        if (state.component_clicked_last.isPresent()) {
+          final SyComponentType component = state.component_clicked_last.get();
+          final SyWindowReadableType window = component.window();
+          final PVectorWritable2IType<SySpaceWindowRelativeType> w_position =
+            new PVectorM2I<>();
+          window.transformViewportRelative(position, w_position);
+          SyGUI.LOG.trace("onMouseReleased: {}", component);
+          component.onMouseReleased(position, button, component);
+        }
+
+        this.onMouseMoved(position);
+        return state.component_clicked_last;
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  private enum MouseButtonState
+  {
+    MOUSE_STATE_UP,
+    MOUSE_STATE_DOWN
+  }
+
+  private static final class MouseState
+  {
+    private final PVectorM2I<SySpaceViewportType> position_clicked_last;
+    private MouseButtonState state;
+    private Optional<SyComponentType> component_clicked_last;
+
+    MouseState()
+    {
+      this.component_clicked_last = Optional.empty();
+      this.position_clicked_last = new PVectorM2I<>();
+      this.state = MouseButtonState.MOUSE_STATE_UP;
+    }
+  }
+
+  private final class Window extends SyWindowAbstract
+  {
+    Window(
+      final int width,
+      final int height,
+      final String in_text)
+    {
+      super(SyGUI.this, width, height, in_text);
+    }
   }
 }

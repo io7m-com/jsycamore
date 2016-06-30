@@ -14,36 +14,31 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import java.awt.Font;
+package com.io7m.jsycamore.core.themes;
 
 /**
- * The type of text measurement interfaces.
+ * A specification of the width behavior of a titlebar.
  */
 
-public interface SyTextMeasurementType
+public enum SyThemeWindowTitlebarWidthBehavior
 {
   /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * The titlebar will be the narrowest it can be whilst still containing the
+   * titlebar content.
    */
 
-  int measureText(
-    String font,
-    String text);
+  WIDTH_RESIZE_TO_CONTENT,
 
   /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
+   * The titlebar will be resized such that it fits inside the window frame.
    */
 
-  Font decodeFont(String font);
+  WIDTH_RESIZE_INSIDE_FRAME,
+
+  /**
+   * The titlebar will be resized such that the width matches that of the
+   * window.
+   */
+
+  WIDTH_RESIZE_TO_WINDOW
 }

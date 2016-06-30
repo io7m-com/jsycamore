@@ -18,8 +18,24 @@ package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jsycamore.core.SyWindowType;
 
+/**
+ * The type of window renderers.
+ *
+ * @param <I> The type of input data
+ * @param <O> The type of output data
+ */
+
 public interface SyWindowRendererType<I, O>
 {
+  /**
+   * Render a window.
+   *
+   * @param input  The input data
+   * @param window The window
+   *
+   * @return A rendered output
+   */
+
   O render(
     I input,
     SyWindowType window);

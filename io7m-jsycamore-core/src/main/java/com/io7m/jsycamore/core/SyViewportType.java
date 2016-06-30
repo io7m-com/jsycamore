@@ -16,34 +16,17 @@
 
 package com.io7m.jsycamore.core;
 
-import java.awt.Font;
+import com.io7m.jtensors.Vector2IType;
 
 /**
- * The type of text measurement interfaces.
+ * The type of viewports.
  */
 
-public interface SyTextMeasurementType
+public interface SyViewportType extends SyViewportReadableType
 {
-  /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
-   */
+  @Override
+  Vector2IType position();
 
-  int measureText(
-    String font,
-    String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
+  @Override
+  Vector2IType size();
 }

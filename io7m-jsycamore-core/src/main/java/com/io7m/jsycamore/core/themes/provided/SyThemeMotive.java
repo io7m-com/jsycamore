@@ -14,16 +14,12 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.core.themes.provided;
 
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
+import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeAlignment;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
-import com.io7m.jsycamore.core.themes.SyThemeMutable;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
@@ -35,50 +31,84 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarWidthBehavior;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.junreachable.UnreachableCodeException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Optional;
 
-public final class Demo
+/**
+ * A 1980s style workstation theme.
+ */
+
+public final class SyThemeMotive
 {
-  private Demo()
+  private SyThemeMotive()
   {
     throw new UnreachableCodeException();
   }
 
-  public static void main(final String[] args)
-    throws Exception
-  {
-    final BufferedImage bi = new BufferedImage(
-      320 + 32, 240 + 32, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+  /**
+   * Create a theme based on the given input values.
+   *
+   * @param spec The theme-specific input values
+   *
+   * @return A new theme
+   */
 
-    final SyThemeMutable theme = SyThemeMutable.create();
+  public static SyTheme.Builder createFrom(
+    final SyThemeMotiveSpecificationType spec)
+  {
+    NullCheck.notNull(spec);
+
+    final SyTheme.Builder theme = SyTheme.builder();
+
+    final VectorI3F color_active_lighter =
+      VectorI3F.scale(spec.colorActive(), spec.colorLightFactor());
+    final VectorI3F color_active_darker =
+      VectorI3F.scale(spec.colorActive(), spec.colorDarkFactor());
+
+    final float average =
+      (spec.colorActive().getXF()
+        + spec.colorActive().getYF()
+        + spec.colorActive().getZF()) / 3.0f;
+
+    final VectorI3F color_inactive_base =
+      new VectorI3F(average, average, average);
+    final VectorI3F color_inactive_lighter =
+      VectorI3F.scale(color_inactive_base, spec.colorLightFactor());
+    final VectorI3F color_inactive_darker =
+      VectorI3F.scale(color_inactive_base, spec.colorDarkFactor());
+
+    final VectorI3F text_color_active =
+      new VectorI3F(1.0f, 1.0f, 1.0f);
+    final VectorI3F text_color_inactive =
+      VectorI3F.scale(text_color_active, 0.6f);
 
     final SyThemeEmboss.Builder theme_titlebar_emboss_active_b =
       SyThemeEmboss.builder();
     theme_titlebar_emboss_active_b.setSize(1);
-    theme_titlebar_emboss_active_b.setColorTop(
-      new VectorI3F(0.44f, 0.52f, 0.58f));
-    theme_titlebar_emboss_active_b.setColorLeft(
-      new VectorI3F(0.44f, 0.52f, 0.58f));
-    theme_titlebar_emboss_active_b.setColorRight(
-      new VectorI3F(0.24f, 0.32f, 0.38f));
-    theme_titlebar_emboss_active_b.setColorBottom(
-      new VectorI3F(0.24f, 0.32f, 0.38f));
+    theme_titlebar_emboss_active_b.setColorTop(color_active_lighter);
+    theme_titlebar_emboss_active_b.setColorLeft(color_active_lighter);
+    theme_titlebar_emboss_active_b.setColorRight(color_active_darker);
+    theme_titlebar_emboss_active_b.setColorBottom(color_active_darker);
+
+    final SyThemeEmboss.Builder theme_titlebar_emboss_inactive_b =
+      SyThemeEmboss.builder();
+    theme_titlebar_emboss_inactive_b.setSize(1);
+    theme_titlebar_emboss_inactive_b.setColorTop(color_inactive_lighter);
+    theme_titlebar_emboss_inactive_b.setColorLeft(color_inactive_lighter);
+    theme_titlebar_emboss_inactive_b.setColorRight(color_inactive_darker);
+    theme_titlebar_emboss_inactive_b.setColorBottom(color_inactive_darker);
 
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
     theme_titlebar_b.setTextFont("Monospaced 10");
     theme_titlebar_b.setHeight(18);
-    theme_titlebar_b.setColorActive(
-      new VectorI3F(0.34f, 0.42f, 0.48f));
-    theme_titlebar_b.setTextColorActive(
-      new VectorI3F(1.0f, 1.0f, 1.0f));
+    theme_titlebar_b.setColorActive(spec.colorActive());
+    theme_titlebar_b.setColorInactive(color_inactive_base);
+    theme_titlebar_b.setTextColorActive(text_color_active);
+    theme_titlebar_b.setTextColorInactive(text_color_inactive);
     theme_titlebar_b.setEmbossActive(
       Optional.of(theme_titlebar_emboss_active_b.build()));
     theme_titlebar_b.setEmbossInactive(
-      Optional.empty());
+      Optional.of(theme_titlebar_emboss_inactive_b.build()));
     theme_titlebar_b.setTextAlignment(
       SyThemeAlignment.ALIGN_CENTER);
     theme_titlebar_b.setVerticalPlacement(
@@ -91,14 +121,18 @@ public final class Demo
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
     theme_frame_emboss_active_b.setSize(1);
-    theme_frame_emboss_active_b.setColorTop(
-      new VectorI3F(0.44f, 0.52f, 0.58f));
-    theme_frame_emboss_active_b.setColorLeft(
-      new VectorI3F(0.44f, 0.52f, 0.58f));
-    theme_frame_emboss_active_b.setColorRight(
-      new VectorI3F(0.24f, 0.32f, 0.38f));
-    theme_frame_emboss_active_b.setColorBottom(
-      new VectorI3F(0.24f, 0.32f, 0.38f));
+    theme_frame_emboss_active_b.setColorTop(color_active_lighter);
+    theme_frame_emboss_active_b.setColorLeft(color_active_lighter);
+    theme_frame_emboss_active_b.setColorRight(color_active_darker);
+    theme_frame_emboss_active_b.setColorBottom(color_active_darker);
+
+    final SyThemeEmboss.Builder theme_frame_emboss_inactive_b =
+      SyThemeEmboss.builder();
+    theme_frame_emboss_inactive_b.setSize(1);
+    theme_frame_emboss_inactive_b.setColorTop(color_inactive_lighter);
+    theme_frame_emboss_inactive_b.setColorLeft(color_inactive_lighter);
+    theme_frame_emboss_inactive_b.setColorRight(color_inactive_darker);
+    theme_frame_emboss_inactive_b.setColorBottom(color_inactive_darker);
 
     final SyThemeWindowFrame.Builder theme_frame_b =
       SyThemeWindowFrame.builder();
@@ -106,7 +140,8 @@ public final class Demo
     theme_frame_b.setTopHeight(5);
     theme_frame_b.setLeftWidth(5);
     theme_frame_b.setRightWidth(5);
-    theme_frame_b.setColorActive(new VectorI3F(0.34f, 0.42f, 0.48f));
+    theme_frame_b.setColorActive(spec.colorActive());
+    theme_frame_b.setColorInactive(color_inactive_base);
 
     theme_frame_b.setTopLeftStyle(
       SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
@@ -118,12 +153,13 @@ public final class Demo
       SyThemeWindowFrameCorner.FRAME_CORNER_L_PIECE);
 
     theme_frame_b.setEmbossActive(theme_frame_emboss_active_b.build());
-    theme_frame_b.setEmbossInactive(Optional.empty());
+    theme_frame_b.setEmbossInactive(theme_frame_emboss_inactive_b.build());
 
     final SyThemeOutline.Builder theme_window_outline =
       SyThemeOutline.builder();
     theme_window_outline.setColorActive(new VectorI3F(0.0f, 0.0f, 0.0f));
     theme_window_outline.setColorInactive(new VectorI3F(0.3f, 0.3f, 0.3f));
+
     final Optional<SyThemeOutlineType> theme_outline =
       Optional.of(theme_window_outline.build());
 
@@ -133,14 +169,16 @@ public final class Demo
         theme_frame_b.build(),
         theme_outline));
 
-    final SyGUIType ui = SyGUI.createWithTheme("main", theme);
-    final SyWindowType win =
-      ui.windowCreate(320, 240, "File Manager - sys$starlet_c");
+    return theme;
+  }
 
-    final SyWindowRendererType<BufferedImage, BufferedImage> r =
-      SyWindowRendererAWT.create(ui.textMeasurement());
+  /**
+   * @return A theme builder based on the default values
+   */
 
-    r.render(bi, win);
-    ImageIO.write(bi, "PNG", new File("/tmp/window.png"));
+  public static SyTheme.Builder create()
+  {
+    return SyThemeMotive.createFrom(
+      SyThemeMotiveSpecification.builder().build());
   }
 }

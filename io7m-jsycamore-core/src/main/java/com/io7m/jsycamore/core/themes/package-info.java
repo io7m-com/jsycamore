@@ -14,11 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+/**
+ * Theme types.
+ */
 
-public enum SyThemeWindowTitlebarVerticalPlacement
-{
-  PLACEMENT_TOP_INSIDE_FRAME,
-  PLACEMENT_TOP_OVERLAP_FRAME,
-  PLACEMENT_TOP_ABOVE_FRAME
-}
+@com.io7m.jnull.NonNullByDefault
+package com.io7m.jsycamore.core.themes;
+

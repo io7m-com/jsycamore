@@ -26,9 +26,17 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.Optional;
 
+/**
+ * Functions to render embossed shapes.
+ */
+
 public final class SyEmbossed
 {
   private final Polygon poly;
+
+  /**
+   * Construct an embossed renderer.
+   */
 
   public SyEmbossed()
   {
@@ -38,13 +46,17 @@ public final class SyEmbossed
   /**
    * <p>Render an embossed rectangle.</p>
    *
-   * @param graphics A graphics context
-   * @param x        The left rectangle edge
-   * @param y        The top rectangle edge
-   * @param width    The width
-   * @param height   The height
-   * @param fill     The paint with which to fill the center, if filling should
-   *                 occur
+   * @param graphics    A graphics context
+   * @param x           The leftmost edge
+   * @param y           The topmost edge
+   * @param width       The width of the rectangle
+   * @param height      The height of the rectangle
+   * @param emboss_size The size of the embossed region
+   * @param left        The paint used for the left emboss regions
+   * @param right       The paint used for the right emboss regions
+   * @param top         The paint used for the top emboss regions
+   * @param bottom      The paint used for the bottom emboss regions
+   * @param fill        The paint used for the fill, if any
    */
 
   public void rectangle(
@@ -151,15 +163,22 @@ public final class SyEmbossed
   /**
    * <p>Render an embossed L shape.</p>
    *
-   * @param graphics    A graphics context
-   * @param shape       The type of L shape
-   * @param x           The x coordinate of the top left corner
-   * @param y           The y coordinate of the top left corner
-   * @param length      The length of the arms of the L
-   * @param emboss_size The size of the embossed regions
-   * @param fill        The paint used to fill the body of the L, if filling
-   *                    should occur
-   * @param caps        {@code true} iff end caps should be rendered
+   * @param graphics                A graphics context
+   * @param shape                   The shape that will be rendered
+   * @param x                       The leftmost edge
+   * @param y                       The topmost edge
+   * @param thickness_of_horizontal The thickness of horizontal sections
+   * @param thickness_of_vertical   The thickness of vertical sections
+   * @param length                  The length of the arms
+   * @param emboss_size             The size of the embossed region
+   * @param left                    The paint used for the left emboss regions
+   * @param right                   The paint used for the right emboss regions
+   * @param top                     The paint used for the top emboss regions
+   * @param bottom                  The paint used for the bottom emboss
+   *                                regions
+   * @param fill                    The paint used for the fill, if any
+   * @param caps                    {@code true} iff end caps should be
+   *                                rendered
    */
 
   public void drawEmbossedL(

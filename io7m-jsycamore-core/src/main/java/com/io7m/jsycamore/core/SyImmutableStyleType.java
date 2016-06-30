@@ -23,6 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * The {@code immutables} style used by the package.
+ *
+ * @see <a href="http://immutables.org">immutables</a>
+ */
+
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.CLASS)
 @Value.Style(

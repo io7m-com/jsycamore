@@ -16,34 +16,23 @@
 
 package com.io7m.jsycamore.core;
 
-import java.awt.Font;
-
 /**
- * The type of text measurement interfaces.
+ * The type of titlebars for windows.
  */
 
-public interface SyTextMeasurementType
+public interface SyWindowTitlebarType extends SyComponentReadableType
 {
   /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * @return The title text
    */
 
-  int measureText(
-    String font,
-    String text);
+  String text();
 
   /**
-   * Load, cache, and return the font with the given name.
+   * Set the text of the titlebar
    *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
+   * @param in_text The text
    */
 
-  Font decodeFont(String font);
+  void setText(final String in_text);
 }

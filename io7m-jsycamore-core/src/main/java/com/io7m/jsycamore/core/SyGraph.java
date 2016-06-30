@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 
@@ -27,6 +28,7 @@ import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
  * @param <E> The type of edges
  */
 
+@NotThreadSafe
 public final class SyGraph<V, E> extends DirectedAcyclicGraph<V, E>
 {
   /**

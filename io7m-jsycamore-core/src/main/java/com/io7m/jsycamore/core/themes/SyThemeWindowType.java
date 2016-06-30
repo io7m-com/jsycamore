@@ -14,36 +14,40 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.themes;
 
-import java.awt.Font;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import org.immutables.value.Value;
+
+import java.util.Optional;
 
 /**
- * The type of text measurement interfaces.
+ * The theme parameters for windows.
  */
 
-public interface SyTextMeasurementType
+@SyImmutableStyleType
+@Value.Immutable
+@Value.Modifiable
+public interface SyThemeWindowType
 {
   /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
+   * @return The theme parameters used for window titlebars
    */
 
-  int measureText(
-    String font,
-    String text);
+  @Value.Parameter
+  SyThemeWindowTitleBarType titleBar();
 
   /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
+   * @return The theme parameters used for window frames
    */
 
-  Font decodeFont(String font);
+  @Value.Parameter
+  SyThemeWindowFrameType frame();
+
+  /**
+   * @return The outline used for windows
+   */
+
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
 }

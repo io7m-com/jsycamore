@@ -25,10 +25,13 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.WeakHashMap;
 
+/**
+ * The default implementation of the {@link SyTextMeasurementType} interface.
+ */
+
 @NotThreadSafe
 public final class SyTextMeasurement implements SyTextMeasurementType
 {
-  private static SyTextMeasurement INSTANCE = new SyTextMeasurement();
   private final Graphics2D graphics;
   private final WeakHashMap<String, Font> font_cache;
 
@@ -40,9 +43,13 @@ public final class SyTextMeasurement implements SyTextMeasurementType
     this.font_cache = new WeakHashMap<>(8);
   }
 
-  public static SyTextMeasurement get()
+  /**
+   * @return A new text measurement instance
+   */
+
+  public static SyTextMeasurementType create()
   {
-    return SyTextMeasurement.INSTANCE;
+    return new SyTextMeasurement();
   }
 
   @Override

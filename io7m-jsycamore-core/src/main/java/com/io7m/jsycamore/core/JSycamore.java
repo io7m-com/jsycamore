@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.junreachable.UnreachableCodeException;
+
 /**
  * Marker type for locating resources.
  */
@@ -24,6 +26,6 @@ public final class JSycamore
 {
   private JSycamore()
   {
-
+    throw new UnreachableCodeException();
   }
 }

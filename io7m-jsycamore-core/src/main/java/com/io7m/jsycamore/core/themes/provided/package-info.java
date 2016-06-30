@@ -14,36 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import java.awt.Font;
-
 /**
- * The type of text measurement interfaces.
+ * Default provided themes.
  */
 
-public interface SyTextMeasurementType
-{
-  /**
-   * Measure the size of the given text using the given font.
-   *
-   * @param font The font
-   * @param text The text
-   *
-   * @return The size of the text
-   */
+@com.io7m.jnull.NonNullByDefault
+package com.io7m.jsycamore.core.themes.provided;
 
-  int measureText(
-    String font,
-    String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
-}
