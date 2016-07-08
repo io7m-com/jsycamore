@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
 import java.util.Optional;

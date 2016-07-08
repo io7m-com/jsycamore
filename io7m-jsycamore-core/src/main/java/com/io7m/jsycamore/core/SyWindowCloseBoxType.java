@@ -16,25 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.components.SyButtonReadableType;
+
 /**
- * <p>The type of readable component links.</p>
- *
- * <p>A link from component {@code source} to component {@code target} marks
- * {@code target} as being a child of {@code source}. Components have exactly
- * one parent. </p>
+ * The type of close boxes for windows.
  */
 
-public interface SyComponentLinkReadableType
+public interface SyWindowCloseBoxType extends SyButtonReadableType
 {
-  /**
-   * @return The source (or <i>parent</i>) component
-   */
 
-  SyComponentReadableType source();
-
-  /**
-   * @return The target (or <i>child</i>) component
-   */
-
-  SyComponentReadableType target();
 }

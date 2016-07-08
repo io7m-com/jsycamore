@@ -14,21 +14,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
 
 /**
- * <p>The type of component links.</p>
- *
- * <p>A link from component {@code source} to component {@code target} marks
- * {@code target} as being a child of {@code source}. Components have exactly
- * one parent. </p>
+ * The default implementation of the {@link SyPanelType} interface.
  */
 
-public interface SyComponentLinkType extends SyComponentLinkReadableType
+public final class SyPanel extends SyPanelAbstract
 {
-  @Override
-  SyComponentType source();
+  private SyPanel()
+  {
 
-  @Override
-  SyComponentType target();
+  }
 }

@@ -14,15 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
+
+import com.io7m.jnull.NullCheck;
+
+import java.util.function.BiFunction;
 
 /**
- * The type of components.
+ * The type of readable panels.
  */
 
-public interface SyComponentType extends SyComponentParentEventsType,
-  SyComponentMouseEventsType, SyComponentReadableType
+public interface SyPanelReadableType extends SyComponentReadableType
 {
   @Override
-  SyWindowType window();
+  default <A, B> B matchComponentReadable(
+    final A context,
+    final BiFunction<A, SyButtonReadableType, B> on_button,
+    final BiFunction<A, SyPanelReadableType, B> on_panel)
+  {
+    return NullCheck.notNull(on_panel).apply(context, this);
+  }
 }

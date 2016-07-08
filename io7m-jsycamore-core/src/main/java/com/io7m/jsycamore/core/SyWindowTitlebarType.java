@@ -16,11 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.components.SyPanelReadableType;
+
 /**
  * The type of titlebars for windows.
  */
 
-public interface SyWindowTitlebarType extends SyComponentReadableType
+public interface SyWindowTitlebarType extends SyPanelReadableType
 {
   /**
    * @return The title text

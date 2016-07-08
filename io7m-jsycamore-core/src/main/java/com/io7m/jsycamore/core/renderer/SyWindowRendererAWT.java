@@ -17,13 +17,13 @@
 package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.SyComponentReadableType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -166,7 +166,7 @@ public final class SyWindowRendererAWT implements
         final VectorReadable2IType title_size =
           titlebar.size();
         final PVectorReadable2IType<SySpaceParentRelativeType> title_pos =
-          titlebar.positionParentRelative();
+          titlebar.position();
 
         final int title_min_x = title_pos.getXI() - 1;
         final int title_max_x = title_min_x + title_size.getXI() + 1;
@@ -259,7 +259,7 @@ public final class SyWindowRendererAWT implements
   {
     final SyWindowTitlebarType titlebar = window.titlebar();
     final PVectorReadable2IType<SySpaceParentRelativeType> bar_pos =
-      titlebar.positionParentRelative();
+      titlebar.position();
     final VectorReadable2IType bar_size =
       titlebar.size();
 

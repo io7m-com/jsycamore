@@ -67,8 +67,6 @@ public abstract class SyWindowContract
     final SyWindowTitlebarType titlebar = w.titlebar();
     Assert.assertEquals("Main 0", titlebar.text());
 
-    final PVectorReadable2IType<SySpaceWindowRelativeType> titlebar_pos =
-      titlebar.positionWindowRelative();
     final VectorReadable2IType titlebar_size =
       titlebar.size();
     final PVectorReadable2IType<SySpaceWindowRelativeType> frame_pos =
@@ -76,8 +74,6 @@ public abstract class SyWindowContract
     final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
       w.frameBounds();
 
-    Assert.assertTrue(titlebar_pos.getXI() >= 0);
-    Assert.assertTrue(titlebar_pos.getYI() >= 0);
     Assert.assertTrue(titlebar_size.getXI() <= bounds.getXI());
     Assert.assertTrue(titlebar_size.getYI() <= bounds.getYI());
 

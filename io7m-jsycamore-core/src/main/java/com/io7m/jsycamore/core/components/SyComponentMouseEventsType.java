@@ -14,8 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
 
+import com.io7m.jsycamore.core.SyMouseButton;
+import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
 /**

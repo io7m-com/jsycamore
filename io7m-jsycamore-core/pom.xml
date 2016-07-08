@@ -37,6 +37,10 @@
       <artifactId>io7m-jareas-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.io7m.jorchard</groupId>
+      <artifactId>io7m-jorchard-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.io7m.jtensors</groupId>
       <artifactId>io7m-jtensors-core</artifactId>
     </dependency>
@@ -53,10 +57,6 @@
     <dependency>
       <groupId>org.valid4j</groupId>
       <artifactId>valid4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jgrapht</groupId>
-      <artifactId>jgrapht-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -17,15 +17,12 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jranges.RangeCheckException;
-import com.io7m.jsycamore.core.SyComponentLinkReadableType;
-import com.io7m.jsycamore.core.SyComponentReadableType;
-import com.io7m.jsycamore.core.SyComponentType;
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
-import com.io7m.jsycamore.core.SyUnmodifiableGraph;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.themes.SyTheme;
@@ -132,17 +129,13 @@ public abstract class SyGUIContract
 
     final SyWindowTitlebarType titlebar = w.titlebar();
     final PVectorReadable2IType<SySpaceParentRelativeType> titlebar_pos =
-      titlebar.positionParentRelative();
+      titlebar.position();
     Assert.assertTrue(titlebar_pos.getXI() >= pos.getXI());
     Assert.assertTrue(titlebar_pos.getYI() >= pos.getYI());
 
     final VectorReadable2IType titlebar_size = titlebar.size();
     Assert.assertTrue(titlebar_size.getXI() <= bounds.getXI());
     Assert.assertTrue(titlebar_size.getYI() <= bounds.getYI());
-
-    final SyUnmodifiableGraph<SyComponentReadableType, SyComponentLinkReadableType> components =
-      w.components();
-    Assert.assertTrue(components.containsVertex(titlebar));
   }
 
   @Test

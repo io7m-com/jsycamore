@@ -14,24 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
+
+import com.io7m.jnull.NullCheck;
+
+import java.util.function.BiFunction;
 
 /**
- * The parent event interface exposed by components.
+ * The type of buttons.
  */
 
-public interface SyComponentParentEventsType
+public interface SyButtonReadableType extends SyComponentReadableType
 {
-  /**
-   * The parent of this component was resized.
-   *
-   * @param graph   The graph to which this component belongs
-   * @param delta_x The change in the lightWidth
-   * @param delta_y The change in the height
-   */
-
-  void onParentResized(
-    SyGraph<SyComponentType, SyComponentLink> graph,
-    int delta_x,
-    int delta_y);
+  @Override
+  default <A, B> B matchComponentReadable(
+    final A context,
+    final BiFunction<A, SyButtonReadableType, B> on_button,
+    final BiFunction<A, SyPanelReadableType, B> on_panel)
+  {
+    return NullCheck.notNull(on_button).apply(context, this);
+  }
 }

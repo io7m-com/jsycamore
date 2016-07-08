@@ -17,8 +17,16 @@
 package com.io7m.jsycamore.core;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jranges.Ranges;
+import com.io7m.jsycamore.core.components.SyButtonAbstract;
+import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyPanelAbstract;
+import com.io7m.jsycamore.core.components.SyPanelType;
+import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
+import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
@@ -37,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.valid4j.Assertive;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * An abstract default implementation of the {@link SyWindowType} type.
@@ -55,10 +64,9 @@ public abstract class SyWindowAbstract implements SyWindowType
   private final PVectorM2I<SySpaceWindowRelativeType> frame_size;
   private final PVectorM2I<SySpaceWindowRelativeType> frame_position;
   private final SyGUIType gui;
-  private final Titlebar titlebar;
-  private final SyUnmodifiableGraph<SyComponentReadableType, SyComponentLinkReadableType> components_view;
-  private final SyGraph<SyComponentType, SyComponentLink> components;
   private final VectorM2I bounds;
+  private final WindowRoot root;
+  private final SyWindowViewportAccumulatorType transform_context;
   private SyThemeType theme;
 
   protected SyWindowAbstract(
@@ -83,12 +91,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.bounds = new VectorM2I(width, height);
     this.frame_size = new PVectorM2I<>();
     this.frame_position = new PVectorM2I<>();
-
-    this.titlebar = new Titlebar(in_text);
-
-    this.components = new SyGraph<>(SyComponentLink::new);
-    this.components.addVertex(this.titlebar);
-    this.components_view = SyUnmodifiableGraph.createReadable(this.components);
+    this.root = new WindowRoot(in_text);
+    this.transform_context = SyWindowViewportAccumulator.create();
 
     this.themeReload(in_gui.theme());
     this.recalculateBounds(width, height);
@@ -102,13 +106,19 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
+  public final SyComponentType contentPane()
+  {
+    return this.root.content_pane;
+  }
+
+  @Override
   public final String toString()
   {
     final StringBuilder sb = new StringBuilder(128);
     sb.append("[SyWindowAbstract 0x");
     sb.append(Integer.toHexString(this.hashCode()));
     sb.append(" ");
-    sb.append(this.titlebar.text);
+    sb.append(this.root.titlebar.text());
     sb.append("]");
     return sb.toString();
   }
@@ -116,12 +126,6 @@ public abstract class SyWindowAbstract implements SyWindowType
   private void themeReload(final SyThemeType new_theme)
   {
     this.theme = new_theme;
-  }
-
-  @Override
-  public final SyUnmodifiableGraph<SyComponentReadableType, SyComponentLinkReadableType> components()
-  {
-    return this.components_view;
   }
 
   @Override
@@ -334,16 +338,19 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     this.bounds.set2I(clamp_width, clamp_height);
-    this.titlebar.position.set2I(title_x, title_y);
-    this.titlebar.size.set2I(title_width, title_height);
+    this.root.setBounds(clamp_width, clamp_height);
+    this.root.titlebar.setPosition(title_x, title_y);
+    this.root.titlebar.setBounds(title_width, title_height);
     this.frame_position.set2I(frame_x, frame_y);
     this.frame_size.set2I(frame_width, frame_height);
+    this.transform_context.setSize(clamp_width, clamp_height);
   }
 
   private int measureTitleSize(final String text_font)
   {
     final SyTextMeasurementType measure = this.gui.textMeasurement();
-    final int text_size = measure.measureText(text_font, this.titlebar.text);
+    final int text_size =
+      measure.measureText(text_font, this.root.titlebar.text());
     final int space_size = measure.measureText(text_font, " ");
     return (space_size * 2) + text_size;
   }
@@ -363,31 +370,13 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final SyWindowTitlebarType titlebar()
   {
-    return this.titlebar;
+    return this.root.titlebar;
   }
 
   @Override
   public final boolean focused()
   {
     return this.gui.windowIsFocused(this);
-  }
-
-  @Override
-  public final boolean containsViewportRelative(
-    final PVectorReadable2IType<SySpaceViewportType> v_position)
-  {
-    NullCheck.notNull(v_position);
-
-    final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
-    this.transformViewportRelative(v_position, w_position);
-
-    if (this.isInBoundsWindowRelative(w_position)) {
-      if (this.titlebar.containsWindowRelative(w_position)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   private boolean isInBoundsWindowRelative(
@@ -416,11 +405,23 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public final Optional<SyComponentType> componentForPosition(
+  public final Optional<SyComponentType> componentForViewportPosition(
+    final PVectorReadable2IType<SySpaceViewportType> v_position)
+  {
+    NullCheck.notNull(v_position);
+
+    final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
+    this.transformViewportRelative(v_position, w_position);
+    return this.componentForWindowPosition(w_position);
+  }
+
+  @Override
+  public final Optional<SyComponentType> componentForWindowPosition(
     final PVectorReadable2IType<SySpaceWindowRelativeType> w_position)
   {
-    if (this.titlebar.containsWindowRelative(w_position)) {
-      return Optional.of(this.titlebar);
+    if (this.isInBoundsWindowRelative(w_position)) {
+      return this.root.componentForWindowRelative(
+        w_position, this.transform_context);
     }
 
     return Optional.empty();
@@ -450,12 +451,14 @@ public abstract class SyWindowAbstract implements SyWindowType
     return this.gui;
   }
 
-  private final class Titlebar implements SyWindowTitlebarType, SyComponentType
+  private final class Titlebar extends SyPanelAbstract implements
+    SyWindowTitlebarType
   {
     private final PVectorM2I<SySpaceWindowRelativeType> size;
     private final PVectorM2I<SySpaceWindowRelativeType> position;
     private final PVectorReadable2IType<SySpaceParentRelativeType> position_parent_view;
     private final PVectorM2I<SySpaceViewportType> window_drag_start;
+    private final CloseBox close_box;
     private String text;
 
     Titlebar(final String in_text)
@@ -465,6 +468,8 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.position = new PVectorM2I<>();
       this.position_parent_view = SyWindowAbstract.castSpace(this.position);
       this.window_drag_start = new PVectorM2I<>();
+      this.close_box = new CloseBox();
+      this.node().childAdd(this.close_box.node());
     }
 
     @Override
@@ -509,8 +514,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       switch (button) {
         case MOUSE_BUTTON_LEFT: {
           PVectorM2I.copy(
-            SyWindowAbstract.this.position,
-            this.window_drag_start);
+            SyWindowAbstract.this.position(), this.window_drag_start);
           break;
         }
         case MOUSE_BUTTON_MIDDLE:
@@ -544,67 +548,6 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public void onParentResized(
-      final SyGraph<SyComponentType, SyComponentLink> graph,
-      final int delta_x,
-      final int delta_y)
-    {
-
-    }
-
-    @Override
-    public SyParentResizeBehavior resizeBehaviorWidth()
-    {
-      return SyParentResizeBehavior.BEHAVIOR_FIXED;
-    }
-
-    @Override
-    public SyParentResizeBehavior resizeBehaviourHeight()
-    {
-      return SyParentResizeBehavior.BEHAVIOR_FIXED;
-    }
-
-    @Override
-    public PVectorReadable2IType<SySpaceParentRelativeType> positionParentRelative()
-    {
-      return this.position_parent_view;
-    }
-
-    @Override
-    public PVectorReadable2IType<SySpaceWindowRelativeType> positionWindowRelative()
-    {
-      return this.position;
-    }
-
-    @Override
-    public VectorReadable2IType size()
-    {
-      return this.size;
-    }
-
-    @Override
-    public boolean containsWindowRelative(
-      final PVectorReadable2IType<SySpaceWindowRelativeType> w_position)
-    {
-      NullCheck.notNull(w_position);
-
-      final int target_x = w_position.getXI();
-      final int target_y = w_position.getYI();
-      final int min_x = this.position.getXI();
-      final int min_y = this.position.getYI();
-      final int max_x = min_x + this.size.getXI();
-      final int max_y = min_y + this.size.getYI();
-
-      if (target_x >= min_x && target_x <= max_x) {
-        if (target_y >= min_y && target_y <= max_y) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    @Override
     public String text()
     {
       return this.text;
@@ -614,15 +557,56 @@ public abstract class SyWindowAbstract implements SyWindowType
     public void setText(final String in_text)
     {
       this.text = NullCheck.notNull(in_text);
-      SyWindowAbstract.this.recalculateBounds(
+      SyWindowAbstract.this.setBounds(
         SyWindowAbstract.this.bounds.getXI(),
         SyWindowAbstract.this.bounds.getYI());
     }
 
     @Override
-    public SyWindowType window()
+    public <A, B> B matchComponent(
+      final A context,
+      final BiFunction<A, SyButtonType, B> on_button,
+      final BiFunction<A, SyPanelType, B> on_panel)
     {
-      return SyWindowAbstract.this;
+      return NullCheck.notNull(on_panel).apply(context, this);
     }
   }
+
+  private final class CloseBox extends SyButtonAbstract implements
+    SyWindowCloseBoxType
+  {
+    CloseBox()
+    {
+
+    }
+  }
+
+  private final class ContentPane extends SyPanelAbstract implements
+    SyWindowContentPaneType
+  {
+    ContentPane()
+    {
+
+    }
+  }
+
+  private final class WindowRoot extends SyPanelAbstract
+  {
+    private final Titlebar titlebar;
+    private final ContentPane content_pane;
+
+    WindowRoot(final String in_text)
+    {
+      this.setWindow(Optional.of(SyWindowAbstract.this));
+      this.setSelectable(false);
+
+      this.titlebar = new Titlebar(in_text);
+      this.content_pane = new ContentPane();
+
+      final JOTreeNodeType<SyComponentType> node = this.node();
+      node.childAdd(this.content_pane.node());
+      node.childAdd(this.titlebar.node());
+    }
+  }
+
 }

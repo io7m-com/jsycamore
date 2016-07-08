@@ -14,42 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jnull.NullCheck;
+
+import java.util.function.BiFunction;
 
 /**
- * The type of windows.
+ * The type of panels. These are simple (possibly invisible) containers for
+ * other components.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public interface SyPanelType extends SyComponentType, SyPanelReadableType
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
-
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
   @Override
-  SyComponentType contentPane();
+  default <A, B> B matchComponent(
+    final A context,
+    final BiFunction<A, SyButtonType, B> on_button,
+    final BiFunction<A, SyPanelType, B> on_panel)
+  {
+    return NullCheck.notNull(on_panel).apply(context, this);
+  }
 }

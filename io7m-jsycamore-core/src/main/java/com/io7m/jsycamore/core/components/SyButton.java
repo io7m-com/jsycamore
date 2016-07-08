@@ -14,42 +14,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import com.io7m.jsycamore.core.components.SyComponentType;
+package com.io7m.jsycamore.core.components;
 
 /**
- * The type of windows.
+ * The default implementation of the {@link SyButtonType} interface.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public final class SyButton extends SyButtonAbstract
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
+  private SyButton()
+  {
 
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
-  @Override
-  SyComponentType contentPane();
+  }
 }

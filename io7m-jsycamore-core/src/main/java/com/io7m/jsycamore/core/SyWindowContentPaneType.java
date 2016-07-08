@@ -16,40 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyPanelReadableType;
 
 /**
- * The type of windows.
+ * The type of content panes for windows.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public interface SyWindowContentPaneType extends SyPanelReadableType
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
 
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
-  @Override
-  SyComponentType contentPane();
 }

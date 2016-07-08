@@ -14,42 +14,42 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jnull.NullCheck;
+
+import java.util.function.BiFunction;
 
 /**
- * The type of windows.
+ * The type of buttons.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public interface SyButtonType extends SyComponentType, SyButtonReadableType
 {
   /**
-   * Set the size of the window.
+   * Add a listener to the button that will be called whenever the button is
+   * pressed.
    *
-   * @param width  The lightWidth
-   * @param height The height
+   * @param r The listener
    */
 
-  void setBounds(
-    int width,
-    int height);
+  void buttonAddListener(Runnable r);
 
   /**
-   * Set the position of the window, in viewport-relative coordinates.
+   * Remove a listener from the button that was previously added with {@link
+   * #buttonAddListener(Runnable)}.
    *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
+   * @param r The listener
    */
 
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
+  void buttonRemoveListener(Runnable r);
 
   @Override
-  SyComponentType contentPane();
+  default <A, B> B matchComponent(
+    final A context,
+    final BiFunction<A, SyButtonType, B> on_button,
+    final BiFunction<A, SyPanelType, B> on_panel)
+  {
+    return NullCheck.notNull(on_button).apply(context, this);
+  }
 }

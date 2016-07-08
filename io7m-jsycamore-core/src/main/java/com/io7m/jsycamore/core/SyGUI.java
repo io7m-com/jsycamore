@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
 import com.io7m.jtensors.parameterized.PVectorM2I;
@@ -251,30 +252,23 @@ public final class SyGUI implements SyGUIType
       }
     } else {
 
-      final Optional<SyWindowType> window_opt = this.windowForPosition(position);
-      if (window_opt.isPresent()) {
-        final SyWindowType window = window_opt.get();
+      final Optional<SyComponentType> component_opt =
+        this.componentForPosition(position);
 
-        final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
-        window.transformViewportRelative(position, w_position);
-        final Optional<SyComponentType> currently_over_opt =
-          window.componentForPosition(w_position);
-
+      if (component_opt.isPresent()) {
+        final SyComponentType current = component_opt.get();
         if (this.component_over.isPresent()) {
-          if (!this.component_over.equals(currently_over_opt)) {
-            final SyComponentType previous = this.component_over.get();
+          final SyComponentType previous = this.component_over.get();
+          if (!Objects.equals(previous, current)) {
             SyGUI.LOG.trace("onMouseNoLongerOver: {}", previous);
             previous.onMouseNoLongerOver();
             this.component_over = Optional.empty();
           }
         }
 
-        if (currently_over_opt.isPresent()) {
-          this.component_over = currently_over_opt;
-          final SyComponentType current = currently_over_opt.get();
-          SyGUI.LOG.trace("onMouseOver: {}", current);
-          current.onMouseOver(position, current);
-        }
+        SyGUI.LOG.trace("onMouseOver: {}", current);
+        this.component_over = component_opt;
+        current.onMouseOver(position, current);
       } else {
         if (this.component_over.isPresent()) {
           final SyComponentType previous = this.component_over.get();
@@ -297,11 +291,13 @@ public final class SyGUI implements SyGUIType
     NullCheck.notNull(button);
 
     /**
-     * Find out which window the mouse cursor is over, if any.
+     * Find out which component the mouse cursor is over, if any.
      */
 
-    final Optional<SyWindowType> window_opt = this.windowForPosition(position);
-    if (!window_opt.isPresent()) {
+    final Optional<SyComponentType> component_opt =
+      this.componentForPosition(position);
+
+    if (!component_opt.isPresent()) {
       return Optional.empty();
     }
 
@@ -309,6 +305,9 @@ public final class SyGUI implements SyGUIType
      * Focus the window.
      */
 
+    final SyComponentType component = component_opt.get();
+    final Optional<SyWindowType> window_opt = component.window();
+    Assertive.require(window_opt.isPresent());
     final SyWindowType window = window_opt.get();
     this.windowFocusActual(window);
 
@@ -323,31 +322,15 @@ public final class SyGUI implements SyGUIType
       case MOUSE_STATE_UP: {
 
         /**
-         * Find out exactly which component was clicked.
-         */
-
-        final PVectorM2I<SySpaceWindowRelativeType> w_position = new PVectorM2I<>();
-        window.transformViewportRelative(position, w_position);
-
-        final Optional<SyComponentType> component_opt =
-          window.componentForPosition(w_position);
-
-        /**
          * Deliver a "mouse was pressed" event to the component.
          */
 
-        if (component_opt.isPresent()) {
-          state.state = MouseButtonState.MOUSE_STATE_DOWN;
-          state.component_clicked_last = component_opt;
-          PVectorM2I.copy(position, state.position_clicked_last);
+        state.state = MouseButtonState.MOUSE_STATE_DOWN;
+        state.component_clicked_last = component_opt;
+        PVectorM2I.copy(position, state.position_clicked_last);
 
-          if (state.component_clicked_last.isPresent()) {
-            final SyComponentType component = component_opt.get();
-            SyGUI.LOG.trace("onMousePressed: {}", component);
-            component.onMousePressed(position, button, component);
-          }
-        }
-
+        SyGUI.LOG.trace("onMousePressed: {}", component);
+        component.onMousePressed(position, button, component);
         return state.component_clicked_last;
       }
 
@@ -385,7 +368,7 @@ public final class SyGUI implements SyGUIType
     this.windows_open_order.add(0, window);
   }
 
-  private Optional<SyWindowType> windowForPosition(
+  private Optional<SyComponentType> componentForPosition(
     final PVectorReadable2IType<SySpaceViewportType> position)
   {
     NullCheck.notNull(position);
@@ -395,16 +378,17 @@ public final class SyGUI implements SyGUIType
 
     while (window_iter.hasNext()) {
       final SyWindowType window = window_iter.next();
-      final boolean contains = window.containsViewportRelative(position);
+      final Optional<SyComponentType> component =
+        window.componentForViewportPosition(position);
 
       if (SyGUI.LOG.isTraceEnabled()) {
         SyGUI.LOG.trace(
-          "windowForPosition: {} {} {}",
-          window, position, Boolean.valueOf(contains));
+          "componentForPosition: {} {} {}",
+          window, position, component);
       }
 
-      if (contains) {
-        return Optional.of(window);
+      if (component.isPresent()) {
+        return component;
       }
     }
 
@@ -438,12 +422,18 @@ public final class SyGUI implements SyGUIType
 
         if (state.component_clicked_last.isPresent()) {
           final SyComponentType component = state.component_clicked_last.get();
-          final SyWindowReadableType window = component.window();
-          final PVectorWritable2IType<SySpaceWindowRelativeType> w_position =
-            new PVectorM2I<>();
-          window.transformViewportRelative(position, w_position);
-          SyGUI.LOG.trace("onMouseReleased: {}", component);
-          component.onMouseReleased(position, button, component);
+
+          final Optional<SyWindowType> window_opt = component.window();
+          if (window_opt.isPresent()) {
+            final SyWindowType window = window_opt.get();
+            final PVectorWritable2IType<SySpaceWindowRelativeType> w_position =
+              new PVectorM2I<>();
+            window.transformViewportRelative(position, w_position);
+            SyGUI.LOG.trace("onMouseReleased: {}", component);
+            component.onMouseReleased(position, button, component);
+          } else {
+            SyGUI.LOG.error("onMouseReleased: {} has no window", component);
+          }
         }
 
         this.onMouseMoved(position);

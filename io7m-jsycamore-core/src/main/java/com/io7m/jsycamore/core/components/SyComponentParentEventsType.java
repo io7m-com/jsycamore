@@ -14,42 +14,22 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import com.io7m.jsycamore.core.components.SyComponentType;
+package com.io7m.jsycamore.core.components;
 
 /**
- * The type of windows.
+ * The parent event interface exposed by components.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public interface SyComponentParentEventsType
 {
   /**
-   * Set the size of the window.
+   * The parent of this component was resized.
    *
-   * @param width  The lightWidth
-   * @param height The height
+   * @param delta_x The change in the lightWidth
+   * @param delta_y The change in the height
    */
 
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
-  @Override
-  SyComponentType contentPane();
+  void onParentResized(
+    int delta_x,
+    int delta_y);
 }

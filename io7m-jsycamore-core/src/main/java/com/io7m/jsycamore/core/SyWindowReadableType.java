@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.components.SyComponentReadableType;
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
@@ -30,19 +32,19 @@ import java.util.Optional;
 public interface SyWindowReadableType extends SyGUIElementType
 {
   /**
-   * Retrieve the positionParentRelative of the window. This is the very top
-   * left corner of the window's bounding box.
+   * Retrieve the position of the window. This is the very top left corner of
+   * the window's bounding box.
    *
-   * @return The positionParentRelative of the window
+   * @return The position of the window
    */
 
   PVectorReadable2IType<SySpaceViewportType> position();
 
   /**
-   * @return The tree of components owned by the window
+   * @return Read-only access to the content pane
    */
 
-  SyUnmodifiableGraph<SyComponentReadableType, SyComponentLinkReadableType> components();
+  SyComponentReadableType contentPane();
 
   /**
    * Retrieve the size of the bounds of the window. This is the absolute maximum
@@ -85,15 +87,6 @@ public interface SyWindowReadableType extends SyGUIElementType
   boolean focused();
 
   /**
-   * @param position A viewport-relative position
-   *
-   * @return {@code true} iff the window contains {@code position}
-   */
-
-  boolean containsViewportRelative(
-    PVectorReadable2IType<SySpaceViewportType> position);
-
-  /**
    * Transform a viewport-relative position to window-relative form.
    *
    * @param v_position A viewport-relative position
@@ -110,6 +103,15 @@ public interface SyWindowReadableType extends SyGUIElementType
    * @return The topmost component that contains {@code w_position}
    */
 
-  Optional<SyComponentType> componentForPosition(
+  Optional<SyComponentType> componentForWindowPosition(
     PVectorReadable2IType<SySpaceWindowRelativeType> w_position);
+
+  /**
+   * @param position A viewport-relative position
+   *
+   * @return The topmost component that contains {@code position}
+   */
+
+  Optional<SyComponentType> componentForViewportPosition(
+    PVectorReadable2IType<SySpaceViewportType> position);
 }
