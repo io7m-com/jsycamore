@@ -239,6 +239,9 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       case PLACEMENT_TOP_OVERLAP_FRAME: {
+        content_y = title_y + title_height;
+        content_h = frame_height - (content_y + frame_bottom);
+
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
             title_width = this.measureTitleSize(text_font);
