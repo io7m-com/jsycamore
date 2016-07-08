@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
@@ -92,4 +93,10 @@ public interface SyComponentReadableType
   Optional<SyComponentReadableType> componentReadableForWindowRelative(
     PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
     SyWindowViewportAccumulatorType context);
+
+  /**
+   * @return The component tree node to which this component is attached
+   */
+
+  JOTreeNodeReadableType<SyComponentReadableType> nodeReadable();
 }

@@ -21,10 +21,8 @@ import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jranges.Ranges;
 import com.io7m.jsycamore.core.components.SyButtonAbstract;
-import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
-import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
@@ -45,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.valid4j.Assertive;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 /**
  * An abstract default implementation of the {@link SyWindowType} type.
@@ -103,6 +100,18 @@ public abstract class SyWindowAbstract implements SyWindowType
   PVectorReadable2IType<U> castSpace(final PVectorReadable2IType<T> v)
   {
     return (PVectorReadable2IType<U>) v;
+  }
+
+  private static int calculateOutlineSize(final SyThemeWindowType window_theme)
+  {
+    final Optional<SyThemeOutlineType> window_outline = window_theme.outline();
+    final int outline_size;
+    if (window_outline.isPresent()) {
+      outline_size = 1;
+    } else {
+      outline_size = 0;
+    }
+    return outline_size;
   }
 
   @Override
@@ -164,34 +173,38 @@ public abstract class SyWindowAbstract implements SyWindowType
     final SyThemeWindowFrameType frame_theme = window_theme.frame();
     final SyThemeWindowTitleBarType title_theme = window_theme.titleBar();
 
-    final Optional<SyThemeOutlineType> window_outline = window_theme.outline();
-    final int outline_size;
-    if (window_outline.isPresent()) {
-      outline_size = 1;
-    } else {
-      outline_size = 0;
-    }
-
+    final int outline_size = SyWindowAbstract.calculateOutlineSize(window_theme);
     final int clamp_width = Math.max(width, 2);
     final int clamp_height = Math.max(height, 2);
+    final int clamp_width_half = clamp_width / 2;
 
     int title_x = outline_size;
     int title_y = outline_size;
-    int title_width = clamp_width - (outline_size * 2);
+    final int outline_m2 = outline_size * 2;
+    int title_width = clamp_width - outline_m2;
     final int title_height = title_theme.height();
 
     final int frame_x = outline_size;
     int frame_y = outline_size;
-    final int frame_width = clamp_width - (outline_size * 2);
-    int frame_height = clamp_height - (outline_size * 2);
+    final int frame_width = clamp_width - outline_m2;
+    int frame_height = clamp_height - outline_m2;
 
     final int frame_left = frame_theme.leftWidth();
     final int frame_right = frame_theme.rightWidth();
+    final int frame_top = frame_theme.topHeight();
+    final int frame_bottom = frame_theme.bottomHeight();
+
+    int content_y = 0;
+    int content_h = 0;
 
     final String text_font = title_theme.textFont();
+
     switch (title_theme.verticalPlacement()) {
       case PLACEMENT_TOP_INSIDE_FRAME: {
-        title_y = frame_theme.topHeight() + outline_size;
+        title_y = frame_top + outline_size;
+
+        content_y = title_y + title_height;
+        content_h = frame_height - (content_y + frame_bottom);
 
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
@@ -207,7 +220,7 @@ public abstract class SyWindowAbstract implements SyWindowType
                 break;
               }
               case ALIGN_CENTER: {
-                title_x = (clamp_width / 2) - (title_width / 2);
+                title_x = clamp_width_half - (title_width / 2);
                 break;
               }
             }
@@ -239,7 +252,7 @@ public abstract class SyWindowAbstract implements SyWindowType
                 break;
               }
               case ALIGN_CENTER: {
-                title_x = (clamp_width / 2) - (title_width / 2);
+                title_x = clamp_width_half - (title_width / 2);
                 break;
               }
             }
@@ -247,8 +260,7 @@ public abstract class SyWindowAbstract implements SyWindowType
           }
 
           case WIDTH_RESIZE_INSIDE_FRAME: {
-            title_width =
-              frame_width - (frame_left + frame_right);
+            title_width = frame_width - (frame_left + frame_right);
 
             switch (title_theme.horizontalAlignment()) {
               case ALIGN_LEFT: {
@@ -259,7 +271,7 @@ public abstract class SyWindowAbstract implements SyWindowType
                 break;
               }
               case ALIGN_CENTER: {
-                title_x = (clamp_width / 2) - (title_width / 2);
+                title_x = clamp_width_half - (title_width / 2);
                 break;
               }
             }
@@ -277,6 +289,9 @@ public abstract class SyWindowAbstract implements SyWindowType
         frame_height -= title_height;
         frame_y += title_height;
 
+        content_y = frame_y + frame_top;
+        content_h = frame_height - (frame_bottom + frame_top);
+
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
             title_width = this.measureTitleSize(text_font);
@@ -290,7 +305,7 @@ public abstract class SyWindowAbstract implements SyWindowType
                 break;
               }
               case ALIGN_CENTER: {
-                title_x = (clamp_width / 2) - (title_width / 2);
+                title_x = clamp_width_half - (title_width / 2);
                 break;
               }
             }
@@ -298,8 +313,7 @@ public abstract class SyWindowAbstract implements SyWindowType
           }
 
           case WIDTH_RESIZE_INSIDE_FRAME: {
-            title_width =
-              frame_width - (frame_left + frame_right);
+            title_width = frame_width - (frame_left + frame_right);
 
             switch (title_theme.horizontalAlignment()) {
               case ALIGN_LEFT: {
@@ -310,7 +324,7 @@ public abstract class SyWindowAbstract implements SyWindowType
                 break;
               }
               case ALIGN_CENTER: {
-                title_x = (clamp_width / 2) - (title_width / 2);
+                title_x = clamp_width_half - (title_width / 2);
                 break;
               }
             }
@@ -324,6 +338,9 @@ public abstract class SyWindowAbstract implements SyWindowType
         break;
       }
     }
+
+    final int content_x = frame_x + frame_left;
+    final int content_w = frame_width - (content_x + frame_right - outline_size);
 
     Assertive.ensure(clamp_width >= 2);
     Assertive.ensure(clamp_height >= 2);
@@ -339,6 +356,8 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     this.bounds.set2I(clamp_width, clamp_height);
     this.root.setBounds(clamp_width, clamp_height);
+    this.root.content_pane.setBounds(content_w, content_h);
+    this.root.content_pane.setPosition(content_x, content_y);
     this.root.titlebar.setPosition(title_x, title_y);
     this.root.titlebar.setBounds(title_width, title_height);
     this.frame_position.set2I(frame_x, frame_y);
@@ -560,15 +579,6 @@ public abstract class SyWindowAbstract implements SyWindowType
       SyWindowAbstract.this.setBounds(
         SyWindowAbstract.this.bounds.getXI(),
         SyWindowAbstract.this.bounds.getYI());
-    }
-
-    @Override
-    public <A, B> B matchComponent(
-      final A context,
-      final BiFunction<A, SyButtonType, B> on_button,
-      final BiFunction<A, SyPanelType, B> on_panel)
-    {
-      return NullCheck.notNull(on_panel).apply(context, this);
     }
   }
 

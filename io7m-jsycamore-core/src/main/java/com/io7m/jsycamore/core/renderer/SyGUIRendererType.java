@@ -26,17 +26,7 @@ import com.io7m.jsycamore.core.SyGUIType;
  */
 
 public interface SyGUIRendererType<I, O>
+  extends SyRendererType<I, SyGUIType, O>
 {
-  /**
-   * Render the given GUI.
-   *
-   * @param input The input data
-   * @param ui    The GUI
-   *
-   * @return A rendered output
-   */
 
-  O render(
-    I input,
-    SyGUIType ui);
 }

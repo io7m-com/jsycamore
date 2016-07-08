@@ -18,6 +18,7 @@ package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNode;
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
@@ -63,9 +64,23 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @SuppressWarnings("unchecked")
-  private static <TR, T extends TR> Optional<TR> cast(final Optional<T> o)
+  private static <TR, T extends TR> JOTreeNodeType<TR> castNode(
+    final JOTreeNodeType<T> o)
+  {
+    return (JOTreeNodeType<TR>) o;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <TR, T extends TR> Optional<TR> cast(
+    final Optional<T> o)
   {
     return (Optional<TR>) o;
+  }
+
+  @Override
+  public final JOTreeNodeReadableType<SyComponentReadableType> nodeReadable()
+  {
+    return SyComponentAbstract.castNode(this.node);
   }
 
   protected final void setSelectable(final boolean s)

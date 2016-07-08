@@ -27,6 +27,7 @@ import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
+import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public final class WindowDemo implements Runnable
 
   private WindowDemo()
   {
-    final SyThemeType theme = SyThemeBee.builder().build();
+    final SyThemeType theme = SyThemeMotive.builder().build();
     this.gui = SyGUI.createWithTheme("main", theme);
     this.window0 = this.gui.windowCreate(320, 240, "Files");
     this.window1 = this.gui.windowCreate(300, 240, "Other");

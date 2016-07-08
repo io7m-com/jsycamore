@@ -16,17 +16,17 @@
 
 package com.io7m.jsycamore.core.renderer;
 
-import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.components.SyComponentReadableType;
 
 /**
- * The type of window renderers.
+ * The type of component renderers.
  *
  * @param <I> The type of input data
  * @param <O> The type of output data
  */
 
-public interface SyWindowRendererType<I, O>
-  extends SyRendererType<I, SyWindowType, O>
+public interface SyComponentRendererType<I, O>
+  extends SyRendererType<I, SyComponentReadableType, O>
 {
 
 }

@@ -16,17 +16,19 @@
 
 package com.io7m.jsycamore.core.renderer;
 
-import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import org.immutables.value.Value;
 
-/**
- * The type of window renderers.
- *
- * @param <I> The type of input data
- * @param <O> The type of output data
- */
+import java.awt.image.BufferedImage;
 
-public interface SyWindowRendererType<I, O>
-  extends SyRendererType<I, SyWindowType, O>
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyComponentRendererAWTContextType
 {
+  @Value.Parameter
+  SyWindowViewportAccumulatorType viewport();
 
+  @Value.Parameter
+  BufferedImage image();
 }

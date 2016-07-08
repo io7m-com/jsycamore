@@ -16,17 +16,26 @@
 
 package com.io7m.jsycamore.core.renderer;
 
-import com.io7m.jsycamore.core.SyWindowType;
-
 /**
- * The type of window renderers.
+ * The type of object renderers.
  *
  * @param <I> The type of input data
+ * @param <T> The type of objects to render
  * @param <O> The type of output data
  */
 
-public interface SyWindowRendererType<I, O>
-  extends SyRendererType<I, SyWindowType, O>
+public interface SyRendererType<I, T, O>
 {
+  /**
+   * Render an object.
+   *
+   * @param context The context data
+   * @param object  The object
+   *
+   * @return A rendered object
+   */
 
+  O render(
+    I context,
+    T object);
 }

@@ -24,6 +24,7 @@ import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -105,8 +106,42 @@ public final class SyWindowRendererAWT implements
     graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
     this.renderFrame(graphics, window);
     this.renderTitlebar(graphics, window);
+    this.renderContent(graphics, window);
     this.renderOutline(graphics, window);
     return input;
+  }
+
+  private void renderContent(
+    final Graphics2D graphics,
+    final SyWindowType window)
+  {
+    final AffineTransform old_transform = graphics.getTransform();
+    final Shape old_clip = graphics.getClip();
+
+    try {
+      final SyComponentType content =
+        window.contentPane();
+      final PVectorReadable2IType<SySpaceParentRelativeType> position =
+        content.position();
+      final VectorReadable2IType size =
+        content.size();
+
+      graphics.clipRect(
+        position.getXI(),
+        position.getYI(),
+        size.getXI(),
+        size.getYI());
+      graphics.setPaint(Color.MAGENTA);
+      graphics.fillRect(
+        position.getXI(),
+        position.getYI(),
+        size.getXI(),
+        size.getYI());
+
+    } finally {
+      graphics.setTransform(old_transform);
+      graphics.setClip(old_clip);
+    }
   }
 
   private void renderOutline(
