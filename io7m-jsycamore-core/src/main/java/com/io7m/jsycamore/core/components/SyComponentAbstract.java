@@ -68,11 +68,11 @@ public abstract class SyComponentAbstract implements SyComponentType
   {
     this.resize_width = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.resize_height = SyParentResizeBehavior.BEHAVIOR_FIXED;
+    this.visibility = SyVisibility.VISIBILITY_VISIBLE;
     this.window = Optional.empty();
     this.position = new PVectorM2I<>();
     this.size = new VectorM2I();
     this.node = JOTreeNode.create(this);
-    this.visibility = SyVisibility.VISIBILITY_VISIBLE;
   }
 
   @SuppressWarnings("unchecked")
@@ -145,6 +145,14 @@ public abstract class SyComponentAbstract implements SyComponentType
   {
     return SyComponentAbstract.castNode(this.node);
   }
+
+  /**
+   * Indicate whether or not this component should be selectable. This is used
+   * to implement pseudo-components such as the root window component: The
+   * component is visible but should not be selectable by users.
+   *
+   * @param s {@code true} iff the component is selectable
+   */
 
   protected final void setSelectable(final boolean s)
   {
