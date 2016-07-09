@@ -31,6 +31,7 @@ import com.io7m.jtensors.VectorM2I;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   private VectorM2I size;
   private boolean selectable = true;
   private boolean enabled = true;
+  private SyVisibility visibility;
 
   protected SyComponentAbstract()
   {
@@ -70,6 +72,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     this.position = new PVectorM2I<>();
     this.size = new VectorM2I();
     this.node = JOTreeNode.create(this);
+    this.visibility = SyVisibility.VISIBILITY_VISIBLE;
   }
 
   @SuppressWarnings("unchecked")
@@ -77,6 +80,45 @@ public abstract class SyComponentAbstract implements SyComponentType
     final JOTreeNodeType<T> o)
   {
     return (JOTreeNodeType<TR>) o;
+  }
+
+  @Override
+  public final boolean isVisible()
+  {
+    /**
+     * If a component is set to invisible, it is unconditionally invisible.
+     * Otherwise, it is visible if its parent is visible. If there is no
+     * parent, the component is visible.
+     */
+
+    switch (this.visibility) {
+      case VISIBILITY_INVISIBLE: {
+        return false;
+      }
+      case VISIBILITY_VISIBLE: {
+        final Optional<JOTreeNodeType<SyComponentType>> parent_opt =
+          this.node.parent();
+        if (parent_opt.isPresent()) {
+          final SyComponentType parent = parent_opt.get().value();
+          return parent.isVisible();
+        }
+        return true;
+      }
+    }
+
+    throw new UnreachableCodeException();
+  }
+
+  @Override
+  public final SyVisibility visibility()
+  {
+    return this.visibility;
+  }
+
+  @Override
+  public final void setVisibility(final SyVisibility v)
+  {
+    this.visibility = NullCheck.notNull(v);
   }
 
   @SuppressWarnings("unchecked")
@@ -127,6 +169,15 @@ public abstract class SyComponentAbstract implements SyComponentType
     final PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
     final SyWindowViewportAccumulatorType context)
   {
+    /**
+     * If this component is invisible, then none of the children are
+     * visible either and so there's no point returning them.
+     */
+
+    if (!this.isVisible()) {
+      return Optional.empty();
+    }
+
     try {
       context.accumulate(this.position, this.size);
 

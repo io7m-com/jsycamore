@@ -34,14 +34,31 @@ import java.util.function.BiFunction;
 public interface SyComponentReadableType
 {
   /**
-   * Components may be enabled and disabled. A component that is disabled
-   * will not receive input events, and will typically be rendered as "greyed"
-   * out by renderers.
+   * Components may be enabled and disabled. A component that is disabled will
+   * not receive input events, and will typically be rendered as "greyed" out by
+   * renderers.
    *
    * @return {@code true} iff this component is enabled
    */
 
   boolean isEnabled();
+
+  /**
+   * Determine whether this component is visible or not based on the visibility
+   * of its ancestors.
+   *
+   * @return {@code true} iff this component is visible
+   */
+
+  boolean isVisible();
+
+  /**
+   * @return This component's visibility
+   *
+   * @see {@link SyComponentType#setVisibility(SyVisibility)}
+   */
+
+  SyVisibility visibility();
 
   /**
    * @return This component's width resize behavior.

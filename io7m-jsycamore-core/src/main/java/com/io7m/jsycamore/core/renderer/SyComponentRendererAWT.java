@@ -83,6 +83,14 @@ public final class SyComponentRendererAWT implements
     final Shape initial_clip,
     final SyComponentReadableType object)
   {
+    /**
+     * Do not render invisible components.
+     */
+
+    if (!object.isVisible()) {
+      return;
+    }
+
     final SyWindowViewportAccumulatorType viewport = context.viewport();
 
     try {

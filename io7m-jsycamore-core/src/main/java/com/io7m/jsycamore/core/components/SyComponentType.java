@@ -108,4 +108,14 @@ public interface SyComponentType extends SyComponentParentEventsType,
    */
 
   void setEnabled(boolean e);
+
+  /**
+   * Set this component's visibility.
+   *
+   * @param v The component's visibility
+   *
+   * @see SyComponentReadableType#isVisible()
+   */
+
+  void setVisibility(SyVisibility v);
 }

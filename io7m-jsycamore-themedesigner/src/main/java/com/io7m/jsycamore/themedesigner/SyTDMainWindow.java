@@ -23,6 +23,7 @@ import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.components.SyButton;
 import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererAWTContextType;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
