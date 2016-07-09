@@ -85,4 +85,13 @@ public interface SyGUIType extends SyGUIMouseEventsType
    */
 
   String name();
+
+  /**
+   * Set the theme for the GUI. This will reload the theme for all windows that
+   * are using the GUI theme.
+   *
+   * @param theme The theme
+   */
+
+  void setTheme(SyThemeType theme);
 }

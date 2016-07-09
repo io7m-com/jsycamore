@@ -25,7 +25,6 @@ import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
@@ -58,14 +57,6 @@ public abstract class SyWindowAbstract implements SyWindowType
     LOG = LoggerFactory.getLogger(SyWindowAbstract.class);
   }
 
-  @Override
-  public final void setTheme(final SyTheme in_theme)
-  {
-    this.themeReload(NullCheck.notNull(in_theme));
-    final VectorReadable2IType current_bounds = this.bounds();
-    this.recalculateBounds(current_bounds.getXI(), current_bounds.getYI());
-  }
-
   private final PVector2IType<SySpaceViewportType> position;
   private final PVectorM2I<SySpaceWindowRelativeType> frame_size;
   private final PVectorM2I<SySpaceWindowRelativeType> frame_position;
@@ -73,7 +64,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   private final VectorM2I bounds;
   private final WindowRoot root;
   private final SyWindowViewportAccumulatorType transform_context;
-  private SyThemeType theme;
+  private Optional<SyThemeType> theme_override;
 
   protected SyWindowAbstract(
     final SyGUIType in_gui,
@@ -99,8 +90,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.frame_position = new PVectorM2I<>();
     this.root = new WindowRoot(in_text);
     this.transform_context = SyWindowViewportAccumulator.create();
+    this.theme_override = Optional.empty();
 
-    this.themeReload(in_gui.theme());
     this.recalculateBounds(width, height);
   }
 
@@ -124,6 +115,25 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
+  public final void onWindowGUIThemeChanged()
+  {
+    if (this.theme_override.isPresent()) {
+      return;
+    }
+
+    final VectorReadable2IType current_bounds = this.bounds();
+    this.recalculateBounds(current_bounds.getXI(), current_bounds.getYI());
+  }
+
+  @Override
+  public final void setTheme(final Optional<SyThemeType> in_theme)
+  {
+    this.theme_override = NullCheck.notNull(in_theme);
+    final VectorReadable2IType current_bounds = this.bounds();
+    this.recalculateBounds(current_bounds.getXI(), current_bounds.getYI());
+  }
+
+  @Override
   public final SyComponentType contentPane()
   {
     return this.root.content_pane;
@@ -141,11 +151,6 @@ public abstract class SyWindowAbstract implements SyWindowType
     return sb.toString();
   }
 
-  private void themeReload(final SyThemeType new_theme)
-  {
-    this.theme = new_theme;
-  }
-
   @Override
   public final VectorReadable2IType bounds()
   {
@@ -155,7 +160,10 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final SyThemeType theme()
   {
-    return this.theme;
+    if (this.theme_override.isPresent()) {
+      return this.theme_override.get();
+    }
+    return this.gui.theme();
   }
 
   @Override
@@ -178,7 +186,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     final int width,
     final int height)
   {
-    final SyThemeWindowType window_theme = this.theme.windowTheme();
+    final SyThemeType theme = this.theme();
+    final SyThemeWindowType window_theme = theme.windowTheme();
     final SyThemeWindowFrameType frame_theme = window_theme.frame();
     final SyThemeWindowTitleBarType title_theme = window_theme.titleBar();
 
@@ -485,7 +494,6 @@ public abstract class SyWindowAbstract implements SyWindowType
   private final class Titlebar extends SyPanelAbstract implements
     SyWindowTitlebarType
   {
-    private final PVectorM2I<SySpaceWindowRelativeType> size;
     private final PVectorM2I<SySpaceWindowRelativeType> position;
     private final PVectorReadable2IType<SySpaceParentRelativeType> position_parent_view;
     private final PVectorM2I<SySpaceViewportType> window_drag_start;
@@ -495,7 +503,6 @@ public abstract class SyWindowAbstract implements SyWindowType
     Titlebar(final String in_text)
     {
       this.text = NullCheck.notNull(in_text);
-      this.size = new PVectorM2I<>();
       this.position = new PVectorM2I<>();
       this.position_parent_view = SyWindowAbstract.castSpace(this.position);
       this.window_drag_start = new PVectorM2I<>();

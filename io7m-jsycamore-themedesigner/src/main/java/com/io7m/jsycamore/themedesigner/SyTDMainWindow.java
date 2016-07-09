@@ -60,6 +60,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Optional;
 
 final class SyTDMainWindow extends JFrame
 {
@@ -429,8 +430,7 @@ final class SyTDMainWindow extends JFrame
       final SyTheme theme =
         this.theme_builder.build();
 
-      SyTDMainWindow.this.window0.setTheme(theme);
-      SyTDMainWindow.this.window1.setTheme(theme);
+      SyTDMainWindow.this.gui.setTheme(theme);
       SyTDMainWindow.this.canvas.repaint();
     }
   }

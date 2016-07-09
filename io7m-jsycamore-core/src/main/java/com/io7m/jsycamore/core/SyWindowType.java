@@ -17,13 +17,17 @@
 package com.io7m.jsycamore.core;
 
 import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.themes.SyTheme;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+
+import java.util.Optional;
 
 /**
  * The type of windows.
  */
 
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+public interface SyWindowType extends SyWindowEventsType,
+  SyWindowThemeEventsType,
+  SyWindowReadableType
 {
   /**
    * Set the size of the window.
@@ -54,5 +58,13 @@ public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
   @Override
   SyComponentType contentPane();
 
-  void setTheme(SyTheme theme);
+  /**
+   * Set the theme for the window. If an empty value is specified, the window
+   * will be reset to whatever is the default theme for the owning {@link
+   * SyGUIType}.
+   *
+   * @param theme The theme, or an empty value to reset to the GUI default
+   */
+
+  void setTheme(Optional<SyThemeType> theme);
 }

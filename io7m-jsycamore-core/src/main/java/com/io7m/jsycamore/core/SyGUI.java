@@ -198,6 +198,20 @@ public final class SyGUI implements SyGUIType
     return this.name;
   }
 
+  @Override
+  public void setTheme(final SyThemeType in_theme)
+  {
+    this.theme = NullCheck.notNull(in_theme);
+
+    for (final SyWindowType w : this.windows_open) {
+      w.onWindowGUIThemeChanged();
+    }
+
+    for (final SyWindowType w : this.windows_closed) {
+      w.onWindowGUIThemeChanged();
+    }
+  }
+
   private boolean mouseAnyButtonsAreDown()
   {
     final Set<Map.Entry<SyMouseButton, MouseState>> entries =
