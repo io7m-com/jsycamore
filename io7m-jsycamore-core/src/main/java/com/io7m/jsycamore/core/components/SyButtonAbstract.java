@@ -22,6 +22,7 @@ import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.junreachable.UnreachableCodeException;
+import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ import java.util.Optional;
  * An abstract implementation of the {@link SyButtonType} interface.
  */
 
+@NotThreadSafe
 public abstract class SyButtonAbstract extends SyComponentAbstract implements
   SyButtonType
 {

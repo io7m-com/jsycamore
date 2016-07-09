@@ -20,6 +20,7 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
 import java.util.ArrayDeque;
@@ -29,6 +30,7 @@ import java.util.ArrayDeque;
  * interface.
  */
 
+@NotThreadSafe
 public final class SyWindowViewportAccumulator implements
   SyWindowViewportAccumulatorType
 {

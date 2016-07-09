@@ -19,11 +19,13 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import net.jcip.annotations.NotThreadSafe;
 
 /**
  * An abstract implementation of the {@link SyPanelType} interface.
  */
 
+@NotThreadSafe
 public abstract class SyPanelAbstract extends SyComponentAbstract implements
   SyPanelType
 {
