@@ -14,45 +14,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.themedesigner;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.themes.SyTheme;
+import net.java.dev.designgridlayout.DesignGridLayout;
 
-/**
- * The type of windows.
- */
-
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+interface SyTDControlsType
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
+  void controlsAddToLayout(
+    DesignGridLayout layout);
 
-  void setBounds(
-    int width,
-    int height);
+  void controlsHide();
 
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
-  @Override
-  SyComponentType contentPane();
-
-  void setTheme(SyTheme theme);
+  void controlsShow();
 }

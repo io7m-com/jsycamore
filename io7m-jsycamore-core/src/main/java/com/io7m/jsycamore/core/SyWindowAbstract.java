@@ -25,6 +25,7 @@ import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
@@ -55,6 +56,14 @@ public abstract class SyWindowAbstract implements SyWindowType
 
   static {
     LOG = LoggerFactory.getLogger(SyWindowAbstract.class);
+  }
+
+  @Override
+  public final void setTheme(final SyTheme in_theme)
+  {
+    this.themeReload(NullCheck.notNull(in_theme));
+    final VectorReadable2IType current_bounds = this.bounds();
+    this.recalculateBounds(current_bounds.getXI(), current_bounds.getYI());
   }
 
   private final PVector2IType<SySpaceViewportType> position;

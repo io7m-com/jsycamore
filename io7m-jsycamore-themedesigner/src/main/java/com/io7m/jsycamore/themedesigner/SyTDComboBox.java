@@ -14,45 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.themedesigner;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.themes.SyTheme;
+import javax.swing.JComboBox;
 
-/**
- * The type of windows.
- */
-
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+final class SyTDComboBox<T extends Enum<T>> extends JComboBox<T>
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
+  private final T[] values;
 
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
+  SyTDComboBox(final Class<T> c)
+  {
+    this.values = c.getEnumConstants();
+    for (final T cons : this.values) {
+      this.addItem(cons);
+    }
+  }
 
   @Override
-  SyComponentType contentPane();
-
-  void setTheme(SyTheme theme);
+  public T getSelectedItem()
+  {
+    final int index = this.getSelectedIndex();
+    if (index < 0) {
+      return null;
+    }
+    return this.values[index];
+  }
 }

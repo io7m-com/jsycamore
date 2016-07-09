@@ -14,45 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.themedesigner;
 
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.themes.SyTheme;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import java.awt.Dimension;
 
-/**
- * The type of windows.
- */
-
-public interface SyWindowType extends SyWindowEventsType, SyWindowReadableType
+final class SyTDMain
 {
-  /**
-   * Set the size of the window.
-   *
-   * @param width  The lightWidth
-   * @param height The height
-   */
+  private SyTDMain()
+  {
 
-  void setBounds(
-    int width,
-    int height);
+  }
 
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * @return Writable access to the content pane
-   */
-
-  @Override
-  SyComponentType contentPane();
-
-  void setTheme(SyTheme theme);
+  public static void main(final String[] args)
+  {
+    SwingUtilities.invokeLater(() -> {
+      final SyTDMainWindow w = new SyTDMainWindow();
+      w.setMinimumSize(new Dimension(640, 480));
+      w.setPreferredSize(new Dimension(800, 600));
+      w.pack();
+      w.setVisible(true);
+      w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    });
+  }
 }
