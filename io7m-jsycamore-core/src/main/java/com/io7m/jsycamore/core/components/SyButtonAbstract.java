@@ -96,7 +96,7 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
       return SyButtonState.BUTTON_OVER;
     }
 
-    return SyButtonState.BUTTON_NONE;
+    return SyButtonState.BUTTON_ACTIVE;
   }
 
   @Override

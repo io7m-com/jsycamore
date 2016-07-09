@@ -34,4 +34,11 @@ public interface SyThemeType
 
   @Value.Parameter
   SyThemeWindowType windowTheme();
+
+  /**
+   * @return The theme used for buttons
+   */
+
+  @Value.Parameter
+  SyThemeButtonType buttonTheme();
 }

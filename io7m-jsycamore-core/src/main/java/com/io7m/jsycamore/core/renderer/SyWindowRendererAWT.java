@@ -125,7 +125,8 @@ public final class SyWindowRendererAWT implements
   {
     final SyComponentType content = window.contentPane();
     final SyComponentRendererAWTContext context =
-      SyComponentRendererAWTContext.of(window.viewportAccumulator(), output);
+      SyComponentRendererAWTContext.of(
+        window.viewportAccumulator(), output, window.theme());
     this.component_renderer.render(context, content);
   }
 

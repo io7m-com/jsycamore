@@ -80,7 +80,29 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default VectorI3F frameColor()
   {
-    return new VectorI3F(0.5f, 0.5f, 0.5f);
+    return new VectorI3F(0.7f, 0.7f, 0.7f);
+  }
+
+  /**
+   * @return The general background color used for buttons, panels, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F backgroundColor()
+  {
+    return new VectorI3F(0.6f, 0.6f, 0.6f);
+  }
+
+  /**
+   * @return The general foreground color used for text on components, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F foregroundColor()
+  {
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
   }
 
   /**
@@ -92,7 +114,7 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default float colorLightFactor()
   {
-    return 2.5f;
+    return 1.2f;
   }
 
   /**
@@ -104,6 +126,6 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default float colorDarkFactor()
   {
-    return 1.2f;
+    return 0.8f;
   }
 }

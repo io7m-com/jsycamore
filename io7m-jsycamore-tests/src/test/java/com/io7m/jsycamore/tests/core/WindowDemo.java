@@ -21,6 +21,7 @@ import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyGUIRendererAWTInefficient;
 import com.io7m.jsycamore.core.renderer.SyGUIRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
@@ -89,7 +90,8 @@ public final class WindowDemo implements Runnable
     this.window1.setPosition(100, 100);
 
     this.window_renderer =
-      SyWindowRendererAWT.create(this.gui.textMeasurement());
+      SyWindowRendererAWT.create(
+        this.gui.textMeasurement(), SyComponentRendererAWT.create());
     this.gui_renderer =
       SyGUIRendererAWTInefficient.create(this.window_renderer);
     this.output =

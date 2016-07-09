@@ -30,6 +30,7 @@ import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeAlignment;
+import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
@@ -37,6 +38,8 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowFrameCorner;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarVerticalPlacement;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarWidthBehavior;
+import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
+import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable2IType;
@@ -85,6 +88,7 @@ final class SyTDMainWindow extends JFrame
   SyTDMainWindow()
   {
     final SyThemeType theme = SyThemeStride.builder().build();
+
     this.gui = SyGUI.createWithTheme("main", theme);
     this.window0 = this.gui.windowCreate(320, 240, "Files");
     this.window0.setPosition(32, 32);
@@ -102,8 +106,24 @@ final class SyTDMainWindow extends JFrame
     {
       final SyButtonType button = SyButton.create();
       button.setBounds(64, 32);
+      button.setPosition(16 + 64 + 16, 16);
+      button.setEnabled(false);
+      this.window0.contentPane().node().childAdd(button.node());
+    }
+
+    {
+      final SyButtonType button = SyButton.create();
+      button.setBounds(64, 32);
       button.setPosition(16, 16);
       button.buttonAddListener(b -> SyTDMainWindow.LOG.debug("click"));
+      this.window1.contentPane().node().childAdd(button.node());
+    }
+
+    {
+      final SyButtonType button = SyButton.create();
+      button.setBounds(64, 32);
+      button.setPosition(16 + 64 + 16, 16);
+      button.setEnabled(false);
       this.window1.contentPane().node().childAdd(button.node());
     }
 
@@ -221,10 +241,12 @@ final class SyTDMainWindow extends JFrame
     private final SyTDComboBox<SyThemeAlignment> titlebar_text_alignment;
     private final SyTDComboBox<SyThemeAlignment> titlebar_alignment;
     private final SyTDFontSelector titlebar_text_font;
+    private final SyThemeButton.Builder theme_button_builder;
 
     Controls()
     {
       this.theme_builder = SyTheme.builder();
+      this.theme_button_builder = SyThemeButton.builder();
       this.theme_window_builder = SyThemeWindow.builder();
       this.theme_window_frame_builder = SyThemeWindowFrame.builder();
       this.theme_window_titlebar_builder = SyThemeWindowTitleBar.builder();
@@ -234,9 +256,7 @@ final class SyTDMainWindow extends JFrame
       this.slider_frame_top.setOnChangeListener(e -> this.updateTheme());
 
       this.slider_frame_bottom = new SyTDIntegerSlider(
-        "Bottom thickness",
-        0,
-        16);
+        "Bottom thickness", 0, 16);
       this.slider_frame_bottom.setCurrent(5);
       this.slider_frame_bottom.setOnChangeListener(e -> this.updateTheme());
 
@@ -451,6 +471,9 @@ final class SyTDMainWindow extends JFrame
         this.theme_window_frame_builder.build());
       this.theme_builder.setWindowTheme(
         this.theme_window_builder.build());
+      this.theme_builder.setButtonTheme(
+        this.theme_button_builder.build());
+
       final SyTheme theme =
         this.theme_builder.build();
 

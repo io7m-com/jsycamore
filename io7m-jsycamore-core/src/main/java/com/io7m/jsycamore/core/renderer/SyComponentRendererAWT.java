@@ -23,7 +23,11 @@ import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
+import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jtensors.VectorReadable2IType;
+import com.io7m.jtensors.VectorReadable3FType;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -31,13 +35,16 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.Optional;
 
 public final class SyComponentRendererAWT implements
   SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage>
 {
+  private final SyEmbossed embossed;
+
   private SyComponentRendererAWT()
   {
-
+    this.embossed = new SyEmbossed();
   }
 
   public static SyComponentRendererType<
@@ -94,10 +101,10 @@ public final class SyComponentRendererAWT implements
       graphics.translate(min_x, min_y);
 
       object.matchComponentReadable(this, (r, button) -> {
-        SyComponentRendererAWT.renderButton(context, graphics, button);
+        this.renderButton(context, graphics, button);
         return Unit.unit();
       }, (r, panel) -> {
-        SyComponentRendererAWT.renderPanel(context, graphics, panel);
+        this.renderPanel(context, graphics, panel);
         return Unit.unit();
       });
 
@@ -120,38 +127,148 @@ public final class SyComponentRendererAWT implements
     }
   }
 
-  private static void renderPanel(
+  private void renderPanel(
     final SyComponentRendererAWTContextType context,
     final Graphics2D graphics,
     final SyPanelReadableType panel)
   {
-    final VectorReadable2IType size = panel.size();
-    graphics.setPaint(Color.MAGENTA);
-    graphics.fillRect(0, 0, size.getXI(), size.getYI());
+
   }
 
-  private static void renderButton(
+  private void renderButton(
     final SyComponentRendererAWTContextType context,
     final Graphics2D graphics,
     final SyButtonReadableType button)
   {
     final VectorReadable2IType size = button.size();
+    final SyThemeButtonType button_theme = context.theme().buttonTheme();
+
+    final int width = size.getXI();
+    final int height = size.getYI();
+    final int fill_width;
+    final int fill_height;
+    final int fill_x;
+    final int fill_y;
+    final int rect_width;
+    final int rect_height;
+
+    final Optional<SyThemeOutlineType> outline_opt = button_theme.outline();
+    if (outline_opt.isPresent()) {
+      fill_x = 1;
+      fill_y = 1;
+      fill_width = width - 3;
+      fill_height = height - 3;
+      rect_width = width - 2;
+      rect_height = height - 2;
+    } else {
+      fill_x = 0;
+      fill_y = 0;
+      fill_width = width;
+      fill_height = height;
+      rect_width = width;
+      rect_height = height;
+    }
+
+    if (!button.isEnabled()) {
+      this.renderButtonFill(
+        graphics,
+        fill_width,
+        fill_height,
+        fill_x,
+        fill_y,
+        button_theme.embossDisabled(),
+        button_theme.colorDisabled());
+
+      if (outline_opt.isPresent()) {
+        final SyThemeOutlineType outline = outline_opt.get();
+        graphics.setPaint(
+          SyComponentRendererAWT.toColor(outline.colorInactive()));
+        graphics.drawRect(0, 0, rect_width, rect_height);
+      }
+      return;
+    }
 
     switch (button.buttonState()) {
-      case BUTTON_NONE: {
-        graphics.setPaint(Color.GREEN);
+      case BUTTON_ACTIVE: {
+        this.renderButtonFill(
+          graphics,
+          fill_width,
+          fill_height,
+          fill_x,
+          fill_y,
+          button_theme.embossActive(),
+          button_theme.colorActive());
         break;
       }
       case BUTTON_OVER: {
-        graphics.setPaint(Color.YELLOW);
+        this.renderButtonFill(
+          graphics,
+          fill_width,
+          fill_height,
+          fill_x,
+          fill_y,
+          button_theme.embossOver(),
+          button_theme.colorOver());
         break;
       }
       case BUTTON_PRESSED: {
-        graphics.setPaint(Color.BLUE);
+        this.renderButtonFill(
+          graphics,
+          fill_width,
+          fill_height,
+          fill_x,
+          fill_y,
+          button_theme.embossPressed(),
+          button_theme.colorPressed());
         break;
       }
     }
 
-    graphics.fillRect(0, 0, size.getXI(), size.getYI());
+    if (outline_opt.isPresent()) {
+      final SyThemeOutlineType outline = outline_opt.get();
+      graphics.setPaint(SyComponentRendererAWT.toColor(outline.colorActive()));
+      graphics.drawRect(0, 0, rect_width, rect_height);
+    }
+  }
+
+  private void renderButtonFill(
+    final Graphics2D graphics,
+    final int fill_width,
+    final int fill_height,
+    final int fill_x,
+    final int fill_y,
+    final Optional<SyThemeEmbossType> emboss_opt,
+    final VectorReadable3FType fill_color)
+  {
+    final Color fill =
+      SyComponentRendererAWT.toColor(fill_color);
+
+    if (emboss_opt.isPresent()) {
+      final SyThemeEmbossType emboss = emboss_opt.get();
+      this.embossed.rectangle(
+        graphics,
+        fill_x,
+        fill_y,
+        fill_width,
+        fill_height,
+        emboss.size(),
+        SyComponentRendererAWT.toColor(emboss.colorLeft()),
+        SyComponentRendererAWT.toColor(emboss.colorRight()),
+        SyComponentRendererAWT.toColor(emboss.colorTop()),
+        SyComponentRendererAWT.toColor(emboss.colorBottom()),
+        Optional.of(fill));
+    } else {
+      graphics.setPaint(fill);
+      graphics.fillRect(fill_x, fill_y, fill_width, fill_height);
+    }
+  }
+
+  private static Color toColor(
+    final VectorReadable3FType color)
+  {
+    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
+    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
+    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
+    return new Color(r, g, b);
   }
 }

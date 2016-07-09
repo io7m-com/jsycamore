@@ -62,4 +62,26 @@ public interface SyThemeMotiveSpecificationType
   {
     return 0.5f;
   }
+
+  /**
+   * @return The general background color used for buttons, panels, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F backgroundColor()
+  {
+    return new VectorI3F(0.34f, 0.42f, 0.48f);
+  }
+
+  /**
+   * @return The general foreground color used for text on components, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F foregroundColor()
+  {
+    return new VectorI3F(1.0f, 1.0f, 1.0f);
+  }
 }

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.core.themes.provided;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeAlignment;
+import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
@@ -58,6 +59,14 @@ public final class SyThemeStride
     NullCheck.notNull(spec);
 
     final SyTheme.Builder theme = SyTheme.builder();
+
+    final VectorI3F background = spec.backgroundColor();
+    final VectorI3F background_lighter =
+      VectorI3F.scale(background, spec.colorLightFactor());
+    final VectorI3F background_lighter_lighter =
+      VectorI3F.scale(background_lighter, spec.colorLightFactor());
+    final VectorI3F background_darker =
+      VectorI3F.scale(background, spec.colorDarkFactor());
 
     final VectorI3F title_color_active_lighter =
       VectorI3F.scale(spec.titlebarColorActive(), spec.colorLightFactor());
@@ -155,8 +164,7 @@ public final class SyThemeStride
     theme_frame_b.setEmbossActive(theme_frame_emboss_active_b.build());
     theme_frame_b.setEmbossInactive(theme_frame_emboss_inactive_b.build());
 
-    final SyThemeOutline.Builder theme_window_outline =
-      SyThemeOutline.builder();
+    final SyThemeOutline.Builder theme_window_outline = SyThemeOutline.builder();
     theme_window_outline.setColorActive(new VectorI3F(0.0f, 0.0f, 0.0f));
     theme_window_outline.setColorInactive(new VectorI3F(0.3f, 0.3f, 0.3f));
 
@@ -169,6 +177,43 @@ public final class SyThemeStride
         theme_frame_b.build(),
         theme_outline));
 
+    final SyThemeButton.Builder theme_button_b =
+      SyThemeButton.builder();
+
+    theme_button_b.setOutline(SyThemeOutline.of(
+      spec.foregroundColor(),
+      spec.foregroundColor()));
+
+    theme_button_b.setColorActive(background);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1
+    ));
+
+    theme_button_b.setColorDisabled(background);
+
+    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      background_lighter_lighter,
+      background,
+      background_lighter_lighter,
+      background,
+      1
+    ));
+
+    theme_button_b.setColorPressed(background);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      1
+    ));
+
+    theme.setButtonTheme(theme_button_b.build());
     return theme;
   }
 

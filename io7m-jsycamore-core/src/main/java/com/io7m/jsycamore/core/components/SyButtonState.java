@@ -26,7 +26,7 @@ public enum SyButtonState
    * The button is not pressed and the cursor is not over it.
    */
 
-  BUTTON_NONE,
+  BUTTON_ACTIVE,
 
   /**
    * The button is not pressed, but the cursor is over it.

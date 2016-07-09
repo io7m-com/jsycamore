@@ -19,6 +19,7 @@ package com.io7m.jsycamore.tests.core;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeAlignment;
@@ -138,7 +139,8 @@ public final class Demo
       ui.windowCreate(320, 240, "File Manager - sys$starlet_c");
 
     final SyWindowRendererType<BufferedImage, BufferedImage> r =
-      SyWindowRendererAWT.create(ui.textMeasurement());
+      SyWindowRendererAWT.create(
+        ui.textMeasurement(), SyComponentRendererAWT.create());
 
     r.render(bi, win);
     ImageIO.write(bi, "PNG", new File("/tmp/window.png"));

@@ -106,4 +106,26 @@ public interface SyThemeBeeSpecificationType
   {
     return 0.5f;
   }
+
+  /**
+   * @return The general background color used for buttons, panels, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F backgroundColor()
+  {
+    return new VectorI3F(0.8f, 0.8f, 0.8f);
+  }
+
+  /**
+   * @return The general foreground color used for text on components, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F foregroundColor()
+  {
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
 }
