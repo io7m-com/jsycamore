@@ -390,8 +390,8 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     final SyTextMeasurementType measure = this.gui.textMeasurement();
     final int text_size =
-      measure.measureText(text_font, this.root.titlebar.text());
-    final int space_size = measure.measureText(text_font, " ");
+      measure.measureTextWidth(text_font, this.root.titlebar.text());
+    final int space_size = measure.measureTextWidth(text_font, " ");
     return (space_size * 2) + text_size;
   }
 

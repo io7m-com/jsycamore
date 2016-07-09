@@ -98,17 +98,21 @@ public final class SyWindowRendererAWT implements
     Assertive.require(input.getHeight() >= window_size.getYI());
 
     final Graphics2D graphics = input.createGraphics();
-    graphics.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    graphics.setRenderingHint(
-      RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+    try {
+      graphics.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      graphics.setRenderingHint(
+        RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
-    this.renderFrame(graphics, window);
-    this.renderTitlebar(graphics, window);
-    this.renderContent(graphics, window);
-    this.renderOutline(graphics, window);
-    return input;
+      graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
+      this.renderFrame(graphics, window);
+      this.renderTitlebar(graphics, window);
+      this.renderContent(graphics, window);
+      this.renderOutline(graphics, window);
+      return input;
+    } finally {
+      graphics.dispose();
+    }
   }
 
   private void renderContent(
@@ -344,11 +348,14 @@ public final class SyWindowRendererAWT implements
       final String text_font = titlebar_theme.textFont();
       final String text = titlebar.text();
 
-      final int text_width = this.measurement.measureText(text_font, text);
-      final int space_width = this.measurement.measureText(text_font, " ");
+      final int text_width = this.measurement.measureTextWidth(text_font, text);
+      final int space_width = this.measurement.measureTextWidth(text_font, " ");
 
+      final int bar_height = titlebar_theme.height();
+      final int text_height = this.measurement.measureTextHeight(text_font);
+
+      final int text_y = (bar_height / 2) + (text_height / 3);
       int text_x = 0;
-      final int text_y = (titlebar_theme.height() / 4) * 3;
       switch (titlebar_theme.textAlignment()) {
         case ALIGN_LEFT: {
           text_x = space_width;

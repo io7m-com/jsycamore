@@ -25,15 +25,25 @@ import java.awt.Font;
 public interface SyTextMeasurementType
 {
   /**
-   * Measure the size of the given text using the given font.
+   * Measure the maximum height of text rendered using the given font.
+   *
+   * @param font The font
+   *
+   * @return The height of the text
+   */
+
+  int measureTextHeight(String font);
+
+  /**
+   * Measure the width of the given text using the given font.
    *
    * @param font The font
    * @param text The text
    *
-   * @return The size of the text
+   * @return The width of the text
    */
 
-  int measureText(
+  int measureTextWidth(
     String font,
     String text);
 

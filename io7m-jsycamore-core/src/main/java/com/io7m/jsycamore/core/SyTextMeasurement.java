@@ -53,7 +53,15 @@ public final class SyTextMeasurement implements SyTextMeasurementType
   }
 
   @Override
-  public int measureText(
+  public int measureTextHeight(final String font)
+  {
+    final FontMetrics metrics =
+      this.graphics.getFontMetrics(this.decodeFont(font));
+    return metrics.getHeight();
+  }
+
+  @Override
+  public int measureTextWidth(
     final String font,
     final String text)
   {
