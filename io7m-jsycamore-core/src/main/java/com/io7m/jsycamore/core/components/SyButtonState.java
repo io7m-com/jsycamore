@@ -17,32 +17,26 @@
 package com.io7m.jsycamore.core.components;
 
 /**
- * The default implementation of the {@link SyButtonType} interface.
+ * The state of a button.
  */
 
-public final class SyButton extends SyButtonAbstract
+public enum SyButtonState
 {
   /**
-   * @return A new button
+   * The button is not pressed and the cursor is not over it.
    */
 
-  public static SyButtonType create()
-  {
-    return new SyButton();
-  }
+  BUTTON_NONE,
 
-  private SyButton()
-  {
+  /**
+   * The button is not pressed, but the cursor is over it.
+   */
 
-  }
+  BUTTON_OVER,
 
-  @Override
-  public String toString()
-  {
-    final StringBuilder sb = new StringBuilder("[SyButton ");
-    sb.append(" [pressed ").append(this.isPressed()).append("]");
-    sb.append(" [over ").append(this.isOver()).append("]");
-    sb.append(']');
-    return sb.toString();
-  }
+  /**
+   * The button is pressed.
+   */
+
+  BUTTON_PRESSED
 }

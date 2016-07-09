@@ -34,6 +34,16 @@ import java.util.function.BiFunction;
 public interface SyComponentReadableType
 {
   /**
+   * Components may be enabled and disabled. A component that is disabled
+   * will not receive input events, and will typically be rendered as "greyed"
+   * out by renderers.
+   *
+   * @return {@code true} iff this component is enabled
+   */
+
+  boolean isEnabled();
+
+  /**
    * @return This component's width resize behavior.
    */
 

@@ -37,6 +37,7 @@ import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorWritable2IType;
+import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +113,12 @@ public abstract class SyWindowAbstract implements SyWindowType
       outline_size = 0;
     }
     return outline_size;
+  }
+
+  @Override
+  public final SyWindowViewportAccumulatorType viewportAccumulator()
+  {
+    return this.transform_context;
   }
 
   @Override
@@ -383,7 +390,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.root.titlebar.setBounds(title_width, title_height);
     this.frame_position.set2I(frame_x, frame_y);
     this.frame_size.set2I(frame_width, frame_height);
-    this.transform_context.setSize(clamp_width, clamp_height);
+    this.transform_context.reset(clamp_width, clamp_height);
   }
 
   private int measureTitleSize(final String text_font)
@@ -521,30 +528,32 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public void onMouseHeld(
+    public boolean mouseHeld(
       final PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
-      final PVectorReadable2IType<SySpaceViewportType> mouse_position,
+      final PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
       final SyMouseButton button,
       final SyComponentType actual)
     {
       switch (button) {
         case MOUSE_BUTTON_LEFT: {
           final PVectorI2I<SySpaceViewportType> diff =
-            PVectorI2I.subtract(mouse_position, mouse_position_first);
+            PVectorI2I.subtract(mouse_position_now, mouse_position_first);
           final PVectorI2I<SySpaceViewportType> current =
             PVectorI2I.add(this.window_drag_start, diff);
           SyWindowAbstract.this.setPosition(current.getXI(), current.getYI());
-          break;
+          return true;
         }
         case MOUSE_BUTTON_MIDDLE:
         case MOUSE_BUTTON_RIGHT: {
-          break;
+          return false;
         }
       }
+
+      throw new UnreachableCodeException();
     }
 
     @Override
-    public void onMousePressed(
+    public boolean mousePressed(
       final PVectorReadable2IType<SySpaceViewportType> mouse_position,
       final SyMouseButton button,
       final SyComponentType actual)
@@ -553,36 +562,38 @@ public abstract class SyWindowAbstract implements SyWindowType
         case MOUSE_BUTTON_LEFT: {
           PVectorM2I.copy(
             SyWindowAbstract.this.position(), this.window_drag_start);
-          break;
+          return true;
         }
         case MOUSE_BUTTON_MIDDLE:
         case MOUSE_BUTTON_RIGHT: {
-          break;
+          return false;
         }
       }
+
+      throw new UnreachableCodeException();
     }
 
     @Override
-    public void onMouseReleased(
+    public boolean mouseReleased(
       final PVectorReadable2IType<SySpaceViewportType> mouse_position,
       final SyMouseButton button,
       final SyComponentType actual)
     {
-
+      return false;
     }
 
     @Override
-    public void onMouseNoLongerOver()
+    public boolean mouseNoLongerOver()
     {
-
+      return false;
     }
 
     @Override
-    public void onMouseOver(
+    public boolean mouseOver(
       final PVectorReadable2IType<SySpaceViewportType> mouse_position,
       final SyComponentType actual)
     {
-
+      return false;
     }
 
     @Override

@@ -29,7 +29,9 @@ import java.util.function.BiFunction;
  */
 
 public interface SyComponentType extends SyComponentParentEventsType,
-  SyComponentMouseEventsType, SyComponentReadableType
+  SyComponentMouseEventsType,
+  SyComponentReadableType,
+  SyMouseListenerType<SyComponentType>
 {
   /**
    * @return The window to which the most distant ancestor of this component is
@@ -96,4 +98,14 @@ public interface SyComponentType extends SyComponentParentEventsType,
     A context,
     BiFunction<A, SyButtonType, B> on_button,
     BiFunction<A, SyPanelType, B> on_panel);
+
+  /**
+   * Enable/disable this component.
+   *
+   * @param e {@code true} iff the component should be enabled
+   *
+   * @see SyComponentReadableType#isEnabled()
+   */
+
+  void setEnabled(boolean e);
 }

@@ -51,7 +51,7 @@ public abstract class SyWindowViewportAccumulatorContract
   public final void testAccumulateAlwaysSmaller()
   {
     final SyWindowViewportAccumulatorType c = this.create();
-    c.setSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    c.reset(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
     int last_x0 = c.minimumX();
     int last_y0 = c.minimumY();
@@ -100,7 +100,7 @@ public abstract class SyWindowViewportAccumulatorContract
   public final void testAccumulate()
   {
     final SyWindowViewportAccumulatorType c = this.create();
-    c.setSize(1000, 500);
+    c.reset(1000, 500);
 
     {
       final long width = (long) (c.maximumX() - c.minimumX());

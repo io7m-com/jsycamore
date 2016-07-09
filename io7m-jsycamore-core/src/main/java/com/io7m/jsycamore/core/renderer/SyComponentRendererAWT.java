@@ -56,18 +56,27 @@ public final class SyComponentRendererAWT implements
 
     final BufferedImage image = context.image();
     final Graphics2D graphics = image.createGraphics();
-    this.renderActual(context, graphics, object);
-    return image;
+    try {
+      this.renderActual(
+        context,
+        graphics,
+        graphics.getTransform(),
+        graphics.getClip(),
+        object);
+      return image;
+    } finally {
+      graphics.dispose();
+    }
   }
 
   private void renderActual(
     final SyComponentRendererAWTContextType context,
     final Graphics2D graphics,
+    final AffineTransform initial_transform,
+    final Shape initial_clip,
     final SyComponentReadableType object)
   {
     final SyWindowViewportAccumulatorType viewport = context.viewport();
-    final AffineTransform saved_transform = graphics.getTransform();
-    final Shape saved_clip = graphics.getClip();
 
     try {
       viewport.accumulate(object.position(), object.size());
@@ -78,6 +87,9 @@ public final class SyComponentRendererAWT implements
       final int min_y = viewport.minimumY();
       final int width = max_x - min_x;
       final int height = max_y - min_y;
+
+      graphics.setClip(initial_clip);
+      graphics.setTransform(initial_transform);
       graphics.clipRect(min_x, min_y, width, height);
       graphics.translate(min_x, min_y);
 
@@ -95,13 +107,16 @@ public final class SyComponentRendererAWT implements
         node.childrenReadable();
 
       for (final JOTreeNodeReadableType<SyComponentReadableType> child_node : child_nodes) {
-        this.renderActual(context, graphics, child_node.value());
+        this.renderActual(
+          context,
+          graphics,
+          initial_transform,
+          initial_clip,
+          child_node.value());
       }
 
     } finally {
       viewport.restore();
-      graphics.setTransform(saved_transform);
-      graphics.setClip(saved_clip);
     }
   }
 
@@ -121,7 +136,22 @@ public final class SyComponentRendererAWT implements
     final SyButtonReadableType button)
   {
     final VectorReadable2IType size = button.size();
-    graphics.setPaint(Color.GREEN);
+
+    switch (button.buttonState()) {
+      case BUTTON_NONE: {
+        graphics.setPaint(Color.GREEN);
+        break;
+      }
+      case BUTTON_OVER: {
+        graphics.setPaint(Color.YELLOW);
+        break;
+      }
+      case BUTTON_PRESSED: {
+        graphics.setPaint(Color.BLUE);
+        break;
+      }
+    }
+
     graphics.fillRect(0, 0, size.getXI(), size.getYI());
   }
 }

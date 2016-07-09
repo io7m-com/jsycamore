@@ -33,16 +33,16 @@ public interface SyButtonType extends SyComponentType, SyButtonReadableType
    * @param r The listener
    */
 
-  void buttonAddListener(Runnable r);
+  void buttonAddListener(SyButtonListenerType r);
 
   /**
    * Remove a listener from the button that was previously added with {@link
-   * #buttonAddListener(Runnable)}.
+   * #buttonAddListener(SyButtonListenerType)}.
    *
    * @param r The listener
    */
 
-  void buttonRemoveListener(Runnable r);
+  void buttonRemoveListener(SyButtonListenerType r);
 
   @Override
   default <A, B> B matchComponent(

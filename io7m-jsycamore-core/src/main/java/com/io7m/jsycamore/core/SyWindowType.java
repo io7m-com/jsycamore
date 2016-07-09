@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core;
 
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 
 import java.util.Optional;
@@ -67,4 +68,10 @@ public interface SyWindowType extends SyWindowEventsType,
    */
 
   void setTheme(Optional<SyThemeType> theme);
+
+  /**
+   * @return A viewport accumulator for the window
+   */
+
+  SyWindowViewportAccumulatorType viewportAccumulator();
 }

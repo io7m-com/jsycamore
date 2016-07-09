@@ -21,6 +21,11 @@ import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.components.SyButton;
+import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererAWTContextType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyTheme;
@@ -60,7 +65,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.Optional;
 
 final class SyTDMainWindow extends JFrame
 {
@@ -75,6 +79,7 @@ final class SyTDMainWindow extends JFrame
   private final SyGUIType gui;
   private final SyWindowType window0;
   private final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
+  private final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> component_renderer;
   private SyWindowType window1;
 
   SyTDMainWindow()
@@ -86,8 +91,27 @@ final class SyTDMainWindow extends JFrame
     this.window1 = this.gui.windowCreate(300, 240, "Other");
     this.window1.setPosition(100, 100);
 
+    {
+      final SyButtonType button = SyButton.create();
+      button.setBounds(64, 32);
+      button.setPosition(16, 16);
+      button.buttonAddListener(b -> SyTDMainWindow.LOG.debug("click"));
+      this.window0.contentPane().node().childAdd(button.node());
+    }
+
+    {
+      final SyButtonType button = SyButton.create();
+      button.setBounds(64, 32);
+      button.setPosition(16, 16);
+      button.buttonAddListener(b -> SyTDMainWindow.LOG.debug("click"));
+      this.window1.contentPane().node().childAdd(button.node());
+    }
+
+    this.component_renderer =
+      SyComponentRendererAWT.create();
     this.window_renderer =
-      SyWindowRendererAWT.create(this.gui.textMeasurement());
+      SyWindowRendererAWT.create(
+        this.gui.textMeasurement(), this.component_renderer);
 
     this.controls = new Controls();
     final JScrollPane controls_scroll = new JScrollPane(this.controls);
@@ -114,7 +138,7 @@ final class SyTDMainWindow extends JFrame
     final JMenuBar mb = new JMenuBar();
     final JMenu menu_file = new JMenu("File");
 
-    final JMenuItem item_quit = new JMenuItem("Quit", 'Q');
+    final JMenuItem item_quit = new JMenuItem("Quit", (int) 'Q');
     menu_file.add(item_quit);
 
     mb.add(menu_file);
@@ -445,6 +469,7 @@ final class SyTDMainWindow extends JFrame
     {
       this.position.set2I(e.getX(), e.getY());
       SyTDMainWindow.this.gui.onMouseMoved(this.position);
+      SyTDMainWindow.this.canvas.repaint();
     }
 
     @Override

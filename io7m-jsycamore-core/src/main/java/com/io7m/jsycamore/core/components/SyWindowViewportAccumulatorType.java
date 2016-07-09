@@ -38,14 +38,17 @@ import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 public interface SyWindowViewportAccumulatorType
 {
   /**
-   * Set the base size. This is typically the width and height of a containing
-   * window. The width and height must be greater than or equal to {@code 0}.
+   * <p>Reset the accumulator to the given base size. This is typically the width
+   * and height of a containing window. The width and height must be greater
+   * than or equal to {@code 0}.</p>
+   *
+   * <p>This will clear the internal accumulator stack.</p>
    *
    * @param width  The width
    * @param height The height
    */
 
-  void setSize(
+  void reset(
     int width,
     int height);
 
@@ -92,7 +95,7 @@ public interface SyWindowViewportAccumulatorType
    *
    * <p>If more {@code restore} calls have been made than {@code accumulate}
    * calls, the viewport position is reset to {@code (0, 0)} and the size is
-   * reset to the most recent values given to {@link #setSize(int, int)} (or
+   * reset to the most recent values given to {@link #reset(int, int)} (or
    * {@code (0,0)} if none exist).</p>
    */
 

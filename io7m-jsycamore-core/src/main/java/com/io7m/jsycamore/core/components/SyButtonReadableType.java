@@ -26,6 +26,12 @@ import java.util.function.BiFunction;
 
 public interface SyButtonReadableType extends SyComponentReadableType
 {
+  /**
+   * @return The current state of the button
+   */
+
+  SyButtonState buttonState();
+
   @Override
   default <A, B> B matchComponentReadable(
     final A context,

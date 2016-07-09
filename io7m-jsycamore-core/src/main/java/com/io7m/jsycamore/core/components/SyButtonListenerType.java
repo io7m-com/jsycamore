@@ -17,32 +17,16 @@
 package com.io7m.jsycamore.core.components;
 
 /**
- * The default implementation of the {@link SyButtonType} interface.
+ * The type of listeners that are notified when a button is clicked.
  */
 
-public final class SyButton extends SyButtonAbstract
+public interface SyButtonListenerType
 {
   /**
-   * @return A new button
+   * A button was clicked.
+   *
+   * @param b The button
    */
 
-  public static SyButtonType create()
-  {
-    return new SyButton();
-  }
-
-  private SyButton()
-  {
-
-  }
-
-  @Override
-  public String toString()
-  {
-    final StringBuilder sb = new StringBuilder("[SyButton ");
-    sb.append(" [pressed ").append(this.isPressed()).append("]");
-    sb.append(" [over ").append(this.isOver()).append("]");
-    sb.append(']');
-    return sb.toString();
-  }
+  void buttonClicked(SyButtonType b);
 }

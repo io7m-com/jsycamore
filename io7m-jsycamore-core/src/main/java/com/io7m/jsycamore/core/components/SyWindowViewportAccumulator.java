@@ -80,13 +80,14 @@ public final class SyWindowViewportAccumulator implements
   }
 
   @Override
-  public void setSize(
+  public void reset(
     final int width,
     final int height)
   {
     Assertive.require(width >= 0);
     Assertive.require(height >= 0);
 
+    this.saved.clear();
     this.base_width = width;
     this.base_height = height;
     this.current.x_max = width;

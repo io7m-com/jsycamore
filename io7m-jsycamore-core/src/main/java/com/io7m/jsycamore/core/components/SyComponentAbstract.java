@@ -32,6 +32,8 @@ import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import net.jcip.annotations.NotThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.valid4j.Assertive;
 
 import java.util.Collection;
@@ -45,6 +47,12 @@ import java.util.Optional;
 @NotThreadSafe
 public abstract class SyComponentAbstract implements SyComponentType
 {
+  private static final Logger LOG;
+
+  static {
+    LOG = LoggerFactory.getLogger(SyComponentAbstract.class);
+  }
+
   private final JOTreeNodeType<SyComponentType> node;
   private Optional<SyWindowType> window;
   private SyParentResizeBehavior resize_width;
@@ -52,6 +60,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   private PVectorM2I<SySpaceParentRelativeType> position;
   private VectorM2I size;
   private boolean selectable = true;
+  private boolean enabled = true;
 
   protected SyComponentAbstract()
   {
@@ -75,6 +84,18 @@ public abstract class SyComponentAbstract implements SyComponentType
     final Optional<T> o)
   {
     return (Optional<TR>) o;
+  }
+
+  @Override
+  public final boolean isEnabled()
+  {
+    return this.enabled;
+  }
+
+  @Override
+  public final void setEnabled(final boolean e)
+  {
+    this.enabled = e;
   }
 
   @Override
@@ -155,45 +176,118 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public void onMouseHeld(
+  public final void onMouseHeld(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
     final PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
     final SyMouseButton button,
     final SyComponentType actual)
   {
+    boolean consumed = true;
+    if (this.isEnabled()) {
+      consumed = this.mouseHeld(
+        mouse_position_first, mouse_position_now, button, actual);
+    }
 
+    if (!consumed) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_node =
+        this.node.parent();
+      if (parent_node.isPresent()) {
+        final SyComponentType parent = parent_node.get().value();
+        parent.onMouseHeld(
+          mouse_position_first, mouse_position_now, button, actual);
+      } else {
+        SyComponentAbstract.LOG.warn("onMouseHeld: event not consumed");
+      }
+    }
   }
 
   @Override
-  public void onMousePressed(
+  public final void onMousePressed(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position,
     final SyMouseButton button,
     final SyComponentType actual)
   {
+    boolean consumed = true;
+    if (this.isEnabled()) {
+      consumed = this.mousePressed(mouse_position, button, actual);
+    }
 
+    if (!consumed) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_node =
+        this.node.parent();
+      if (parent_node.isPresent()) {
+        final SyComponentType parent = parent_node.get().value();
+        parent.onMousePressed(mouse_position, button, actual);
+      } else {
+        SyComponentAbstract.LOG.warn("onMousePressed: event not consumed");
+      }
+    }
   }
 
   @Override
-  public void onMouseReleased(
+  public final void onMouseReleased(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position,
     final SyMouseButton button,
     final SyComponentType actual)
   {
+    boolean consumed = true;
+    if (this.isEnabled()) {
+      consumed =
+        this.mouseReleased(mouse_position, button, actual);
+    }
 
+    if (!consumed) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_node =
+        this.node.parent();
+      if (parent_node.isPresent()) {
+        final SyComponentType parent = parent_node.get().value();
+        parent.onMouseReleased(mouse_position, button, actual);
+      } else {
+        SyComponentAbstract.LOG.warn("onMouseReleased: event not consumed");
+      }
+    }
   }
 
   @Override
-  public void onMouseNoLongerOver()
+  public final void onMouseNoLongerOver()
   {
+    boolean consumed = true;
+    if (this.isEnabled()) {
+      consumed = this.mouseNoLongerOver();
+    }
 
+    if (!consumed) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_node =
+        this.node.parent();
+      if (parent_node.isPresent()) {
+        final SyComponentType parent = parent_node.get().value();
+        parent.onMouseNoLongerOver();
+      } else {
+        SyComponentAbstract.LOG.warn("onMouseNoLongerOver: event not consumed");
+      }
+    }
   }
 
   @Override
-  public void onMouseOver(
+  public final void onMouseOver(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position,
     final SyComponentType actual)
   {
+    boolean consumed = true;
+    if (this.isEnabled()) {
+      consumed = this.mouseOver(mouse_position, actual);
+    }
 
+    if (!consumed) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_node =
+        this.node.parent();
+      if (parent_node.isPresent()) {
+        final SyComponentType parent = parent_node.get().value();
+        parent.onMouseOver(mouse_position, actual);
+      } else {
+        SyComponentAbstract.LOG.warn("onMouseOver: event not consumed");
+      }
+    }
   }
 
   @Override

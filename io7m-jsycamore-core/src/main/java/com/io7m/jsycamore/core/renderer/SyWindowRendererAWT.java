@@ -56,11 +56,14 @@ public final class SyWindowRendererAWT implements
 {
   private final SyEmbossed embossed;
   private final SyTextMeasurementType measurement;
+  private final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> component_renderer;
 
   private SyWindowRendererAWT(
-    final SyTextMeasurementType in_measurement)
+    final SyTextMeasurementType in_measurement,
+    final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> in_component_renderer)
   {
     this.measurement = NullCheck.notNull(in_measurement);
+    this.component_renderer = NullCheck.notNull(in_component_renderer);
     this.embossed = new SyEmbossed();
   }
 
@@ -71,9 +74,10 @@ public final class SyWindowRendererAWT implements
    */
 
   public static SyWindowRendererType<BufferedImage, BufferedImage> create(
-    final SyTextMeasurementType in_measurement)
+    final SyTextMeasurementType in_measurement,
+    final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> in_component_renderer)
   {
-    return new SyWindowRendererAWT(in_measurement);
+    return new SyWindowRendererAWT(in_measurement, in_component_renderer);
   }
 
   private static Color toColor(
@@ -107,7 +111,7 @@ public final class SyWindowRendererAWT implements
       graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
       this.renderFrame(graphics, window);
       this.renderTitlebar(graphics, window);
-      this.renderContent(graphics, window);
+      this.renderContent(input, window);
       this.renderOutline(graphics, window);
       return input;
     } finally {
@@ -116,36 +120,13 @@ public final class SyWindowRendererAWT implements
   }
 
   private void renderContent(
-    final Graphics2D graphics,
+    final BufferedImage output,
     final SyWindowType window)
   {
-    final AffineTransform old_transform = graphics.getTransform();
-    final Shape old_clip = graphics.getClip();
-
-    try {
-      final SyComponentType content =
-        window.contentPane();
-      final PVectorReadable2IType<SySpaceParentRelativeType> position =
-        content.position();
-      final VectorReadable2IType size =
-        content.size();
-
-      graphics.clipRect(
-        position.getXI(),
-        position.getYI(),
-        size.getXI(),
-        size.getYI());
-      graphics.setPaint(Color.MAGENTA);
-      graphics.fillRect(
-        position.getXI(),
-        position.getYI(),
-        size.getXI(),
-        size.getYI());
-
-    } finally {
-      graphics.setTransform(old_transform);
-      graphics.setClip(old_clip);
-    }
+    final SyComponentType content = window.contentPane();
+    final SyComponentRendererAWTContext context =
+      SyComponentRendererAWTContext.of(window.viewportAccumulator(), output);
+    this.component_renderer.render(context, content);
   }
 
   private void renderOutline(
