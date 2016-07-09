@@ -213,7 +213,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         title_y = frame_top + outline_size;
 
         content_y = title_y + title_height;
-        content_h = frame_height - (content_y + frame_bottom);
+        content_h = outline_size + frame_height - (content_y + frame_bottom);
 
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
@@ -248,8 +248,8 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       case PLACEMENT_TOP_OVERLAP_FRAME: {
-        content_y = title_y + title_height;
-        content_h = frame_height - (content_y + frame_bottom);
+        content_y = Math.max(title_y + title_height, frame_top + outline_size);
+        content_h = outline_size + frame_height - (content_y + frame_bottom);
 
         switch (title_theme.widthBehavior()) {
           case WIDTH_RESIZE_TO_CONTENT: {
