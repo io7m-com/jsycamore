@@ -342,7 +342,7 @@ public final class SyWindowRendererAWT implements
         text_font,
         w,
         h,
-        titlebar_theme.horizontalAlignment(),
+        titlebar_theme.textAlignment(),
         SyAlignmentVertical.ALIGN_CENTER,
         text);
     }
