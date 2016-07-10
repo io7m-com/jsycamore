@@ -63,16 +63,10 @@ public interface SyWindowReadableType extends SyGUIElementType
   SyThemeType theme();
 
   /**
-   * @return The window-relative position of the frame
+   * @return The window frame
    */
 
-  PVectorReadable2IType<SySpaceWindowRelativeType> framePosition();
-
-  /**
-   * @return The size of the frame
-   */
-
-  PVectorReadable2IType<SySpaceWindowRelativeType> frameBounds();
+  SyWindowFrameType frame();
 
   /**
    * @return The window titlebar

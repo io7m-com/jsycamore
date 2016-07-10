@@ -59,8 +59,6 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   private final PVector2IType<SySpaceViewportType> position;
-  private final PVectorM2I<SySpaceWindowRelativeType> frame_size;
-  private final PVectorM2I<SySpaceWindowRelativeType> frame_position;
   private final SyGUIType gui;
   private final VectorM2I bounds;
   private final WindowRoot root;
@@ -87,8 +85,6 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.gui = NullCheck.notNull(in_gui);
     this.position = new PVectorM2I<>();
     this.bounds = new VectorM2I(width, height);
-    this.frame_size = new PVectorM2I<>();
-    this.frame_position = new PVectorM2I<>();
     this.root = new WindowRoot(in_text);
     this.transform_context = SyWindowViewportAccumulator.create();
     this.theme_override = Optional.empty();
@@ -113,6 +109,12 @@ public abstract class SyWindowAbstract implements SyWindowType
       outline_size = 0;
     }
     return outline_size;
+  }
+
+  @Override
+  public final SyWindowFrameType frame()
+  {
+    return this.root.frame;
   }
 
   @Override
@@ -143,7 +145,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final SyComponentType contentPane()
   {
-    return this.root.content_pane;
+    return this.root.frame.content_pane;
   }
 
   @Override
@@ -370,6 +372,11 @@ public abstract class SyWindowAbstract implements SyWindowType
     final int content_x = frame_x + frame_left;
     final int content_w = frame_width - (content_x + frame_right - outline_size);
 
+    final int frame_inner_x_min = content_x;
+    final int frame_inner_y_min = frame_y + frame_top;
+    final int frame_inner_x_max = frame_width - frame_right;
+    final int frame_inner_y_max = frame_height - frame_bottom;
+
     Assertive.ensure(clamp_width >= 2);
     Assertive.ensure(clamp_height >= 2);
     Assertive.ensure(title_width >= 2);
@@ -384,12 +391,19 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     this.bounds.set2I(clamp_width, clamp_height);
     this.root.setBounds(clamp_width, clamp_height);
-    this.root.content_pane.setBounds(content_w, content_h);
-    this.root.content_pane.setPosition(content_x, content_y);
+
+    this.root.frame.setPosition(frame_x, frame_y);
+    this.root.frame.setBounds(frame_width, frame_height);
+    this.root.frame.setPositionInnerMinimum(
+      frame_inner_x_min, frame_inner_y_min);
+    this.root.frame.setPositionInnerMaximum(
+      frame_inner_x_max, frame_inner_y_max);
+
+    this.root.frame.content_pane.setBounds(content_w, content_h);
+    this.root.frame.content_pane.setPosition(content_x, content_y);
     this.root.titlebar.setPosition(title_x, title_y);
     this.root.titlebar.setBounds(title_width, title_height);
-    this.frame_position.set2I(frame_x, frame_y);
-    this.frame_size.set2I(frame_width, frame_height);
+
     this.transform_context.reset(clamp_width, clamp_height);
   }
 
@@ -400,18 +414,6 @@ public abstract class SyWindowAbstract implements SyWindowType
       measure.measureTextWidth(text_font, this.root.titlebar.text());
     final int space_size = measure.measureTextWidth(text_font, " ");
     return (space_size * 2) + text_size;
-  }
-
-  @Override
-  public final PVectorReadable2IType<SySpaceWindowRelativeType> framePosition()
-  {
-    return this.frame_position;
-  }
-
-  @Override
-  public final PVectorReadable2IType<SySpaceWindowRelativeType> frameBounds()
-  {
-    return this.frame_size;
   }
 
   @Override
@@ -630,10 +632,59 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
+  private final class Frame extends SyPanelAbstract implements
+    SyWindowFrameType
+  {
+    private final ContentPane content_pane;
+    private int inner_x_min;
+    private int inner_y_min;
+    private int inner_x_max;
+    private int inner_y_max;
+
+    @Override
+    protected boolean isOverlappingExcludedArea(
+      final int viewport_min_x,
+      final int viewport_min_y,
+      final int viewport_max_x,
+      final int viewport_max_y,
+      final int target_x,
+      final int target_y)
+    {
+      final boolean inside_x =
+        target_x >= this.inner_x_min && target_x <= this.inner_x_max;
+      final boolean inside_y =
+        target_y >= this.inner_y_min && target_y <= this.inner_y_max;
+      return inside_x && inside_y;
+    }
+
+    Frame()
+    {
+      this.content_pane = new ContentPane();
+      final JOTreeNodeType<SyComponentType> node = this.node();
+      node.childAdd(this.content_pane.node());
+    }
+
+    void setPositionInnerMinimum(
+      final int x_min,
+      final int y_min)
+    {
+      this.inner_x_min = x_min;
+      this.inner_y_min = y_min;
+    }
+
+    void setPositionInnerMaximum(
+      final int x_max,
+      final int y_max)
+    {
+      this.inner_x_max = x_max;
+      this.inner_y_max = y_max;
+    }
+  }
+
   private final class WindowRoot extends SyPanelAbstract
   {
     private final Titlebar titlebar;
-    private final ContentPane content_pane;
+    private final Frame frame;
 
     WindowRoot(final String in_text)
     {
@@ -641,10 +692,10 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.setSelectable(false);
 
       this.titlebar = new Titlebar(in_text);
-      this.content_pane = new ContentPane();
+      this.frame = new Frame();
 
       final JOTreeNodeType<SyComponentType> node = this.node();
-      node.childAdd(this.content_pane.node());
+      node.childAdd(this.frame.node());
       node.childAdd(this.titlebar.node());
     }
   }

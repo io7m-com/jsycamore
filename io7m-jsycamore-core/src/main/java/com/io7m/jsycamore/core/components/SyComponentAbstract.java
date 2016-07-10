@@ -54,18 +54,6 @@ public abstract class SyComponentAbstract implements SyComponentType
     LOG = LoggerFactory.getLogger(SyComponentAbstract.class);
   }
 
-  @Override
-  public final void setResizeBehaviorWidth(final SyParentResizeBehavior b)
-  {
-    this.resize_width = NullCheck.notNull(b);
-  }
-
-  @Override
-  public final void setResizeBehaviorHeight(final SyParentResizeBehavior b)
-  {
-    this.resize_height = NullCheck.notNull(b);
-  }
-
   private final JOTreeNodeType<SyComponentType> node;
   private Optional<SyWindowType> window;
   private SyParentResizeBehavior resize_width;
@@ -92,6 +80,42 @@ public abstract class SyComponentAbstract implements SyComponentType
     final JOTreeNodeType<T> o)
   {
     return (JOTreeNodeType<TR>) o;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <TR, T extends TR> Optional<TR> cast(
+    final Optional<T> o)
+  {
+    return (Optional<TR>) o;
+  }
+
+  private static boolean isOverlappingComponent(
+    final int viewport_min_x,
+    final int viewport_min_y,
+    final int viewport_max_x,
+    final int viewport_max_y,
+    final int target_x,
+    final int target_y)
+  {
+    if (target_x >= viewport_min_x && target_x <= viewport_max_x) {
+      if (target_y >= viewport_min_y && target_y <= viewport_max_y) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Override
+  public final void setResizeBehaviorWidth(final SyParentResizeBehavior b)
+  {
+    this.resize_width = NullCheck.notNull(b);
+  }
+
+  @Override
+  public final void setResizeBehaviorHeight(final SyParentResizeBehavior b)
+  {
+    this.resize_height = NullCheck.notNull(b);
   }
 
   @Override
@@ -131,13 +155,6 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final void setVisibility(final SyVisibility v)
   {
     this.visibility = NullCheck.notNull(v);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <TR, T extends TR> Optional<TR> cast(
-    final Optional<T> o)
-  {
-    return (Optional<TR>) o;
   }
 
   @Override
@@ -184,6 +201,19 @@ public abstract class SyComponentAbstract implements SyComponentType
     return this.componentForWindowRelative(w_position, context).map(x -> x);
   }
 
+  // CHECKSTYLE:OFF
+  protected boolean isOverlappingExcludedArea(
+    final int viewport_min_x,
+    final int viewport_min_y,
+    final int viewport_max_x,
+    final int viewport_max_y,
+    final int target_x,
+    final int target_y)
+  {
+    return false;
+  }
+  // CHECKSTYLE:ON
+
   @Override
   public final Optional<SyComponentType> componentForWindowRelative(
     final PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
@@ -208,21 +238,24 @@ public abstract class SyComponentAbstract implements SyComponentType
       final int target_x = w_position.getXI();
       final int target_y = w_position.getYI();
 
-      if (target_x >= min_x && target_x <= max_x) {
-        if (target_y >= min_y && target_y <= max_y) {
-          final Collection<JOTreeNodeType<SyComponentType>> children =
-            this.node.children();
+      if (SyComponentAbstract.isOverlappingComponent(
+        min_x, min_y, max_x, max_y, target_x, target_y)) {
 
-          for (final JOTreeNodeType<SyComponentType> child_node : children) {
-            final SyComponentType child = child_node.value();
-            final Optional<SyComponentType> child_sub =
-              child.componentForWindowRelative(w_position, context);
-            if (child_sub.isPresent()) {
-              return child_sub;
-            }
+        final Collection<JOTreeNodeType<SyComponentType>> children =
+          this.node.children();
+
+        for (final JOTreeNodeType<SyComponentType> child_node : children) {
+          final SyComponentType child = child_node.value();
+          final Optional<SyComponentType> child_sub =
+            child.componentForWindowRelative(w_position, context);
+          if (child_sub.isPresent()) {
+            return child_sub;
           }
+        }
 
-          if (this.selectable) {
+        if (this.selectable) {
+          if (!this.isOverlappingExcludedArea(
+            min_x, min_y, max_x, max_y, target_x, target_y)) {
             return Optional.of(this);
           }
         }

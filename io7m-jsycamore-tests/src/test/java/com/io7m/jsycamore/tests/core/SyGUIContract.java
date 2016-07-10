@@ -117,13 +117,12 @@ public abstract class SyGUIContract
     Assert.assertEquals(640L, (long) bounds.getXI());
     Assert.assertEquals(480L, (long) bounds.getYI());
 
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_pos =
-      w.framePosition();
+    final PVectorReadable2IType<SySpaceParentRelativeType> frame_pos =
+      w.frame().position();
     Assert.assertTrue(frame_pos.getXI() >= pos.getXI());
     Assert.assertTrue(frame_pos.getYI() >= pos.getYI());
 
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_bounds =
-      w.frameBounds();
+    final VectorReadable2IType frame_bounds = w.frame().size();
     Assert.assertTrue(frame_bounds.getXI() <= bounds.getXI());
     Assert.assertTrue(frame_bounds.getYI() <= bounds.getYI());
 

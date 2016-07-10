@@ -19,8 +19,8 @@ package com.io7m.jsycamore.core.renderer;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
@@ -448,10 +448,11 @@ public final class SyWindowRendererAWT implements
     final int top_height = frame_theme.topHeight();
     final int bottom_height = frame_theme.bottomHeight();
 
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_position =
-      window.framePosition();
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
-      window.frameBounds();
+    final SyWindowFrameType frame = window.frame();
+    final PVectorReadable2IType<SySpaceParentRelativeType> frame_position =
+      frame.position();
+    final VectorReadable2IType frame_size =
+      frame.size();
 
     final int frame_x = frame_position.getXI();
     final int frame_y = frame_position.getYI();
@@ -736,10 +737,11 @@ public final class SyWindowRendererAWT implements
     final int top_height = frame_theme.topHeight();
     final int bottom_height = frame_theme.bottomHeight();
 
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_position =
-      window.framePosition();
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
-      window.frameBounds();
+    final SyWindowFrameType frame = window.frame();
+    final PVectorReadable2IType<SySpaceParentRelativeType> frame_position =
+      frame.position();
+    final VectorReadable2IType frame_size =
+      frame.size();
 
     final int frame_x = frame_position.getXI();
     final int frame_y = frame_position.getYI();

@@ -119,6 +119,10 @@ final class SyTDMainWindow extends JFrame
       button0_label.setText("Hello.");
       button0_label.setBounds(64, 32);
       button0_label.setPosition(0, 0);
+      button0_label.setResizeBehaviorHeight(
+        SyParentResizeBehavior.BEHAVIOR_RESIZE);
+      button0_label.setResizeBehaviorWidth(
+        SyParentResizeBehavior.BEHAVIOR_RESIZE);
       button0.node().childAdd(button0_label.node());
 
       final SyButtonType button1 = SyButton.create();

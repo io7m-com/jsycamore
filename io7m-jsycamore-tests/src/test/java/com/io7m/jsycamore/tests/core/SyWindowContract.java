@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
@@ -69,10 +70,10 @@ public abstract class SyWindowContract
 
     final VectorReadable2IType titlebar_size =
       titlebar.size();
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_pos =
-      w.framePosition();
-    final PVectorReadable2IType<SySpaceWindowRelativeType> frame_size =
-      w.frameBounds();
+    final PVectorReadable2IType<SySpaceParentRelativeType> frame_pos =
+      w.frame().position();
+    final VectorReadable2IType frame_size =
+      w.frame().size();
 
     Assert.assertTrue(titlebar_size.getXI() <= bounds.getXI());
     Assert.assertTrue(titlebar_size.getYI() <= bounds.getYI());
