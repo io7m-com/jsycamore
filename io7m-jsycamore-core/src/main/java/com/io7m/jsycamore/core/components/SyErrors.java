@@ -14,32 +14,41 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core.components;
 
-import net.jcip.annotations.Immutable;
+import com.io7m.jnull.NullCheck;
+import org.slf4j.Logger;
 
 /**
- * An alignment specification for an object.
+ * Functions to log and ignore exceptions.
  */
 
-@Immutable
-public enum SyThemeAlignment
+public final class SyErrors
 {
-  /**
-   * The object will be left-aligned within its parent.
-   */
+  private SyErrors()
+  {
 
-  ALIGN_LEFT,
-
-  /**
-   * The object will be right-aligned within its parent.
-   */
-
-  ALIGN_RIGHT,
+  }
 
   /**
-   * The object will be centered within its parent.
+   * Iff {@code e <: Error}, throw {@code e}. Otherwise, log {@code e} and
+   * suppress it.
+   *
+   * @param log A log
+   * @param e   An exception
    */
 
-  ALIGN_CENTER
+  public static void ignoreNonErrors(
+    final Logger log,
+    final Throwable e)
+  {
+    NullCheck.notNull(log);
+    NullCheck.notNull(e);
+
+    if (e instanceof Error) {
+      throw (Error) e;
+    }
+
+    log.debug("ignored exception: ", e);
+  }
 }

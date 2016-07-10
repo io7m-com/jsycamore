@@ -41,4 +41,18 @@ public interface SyThemeType
 
   @Value.Parameter
   SyThemeButtonType buttonTheme();
+
+  /**
+   * @return The theme used for panels
+   */
+
+  @Value.Parameter
+  SyThemePanelType panelTheme();
+
+  /**
+   * @return The theme used for labels
+   */
+
+  @Value.Parameter
+  SyThemeLabelType labelTheme();
 }

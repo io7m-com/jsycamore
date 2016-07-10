@@ -14,31 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
-
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
+package com.io7m.jsycamore.core;
 
 /**
- * The type of buttons.
+ * Horizontal alignment.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public enum SyAlignmentHorizontal
 {
   /**
-   * @return The current state of the button
+   * The object will be left-aligned.
    */
 
-  SyButtonState buttonState();
+  ALIGN_LEFT,
 
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
-  {
-    return NullCheck.notNull(on_button).apply(context, this);
-  }
+  /**
+   * The object will be right-aligned.
+   */
+
+  ALIGN_RIGHT,
+
+  /**
+   * The object will be centered horizontally.
+   */
+
+  ALIGN_CENTER
 }

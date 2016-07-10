@@ -47,7 +47,7 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default VectorI3F titlebarColorInactive()
   {
-    return new VectorI3F(0.5f, 0.5f, 0.5f);
+    return new VectorI3F(0.7f, 0.7f, 0.7f);
   }
 
   /**
@@ -91,7 +91,7 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default VectorI3F backgroundColor()
   {
-    return new VectorI3F(0.6f, 0.6f, 0.6f);
+    return new VectorI3F(0.7f, 0.7f, 0.7f);
   }
 
   /**

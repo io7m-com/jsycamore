@@ -17,12 +17,17 @@
 package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeAlignment;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
+import com.io7m.jsycamore.core.themes.SyThemeLabel;
+import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jsycamore.core.themes.SyThemePanel;
+import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameCorner;
@@ -119,11 +124,11 @@ public final class SyThemeBee
     theme_titlebar_b.setEmbossInactive(
       Optional.of(theme_titlebar_emboss_inactive_b.build()));
     theme_titlebar_b.setTextAlignment(
-      SyThemeAlignment.ALIGN_CENTER);
+      SyAlignmentHorizontal.ALIGN_CENTER);
     theme_titlebar_b.setVerticalPlacement(
       SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_ABOVE_FRAME);
     theme_titlebar_b.setHorizontalAlignment(
-      SyThemeAlignment.ALIGN_LEFT);
+      SyAlignmentHorizontal.ALIGN_LEFT);
     theme_titlebar_b.setWidthBehavior(
       SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_TO_CONTENT);
 
@@ -178,12 +183,46 @@ public final class SyThemeBee
         theme_frame_b.build(),
         theme_outline));
 
+    theme.setButtonTheme(SyThemeBee.createThemeButton(
+      spec,
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker));
+
+    theme.setPanelTheme(SyThemeBee.createThemePanel(background));
+    theme.setLabelTheme(SyThemeBee.createThemeLabel(spec.foregroundColor()));
+    return theme;
+  }
+
+  private static SyThemePanelType createThemePanel(
+    final VectorI3F background)
+  {
+    final SyThemePanel.Builder b = SyThemePanel.builder();
+    b.setColor(background);
+    return b.build();
+  }
+
+  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  {
+    final SyThemeLabel.Builder b = SyThemeLabel.builder();
+    b.setTextColor(foreground);
+    return b.build();
+  }
+
+  private static SyThemeButtonType createThemeButton(
+    final SyThemeBeeSpecificationType spec,
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker)
+  {
     final SyThemeButton.Builder theme_button_b =
       SyThemeButton.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
       spec.foregroundColor(),
-      spec.foregroundColor()));
+      background_darker));
 
     theme_button_b.setColorActive(background);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
@@ -214,9 +253,7 @@ public final class SyThemeBee
       1
     ));
 
-    theme.setButtonTheme(theme_button_b.build());
-
-    return theme;
+    return theme_button_b.build();
   }
 
   /**

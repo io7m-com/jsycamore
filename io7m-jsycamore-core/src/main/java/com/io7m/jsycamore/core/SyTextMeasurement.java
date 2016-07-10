@@ -77,4 +77,12 @@ public final class SyTextMeasurement implements SyTextMeasurementType
     return this.font_cache.computeIfAbsent(font, Font::decode);
   }
 
+  @Override
+  public int measureTextDescent(final String font)
+  {
+    NullCheck.notNull(font);
+    final FontMetrics metrics =
+      this.graphics.getFontMetrics(this.decodeFont(font));
+    return metrics.getDescent();
+  }
 }

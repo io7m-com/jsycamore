@@ -16,13 +16,13 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
-import com.io7m.jsycamore.core.themes.SyThemeAlignment;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeMutable;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
@@ -81,11 +81,11 @@ public final class Demo
     theme_titlebar_b.setEmbossInactive(
       Optional.empty());
     theme_titlebar_b.setTextAlignment(
-      SyThemeAlignment.ALIGN_CENTER);
+      SyAlignmentHorizontal.ALIGN_CENTER);
     theme_titlebar_b.setVerticalPlacement(
       SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME);
     theme_titlebar_b.setHorizontalAlignment(
-      SyThemeAlignment.ALIGN_LEFT);
+      SyAlignmentHorizontal.ALIGN_LEFT);
     theme_titlebar_b.setWidthBehavior(
       SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME);
 
@@ -140,7 +140,8 @@ public final class Demo
 
     final SyWindowRendererType<BufferedImage, BufferedImage> r =
       SyWindowRendererAWT.create(
-        ui.textMeasurement(), SyComponentRendererAWT.create());
+        ui.textMeasurement(),
+        SyComponentRendererAWT.create(ui.textMeasurement()));
 
     r.render(bi, win);
     ImageIO.write(bi, "PNG", new File("/tmp/window.png"));

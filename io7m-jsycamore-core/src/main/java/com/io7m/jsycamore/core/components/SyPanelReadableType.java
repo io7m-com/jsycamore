@@ -26,11 +26,23 @@ import java.util.function.BiFunction;
 
 public interface SyPanelReadableType extends SyComponentReadableType
 {
+  /**
+   * A panel may be made <i>transparent</i> iff it is intended to be
+   * used a simple container of other components. A transparent panel
+   * works identically to an ordinary component except that it is not
+   * rendered by renderers. All child components are rendered as normal.
+   *
+   * @return {@code true} iff this panel is <i>transparent</i>
+   */
+
+  boolean isPanelTransparent();
+
   @Override
   default <A, B> B matchComponentReadable(
     final A context,
     final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel)
+    final BiFunction<A, SyPanelReadableType, B> on_panel,
+    final BiFunction<A, SyLabelReadableType, B> on_label)
   {
     return NullCheck.notNull(on_panel).apply(context, this);
   }

@@ -54,6 +54,18 @@ public abstract class SyComponentAbstract implements SyComponentType
     LOG = LoggerFactory.getLogger(SyComponentAbstract.class);
   }
 
+  @Override
+  public final void setResizeBehaviorWidth(final SyParentResizeBehavior b)
+  {
+    this.resize_width = NullCheck.notNull(b);
+  }
+
+  @Override
+  public final void setResizeBehaviorHeight(final SyParentResizeBehavior b)
+  {
+    this.resize_height = NullCheck.notNull(b);
+  }
+
   private final JOTreeNodeType<SyComponentType> node;
   private Optional<SyWindowType> window;
   private SyParentResizeBehavior resize_width;
@@ -368,7 +380,18 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int width,
     final int height)
   {
+    final int old_width = this.size.getXI();
+    final int old_height = this.size.getYI();
+
     this.size.set2I(width, height);
+
+    try {
+      final int delta_x = width - old_width;
+      final int delta_y = height - old_height;
+      this.resized(delta_x, delta_y);
+    } catch (final Throwable e) {
+      SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+    }
   }
 
   @Override
@@ -428,6 +451,13 @@ public abstract class SyComponentAbstract implements SyComponentType
       diff_x > 0 && diff_y > 0;
 
     if (resized) {
+
+      try {
+        this.resized(delta_x, delta_y);
+      } catch (final Throwable e) {
+        SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+      }
+
       final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
       for (final JOTreeNodeType<SyComponentType> child_node : children) {
         final SyComponentType child = child_node.value();
@@ -458,7 +488,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final SyParentResizeBehavior resizeBehaviourHeight()
+  public final SyParentResizeBehavior resizeBehaviorHeight()
   {
     return this.resize_height;
   }

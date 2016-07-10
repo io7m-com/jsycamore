@@ -91,7 +91,8 @@ public final class WindowDemo implements Runnable
 
     this.window_renderer =
       SyWindowRendererAWT.create(
-        this.gui.textMeasurement(), SyComponentRendererAWT.create());
+        this.gui.textMeasurement(),
+        SyComponentRendererAWT.create(this.gui.textMeasurement()));
     this.gui_renderer =
       SyGUIRendererAWTInefficient.create(this.window_renderer);
     this.output =

@@ -14,31 +14,39 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
+package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI3F;
+import org.immutables.value.Value;
 
 /**
- * The type of buttons.
+ * A label theme specification.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyThemeLabelType
 {
   /**
-   * @return The current state of the button
+   * @return The base color used for text
    */
 
-  SyButtonState buttonState();
-
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F textColor()
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
+
+  /**
+   * @return The font used for labels
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default String textFont()
+  {
+    return "Sans-plain-12";
   }
 }

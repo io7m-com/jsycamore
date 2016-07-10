@@ -64,17 +64,6 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     this.listeners = new ArrayList<>(4);
   }
 
-  private static void ignoreNonErrors(
-    final Throwable e)
-  {
-    if (e instanceof Error) {
-      throw (Error) e;
-    }
-
-    SyButtonAbstract.LOG.debug(
-      "ignored exception in button listener: ", e);
-  }
-
   @Override
   public final void buttonAddListener(final SyButtonListenerType r)
   {
@@ -213,14 +202,14 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     try {
       this.buttonOnClick();
     } catch (final Throwable e) {
-      SyButtonAbstract.ignoreNonErrors(e);
+      SyErrors.ignoreNonErrors(SyButtonAbstract.LOG, e);
     }
 
     for (final SyButtonListenerType x : this.listeners) {
       try {
         x.buttonClicked(this);
       } catch (final Throwable e) {
-        SyButtonAbstract.ignoreNonErrors(e);
+        SyErrors.ignoreNonErrors(SyButtonAbstract.LOG, e);
       }
     }
   }

@@ -44,11 +44,14 @@ public interface SyMouseListenerType<T>
    * @return {@code true} if this component has consumed the message.
    */
 
-  boolean mouseHeld(
-    PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
-    PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
-    SyMouseButton button,
-    T actual);
+  default boolean mouseHeld(
+    final PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
+    final PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
+    final SyMouseButton button,
+    final T actual)
+  {
+    return false;
+  }
 
   /**
    * Notify the component that the mouse button {@code button} has just been
@@ -61,10 +64,13 @@ public interface SyMouseListenerType<T>
    * @return {@code true} if this component has consumed the message.
    */
 
-  boolean mousePressed(
-    PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    SyMouseButton button,
-    T actual);
+  default boolean mousePressed(
+    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
+    final SyMouseButton button,
+    final T actual)
+  {
+    return false;
+  }
 
   /**
    * Notify the component that the mouse button {@code button} has just been
@@ -77,10 +83,13 @@ public interface SyMouseListenerType<T>
    * @return {@code true} if this component has consumed the message.
    */
 
-  boolean mouseReleased(
-    PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    SyMouseButton button,
-    T actual);
+  default boolean mouseReleased(
+    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
+    final SyMouseButton button,
+    final T actual)
+  {
+    return false;
+  }
 
   /**
    * Notify the component that the mouse cursor is no longer over this
@@ -89,7 +98,10 @@ public interface SyMouseListenerType<T>
    * @return {@code true} if this component has consumed the message.
    */
 
-  boolean mouseNoLongerOver();
+  default boolean mouseNoLongerOver()
+  {
+    return false;
+  }
 
   /**
    * Notify the component that the mouse cursor has just moved over this
@@ -101,7 +113,10 @@ public interface SyMouseListenerType<T>
    * @return {@code true} if this component has consumed the message.
    */
 
-  boolean mouseOver(
-    PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    T actual);
+  default boolean mouseOver(
+    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
+    final T actual)
+  {
+    return false;
+  }
 }

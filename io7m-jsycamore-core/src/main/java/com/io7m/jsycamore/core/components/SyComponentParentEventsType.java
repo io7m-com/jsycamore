@@ -25,7 +25,7 @@ public interface SyComponentParentEventsType
   /**
    * The parent of this component was resized.
    *
-   * @param delta_x The change in the lightWidth
+   * @param delta_x The change in the width
    * @param delta_y The change in the height
    */
 

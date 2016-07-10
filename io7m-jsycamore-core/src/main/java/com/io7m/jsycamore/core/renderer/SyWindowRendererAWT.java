@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
@@ -68,7 +69,8 @@ public final class SyWindowRendererAWT implements
   }
 
   /**
-   * @param in_measurement A text measurement interface
+   * @param in_measurement        A text measurement interface
+   * @param in_component_renderer A component renderer
    *
    * @return A new renderer
    */
@@ -328,35 +330,21 @@ public final class SyWindowRendererAWT implements
 
     {
       final String text_font = titlebar_theme.textFont();
-      final String text = titlebar.text();
-
-      final int text_width = this.measurement.measureTextWidth(text_font, text);
-      final int space_width = this.measurement.measureTextWidth(text_font, " ");
-
-      final int bar_height = titlebar_theme.height();
-      final int text_height = this.measurement.measureTextHeight(text_font);
-
-      final int text_y = (bar_height / 2) + (text_height / 3);
-      int text_x = 0;
-      switch (titlebar_theme.textAlignment()) {
-        case ALIGN_LEFT: {
-          text_x = space_width;
-          break;
-        }
-        case ALIGN_RIGHT: {
-          text_x = w - (text_width + space_width);
-          break;
-        }
-        case ALIGN_CENTER: {
-          text_x = (w / 2) - (text_width / 2);
-          break;
-        }
-      }
+      final String text = " " + titlebar.text() + " ";
 
       final Color text_paint = SyWindowRendererAWT.toColor(text_color);
       graphics.setFont(this.measurement.decodeFont(text_font));
       graphics.setPaint(text_paint);
-      graphics.drawString(text, text_x, text_y);
+
+      SyTextRenderer.renderText(
+        this.measurement,
+        graphics,
+        text_font,
+        w,
+        h,
+        titlebar_theme.horizontalAlignment(),
+        SyAlignmentVertical.ALIGN_CENTER,
+        text);
     }
   }
 

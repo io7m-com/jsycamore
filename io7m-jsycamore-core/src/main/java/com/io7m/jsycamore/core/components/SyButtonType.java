@@ -48,7 +48,8 @@ public interface SyButtonType extends SyComponentType, SyButtonReadableType
   default <A, B> B matchComponent(
     final A context,
     final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel)
+    final BiFunction<A, SyPanelType, B> on_panel,
+    final BiFunction<A, SyLabelType, B> on_label)
   {
     return NullCheck.notNull(on_button).apply(context, this);
   }

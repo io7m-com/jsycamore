@@ -16,29 +16,23 @@
 
 package com.io7m.jsycamore.core.components;
 
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
-
 /**
- * The type of buttons.
+ * The resize event interface.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public interface SyResizeListenerType
 {
   /**
-   * @return The current state of the button
+   * A component was resized.
+   *
+   * @param delta_x The change in the width
+   * @param delta_y The change in the height
    */
 
-  SyButtonState buttonState();
-
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+  default void resized(
+    final int delta_x,
+    final int delta_y)
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+
   }
 }

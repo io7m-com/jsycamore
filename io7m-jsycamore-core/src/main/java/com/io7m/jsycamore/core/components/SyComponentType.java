@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jorchard.core.JOTreeNodeType;
+import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
@@ -31,8 +32,29 @@ import java.util.function.BiFunction;
 public interface SyComponentType extends SyComponentParentEventsType,
   SyComponentMouseEventsType,
   SyComponentReadableType,
-  SyMouseListenerType<SyComponentType>
+  SyMouseListenerType<SyComponentType>,
+  SyResizeListenerType
 {
+  /**
+   * Set the parent resize behavior with regards to width.
+   *
+   * @param b The resize behavior
+   *
+   * @see #resizeBehaviorWidth()
+   */
+
+  void setResizeBehaviorWidth(SyParentResizeBehavior b);
+
+  /**
+   * Set the parent resize behavior with regards to height.
+   *
+   * @param b The resize behavior
+   *
+   * @see #resizeBehaviorHeight()
+   */
+
+  void setResizeBehaviorHeight(SyParentResizeBehavior b);
+
   /**
    * @return The window to which the most distant ancestor of this component is
    * attached
@@ -87,6 +109,7 @@ public interface SyComponentType extends SyComponentParentEventsType,
    * @param context   A context value passed through to the given functions
    * @param on_button A function evaluated if this component is a button
    * @param on_panel  A function evaluated if this component is a panel
+   * @param on_label  A function evaluated if this component is a label
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
@@ -97,7 +120,8 @@ public interface SyComponentType extends SyComponentParentEventsType,
   <A, B> B matchComponent(
     A context,
     BiFunction<A, SyButtonType, B> on_button,
-    BiFunction<A, SyPanelType, B> on_panel);
+    BiFunction<A, SyPanelType, B> on_panel,
+    BiFunction<A, SyLabelType, B> on_label);
 
   /**
    * Enable/disable this component.

@@ -16,29 +16,23 @@
 
 package com.io7m.jsycamore.core.components;
 
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
-
 /**
- * The type of buttons.
+ * The default implementation of the {@link SyLabelType}.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public final class SyLabel extends SyLabelAbstract
 {
+  private SyLabel()
+  {
+
+  }
+
   /**
-   * @return The current state of the button
+   * @return A new label
    */
 
-  SyButtonState buttonState();
-
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+  public static SyLabelType create()
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return new SyLabel();
   }
 }

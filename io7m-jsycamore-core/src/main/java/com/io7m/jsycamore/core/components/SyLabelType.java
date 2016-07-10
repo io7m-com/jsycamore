@@ -17,28 +17,52 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 
 import java.util.function.BiFunction;
 
 /**
- * The type of buttons.
+ * The type of labels.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public interface SyLabelType extends SyComponentType, SyLabelReadableType
 {
   /**
-   * @return The current state of the button
+   * Set the label text.
+   *
+   * @param text The new text
    */
 
-  SyButtonState buttonState();
+  void setText(String text);
+
+  /**
+   * Set the horizontal alighnment of the text.
+   *
+   * @param h The alignment
+   *
+   * @see #textAlignmentHorizontal()
+   */
+
+  void setTextAlignmentHorizontal(SyAlignmentHorizontal h);
+
+  /**
+   * Set the vertical alighnment of the text.
+   *
+   * @param v The alignment
+   *
+   * @see #textAlignmentVertical()
+   */
+
+  void setTextAlignmentVertical(SyAlignmentVertical v);
 
   @Override
-  default <A, B> B matchComponentReadable(
+  default <A, B> B matchComponent(
     final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+    final BiFunction<A, SyButtonType, B> on_button,
+    final BiFunction<A, SyPanelType, B> on_panel,
+    final BiFunction<A, SyLabelType, B> on_label)
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return NullCheck.notNull(on_label).apply(context, this);
   }
 }

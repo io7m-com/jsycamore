@@ -626,7 +626,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     ContentPane()
     {
-
+      this.setPanelTransparent(true);
     }
   }
 

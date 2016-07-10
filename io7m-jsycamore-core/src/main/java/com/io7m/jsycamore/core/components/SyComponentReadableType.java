@@ -55,7 +55,7 @@ public interface SyComponentReadableType
   /**
    * @return This component's visibility
    *
-   * @see {@link SyComponentType#setVisibility(SyVisibility)}
+   * @see SyComponentType#setVisibility(SyVisibility)
    */
 
   SyVisibility visibility();
@@ -70,7 +70,7 @@ public interface SyComponentReadableType
    * @return This component's height resize behavior.
    */
 
-  SyParentResizeBehavior resizeBehaviourHeight();
+  SyParentResizeBehavior resizeBehaviorHeight();
 
   /**
    * @return The position of the component relative to its parent
@@ -96,6 +96,7 @@ public interface SyComponentReadableType
    * @param context   A context value passed through to the given functions
    * @param on_button A function evaluated if this component is a button
    * @param on_panel  A function evaluated if this component is a panel
+   * @param on_label  A function evaluated if this component is a label
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
@@ -106,7 +107,8 @@ public interface SyComponentReadableType
   <A, B> B matchComponentReadable(
     A context,
     BiFunction<A, SyButtonReadableType, B> on_button,
-    BiFunction<A, SyPanelReadableType, B> on_panel);
+    BiFunction<A, SyPanelReadableType, B> on_panel,
+    BiFunction<A, SyLabelReadableType, B> on_label);
 
   /**
    * Determine the topmost component at the given window-relative position.

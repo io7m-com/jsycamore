@@ -14,31 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
-
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
+package com.io7m.jsycamore.core;
 
 /**
- * The type of buttons.
+ * Vertical alignment.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public enum SyAlignmentVertical
 {
   /**
-   * @return The current state of the button
+   * The object will be top-aligned.
    */
 
-  SyButtonState buttonState();
+  ALIGN_TOP,
 
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
-  {
-    return NullCheck.notNull(on_button).apply(context, this);
-  }
+  /**
+   * The object will be bottom-aligned.
+   */
+
+  ALIGN_BOTTOM,
+
+  /**
+   * The object will be centered vertically.
+   */
+
+  ALIGN_CENTER
 }

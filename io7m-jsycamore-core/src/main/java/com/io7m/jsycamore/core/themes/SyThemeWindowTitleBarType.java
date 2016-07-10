@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
@@ -69,9 +70,9 @@ public interface SyThemeWindowTitleBarType
 
   @Value.Parameter
   @Value.Default
-  default SyThemeAlignment horizontalAlignment()
+  default SyAlignmentHorizontal horizontalAlignment()
   {
-    return SyThemeAlignment.ALIGN_CENTER;
+    return SyAlignmentHorizontal.ALIGN_CENTER;
   }
 
   /**
@@ -140,9 +141,9 @@ public interface SyThemeWindowTitleBarType
 
   @Value.Parameter
   @Value.Default
-  default SyThemeAlignment textAlignment()
+  default SyAlignmentHorizontal textAlignment()
   {
-    return SyThemeAlignment.ALIGN_CENTER;
+    return SyAlignmentHorizontal.ALIGN_CENTER;
   }
 
   /**
@@ -153,6 +154,6 @@ public interface SyThemeWindowTitleBarType
   @Value.Default
   default String textFont()
   {
-    return "Monospaced 10";
+    return "Monospaced-plain-10";
   }
 }

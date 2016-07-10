@@ -30,7 +30,6 @@ import java.util.Optional;
 @Value.Immutable
 public interface SyThemeButtonType
 {
-
   /**
    * @return The base color used for active buttons
    */

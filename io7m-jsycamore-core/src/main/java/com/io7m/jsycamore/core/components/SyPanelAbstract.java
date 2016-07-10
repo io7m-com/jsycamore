@@ -16,10 +16,9 @@
 
 package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import net.jcip.annotations.NotThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An abstract implementation of the {@link SyPanelType} interface.
@@ -29,50 +28,28 @@ import net.jcip.annotations.NotThreadSafe;
 public abstract class SyPanelAbstract extends SyComponentAbstract implements
   SyPanelType
 {
+  private static final Logger LOG;
+
+  static {
+    LOG = LoggerFactory.getLogger(SyPanelAbstract.class);
+  }
+
+  private boolean transparent;
+
   protected SyPanelAbstract()
   {
 
   }
 
   @Override
-  public boolean mouseHeld(
-    final PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
-    final PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
-    final SyMouseButton button,
-    final SyComponentType actual)
+  public final void setPanelTransparent(final boolean e)
   {
-    return false;
+    this.transparent = e;
   }
 
   @Override
-  public boolean mousePressed(
-    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    final SyMouseButton button,
-    final SyComponentType actual)
+  public final boolean isPanelTransparent()
   {
-    return false;
-  }
-
-  @Override
-  public boolean mouseReleased(
-    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    final SyMouseButton button,
-    final SyComponentType actual)
-  {
-    return false;
-  }
-
-  @Override
-  public boolean mouseNoLongerOver()
-  {
-    return false;
-  }
-
-  @Override
-  public boolean mouseOver(
-    final PVectorReadable2IType<SySpaceViewportType> mouse_position,
-    final SyComponentType actual)
-  {
-    return false;
+    return this.transparent;
   }
 }

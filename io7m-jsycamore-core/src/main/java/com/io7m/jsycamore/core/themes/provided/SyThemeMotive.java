@@ -17,12 +17,17 @@
 package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeAlignment;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
+import com.io7m.jsycamore.core.themes.SyThemeLabel;
+import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jsycamore.core.themes.SyThemePanel;
+import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameCorner;
@@ -119,11 +124,11 @@ public final class SyThemeMotive
     theme_titlebar_b.setEmbossInactive(
       Optional.of(theme_titlebar_emboss_inactive_b.build()));
     theme_titlebar_b.setTextAlignment(
-      SyThemeAlignment.ALIGN_CENTER);
+      SyAlignmentHorizontal.ALIGN_CENTER);
     theme_titlebar_b.setVerticalPlacement(
       SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME);
     theme_titlebar_b.setHorizontalAlignment(
-      SyThemeAlignment.ALIGN_LEFT);
+      SyAlignmentHorizontal.ALIGN_LEFT);
     theme_titlebar_b.setWidthBehavior(
       SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME);
 
@@ -178,17 +183,67 @@ public final class SyThemeMotive
         theme_frame_b.build(),
         theme_outline));
 
+    theme.setPanelTheme(SyThemeMotive.createThemePanel(
+      background,
+      background_lighter,
+      background_darker));
+
+    theme.setButtonTheme(SyThemeMotive.createThemeButton(
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker));
+
+    theme.setLabelTheme(SyThemeMotive.createThemeLabel(spec.foregroundColor()));
+    return theme;
+  }
+
+  private static SyThemePanelType createThemePanel(
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_darker)
+  {
+    final SyThemePanel.Builder b = SyThemePanel.builder();
+    b.setColor(background);
+    b.setEmboss(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1));
+    return b.build();
+  }
+
+  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  {
+    final SyThemeLabel.Builder b = SyThemeLabel.builder();
+    b.setTextColor(foreground);
+    b.setTextFont("Monospaced-plain-10");
+    return b.build();
+  }
+
+  private static SyThemeButtonType createThemeButton(
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker)
+  {
     final SyThemeButton.Builder theme_button_b =
       SyThemeButton.builder();
 
-    theme_button_b.setOutline(Optional.empty());
+    theme_button_b.setOutline(Optional.of(SyThemeOutline.of(
+      background_darker,
+      background_darker)));
+
+    final int emboss_size = 2;
+
     theme_button_b.setColorActive(background);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
       background_lighter,
       background_darker,
-      3
+      emboss_size
     ));
 
     theme_button_b.setColorDisabled(background);
@@ -199,7 +254,7 @@ public final class SyThemeMotive
       background,
       background_lighter_lighter,
       background,
-      3
+      emboss_size
     ));
 
     theme_button_b.setColorPressed(background);
@@ -208,11 +263,10 @@ public final class SyThemeMotive
       background_lighter,
       background_darker,
       background_lighter,
-      3
+      emboss_size
     ));
 
-    theme.setButtonTheme(theme_button_b.build());
-    return theme;
+    return theme_button_b.build();
   }
 
   /**

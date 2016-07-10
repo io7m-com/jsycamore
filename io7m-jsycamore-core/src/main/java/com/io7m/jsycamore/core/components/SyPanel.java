@@ -26,4 +26,13 @@ public final class SyPanel extends SyPanelAbstract
   {
 
   }
+
+  /**
+   * @return A new panel
+   */
+
+  public static SyPanelType create()
+  {
+    return new SyPanel();
+  }
 }

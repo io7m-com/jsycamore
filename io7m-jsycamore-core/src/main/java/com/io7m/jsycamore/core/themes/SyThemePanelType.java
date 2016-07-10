@@ -14,31 +14,44 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
+package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI3F;
+import org.immutables.value.Value;
 
-import java.util.function.BiFunction;
+import java.util.Optional;
 
 /**
- * The type of buttons.
+ * A panel theme specification.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyThemePanelType
 {
   /**
-   * @return The current state of the button
+   * @return The base color used for panels
    */
 
-  SyButtonState buttonState();
-
-  @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F color()
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
+
+  /**
+   * @return The embossing used for panels
+   */
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> emboss();
+
+  /**
+   * @return The outline used for panels
+   */
+
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
 }

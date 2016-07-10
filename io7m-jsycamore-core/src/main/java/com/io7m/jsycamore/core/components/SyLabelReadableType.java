@@ -17,20 +17,40 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 
 import java.util.function.BiFunction;
 
 /**
- * The type of buttons.
+ * The type of readable text labels.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public interface SyLabelReadableType extends SyComponentReadableType
 {
   /**
-   * @return The current state of the button
+   * @return The label text
    */
 
-  SyButtonState buttonState();
+  String text();
+
+  /**
+   * Retrieve the horizontal alignment of the text. Text will be aligned within
+   * the bounds specified by {@link #size()}.
+   *
+   * @return The alignment
+   */
+
+  SyAlignmentHorizontal textAlignmentHorizontal();
+
+  /**
+   * Retrieve the vertical alignment of the text. Text will be aligned within
+   * the bounds specified by {@link #size()}.
+   *
+   * @return The alignment
+   */
+
+  SyAlignmentVertical textAlignmentVertical();
 
   @Override
   default <A, B> B matchComponentReadable(
@@ -39,6 +59,6 @@ public interface SyButtonReadableType extends SyComponentReadableType
     final BiFunction<A, SyPanelReadableType, B> on_panel,
     final BiFunction<A, SyLabelReadableType, B> on_label)
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return NullCheck.notNull(on_label).apply(context, this);
   }
 }

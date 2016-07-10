@@ -27,11 +27,22 @@ import java.util.function.BiFunction;
 
 public interface SyPanelType extends SyComponentType, SyPanelReadableType
 {
+  /**
+   * Set the panel as <i>transparent</i>.
+   *
+   * @param e {@code true} iff this panel is <i>transparent</i>
+   *
+   * @see SyPanelReadableType#isPanelTransparent()
+   */
+
+  void setPanelTransparent(boolean e);
+
   @Override
   default <A, B> B matchComponent(
     final A context,
     final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel)
+    final BiFunction<A, SyPanelType, B> on_panel,
+    final BiFunction<A, SyLabelType, B> on_label)
   {
     return NullCheck.notNull(on_panel).apply(context, this);
   }

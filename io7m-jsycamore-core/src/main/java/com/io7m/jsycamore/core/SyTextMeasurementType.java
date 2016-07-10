@@ -56,4 +56,15 @@ public interface SyTextMeasurementType
    */
 
   Font decodeFont(String font);
+
+  /**
+   * Measure the maximum descent of text rendered using the given font.
+   *
+   * @param font The font
+   *
+   * @return The descent of the text
+   */
+
+  int measureTextDescent(String font);
+
 }

@@ -20,12 +20,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 
-final class SyTDMain
+/**
+ * Main program.
+ */
+
+public final class SyTDMain
 {
   private SyTDMain()
   {
 
   }
+
+  /**
+   * Main entry point.
+   *
+   * @param args Command line arguments (ignored)
+   */
 
   public static void main(final String[] args)
   {

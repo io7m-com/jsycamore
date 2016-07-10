@@ -46,7 +46,7 @@ final class SyTDFontSelector extends JPanel implements SyTDControlsType
     this.listeners = new ArrayList<>(1);
     this.field = new JTextField();
     this.field.setEditable(false);
-    this.font = Font.decode("Monospaced 11");
+    this.font = Font.decode("Monospaced-plain-10");
     this.field.setText(this.fontString());
     this.group = new RowGroup();
 
