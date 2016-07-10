@@ -381,7 +381,7 @@ final class SyTDMainWindow extends JFrame
       this.titlebar_vertical_placement =
         new SyTDComboBox<>(SyThemeWindowTitlebarVerticalPlacement.class);
       this.titlebar_vertical_placement.setSelectedItem(
-        SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME);
+        SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_OVERLAP_FRAME);
       this.titlebar_vertical_placement.addActionListener(
         x -> this.updateTheme());
 

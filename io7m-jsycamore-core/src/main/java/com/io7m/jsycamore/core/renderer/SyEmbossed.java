@@ -49,8 +49,8 @@ public final class SyEmbossed
    * @param graphics    A graphics context
    * @param x           The leftmost edge
    * @param y           The topmost edge
-   * @param width       The width of the rectangle
-   * @param height      The height of the rectangle
+   * @param width       The width of the rectangle (must be positive)
+   * @param height      The height of the rectangle (must be positive)
    * @param emboss_size The size of the embossed region
    * @param left        The paint used for the left emboss regions
    * @param right       The paint used for the right emboss regions
@@ -79,8 +79,8 @@ public final class SyEmbossed
     NullCheck.notNull(bottom);
     NullCheck.notNull(fill);
 
-    Assertive.require(width > 0, "Width must be positive");
-    Assertive.require(height > 0, "Height must be positive");
+    Assertive.require(width > 0, "Rendered rectangle width must be positive");
+    Assertive.require(height > 0, "Rendered rectangle height must be positive");
     Assertive.require(emboss_size > 0, "Emboss area size must be positive");
 
     final AffineTransform old_transform = graphics.getTransform();

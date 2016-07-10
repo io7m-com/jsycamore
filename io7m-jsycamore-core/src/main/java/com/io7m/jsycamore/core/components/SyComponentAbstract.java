@@ -438,8 +438,8 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int delta_x,
     final int delta_y)
   {
-    Assertive.require(delta_x > 0);
-    Assertive.require(delta_y > 0);
+    Assertive.require(delta_x > 0, "X delta must be positive");
+    Assertive.require(delta_y > 0, "Y delta must be positive");
 
     final int previous_x = this.position.getXI();
     final int previous_y = this.position.getYI();

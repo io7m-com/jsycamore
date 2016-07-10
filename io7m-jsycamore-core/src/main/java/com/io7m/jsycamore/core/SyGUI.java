@@ -321,7 +321,9 @@ public final class SyGUI implements SyGUIType
 
     final SyComponentType component = component_opt.get();
     final Optional<SyWindowType> window_opt = component.window();
-    Assertive.require(window_opt.isPresent());
+    Assertive.require(
+      window_opt.isPresent(),
+      "Component must be attached to window to receive events");
     final SyWindowType window = window_opt.get();
     this.windowFocusActual(window);
 
@@ -374,10 +376,18 @@ public final class SyGUI implements SyGUIType
   {
     SyGUI.LOG.debug("windowFocusActual: {}", window);
 
-    Assertive.require(this.windows_open.contains(window));
-    Assertive.require(!this.windows_closed.contains(window));
+    Assertive.require(
+      this.windows_open.contains(window),
+      "The window must be open to receive focus");
+    Assertive.require(
+      !this.windows_closed.contains(window),
+      "The window must not be both open and closed");
+
     final int index = this.windows_open_order.indexOf(window);
-    Assertive.require(index >= 0);
+    Assertive.require(
+      index >= 0,
+      "The window must be present in the ordered window list");
+
     this.windows_open_order.remove(index);
     this.windows_open_order.add(0, window);
   }

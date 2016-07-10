@@ -100,8 +100,15 @@ public final class SyWindowRendererAWT implements
     NullCheck.notNull(window);
 
     final VectorReadable2IType window_size = window.bounds();
-    Assertive.require(input.getWidth() >= window_size.getXI());
-    Assertive.require(input.getHeight() >= window_size.getYI());
+
+    // XXX: Are these assertions really necessary? If anything, they should
+    //      be preconditions (Validation.validate()).
+    Assertive.require(
+      input.getWidth() >= window_size.getXI(),
+      "Image width must be >= window width");
+    Assertive.require(
+      input.getHeight() >= window_size.getYI(),
+      "Image height must be >= window height");
 
     final Graphics2D graphics = input.createGraphics();
     try {
@@ -115,6 +122,7 @@ public final class SyWindowRendererAWT implements
       this.renderTitlebar(graphics, window);
       this.renderContent(input, window);
       this.renderOutline(graphics, window);
+
       return input;
     } finally {
       graphics.dispose();
@@ -486,8 +494,8 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(left_width > 0);
-        Assertive.require(top_height > 0);
+        Assertive.require(left_width > 0, "L piece left_width must be > 0");
+        Assertive.require(top_height > 0, "L piece top_height must be > 0");
 
         top_left_caps = true;
         top_left_len += cap_length;
@@ -508,8 +516,8 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(right_width > 0);
-        Assertive.require(top_height > 0);
+        Assertive.require(right_width > 0, "L piece right_width must be > 0");
+        Assertive.require(top_height > 0, "L piece top_height must be > 0");
 
         top_right_caps = true;
         top_right_len += cap_length;
@@ -529,8 +537,10 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(left_width > 0);
-        Assertive.require(bottom_height > 0);
+        Assertive.require(
+          left_width > 0, "L piece left_width must be > 0");
+        Assertive.require(
+          bottom_height > 0, "L piece bottom_height must be > 0");
 
         bottom_left_caps = true;
         bottom_left_len += cap_length;
@@ -550,8 +560,10 @@ public final class SyWindowRendererAWT implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(right_width > 0);
-        Assertive.require(bottom_height > 0);
+        Assertive.require(
+          right_width > 0, "L piece right_width must be > 0");
+        Assertive.require(
+          bottom_height > 0, "L piece bottom_height must be > 0");
 
         bottom_right_caps = true;
         bottom_right_len += cap_length;

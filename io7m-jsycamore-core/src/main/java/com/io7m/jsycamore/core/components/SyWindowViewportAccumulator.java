@@ -86,8 +86,8 @@ public final class SyWindowViewportAccumulator implements
     final int width,
     final int height)
   {
-    Assertive.require(width >= 0);
-    Assertive.require(height >= 0);
+    Assertive.require(width >= 0, "Width must be >= 0");
+    Assertive.require(height >= 0, "Height must be >= 0");
 
     this.saved.clear();
     this.base_width = width;
@@ -136,12 +136,12 @@ public final class SyWindowViewportAccumulator implements
     final int my1 =
       SyWindowViewportAccumulator.clamp(new_y1, my0, original_y1);
 
-    Assertive.require(mx0 >= original_x0);
-    Assertive.require(my0 >= original_y0);
-    Assertive.require(mx1 <= original_x1);
-    Assertive.require(my1 <= original_y1);
-    Assertive.require(mx0 <= mx1);
-    Assertive.require(my0 <= my1);
+    Assertive.require(mx0 >= original_x0, "mx0 must be >= original_x0");
+    Assertive.require(my0 >= original_y0, "my0 must be >= original_y0");
+    Assertive.require(mx1 <= original_x1, "mx1 must be >= original_x1");
+    Assertive.require(my1 <= original_y1, "my1 must be >= original_y1");
+    Assertive.require(mx0 <= mx1, "mx0 must be <= mx1");
+    Assertive.require(my0 <= my1, "my0 must be <= my1");
 
     this.current.x_min = mx0;
     this.current.y_min = my0;
