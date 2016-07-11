@@ -216,10 +216,10 @@ public final class SyComponentRendererAWT implements
     if (outline_opt.isPresent()) {
       fill_x = 1;
       fill_y = 1;
-      fill_width = width - 3;
-      fill_height = height - 3;
-      rect_width = width - 2;
-      rect_height = height - 2;
+      fill_width = width - 2;
+      fill_height = height - 2;
+      rect_width = width - 1;
+      rect_height = height - 1;
     } else {
       fill_x = 0;
       fill_y = 0;
