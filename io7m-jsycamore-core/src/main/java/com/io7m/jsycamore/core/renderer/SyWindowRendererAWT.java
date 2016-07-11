@@ -133,7 +133,7 @@ public final class SyWindowRendererAWT implements
     final BufferedImage output,
     final SyWindowType window)
   {
-    final SyComponentType content = window.contentPane();
+    final SyComponentReadableType content = window.contentPane();
     final SyComponentRendererAWTContext context =
       SyComponentRendererAWTContext.of(
         window.viewportAccumulator(), output, window.theme());
