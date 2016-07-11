@@ -105,7 +105,7 @@ final class SyTDMainWindow extends JFrame
       final SyComponentType content = this.window0.contentPane();
       final SyPanelType panel = SyPanel.create();
       panel.setBounds(content.size().getXI(), content.size().getYI());
-      panel.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+      panel.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
       panel.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
       content.node().childAdd(panel.node());
 
@@ -119,9 +119,9 @@ final class SyTDMainWindow extends JFrame
       button0_label.setText("Hello.");
       button0_label.setBounds(64, 32);
       button0_label.setPosition(0, 0);
-      button0_label.setResizeBehaviorHeight(
-        SyParentResizeBehavior.BEHAVIOR_RESIZE);
       button0_label.setResizeBehaviorWidth(
+        SyParentResizeBehavior.BEHAVIOR_RESIZE);
+      button0_label.setResizeBehaviorHeight(
         SyParentResizeBehavior.BEHAVIOR_RESIZE);
       button0.node().childAdd(button0_label.node());
 

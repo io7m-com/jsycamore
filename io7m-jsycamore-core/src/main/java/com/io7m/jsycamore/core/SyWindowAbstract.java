@@ -157,6 +157,14 @@ public abstract class SyWindowAbstract implements SyWindowType
     sb.append(Integer.toHexString(this.hashCode()));
     sb.append(" ");
     sb.append(this.root.titlebar.text());
+    sb.append(" ");
+    sb.append(this.bounds.getXI());
+    sb.append("x");
+    sb.append(this.bounds.getYI());
+    sb.append(" ");
+    sb.append(this.position.getXI());
+    sb.append("+");
+    sb.append(this.position.getYI());
     sb.append("]");
     return sb.toString();
   }
@@ -587,18 +595,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     final int clamp_height = Math.max(height, 2);
 
     final WindowExtents extents = this.calculateWindowExtents(
-      frame_theme,
-      title_theme,
-      clamp_width,
-      clamp_height,
-      outline_size);
-
-    final int orig_width = this.bounds.getXI();
-    final int orig_height = this.bounds.getYI();
-    if (orig_width != clamp_width && orig_height != clamp_height) {
-      // XXX: Notify top-level components
-      SyWindowAbstract.LOG.error("XXX: NOTIFY TOP LEVEL COMPONENTS HERE");
-    }
+      frame_theme, title_theme, clamp_width, clamp_height, outline_size);
 
     this.bounds.set2I(clamp_width, clamp_height);
     this.root.setBounds(clamp_width, clamp_height);
@@ -744,9 +741,19 @@ public abstract class SyWindowAbstract implements SyWindowType
     public String toString()
     {
       final StringBuilder sb = new StringBuilder(128);
-      sb.append("[Titlebar \"");
+      sb.append("[Titlebar 0x");
+      sb.append(Integer.toHexString(this.hashCode()));
+      sb.append(" \"");
       sb.append(this.text);
-      sb.append("\"]");
+      sb.append("\" ");
+      sb.append(this.size().getXI());
+      sb.append("x");
+      sb.append(this.size().getYI());
+      sb.append(" ");
+      sb.append(this.position().getXI());
+      sb.append("+");
+      sb.append(this.position().getYI());
+      sb.append("]");
       return sb.toString();
     }
 
@@ -851,6 +858,24 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       this.setPanelTransparent(true);
     }
+
+    @Override
+    public String toString()
+    {
+      final StringBuilder sb = new StringBuilder(128);
+      sb.append("[ContentPane 0x");
+      sb.append(Integer.toHexString(this.hashCode()));
+      sb.append(" ");
+      sb.append(this.size().getXI());
+      sb.append("x");
+      sb.append(this.size().getYI());
+      sb.append(" ");
+      sb.append(this.position().getXI());
+      sb.append("+");
+      sb.append(this.position().getYI());
+      sb.append("]");
+      return sb.toString();
+    }
   }
 
   private final class Frame extends SyPanelAbstract implements
@@ -900,6 +925,32 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.inner_x_max = x_max;
       this.inner_y_max = y_max;
     }
+
+    @Override
+    public String toString()
+    {
+      final StringBuilder sb = new StringBuilder(128);
+      sb.append("[Frame 0x");
+      sb.append(Integer.toHexString(this.hashCode()));
+      sb.append(" ");
+      sb.append(this.size().getXI());
+      sb.append("x");
+      sb.append(this.size().getYI());
+      sb.append(" ");
+      sb.append(this.position().getXI());
+      sb.append("+");
+      sb.append(this.position().getYI());
+      sb.append(" (inner ");
+      sb.append(this.inner_x_max - this.inner_x_min);
+      sb.append("x");
+      sb.append(this.inner_y_max - this.inner_y_min);
+      sb.append(" ");
+      sb.append(this.inner_x_min);
+      sb.append("+");
+      sb.append(this.inner_y_min);
+      sb.append(")]");
+      return sb.toString();
+    }
   }
 
   private final class WindowRoot extends SyPanelAbstract
@@ -921,6 +972,24 @@ public abstract class SyWindowAbstract implements SyWindowType
       node.childAdd(this.frame.node());
       node.childAdd(this.titlebar.node());
       node.childAdd(this.content_pane.node());
+    }
+
+    @Override
+    public String toString()
+    {
+      final StringBuilder sb = new StringBuilder(128);
+      sb.append("[WindowRoot 0x");
+      sb.append(Integer.toHexString(this.hashCode()));
+      sb.append(" ");
+      sb.append(this.size().getXI());
+      sb.append("x");
+      sb.append(this.size().getYI());
+      sb.append(" ");
+      sb.append(this.position().getXI());
+      sb.append("+");
+      sb.append(this.position().getYI());
+      sb.append("]");
+      return sb.toString();
     }
   }
 

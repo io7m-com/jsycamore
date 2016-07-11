@@ -16,15 +16,42 @@
 
 package com.io7m.jsycamore.core.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The default implementation of the {@link SyPanelType} interface.
  */
 
 public final class SyPanel extends SyPanelAbstract
 {
+  private static final Logger LOG;
+
+  static {
+    LOG = LoggerFactory.getLogger(SyPanel.class);
+  }
+
   private SyPanel()
   {
 
+  }
+
+  @Override
+  public String toString()
+  {
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[SyPanel 0x");
+    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
+    sb.append(this.size().getXI());
+    sb.append("x");
+    sb.append(this.size().getYI());
+    sb.append(" ");
+    sb.append(this.position().getXI());
+    sb.append("+");
+    sb.append(this.position().getYI());
+    sb.append("]");
+    return sb.toString();
   }
 
   /**

@@ -35,7 +35,6 @@ import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.valid4j.Assertive;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -413,17 +412,38 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int width,
     final int height)
   {
-    final int old_width = this.size.getXI();
-    final int old_height = this.size.getYI();
+    final int previous_w = this.size.getXI();
+    final int previous_h = this.size.getYI();
 
     this.size.set2I(width, height);
 
+    final int delta_x =
+      Math.subtractExact(this.size.getXI(), previous_w);
+    final int delta_y =
+      Math.subtractExact(this.size.getYI(), previous_h);
+    final boolean resized =
+      delta_x != 0 || delta_y != 0;
+
     try {
-      final int delta_x = width - old_width;
-      final int delta_y = height - old_height;
+      if (SyComponentAbstract.LOG.isTraceEnabled()) {
+        SyComponentAbstract.LOG.trace(
+          "resized: ({}) {} ({}, {})",
+          this,
+          this.size,
+          Integer.valueOf(delta_x),
+          Integer.valueOf(delta_y));
+      }
       this.resized(delta_x, delta_y);
     } catch (final Throwable e) {
       SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+    }
+
+    if (resized) {
+      final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
+      for (final JOTreeNodeType<SyComponentType> child_node : children) {
+        final SyComponentType child = child_node.value();
+        child.onParentResized(delta_x, delta_y);
+      }
     }
   }
 
@@ -438,9 +458,6 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int delta_x,
     final int delta_y)
   {
-    Assertive.require(delta_x > 0, "X delta must be positive");
-    Assertive.require(delta_y > 0, "Y delta must be positive");
-
     final int previous_x = this.position.getXI();
     final int previous_y = this.position.getYI();
     final int previous_w = this.size.getXI();
@@ -451,7 +468,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         break;
       }
       case BEHAVIOR_RESIZE: {
-        final int new_w = Math.min(2, Math.addExact(previous_w, delta_x));
+        final int new_w = Math.max(2, Math.addExact(previous_w, delta_x));
         this.size.setXI(new_w);
         break;
       }
@@ -466,7 +483,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         break;
       }
       case BEHAVIOR_RESIZE: {
-        final int new_h = Math.min(2, Math.addExact(previous_h, delta_y));
+        final int new_h = Math.max(2, Math.addExact(previous_h, delta_y));
         this.size.setYI(new_h);
         break;
       }
@@ -477,14 +494,13 @@ public abstract class SyComponentAbstract implements SyComponentType
     }
 
     final int diff_x =
-      Math.abs(Math.subtractExact(this.size.getXI(), previous_w));
+      Math.subtractExact(this.size.getXI(), previous_w);
     final int diff_y =
-      Math.abs(Math.subtractExact(this.size.getYI(), previous_h));
+      Math.subtractExact(this.size.getYI(), previous_h);
     final boolean resized =
-      diff_x > 0 && diff_y > 0;
+      diff_x != 0 || diff_y != 0;
 
     if (resized) {
-
       try {
         this.resized(delta_x, delta_y);
       } catch (final Throwable e) {
@@ -497,9 +513,6 @@ public abstract class SyComponentAbstract implements SyComponentType
         child.onParentResized(diff_x, diff_y);
       }
     }
-
-    Assertive.ensure(this.size.getXI() >= 2);
-    Assertive.ensure(this.size.getYI() >= 2);
   }
 
   @Override
