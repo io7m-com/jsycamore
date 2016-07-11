@@ -16,18 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jorchard.core.JOTreeNodeType;
-import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyPanelReadableType;
 
 /**
- * The type of content panes for windows.
+ * The type of readable content panes for windows.
  */
 
-public interface SyWindowContentPaneType extends SyWindowContentPaneReadableType
+public interface SyWindowContentPaneReadableType extends SyPanelReadableType
 {
-  /**
-   * @return The component tree node to which this component is attached
-   */
-
-  JOTreeNodeType<SyComponentType> node();
+  // No extra methods
 }

@@ -24,7 +24,7 @@ public final class SyLabel extends SyLabelAbstract
 {
   private SyLabel()
   {
-
+    super(() -> true);
   }
 
   /**

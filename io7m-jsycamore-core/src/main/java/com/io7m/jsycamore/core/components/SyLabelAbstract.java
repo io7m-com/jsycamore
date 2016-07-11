@@ -23,6 +23,8 @@ import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * An abstract implementation of the {@link SyLabelType} interface.
  */
@@ -68,8 +70,10 @@ public abstract class SyLabelAbstract extends SyComponentAbstract implements
 
   private String text;
 
-  protected SyLabelAbstract()
+  protected SyLabelAbstract(
+    final BooleanSupplier in_detach_check)
   {
+    super(in_detach_check);
     this.text = "";
     this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
     this.align_v = SyAlignmentVertical.ALIGN_CENTER;

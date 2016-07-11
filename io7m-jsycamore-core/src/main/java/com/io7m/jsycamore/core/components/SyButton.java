@@ -33,7 +33,7 @@ public final class SyButton extends SyButtonAbstract
 
   private SyButton()
   {
-
+    super(() -> true);
   }
 
   @Override

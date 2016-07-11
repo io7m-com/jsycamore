@@ -144,7 +144,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public final SyComponentType contentPane()
+  public final SyWindowContentPaneType contentPane()
   {
     return this.root.content_pane;
   }
@@ -729,6 +729,11 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     Titlebar(final String in_text)
     {
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach titlebar");
+        return false;
+      });
+
       this.text = NullCheck.notNull(in_text);
       this.position = new PVectorM2I<>();
       this.position_parent_view = SyWindowAbstract.castSpace(this.position);
@@ -847,7 +852,10 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     CloseBox()
     {
-
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach close box");
+        return false;
+      });
     }
   }
 
@@ -856,6 +864,11 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     ContentPane()
     {
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach content pane");
+        return false;
+      });
+
       this.setPanelTransparent(true);
     }
 
@@ -904,6 +917,11 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     Frame()
     {
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach frame");
+        return false;
+      });
+
       this.inner_x_min = 0;
       this.inner_y_min = 0;
       this.inner_x_max = 0;
@@ -961,6 +979,11 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     WindowRoot(final String in_text)
     {
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach window root");
+        return false;
+      });
+
       this.setWindow(Optional.of(SyWindowAbstract.this));
       this.setSelectable(false);
 

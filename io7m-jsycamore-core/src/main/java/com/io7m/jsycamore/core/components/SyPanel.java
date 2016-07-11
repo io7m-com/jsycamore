@@ -33,7 +33,7 @@ public final class SyPanel extends SyPanelAbstract
 
   private SyPanel()
   {
-
+    super(() -> true);
   }
 
   @Override

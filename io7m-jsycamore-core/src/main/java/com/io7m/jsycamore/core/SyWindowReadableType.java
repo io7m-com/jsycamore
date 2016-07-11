@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jtensors.VectorReadable2IType;
@@ -44,7 +43,7 @@ public interface SyWindowReadableType extends SyGUIElementType
    * @return Read-only access to the content pane
    */
 
-  SyComponentReadableType contentPane();
+  SyWindowContentPaneReadableType contentPane();
 
   /**
    * Retrieve the size of the bounds of the window. This is the absolute maximum

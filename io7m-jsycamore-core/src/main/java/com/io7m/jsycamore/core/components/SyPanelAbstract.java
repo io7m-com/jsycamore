@@ -20,6 +20,8 @@ import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * An abstract implementation of the {@link SyPanelType} interface.
  */
@@ -36,9 +38,10 @@ public abstract class SyPanelAbstract extends SyComponentAbstract implements
 
   private boolean transparent;
 
-  protected SyPanelAbstract()
+  protected SyPanelAbstract(
+    final BooleanSupplier in_detach_check)
   {
-
+    super(in_detach_check);
   }
 
   @Override

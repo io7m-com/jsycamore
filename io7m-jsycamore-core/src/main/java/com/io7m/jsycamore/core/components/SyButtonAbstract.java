@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 /**
  * An abstract implementation of the {@link SyButtonType} interface.
@@ -59,8 +60,9 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     return this.over;
   }
 
-  protected SyButtonAbstract()
+  protected SyButtonAbstract(final BooleanSupplier in_detach_check)
   {
+    super(in_detach_check);
     this.listeners = new ArrayList<>(4);
   }
 

@@ -16,6 +16,9 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
@@ -23,6 +26,7 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
@@ -36,12 +40,17 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarWidthBehavior;
 import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class SyWindowContract
 {
+  @Rule public ExpectedException expected = ExpectedException.none();
+
   private static final long FRAME_RIGHT_WIDTH = 4L;
   private static final long FRAME_LEFT_WIDTH = 2L;
   private static final long FRAME_TOP_HEIGHT = 5L;
@@ -160,7 +169,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -235,7 +244,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -310,7 +319,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -387,7 +396,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -477,7 +486,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -564,7 +573,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -641,7 +650,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -718,7 +727,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -795,7 +804,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -847,7 +856,7 @@ public abstract class SyWindowContract
       final PVectorReadable2IType<SySpaceParentRelativeType> position = titlebar.position();
 
       Assert.assertEquals(
-        0,
+        0L,
         (long) position.getXI());
       Assert.assertEquals(
         SyWindowContract.FRAME_TOP_HEIGHT,
@@ -872,7 +881,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -924,7 +933,7 @@ public abstract class SyWindowContract
       final PVectorReadable2IType<SySpaceParentRelativeType> position = titlebar.position();
 
       Assert.assertEquals(
-        0,
+        0L,
         (long) position.getXI());
       Assert.assertEquals(
         SyWindowContract.FRAME_TOP_HEIGHT,
@@ -949,7 +958,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -1001,7 +1010,7 @@ public abstract class SyWindowContract
       final PVectorReadable2IType<SySpaceParentRelativeType> position = titlebar.position();
 
       Assert.assertEquals(
-        0,
+        0L,
         (long) position.getXI());
       Assert.assertEquals(
         SyWindowContract.FRAME_TOP_HEIGHT,
@@ -1026,7 +1035,7 @@ public abstract class SyWindowContract
     }
 
     {
-      final SyComponentType content = w.contentPane();
+      final SyWindowContentPaneType content = w.contentPane();
       final VectorReadable2IType size = content.size();
       final PVectorReadable2IType<SySpaceParentRelativeType> position = content.position();
 
@@ -1055,5 +1064,77 @@ public abstract class SyWindowContract
 
     titlebar.setText("Main 1");
     Assert.assertEquals("Main 1", titlebar.text());
+  }
+
+  @Test
+  public final void testDetachContentPaneDenied()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+    final SyWindowContentPaneType content = w.contentPane();
+
+    this.expected.expect(JOTreeExceptionDetachDenied.class);
+    content.node().detach();
+  }
+
+  @Test
+  public final void testDetachTitlebarDenied()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+    final SyWindowTitlebarType titlebar = w.titlebar();
+
+    final SyWindowContentPaneType content = w.contentPane();
+    final JOTreeNodeType<SyComponentType> c_node = content.node();
+    final JOTreeNodeType<SyComponentType> root = c_node.parent().get();
+
+    JOTreeNodeType<SyComponentType> titlebar_node = null;
+    for (final JOTreeNodeType<SyComponentType> n : root.children()) {
+      if (Objects.equals(n.value(), titlebar)) {
+        titlebar_node = n;
+      }
+    }
+
+    Assert.assertTrue(titlebar_node != null);
+    this.expected.expect(JOTreeExceptionDetachDenied.class);
+    titlebar_node.detach();
+  }
+
+  @Test
+  public final void testDetachEverythingDenied()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+
+    final SyWindowContentPaneType content = w.contentPane();
+    final JOTreeNodeType<SyComponentType> c_node = content.node();
+    final JOTreeNodeType<SyComponentType> root = c_node.parent().get();
+
+    int caught = 0;
+    for (final JOTreeNodeType<SyComponentType> n : root.children()) {
+      try {
+        n.detach();
+      } catch (final JOTreeExceptionDetachDenied e) {
+        ++caught;
+      }
+    }
+    Assert.assertEquals(3L, (long) caught);
+
+    final SyWindowTitlebarType titlebar = w.titlebar();
+
+    JOTreeNodeType<SyComponentType> titlebar_node = null;
+    for (final JOTreeNodeType<SyComponentType> n : root.children()) {
+      if (Objects.equals(n.value(), titlebar)) {
+        titlebar_node = n;
+      }
+    }
+    Assert.assertTrue(titlebar_node != null);
+
+    for (final JOTreeNodeType<SyComponentType> n : titlebar_node.children()) {
+      try {
+        n.detach();
+      } catch (final JOTreeExceptionDetachDenied e) {
+        ++caught;
+      }
+    }
+
+    Assert.assertEquals(4L, (long) caught);
   }
 }

@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 /**
  * The default abstract implementation of the {@link SyComponentType}
@@ -63,15 +64,18 @@ public abstract class SyComponentAbstract implements SyComponentType
   private boolean enabled = true;
   private SyVisibility visibility;
 
-  protected SyComponentAbstract()
+  protected SyComponentAbstract(
+    final BooleanSupplier in_detach_check)
   {
+    NullCheck.notNull(in_detach_check);
+
     this.resize_width = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.resize_height = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.visibility = SyVisibility.VISIBILITY_VISIBLE;
     this.window = Optional.empty();
     this.position = new PVectorM2I<>();
     this.size = new VectorM2I();
-    this.node = JOTreeNode.create(this);
+    this.node = JOTreeNode.createWithDetachCheck(this, in_detach_check);
   }
 
   @SuppressWarnings("unchecked")

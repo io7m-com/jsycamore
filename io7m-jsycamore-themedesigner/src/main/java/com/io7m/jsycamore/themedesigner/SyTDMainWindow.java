@@ -22,6 +22,7 @@ import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceViewportType;
+import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.components.SyButton;
 import com.io7m.jsycamore.core.components.SyButtonType;
@@ -102,7 +103,7 @@ final class SyTDMainWindow extends JFrame
     this.window1.setPosition(100, 100);
 
     {
-      final SyComponentType content = this.window0.contentPane();
+      final SyWindowContentPaneType content = this.window0.contentPane();
       final SyPanelType panel = SyPanel.create();
       panel.setBounds(content.size().getXI(), content.size().getYI());
       panel.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
