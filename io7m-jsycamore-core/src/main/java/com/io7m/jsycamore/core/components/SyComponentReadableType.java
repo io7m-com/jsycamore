@@ -97,6 +97,7 @@ public interface SyComponentReadableType
    * @param on_button A function evaluated if this component is a button
    * @param on_panel  A function evaluated if this component is a panel
    * @param on_label  A function evaluated if this component is a label
+   * @param on_image  A function evaluated if this component is an image
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
@@ -108,7 +109,8 @@ public interface SyComponentReadableType
     A context,
     BiFunction<A, SyButtonReadableType, B> on_button,
     BiFunction<A, SyPanelReadableType, B> on_panel,
-    BiFunction<A, SyLabelReadableType, B> on_label);
+    BiFunction<A, SyLabelReadableType, B> on_label,
+    BiFunction<A, SyImageReadableType, B> on_image);
 
   /**
    * Determine the topmost component at the given window-relative position.

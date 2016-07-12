@@ -30,6 +30,12 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>io7m-jsycamore-caffeine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>net.java.dev.designgridlayout</groupId>
       <artifactId>designgridlayout</artifactId>
     </dependency>

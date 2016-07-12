@@ -30,6 +30,7 @@ import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
+import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
@@ -88,6 +89,7 @@ public abstract class SyWindowContract
     theme_b.setPanelTheme(SyThemePanel.builder().build());
     theme_b.setButtonTheme(SyThemeButton.builder().build());
     theme_b.setLabelTheme(SyThemeLabel.builder().build());
+    theme_b.setImageTheme(SyThemeImage.builder().build());
     return theme_b.build();
   }
 

@@ -14,37 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
+package com.io7m.jsycamore.core.images;
 
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of image resolvers.
  */
 
-public interface SyPanelType extends SyComponentType, SyPanelReadableType
+@FunctionalInterface
+public interface SyImageCacheResolverType
 {
   /**
-   * Set the panel as <i>transparent</i>.
+   * Open the image referred to by {@code i} and return a stream for it.
    *
-   * @param e {@code true} iff this panel is <i>transparent</i>
+   * @param specification The image specification
    *
-   * @see SyPanelReadableType#isPanelTransparent()
+   * @return An input stream
+   *
+   * @throws IOException Iff {@code i} cannot be opened.
    */
 
-  void setPanelTransparent(boolean e);
-
-  @Override
-  default <A, B> B matchComponent(
-    final A context,
-    final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel,
-    final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image)
-  {
-    return NullCheck.notNull(on_panel).apply(context, this);
-  }
+  InputStream resolve(
+    SyImageSpecificationType specification)
+    throws IOException;
 }

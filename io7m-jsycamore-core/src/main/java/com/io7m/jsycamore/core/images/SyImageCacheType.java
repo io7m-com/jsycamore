@@ -14,37 +14,43 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.components;
+package com.io7m.jsycamore.core.images;
 
-import com.io7m.jnull.NullCheck;
-
-import java.util.function.BiFunction;
+import java.io.Closeable;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of image caches.
+ *
+ * @param <T> The type of loaded images
  */
 
-public interface SyPanelType extends SyComponentType, SyPanelReadableType
+public interface SyImageCacheType<T> extends Closeable
 {
   /**
-   * Set the panel as <i>transparent</i>.
+   * Load an image and return a reference to it.
    *
-   * @param e {@code true} iff this panel is <i>transparent</i>
+   * @param i The image
    *
-   * @see SyPanelReadableType#isPanelTransparent()
+   * @return An image reference
    */
 
-  void setPanelTransparent(boolean e);
+  SyImageReferenceType<T> get(SyImageSpecificationType i);
 
-  @Override
-  default <A, B> B matchComponent(
-    final A context,
-    final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel,
-    final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image)
-  {
-    return NullCheck.notNull(on_panel).apply(context, this);
-  }
+  /**
+   * @return The maximum size of the cache in bytes
+   */
+
+  long maximumSize();
+
+  /**
+   * @return The current size of the cache in bytes
+   */
+
+  long size();
+
+  /**
+   * @return The number of images in the cache, currently
+   */
+
+  long count();
 }

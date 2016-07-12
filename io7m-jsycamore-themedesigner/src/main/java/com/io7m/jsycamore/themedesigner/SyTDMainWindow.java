@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.themedesigner;
 
+import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
@@ -26,11 +27,18 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.components.SyButton;
 import com.io7m.jsycamore.core.components.SyButtonType;
-import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyImage;
+import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
+import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
+import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
+import com.io7m.jsycamore.core.images.SyImageCacheType;
+import com.io7m.jsycamore.core.images.SyImageFormat;
+import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererAWTContextType;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
@@ -38,6 +46,7 @@ import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
+import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -56,6 +65,7 @@ import net.java.dev.designgridlayout.DesignGridLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -74,7 +84,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 final class SyTDMainWindow extends JFrame
 {
@@ -90,9 +105,12 @@ final class SyTDMainWindow extends JFrame
   private final SyWindowType window0;
   private final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
   private final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> component_renderer;
+  private final ExecutorService io_executor;
+  private final SyImageCacheType<BufferedImage> cache;
   private SyWindowType window1;
 
   SyTDMainWindow()
+    throws IOException
   {
     final SyThemeType theme = SyThemeStride.builder().build();
 
@@ -100,7 +118,55 @@ final class SyTDMainWindow extends JFrame
     this.window0 = this.gui.windowCreate(320, 240, "Files");
     this.window0.setPosition(32, 32);
     this.window1 = this.gui.windowCreate(300, 240, "Other");
-    this.window1.setPosition(100, 100);
+    this.window1.setPosition(32, 300);
+
+    final SyImageCacheResolverType resolver = i -> {
+      SyTDMainWindow.LOG.debug("loading: {}", i.name());
+      final InputStream stream =
+        SyTDMainWindow.class.getResourceAsStream(i.name());
+      if (stream == null) {
+        throw new FileNotFoundException(i.name());
+      }
+      return stream;
+    };
+
+    final SyImageCacheLoaderType<BufferedImage> loader = (i, is) -> {
+      final BufferedImage image = ImageIO.read(is);
+      if (image == null) {
+        throw new IOException("Could not parse image " + i.name());
+      }
+      return image;
+    };
+
+
+    this.io_executor = Executors.newSingleThreadExecutor();
+
+    final SyImageSpecification image_default_spec = SyImageSpecification.of(
+      "clock-8x.png",
+      64,
+      64,
+      SyImageFormat.IMAGE_FORMAT_GREY_8,
+      SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
+    final BufferedImage image_default =
+      loader.load(image_default_spec, resolver.resolve(image_default_spec));
+
+    final SyImageSpecification image_error_spec = SyImageSpecification.of(
+      "circle-x-8x.png",
+      64,
+      64,
+      SyImageFormat.IMAGE_FORMAT_GREY_8,
+      SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
+
+    final BufferedImage image_error =
+      loader.load(image_error_spec, resolver.resolve(image_error_spec));
+
+    this.cache = SyBufferedImageCacheCaffeine.create(
+      resolver,
+      loader,
+      this.io_executor,
+      image_default,
+      image_error,
+      1_000_000L);
 
     {
       final SyWindowContentPaneType content = this.window0.contentPane();
@@ -137,6 +203,17 @@ final class SyTDMainWindow extends JFrame
       label.setBounds(64, 16);
       label.setPosition(16, 64);
       panel.node().childAdd(label.node());
+
+      final SyImageType image =
+        SyImage.create(
+          SyImageSpecification.of(
+            "wheat.png",
+            64,
+            64,
+            SyImageFormat.IMAGE_FORMAT_RGB_565,
+            SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR));
+      image.setPosition(16 + 64 + 16, 64);
+      panel.node().childAdd(image.node());
     }
 
     {
@@ -160,7 +237,9 @@ final class SyTDMainWindow extends JFrame
     }
 
     this.component_renderer =
-      SyComponentRendererAWT.create(this.gui.textMeasurement());
+      SyComponentRendererAWT.create(
+        this.cache,
+        this.gui.textMeasurement());
     this.window_renderer =
       SyWindowRendererAWT.create(
         this.gui.textMeasurement(), this.component_renderer);
@@ -276,6 +355,7 @@ final class SyTDMainWindow extends JFrame
     private final SyThemeButton.Builder theme_button_builder;
     private final SyThemePanel.Builder theme_panel_builder;
     private final SyThemeLabel.Builder theme_label_builder;
+    private final SyThemeImage.Builder theme_image_builder;
 
     Controls()
     {
@@ -288,6 +368,8 @@ final class SyTDMainWindow extends JFrame
       this.theme_panel_builder.from(base.panelTheme());
       this.theme_label_builder = SyThemeLabel.builder();
       this.theme_label_builder.from(base.labelTheme());
+      this.theme_image_builder = SyThemeImage.builder();
+      this.theme_image_builder.from(base.imageTheme());
 
       this.theme_window_builder = SyThemeWindow.builder();
       this.theme_window_frame_builder = SyThemeWindowFrame.builder();
@@ -519,6 +601,8 @@ final class SyTDMainWindow extends JFrame
         this.theme_panel_builder.build());
       this.theme_builder.setLabelTheme(
         this.theme_label_builder.build());
+      this.theme_builder.setImageTheme(
+        this.theme_image_builder.build());
 
       final SyTheme theme =
         this.theme_builder.build();

@@ -20,6 +20,7 @@
     <module>io7m-jsycamore-documentation</module>
     <module>io7m-jsycamore-tests</module>
     <module>io7m-jsycamore-themedesigner</module>
+    <module>io7m-jsycamore-caffeine</module>
   </modules>
 
   <properties>
@@ -139,6 +140,11 @@
         <groupId>io.github.dheid</groupId>
         <artifactId>fontchooser</artifactId>
         <version>1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>2.3.1</version>
       </dependency>
 
       <dependency>

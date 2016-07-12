@@ -14,44 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.themedesigner;
+package com.io7m.jsycamore.core.themes;
 
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
-import java.io.IOException;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import org.immutables.value.Value;
+
+import java.util.Optional;
 
 /**
- * Main program.
+ * An image theme specification.
  */
 
-public final class SyTDMain
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyThemeImageType
 {
-  private SyTDMain()
-  {
-
-  }
-
   /**
-   * Main entry point.
-   *
-   * @param args Command line arguments (ignored)
+   * @return The outline used for images
    */
 
-  public static void main(final String[] args)
-  {
-    SwingUtilities.invokeLater(() -> {
-      try {
-        final SyTDMainWindow w = new SyTDMainWindow();
-        w.setMinimumSize(new Dimension(640, 480));
-        w.setPreferredSize(new Dimension(800, 600));
-        w.pack();
-        w.setVisible(true);
-        w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      } catch (final IOException e) {
-        e.printStackTrace();
-        System.exit(1);
-      }
-    });
-  }
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
 }

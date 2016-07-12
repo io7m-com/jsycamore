@@ -22,6 +22,8 @@ import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
+import com.io7m.jsycamore.core.themes.SyThemeImage;
+import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
@@ -192,7 +194,16 @@ public final class SyThemeBee
 
     theme.setPanelTheme(SyThemeBee.createThemePanel(background));
     theme.setLabelTheme(SyThemeBee.createThemeLabel(spec.foregroundColor()));
+    theme.setImageTheme(SyThemeBee.createThemeImage(background_darker));
     return theme;
+  }
+
+  private static SyThemeImageType createThemeImage(
+    final VectorI3F color)
+  {
+    final SyThemeImage.Builder b = SyThemeImage.builder();
+    b.setOutline(SyThemeOutline.of(color, color));
+    return b.build();
   }
 
   private static SyThemePanelType createThemePanel(

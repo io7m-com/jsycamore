@@ -22,11 +22,15 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
+import com.io7m.jsycamore.core.components.SyImageReadableType;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.images.SyImageCacheType;
+import com.io7m.jsycamore.core.images.SyImageReferenceType;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
+import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
@@ -52,9 +56,13 @@ public final class SyComponentRendererAWT implements
 {
   private final SyEmbossed embossed;
   private final SyTextMeasurementType measurement;
+  private final SyImageCacheType<BufferedImage> cache;
 
-  private SyComponentRendererAWT(final SyTextMeasurementType in_measurement)
+  private SyComponentRendererAWT(
+    final SyImageCacheType<BufferedImage> in_cache,
+    final SyTextMeasurementType in_measurement)
   {
+    this.cache = NullCheck.notNull(in_cache);
     this.measurement = NullCheck.notNull(in_measurement);
     this.embossed = new SyEmbossed();
   }
@@ -62,6 +70,7 @@ public final class SyComponentRendererAWT implements
   /**
    * Construct a new renderer.
    *
+   * @param in_cache       An image cache
    * @param in_measurement A text measurement interface
    *
    * @return A new renderer
@@ -69,9 +78,10 @@ public final class SyComponentRendererAWT implements
 
   public static SyComponentRendererType<
     SyComponentRendererAWTContextType, BufferedImage> create(
+    final SyImageCacheType<BufferedImage> in_cache,
     final SyTextMeasurementType in_measurement)
   {
-    return new SyComponentRendererAWT(in_measurement);
+    return new SyComponentRendererAWT(in_cache, in_measurement);
   }
 
   @Override
@@ -144,6 +154,9 @@ public final class SyComponentRendererAWT implements
       }, (r, label) -> {
         this.renderLabel(context, graphics, label);
         return Unit.unit();
+      }, (r, image) -> {
+        this.renderImage(context, graphics, image);
+        return Unit.unit();
       });
 
       final JOTreeNodeReadableType<SyComponentReadableType> node =
@@ -162,6 +175,66 @@ public final class SyComponentRendererAWT implements
 
     } finally {
       viewport.restore();
+    }
+  }
+
+  private void renderImage(
+    final SyComponentRendererAWTContextType context,
+    final Graphics2D graphics,
+    final SyImageReadableType image)
+  {
+    final SyThemeType theme = context.theme();
+    final SyThemeImageType image_theme = theme.imageTheme();
+
+    final SyImageReferenceType<BufferedImage> ref =
+      this.cache.get(image.image());
+
+    final BufferedImage actual = ref.value();
+    final int area_width = image.size().getXI();
+    final int area_height = image.size().getYI();
+
+    int x = 0;
+    switch (image.imageAlignmentHorizontal()) {
+      case ALIGN_LEFT: {
+        break;
+      }
+      case ALIGN_RIGHT: {
+        x = area_width - actual.getWidth();
+        break;
+      }
+      case ALIGN_CENTER: {
+        x = (area_width / 2) - (actual.getWidth() / 2);
+        break;
+      }
+    }
+
+    int y = 0;
+    switch (image.imageAlignmentVertical()) {
+      case ALIGN_TOP: {
+        break;
+      }
+      case ALIGN_BOTTOM: {
+        y = area_height - actual.getHeight();
+        break;
+      }
+      case ALIGN_CENTER: {
+        y = (area_height / 2) - (actual.getHeight() / 2);
+        break;
+      }
+    }
+
+    graphics.drawImage(actual, x, y, null);
+
+    final Optional<SyThemeOutlineType> outline_opt = image_theme.outline();
+    if (outline_opt.isPresent()) {
+      if (image.isEnabled()) {
+        graphics.setPaint(
+          SyComponentRendererAWT.toColor(outline_opt.get().colorActive()));
+      } else {
+        graphics.setPaint(
+          SyComponentRendererAWT.toColor(outline_opt.get().colorInactive()));
+      }
+      graphics.drawRect(0, 0, area_width - 1, area_height - 1);
     }
   }
 

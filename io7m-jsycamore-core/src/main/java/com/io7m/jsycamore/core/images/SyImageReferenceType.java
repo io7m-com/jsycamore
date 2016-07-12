@@ -14,52 +14,41 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core.images;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * The type of themes.
+ * <p>The type of image references.</p>
+ *
+ * <p>An image reference represents an image that may or may not currently be in
+ * the process of being loaded.</p>
+ *
+ * @param <T> The type of images
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeType
+public interface SyImageReferenceType<T>
 {
   /**
-   * @return The theme used for windows
+   * @return The future representing the image loading operation
    */
 
-  @Value.Parameter
-  SyThemeWindowType windowTheme();
+  CompletableFuture<T> future();
 
   /**
-   * @return The theme used for buttons
+   * @return The specification used to construct the image reference
    */
 
-  @Value.Parameter
-  SyThemeButtonType buttonTheme();
+  SyImageSpecificationType description();
 
   /**
-   * @return The theme used for panels
+   * Retrieve the current image. If the image is not yet loaded, then a default
+   * image will be used. If the image has failed to load, then an image
+   * representing an error will be used. Otherwise, the image itself will be
+   * returned.
+   *
+   * @return An image
    */
 
-  @Value.Parameter
-  SyThemePanelType panelTheme();
-
-  /**
-   * @return The theme used for labels
-   */
-
-  @Value.Parameter
-  SyThemeLabelType labelTheme();
-
-  /**
-   * @return The theme used for images
-   */
-
-  @Value.Parameter
-  SyThemeImageType/**/ imageTheme();
+  T value();
 }

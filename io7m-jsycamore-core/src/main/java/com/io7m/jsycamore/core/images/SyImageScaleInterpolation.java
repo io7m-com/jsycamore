@@ -14,44 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.themedesigner;
-
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
-import java.io.IOException;
+package com.io7m.jsycamore.core.images;
 
 /**
- * Main program.
+ * The method by which images will be scaled, if necessary.
  */
 
-public final class SyTDMain
+public enum SyImageScaleInterpolation
 {
-  private SyTDMain()
-  {
-
-  }
-
   /**
-   * Main entry point.
-   *
-   * @param args Command line arguments (ignored)
+   * The image will be scaled with bilinear interpolation.
    */
 
-  public static void main(final String[] args)
-  {
-    SwingUtilities.invokeLater(() -> {
-      try {
-        final SyTDMainWindow w = new SyTDMainWindow();
-        w.setMinimumSize(new Dimension(640, 480));
-        w.setPreferredSize(new Dimension(800, 600));
-        w.pack();
-        w.setVisible(true);
-        w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      } catch (final IOException e) {
-        e.printStackTrace();
-        System.exit(1);
-      }
-    });
-  }
+  SCALE_INTERPOLATION_BILINEAR,
+
+  /**
+   * The image will be scaled with bicubic interpolation.
+   */
+
+  SCALE_INTERPOLATION_BICUBIC,
+
+  /**
+   * The image will be scaled with nearest-neighbour interpolation.
+   */
+
+  SCALE_INTERPOLATION_NEAREST
 }

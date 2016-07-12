@@ -17,25 +17,45 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 
 import java.util.function.BiFunction;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of images.
  */
 
-public interface SyPanelType extends SyComponentType, SyPanelReadableType
+public interface SyImageType extends SyComponentType, SyImageReadableType
 {
   /**
-   * Set the panel as <i>transparent</i>.
+   * Set the image.
    *
-   * @param e {@code true} iff this panel is <i>transparent</i>
-   *
-   * @see SyPanelReadableType#isPanelTransparent()
+   * @param image The new image
    */
 
-  void setPanelTransparent(boolean e);
+  void setImage(SyImageSpecificationType image);
+
+  /**
+   * Set the horizontal alighnment of the image.
+   *
+   * @param h The alignment
+   *
+   * @see #imageAlignmentHorizontal()
+   */
+
+  void setImageAlignmentHorizontal(SyAlignmentHorizontal h);
+
+  /**
+   * Set the vertical alighnment of the image.
+   *
+   * @param v The alignment
+   *
+   * @see #imageAlignmentVertical()
+   */
+
+  void setImageAlignmentVertical(SyAlignmentVertical v);
 
   @Override
   default <A, B> B matchComponent(
@@ -45,6 +65,6 @@ public interface SyPanelType extends SyComponentType, SyPanelReadableType
     final BiFunction<A, SyLabelType, B> on_label,
     final BiFunction<A, SyImageType, B> on_image)
   {
-    return NullCheck.notNull(on_panel).apply(context, this);
+    return NullCheck.notNull(on_image).apply(context, this);
   }
 }

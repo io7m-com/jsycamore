@@ -19,51 +19,48 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 
 import java.util.function.BiFunction;
 
 /**
- * The type of labels.
+ * The type of readable images.
  */
 
-public interface SyLabelType extends SyComponentType, SyLabelReadableType
+public interface SyImageReadableType extends SyComponentReadableType
 {
   /**
-   * Set the label text.
-   *
-   * @param text The new text
+   * @return The image
    */
 
-  void setText(String text);
+  SyImageSpecificationType image();
 
   /**
-   * Set the horizontal alighnment of the text.
+   * Retrieve the horizontal alignment of the image. Images will be aligned
+   * within the bounds specified by {@link #size()}.
    *
-   * @param h The alignment
-   *
-   * @see #textAlignmentHorizontal()
+   * @return The alignment
    */
 
-  void setTextAlignmentHorizontal(SyAlignmentHorizontal h);
+  SyAlignmentHorizontal imageAlignmentHorizontal();
 
   /**
-   * Set the vertical alighnment of the text.
+   * Retrieve the vertical alignment of the image. Images will be aligned within
+   * the bounds specified by {@link #size()}.
    *
-   * @param v The alignment
-   *
-   * @see #textAlignmentVertical()
+   * @return The alignment
    */
 
-  void setTextAlignmentVertical(SyAlignmentVertical v);
+  SyAlignmentVertical imageAlignmentVertical();
 
   @Override
-  default <A, B> B matchComponent(
+  default <A, B> B matchComponentReadable(
     final A context,
-    final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel,
-    final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image)
+    final BiFunction<A, SyButtonReadableType, B> on_button,
+    final BiFunction<A, SyPanelReadableType, B> on_panel,
+    final BiFunction<A, SyLabelReadableType, B> on_label,
+    final BiFunction<A, SyImageReadableType, B> on_image)
   {
-    return NullCheck.notNull(on_label).apply(context, this);
+    return NullCheck.notNull(on_image).apply(context, this);
   }
 }

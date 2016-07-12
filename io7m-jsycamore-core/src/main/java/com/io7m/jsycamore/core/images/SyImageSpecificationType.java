@@ -14,52 +14,60 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core.images;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import org.immutables.value.Value;
 
 /**
- * The type of themes.
+ * An image to be loaded.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
-public interface SyThemeType
+public interface SyImageSpecificationType
 {
   /**
-   * @return The theme used for windows
+   * The abstract name of an image. This is expected to be mapped in an
+   * implementation-specific manner to an image resource.
+   *
+   * @return The name of the image
+   *
+   * @see SyImageCacheResolverType
    */
 
   @Value.Parameter
-  SyThemeWindowType windowTheme();
+  String name();
 
   /**
-   * @return The theme used for buttons
+   * @return The width of the image
    */
 
   @Value.Parameter
-  SyThemeButtonType buttonTheme();
+  int width();
 
   /**
-   * @return The theme used for panels
+   * @return The height of the image
    */
 
   @Value.Parameter
-  SyThemePanelType panelTheme();
+  int height();
 
   /**
-   * @return The theme used for labels
+   * @return The format of the image
    */
 
   @Value.Parameter
-  SyThemeLabelType labelTheme();
+  SyImageFormat format();
 
   /**
-   * @return The theme used for images
+   * @return The scaling interpolation, if scaling is required
    */
 
   @Value.Parameter
-  SyThemeImageType/**/ imageTheme();
+  @Value.Default
+  default SyImageScaleInterpolation scaleInterpolation()
+  {
+    return SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR;
+  }
 }

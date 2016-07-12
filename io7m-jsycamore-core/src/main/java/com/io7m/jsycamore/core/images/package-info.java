@@ -14,52 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
-
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
-
 /**
- * The type of themes.
+ * Image types and functions.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeType
-{
-  /**
-   * @return The theme used for windows
-   */
+package com.io7m.jsycamore.core.images;
 
-  @Value.Parameter
-  SyThemeWindowType windowTheme();
-
-  /**
-   * @return The theme used for buttons
-   */
-
-  @Value.Parameter
-  SyThemeButtonType buttonTheme();
-
-  /**
-   * @return The theme used for panels
-   */
-
-  @Value.Parameter
-  SyThemePanelType panelTheme();
-
-  /**
-   * @return The theme used for labels
-   */
-
-  @Value.Parameter
-  SyThemeLabelType labelTheme();
-
-  /**
-   * @return The theme used for images
-   */
-
-  @Value.Parameter
-  SyThemeImageType/**/ imageTheme();
-}

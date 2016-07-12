@@ -57,7 +57,8 @@ public interface SyLabelReadableType extends SyComponentReadableType
     final A context,
     final BiFunction<A, SyButtonReadableType, B> on_button,
     final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label)
+    final BiFunction<A, SyLabelReadableType, B> on_label,
+    final BiFunction<A, SyImageReadableType, B> on_image)
   {
     return NullCheck.notNull(on_label).apply(context, this);
   }
