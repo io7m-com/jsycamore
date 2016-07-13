@@ -405,8 +405,8 @@ public final class SyEmbossed
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(emboss_size, emboss_size);
-      this.poly.addPoint(thickness_of_horizontal + emboss_size, emboss_size);
-      this.poly.addPoint(thickness_of_horizontal + emboss_size, 0);
+      this.poly.addPoint(thickness_of_vertical + emboss_size, emboss_size);
+      this.poly.addPoint(thickness_of_vertical + emboss_size, 0);
       graphics.fill(this.poly);
 
       graphics.setPaint(bottom);
@@ -1010,14 +1010,14 @@ public final class SyEmbossed
 
       graphics.translate(0, thickness_of_horizontal);
       graphics.setPaint(left);
-      graphics.fillRect(0, 0, emboss_size, length - thickness_of_vertical);
+      graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
       graphics.translate(
         thickness_of_vertical - emboss_size,
         thickness_of_horizontal);
       graphics.setPaint(right);
-      graphics.fillRect(0, 0, emboss_size, length - thickness_of_vertical);
+      graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
       /**
