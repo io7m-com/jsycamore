@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.slf4j.Logger;
 
 /**
@@ -27,7 +28,7 @@ public final class SyErrors
 {
   private SyErrors()
   {
-
+    throw new UnreachableCodeException();
   }
 
   /**
