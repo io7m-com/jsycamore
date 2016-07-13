@@ -992,9 +992,9 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.content_pane = new ContentPane();
 
       final JOTreeNodeType<SyComponentType> node = this.node();
-      node.childAdd(this.frame.node());
       node.childAdd(this.titlebar.node());
       node.childAdd(this.content_pane.node());
+      node.childAdd(this.frame.node());
     }
 
     @Override
