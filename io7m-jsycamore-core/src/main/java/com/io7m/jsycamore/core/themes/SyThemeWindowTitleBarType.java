@@ -19,8 +19,10 @@ package com.io7m.jsycamore.core.themes;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.VectorI3F;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.immutables.value.Value;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
@@ -31,6 +33,13 @@ import java.util.Optional;
 @Value.Immutable
 public interface SyThemeWindowTitleBarType
 {
+  /**
+   * @return The titlebar outline, if any
+   */
+
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
+
   /**
    * @return The titlebar height
    */
@@ -43,36 +52,88 @@ public interface SyThemeWindowTitleBarType
   }
 
   /**
-   * @return The titlebar width behavior
+   * @return The padding around buttons on the titlebar
    */
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowTitlebarWidthBehavior widthBehavior()
+  default SyThemePaddingType buttonPadding()
   {
-    return SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME;
+    return SyThemePadding.of(0, 0, 0, 0);
   }
 
   /**
-   * @return The titlebar vertical placement
+   * @return {@code true} iff the titlebar should display an icon
    */
 
   @Value.Parameter
   @Value.Default
-  default SyThemeWindowTitlebarVerticalPlacement verticalPlacement()
+  default boolean showIcon()
   {
-    return SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_INSIDE_FRAME;
+    return false;
   }
 
   /**
-   * @return The titlebar horizontal alignment
+   * @return A function that is used to decide the order of elements appearing
+   * in a titlebar
    */
 
   @Value.Parameter
   @Value.Default
-  default SyAlignmentHorizontal horizontalAlignment()
+  default Comparator<SyThemeTitlebarElement> elementOrder()
   {
-    return SyAlignmentHorizontal.ALIGN_CENTER;
+    return (o1, o2) -> {
+      switch (o1) {
+        case ELEMENT_CLOSE_BUTTON: {
+          switch (o2) {
+            case ELEMENT_CLOSE_BUTTON:
+              return 0;
+            case ELEMENT_MAXIMIZE_BUTTON:
+            case ELEMENT_TITLE:
+            case ELEMENT_ICON:
+              return 1;
+          }
+          throw new UnreachableCodeException();
+        }
+        case ELEMENT_MAXIMIZE_BUTTON: {
+          switch (o2) {
+            case ELEMENT_CLOSE_BUTTON:
+              return -1;
+            case ELEMENT_MAXIMIZE_BUTTON:
+              return 0;
+            case ELEMENT_TITLE:
+            case ELEMENT_ICON:
+              return 1;
+          }
+          throw new UnreachableCodeException();
+        }
+        case ELEMENT_TITLE: {
+          switch (o2) {
+            case ELEMENT_CLOSE_BUTTON:
+            case ELEMENT_MAXIMIZE_BUTTON:
+              return -1;
+            case ELEMENT_TITLE:
+              return 0;
+            case ELEMENT_ICON:
+              return 1;
+          }
+          throw new UnreachableCodeException();
+        }
+        case ELEMENT_ICON: {
+          switch (o2) {
+            case ELEMENT_CLOSE_BUTTON:
+            case ELEMENT_MAXIMIZE_BUTTON:
+            case ELEMENT_TITLE:
+              return -1;
+            case ELEMENT_ICON:
+              return 0;
+          }
+          throw new UnreachableCodeException();
+        }
+      }
+
+      throw new UnreachableCodeException();
+    };
   }
 
   /**
@@ -144,6 +205,17 @@ public interface SyThemeWindowTitleBarType
   default SyAlignmentHorizontal textAlignment()
   {
     return SyAlignmentHorizontal.ALIGN_CENTER;
+  }
+
+  /**
+   * @return The padding around the title text
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default SyThemePaddingType textPadding()
+  {
+    return SyThemePadding.of(16, 16, 0, 0);
   }
 
   /**

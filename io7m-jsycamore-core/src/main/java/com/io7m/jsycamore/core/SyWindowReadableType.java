@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorWritable2IType;
 
@@ -31,29 +31,28 @@ import java.util.Optional;
 public interface SyWindowReadableType extends SyGUIElementType
 {
   /**
-   * Retrieve the position of the window. This is the very top left corner of
-   * the window's bounding box.
-   *
-   * @return The position of the window
+   * @return {@code true} iff the window should have a close box
    */
 
-  PVectorReadable2IType<SySpaceViewportType> position();
+  boolean isCloseable();
+
+  /**
+   * @return {@code true} iff the window should have a maximize box
+   */
+
+  boolean isMaximizable();
+
+  /**
+   * @return The readable box representing the window's position and bounds
+   */
+
+  SyBoxType<SySpaceViewportType> box();
 
   /**
    * @return Read-only access to the content pane
    */
 
   SyWindowContentPaneReadableType contentPane();
-
-  /**
-   * Retrieve the size of the bounds of the window. This is the absolute maximum
-   * bounding box size and is therefore useful for allocating images that will
-   * contain the rendered window.
-   *
-   * @return The bounds of the window
-   */
-
-  VectorReadable2IType bounds();
 
   /**
    * @return The current theme

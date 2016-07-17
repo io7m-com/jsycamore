@@ -16,37 +16,30 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.SyWindowReadableType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 
 /**
- * The theme parameters for windows.
+ * A function for arranging the components of a window.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+@FunctionalInterface
+public interface SyThemeWindowArrangementFunctionType
 {
   /**
-   * @return The theme parameters used for window titlebars
+   * Arrange the components in the window.
+   *
+   * @param measurement A measurement interface
+   * @param window      A window
+   * @param box_root    A box covering the entire window
+   *
+   * @return A set of boxes that will be used to arrange components
    */
 
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
-
-  /**
-   * @return The theme parameters used for window frames
-   */
-
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
-
-  /**
-   * @return A function that, given a box representing the window, will return
-   * the positions of the various window components
-   */
-
-  @Value.Parameter
-  SyThemeWindowArrangementFunctionType arranger();
+  SyThemeWindowArrangementType apply(
+    SyTextMeasurementType measurement,
+    SyWindowReadableType window,
+    SyBoxType<SySpaceParentRelativeType> box_root);
 }

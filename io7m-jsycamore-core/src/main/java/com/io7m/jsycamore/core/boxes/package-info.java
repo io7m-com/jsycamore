@@ -14,39 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
-
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
-
 /**
- * The theme parameters for windows.
+ * SyBox calculus.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
-{
-  /**
-   * @return The theme parameters used for window titlebars
-   */
+@com.io7m.jnull.NonNullByDefault
+package com.io7m.jsycamore.core.boxes;
 
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
-
-  /**
-   * @return The theme parameters used for window frames
-   */
-
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
-
-  /**
-   * @return A function that, given a box representing the window, will return
-   * the positions of the various window components
-   */
-
-  @Value.Parameter
-  SyThemeWindowArrangementFunctionType arranger();
-}

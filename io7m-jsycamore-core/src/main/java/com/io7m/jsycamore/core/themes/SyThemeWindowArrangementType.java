@@ -17,80 +17,43 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jtensors.VectorI3F;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.immutables.value.Value;
 
 /**
- * An outline specification.
+ * The boxes for components that appear in windows.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemeOutlineType
+public interface SyThemeWindowArrangementType
 {
   /**
-   * @return {@code true} iff the left edge should have an outline
+   * @return The box that will be used for the frame
    */
 
   @Value.Parameter(order = 0)
-  @Value.Default
-  default boolean left()
-  {
-    return true;
-  }
+  SyBoxType<SySpaceParentRelativeType> frameBox();
 
   /**
-   * @return {@code true} iff the right edge should have an outline
+   * @return The box that will indicate the excluded area inside the frame
    */
 
   @Value.Parameter(order = 1)
-  @Value.Default
-  default boolean right()
-  {
-    return true;
-  }
+  SyBoxType<SySpaceParentRelativeType> frameExclusionBox();
 
   /**
-   * @return {@code true} iff the top edge should have an outline
+   * @return The box that will be used for the titlebar
    */
 
   @Value.Parameter(order = 2)
-  @Value.Default
-  default boolean top()
-  {
-    return true;
-  }
+  SyBoxType<SySpaceParentRelativeType> titlebarBox();
 
   /**
-   * @return {@code true} iff the bottom edge should have an outline
+   * @return The box that will be used for the content area
    */
 
   @Value.Parameter(order = 3)
-  @Value.Default
-  default boolean bottom()
-  {
-    return true;
-  }
-
-  /**
-   * @return The color of the outline when the element is active
-   */
-
-  @Value.Parameter(order = 4)
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
-
-  /**
-   * @return The color of the outline when the element is inactive
-   */
-
-  @Value.Parameter(order = 5)
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.2f, 0.2f, 0.2f);
-  }
+  SyBoxType<SySpaceParentRelativeType> contentBox();
 }

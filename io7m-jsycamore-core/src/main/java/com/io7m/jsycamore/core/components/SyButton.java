@@ -22,6 +22,11 @@ package com.io7m.jsycamore.core.components;
 
 public final class SyButton extends SyButtonAbstract
 {
+  private SyButton()
+  {
+    super(() -> true);
+  }
+
   /**
    * @return A new button
    */
@@ -31,18 +36,24 @@ public final class SyButton extends SyButtonAbstract
     return new SyButton();
   }
 
-  private SyButton()
-  {
-    super(() -> true);
-  }
-
   @Override
   public String toString()
   {
-    final StringBuilder sb = new StringBuilder("[SyButton ");
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[SyButton 0x");
+    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
     sb.append(" [pressed ").append(this.isPressed()).append("]");
     sb.append(" [over ").append(this.isOver()).append("]");
-    sb.append(']');
+    sb.append(" ");
+    sb.append(this.box().width());
+    sb.append("x");
+    sb.append(this.box().height());
+    sb.append(" ");
+    sb.append(this.box().minimumX());
+    sb.append("+");
+    sb.append(this.box().minimumY());
+    sb.append("]");
     return sb.toString();
   }
 }

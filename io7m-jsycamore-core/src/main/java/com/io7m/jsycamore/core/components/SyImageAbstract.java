@@ -44,6 +44,16 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
   private SyAlignmentHorizontal align_h;
   private SyAlignmentVertical align_v;
 
+  protected SyImageAbstract(
+    final SyImageSpecificationType in_image,
+    final BooleanSupplier in_detach_check)
+  {
+    super(in_detach_check);
+    this.image = NullCheck.notNull(in_image);
+    this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
+    this.align_v = SyAlignmentVertical.ALIGN_CENTER;
+  }
+
   @Override
   public final SyAlignmentHorizontal imageAlignmentHorizontal()
   {
@@ -68,16 +78,6 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
     final SyAlignmentHorizontal h)
   {
     this.align_h = NullCheck.notNull(h);
-  }
-
-  protected SyImageAbstract(
-    final SyImageSpecificationType in_image,
-    final BooleanSupplier in_detach_check)
-  {
-    super(in_detach_check);
-    this.image = NullCheck.notNull(in_image);
-    this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
-    this.align_v = SyAlignmentVertical.ALIGN_CENTER;
   }
 
   @Override

@@ -18,6 +18,12 @@ package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.SyWindowReadableType;
+import com.io7m.jsycamore.core.boxes.SyBox;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
@@ -27,15 +33,20 @@ import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
-import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jsycamore.core.themes.SyThemeOutlines;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
+import com.io7m.jsycamore.core.themes.SyThemeTitlebars;
+import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
+import com.io7m.jsycamore.core.themes.SyThemeWindowArrangement;
+import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameCorner;
+import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarVerticalPlacement;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarWidthBehavior;
+import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.junreachable.UnreachableCodeException;
 
@@ -116,7 +127,6 @@ public final class SyThemeBee
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
     theme_titlebar_b.setTextFont("Monospaced 10");
-    theme_titlebar_b.setHeight(18);
     theme_titlebar_b.setColorActive(spec.titlebarColorActive());
     theme_titlebar_b.setColorInactive(title_color_inactive_base);
     theme_titlebar_b.setTextColorActive(text_color_active);
@@ -126,13 +136,11 @@ public final class SyThemeBee
     theme_titlebar_b.setEmbossInactive(
       Optional.of(theme_titlebar_emboss_inactive_b.build()));
     theme_titlebar_b.setTextAlignment(
-      SyAlignmentHorizontal.ALIGN_CENTER);
-    theme_titlebar_b.setVerticalPlacement(
-      SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_ABOVE_FRAME);
-    theme_titlebar_b.setHorizontalAlignment(
       SyAlignmentHorizontal.ALIGN_LEFT);
-    theme_titlebar_b.setWidthBehavior(
-      SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_TO_CONTENT);
+    theme_titlebar_b.setOutline(SyThemeOutline.of(
+      true, true, true, false,
+      new VectorI3F(0.0f, 0.0f, 0.0f),
+      new VectorI3F(0.3f, 0.3f, 0.3f)));
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
@@ -158,6 +166,10 @@ public final class SyThemeBee
     theme_frame_b.setRightWidth(3);
     theme_frame_b.setColorActive(spec.frameColor());
     theme_frame_b.setColorInactive(spec.frameColor());
+    theme_frame_b.setOutline(SyThemeOutline.of(
+      true, true, true, true,
+      new VectorI3F(0.0f, 0.0f, 0.0f),
+      new VectorI3F(0.3f, 0.3f, 0.3f)));
 
     theme_frame_b.setTopLeftStyle(
       SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
@@ -171,19 +183,15 @@ public final class SyThemeBee
     theme_frame_b.setEmbossActive(theme_frame_emboss_active_b.build());
     theme_frame_b.setEmbossInactive(theme_frame_emboss_inactive_b.build());
 
-    final SyThemeOutline.Builder theme_window_outline =
-      SyThemeOutline.builder();
+    final SyThemeOutline.Builder theme_window_outline = SyThemeOutline.builder();
     theme_window_outline.setColorActive(new VectorI3F(0.0f, 0.0f, 0.0f));
     theme_window_outline.setColorInactive(new VectorI3F(0.3f, 0.3f, 0.3f));
-
-    final Optional<SyThemeOutlineType> theme_outline =
-      Optional.of(theme_window_outline.build());
 
     theme.setWindowTheme(
       SyThemeWindow.of(
         theme_titlebar_b.build(),
         theme_frame_b.build(),
-        theme_outline));
+        SyThemeBee::arrangeWindowComponents));
 
     theme.setButtonTheme(SyThemeBee.createThemeButton(
       spec,
@@ -198,11 +206,79 @@ public final class SyThemeBee
     return theme;
   }
 
+  /**
+   * Arrange components in a manner suitable for this theme.
+   *
+   * @param measurement A text measurement interface
+   * @param window      The window
+   * @param window_box  The box covering the window
+   *
+   * @return A set of boxes for the components
+   */
+
+  public static SyThemeWindowArrangementType arrangeWindowComponents(
+    final SyTextMeasurementType measurement,
+    final SyWindowReadableType window,
+    final SyBoxType<SySpaceParentRelativeType> window_box)
+  {
+    NullCheck.notNull(measurement);
+    NullCheck.notNull(window);
+    NullCheck.notNull(window_box);
+
+    final SyThemeType theme = window.theme();
+    final SyThemeWindowType theme_window = theme.windowTheme();
+    final SyThemeWindowTitleBarType titlebar_theme = theme_window.titleBar();
+
+    final SyBoxType<SySpaceParentRelativeType> box_titlebar_initial =
+      SyBoxes.create(
+        0,
+        0,
+        SyThemeTitlebars.minimumWidthRequired(
+          measurement,
+          window_box,
+          titlebar_theme,
+          window.titlebar().text(),
+          window.isCloseable(),
+          window.isMaximizable()),
+        titlebar_theme.height());
+
+    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
+      SyThemeOutlines.scaleForOutlineOptional(
+        box_titlebar_initial, titlebar_theme.outline());
+
+    final SyBox<SySpaceParentRelativeType> box_frame_initial =
+      SyBox.of(
+        0,
+        window_box.maximumX(),
+        box_titlebar.maximumY() - 1,
+        window_box.maximumY());
+
+    final SyThemeWindowFrameType frame_theme = theme_window.frame();
+
+    final SyBoxType<SySpaceParentRelativeType> box_frame =
+      SyThemeOutlines.scaleForOutlineOptional(
+        box_frame_initial, frame_theme.outline());
+
+    final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
+      SyBoxes.hollowOut(
+        box_frame,
+        frame_theme.leftWidth(),
+        frame_theme.rightWidth(),
+        frame_theme.topHeight(),
+        frame_theme.bottomHeight());
+
+    return SyThemeWindowArrangement.of(
+      box_frame,
+      box_frame_inner,
+      box_titlebar,
+      box_frame_inner);
+  }
+
   private static SyThemeImageType createThemeImage(
     final VectorI3F color)
   {
     final SyThemeImage.Builder b = SyThemeImage.builder();
-    b.setOutline(SyThemeOutline.of(color, color));
+    b.setOutline(SyThemeOutline.of(true, true, true, true, color, color));
     return b.build();
   }
 
@@ -232,6 +308,7 @@ public final class SyThemeBee
       SyThemeButton.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
+      true, false, true, true,
       spec.foregroundColor(),
       background_darker));
 

@@ -17,80 +17,57 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
 /**
- * An outline specification.
+ * A padding specification.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemeOutlineType
+public interface SyThemePaddingType
 {
   /**
-   * @return {@code true} iff the left edge should have an outline
+   * @return The size of the left padding
    */
 
-  @Value.Parameter(order = 0)
+  @Value.Parameter
   @Value.Default
-  default boolean left()
+  default int paddingLeft()
   {
-    return true;
+    return 0;
   }
 
   /**
-   * @return {@code true} iff the right edge should have an outline
+   * @return The size of the right padding
    */
 
-  @Value.Parameter(order = 1)
+  @Value.Parameter
   @Value.Default
-  default boolean right()
+  default int paddingRight()
   {
-    return true;
+    return 0;
   }
 
   /**
-   * @return {@code true} iff the top edge should have an outline
+   * @return The size of the top padding
    */
 
-  @Value.Parameter(order = 2)
+  @Value.Parameter
   @Value.Default
-  default boolean top()
+  default int paddingTop()
   {
-    return true;
+    return 0;
   }
 
   /**
-   * @return {@code true} iff the bottom edge should have an outline
+   * @return The size of the bottom padding
    */
 
-  @Value.Parameter(order = 3)
+  @Value.Parameter
   @Value.Default
-  default boolean bottom()
+  default int paddingBottom()
   {
-    return true;
-  }
-
-  /**
-   * @return The color of the outline when the element is active
-   */
-
-  @Value.Parameter(order = 4)
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
-
-  /**
-   * @return The color of the outline when the element is inactive
-   */
-
-  @Value.Parameter(order = 5)
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.2f, 0.2f, 0.2f);
+    return 0;
   }
 }

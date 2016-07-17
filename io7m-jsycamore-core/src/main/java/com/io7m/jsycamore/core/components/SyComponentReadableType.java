@@ -21,7 +21,7 @@ import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jtensors.VectorReadable2IType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
 import java.util.Optional;
@@ -73,16 +73,10 @@ public interface SyComponentReadableType
   SyParentResizeBehavior resizeBehaviorHeight();
 
   /**
-   * @return The position of the component relative to its parent
+   * @return The readable box representing the component's position and bounds
    */
 
-  PVectorReadable2IType<SySpaceParentRelativeType> position();
-
-  /**
-   * @return The size of the component
-   */
-
-  VectorReadable2IType size();
+  SyBoxType<SySpaceParentRelativeType> box();
 
   /**
    * @return The window to which this component belongs

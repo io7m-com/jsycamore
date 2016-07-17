@@ -36,7 +36,7 @@ public interface SyLabelReadableType extends SyComponentReadableType
 
   /**
    * Retrieve the horizontal alignment of the text. Text will be aligned within
-   * the bounds specified by {@link #size()}.
+   * the bounds specified by {@link #box()}.
    *
    * @return The alignment
    */
@@ -45,7 +45,7 @@ public interface SyLabelReadableType extends SyComponentReadableType
 
   /**
    * Retrieve the vertical alignment of the text. Text will be aligned within
-   * the bounds specified by {@link #size()}.
+   * the bounds specified by {@link #box()}.
    *
    * @return The alignment
    */

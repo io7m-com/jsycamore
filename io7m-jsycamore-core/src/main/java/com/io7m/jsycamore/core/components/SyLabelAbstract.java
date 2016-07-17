@@ -41,6 +41,16 @@ public abstract class SyLabelAbstract extends SyComponentAbstract implements
 
   private SyAlignmentHorizontal align_h;
   private SyAlignmentVertical align_v;
+  private String text;
+
+  protected SyLabelAbstract(
+    final BooleanSupplier in_detach_check)
+  {
+    super(in_detach_check);
+    this.text = "";
+    this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
+    this.align_v = SyAlignmentVertical.ALIGN_CENTER;
+  }
 
   @Override
   public final SyAlignmentHorizontal textAlignmentHorizontal()
@@ -66,17 +76,6 @@ public abstract class SyLabelAbstract extends SyComponentAbstract implements
     final SyAlignmentHorizontal h)
   {
     this.align_h = NullCheck.notNull(h);
-  }
-
-  private String text;
-
-  protected SyLabelAbstract(
-    final BooleanSupplier in_detach_check)
-  {
-    super(in_detach_check);
-    this.text = "";
-    this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
-    this.align_v = SyAlignmentVertical.ALIGN_CENTER;
   }
 
   @Override

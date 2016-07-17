@@ -23,8 +23,8 @@ package com.io7m.jsycamore.core.components;
 public enum SyVisibility
 {
   /**
-   * The component is invisible. Accordingly, all children of the component
-   * are invisible too.
+   * The component is invisible. Accordingly, all children of the component are
+   * invisible too.
    */
 
   VISIBILITY_INVISIBLE,

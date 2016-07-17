@@ -111,8 +111,6 @@ public interface SyThemeWindowFrameType
         }
       }
     }
-
-
   }
 
   /**
@@ -238,4 +236,11 @@ public interface SyThemeWindowFrameType
   {
     return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
+
+  /**
+   * @return The frame outline, if any
+   */
+
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
 }

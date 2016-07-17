@@ -14,31 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.tests.core.boxes;
 
-/**
- * A specification of the width behavior of a titlebar.
- */
+import com.io7m.jsycamore.core.boxes.SyBox;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.valid4j.errors.RequireViolation;
 
-public enum SyThemeWindowTitlebarWidthBehavior
+public final class SyBoxTest
 {
-  /**
-   * The titlebar will be the narrowest it can be whilst still containing the
-   * titlebar content.
-   */
+  @Rule public ExpectedException expected = ExpectedException.none();
 
-  WIDTH_RESIZE_TO_CONTENT,
+  @Test
+  public void testNegativeWidth()
+  {
+    this.expected.expect(RequireViolation.class);
+    SyBox.of(0, -1, 0, 0);
+  }
 
-  /**
-   * The titlebar will be resized such that it fits inside the window frame.
-   */
-
-  WIDTH_RESIZE_INSIDE_FRAME,
-
-  /**
-   * The titlebar will be resized such that the width matches that of the
-   * window.
-   */
-
-  WIDTH_RESIZE_TO_WINDOW
+  @Test
+  public void testNegativeHeight()
+  {
+    this.expected.expect(RequireViolation.class);
+    SyBox.of(0, 0, 0, -1);
+  }
 }

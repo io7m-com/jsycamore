@@ -36,24 +36,6 @@ public final class SyPanel extends SyPanelAbstract
     super(() -> true);
   }
 
-  @Override
-  public String toString()
-  {
-    final StringBuilder sb = new StringBuilder(128);
-    sb.append("[SyPanel 0x");
-    sb.append(Integer.toHexString(this.hashCode()));
-    sb.append(" ");
-    sb.append(this.size().getXI());
-    sb.append("x");
-    sb.append(this.size().getYI());
-    sb.append(" ");
-    sb.append(this.position().getXI());
-    sb.append("+");
-    sb.append(this.position().getYI());
-    sb.append("]");
-    return sb.toString();
-  }
-
   /**
    * @return A new panel
    */
@@ -61,5 +43,23 @@ public final class SyPanel extends SyPanelAbstract
   public static SyPanelType create()
   {
     return new SyPanel();
+  }
+
+  @Override
+  public String toString()
+  {
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[SyPanel 0x");
+    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
+    sb.append(this.box().width());
+    sb.append("x");
+    sb.append(this.box().height());
+    sb.append(" ");
+    sb.append(this.box().minimumX());
+    sb.append("+");
+    sb.append(this.box().minimumY());
+    sb.append("]");
+    return sb.toString();
   }
 }

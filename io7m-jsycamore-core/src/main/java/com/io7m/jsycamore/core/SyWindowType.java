@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 
@@ -30,26 +31,12 @@ public interface SyWindowType extends SyWindowEventsType,
   SyWindowReadableType
 {
   /**
-   * Set the size of the window.
+   * Set whether or not the window should have a close box.
    *
-   * @param width  The lightWidth
-   * @param height The height
+   * @param c {@code true} iff the window should have a close box
    */
 
-  void setBounds(
-    int width,
-    int height);
-
-  /**
-   * Set the position of the window, in viewport-relative coordinates.
-   *
-   * @param x The {@code x} value
-   * @param y The {@code y} value
-   */
-
-  void setPosition(
-    int x,
-    int y);
+  void setCloseable(boolean c);
 
   /**
    * @return Writable access to the content pane
@@ -57,6 +44,14 @@ public interface SyWindowType extends SyWindowEventsType,
 
   @Override
   SyWindowContentPaneType contentPane();
+
+  /**
+   * Set the window's position and bounds.
+   *
+   * @param box The box representing the new position and bounds
+   */
+
+  void setBox(SyBoxType<SySpaceViewportType> box);
 
   /**
    * Set the theme for the window. If an empty value is specified, the window

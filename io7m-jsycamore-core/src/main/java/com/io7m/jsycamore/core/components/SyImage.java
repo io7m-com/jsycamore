@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 
 /**
@@ -27,7 +28,7 @@ public final class SyImage extends SyImageAbstract
   private SyImage(final SyImageSpecificationType in_spec)
   {
     super(in_spec, () -> true);
-    this.setBounds(in_spec.width(), in_spec.height());
+    this.setBox(SyBoxes.create(0, 0, in_spec.width(), in_spec.height()));
   }
 
   /**
@@ -39,5 +40,23 @@ public final class SyImage extends SyImageAbstract
   public static SyImageType create(final SyImageSpecificationType in_spec)
   {
     return new SyImage(in_spec);
+  }
+
+  @Override
+  public String toString()
+  {
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[SyImage 0x");
+    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
+    sb.append(this.box().width());
+    sb.append("x");
+    sb.append(this.box().height());
+    sb.append(" ");
+    sb.append(this.box().minimumX());
+    sb.append("+");
+    sb.append(this.box().minimumY());
+    sb.append("]");
+    return sb.toString();
   }
 }

@@ -37,7 +37,7 @@ public interface SyImageReadableType extends SyComponentReadableType
 
   /**
    * Retrieve the horizontal alignment of the image. Images will be aligned
-   * within the bounds specified by {@link #size()}.
+   * within the bounds specified by {@link #box()}.
    *
    * @return The alignment
    */
@@ -46,7 +46,7 @@ public interface SyImageReadableType extends SyComponentReadableType
 
   /**
    * Retrieve the vertical alignment of the image. Images will be aligned within
-   * the bounds specified by {@link #size()}.
+   * the bounds specified by {@link #box()}.
    *
    * @return The alignment
    */

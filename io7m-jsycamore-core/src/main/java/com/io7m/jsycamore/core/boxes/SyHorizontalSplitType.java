@@ -14,30 +14,32 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core.boxes;
+
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.SySpaceType;
+import org.immutables.value.Value;
 
 /**
- * The vertical placement of window titlebars.
+ * The result of splitting a box along a horizontal line.
+ * @param <S> The type of coordinate space
  */
 
-public enum SyThemeWindowTitlebarVerticalPlacement
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyHorizontalSplitType<S extends SySpaceType>
 {
   /**
-   * The titlebar will be placed at the top of the window, inside the frame.
+   * @return The upper half
    */
 
-  PLACEMENT_TOP_INSIDE_FRAME,
+  @Value.Parameter(order = 0)
+  SyBoxType<S> upper();
 
   /**
-   * The titlebar will be placed at the top of the window, overlapping the
-   * frame.
+   * @return The lower half
    */
 
-  PLACEMENT_TOP_OVERLAP_FRAME,
-
-  /**
-   * The titlebar will be placed at the top of the window, above the frame.
-   */
-
-  PLACEMENT_TOP_ABOVE_FRAME
+  @Value.Parameter(order = 1)
+  SyBoxType<S> lower();
 }

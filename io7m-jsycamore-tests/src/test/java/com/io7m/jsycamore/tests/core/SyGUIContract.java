@@ -17,6 +17,10 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jranges.RangeCheckException;
+import com.io7m.jsycamore.core.SyWindowContentPaneType;
+import com.io7m.jsycamore.core.SyWindowFrameType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
@@ -109,32 +113,12 @@ public abstract class SyGUIContract
     Assert.assertTrue(g.windowIsFocused(w));
     Assert.assertTrue(w.focused());
 
-    final PVectorReadable2IType<SySpaceViewportType> pos = w.position();
-    Assert.assertEquals(0L, (long) pos.getXI());
-    Assert.assertEquals(0L, (long) pos.getYI());
+    final SyBoxType<SySpaceViewportType> window_box = w.box();
 
-    final VectorReadable2IType bounds = w.bounds();
-    Assert.assertEquals(640L, (long) bounds.getXI());
-    Assert.assertEquals(480L, (long) bounds.getYI());
-
-    final PVectorReadable2IType<SySpaceParentRelativeType> frame_pos =
-      w.frame().position();
-    Assert.assertTrue(frame_pos.getXI() >= pos.getXI());
-    Assert.assertTrue(frame_pos.getYI() >= pos.getYI());
-
-    final VectorReadable2IType frame_bounds = w.frame().size();
-    Assert.assertTrue(frame_bounds.getXI() <= bounds.getXI());
-    Assert.assertTrue(frame_bounds.getYI() <= bounds.getYI());
-
-    final SyWindowTitlebarType titlebar = w.titlebar();
-    final PVectorReadable2IType<SySpaceParentRelativeType> titlebar_pos =
-      titlebar.position();
-    Assert.assertTrue(titlebar_pos.getXI() >= pos.getXI());
-    Assert.assertTrue(titlebar_pos.getYI() >= pos.getYI());
-
-    final VectorReadable2IType titlebar_size = titlebar.size();
-    Assert.assertTrue(titlebar_size.getXI() <= bounds.getXI());
-    Assert.assertTrue(titlebar_size.getYI() <= bounds.getYI());
+    Assert.assertEquals(0L, (long) window_box.minimumX());
+    Assert.assertEquals(0L, (long) window_box.minimumY());
+    Assert.assertEquals(640L, (long) window_box.width());
+    Assert.assertEquals(480L, (long) window_box.height());
   }
 
   @Test
@@ -164,6 +148,48 @@ public abstract class SyGUIContract
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
   }
 
+  @Test public final void testWindowMouseOverFrame()
+  {
+    final SyTheme t = SyThemeMotive.builder().build();
+    final SyGUIType g = this.createWithTheme("main", t);
+    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(2, 2));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyWindowFrameType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(640 + 2, 480 + 2));
+      Assert.assertFalse(c.isPresent());
+    }
+  }
+
+  @Test public final void testWindowMouseOverContentPane()
+  {
+    final SyTheme t = SyThemeMotive.builder().build();
+    final SyGUIType g = this.createWithTheme("main", t);
+    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(32, 32));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(640 + 32, 480 + 32));
+      Assert.assertFalse(c.isPresent());
+    }
+  }
+
   @Test public final void testWindowMouseOverTitlebar()
   {
     final SyTheme t = SyThemeMotive.builder().build();
@@ -181,6 +207,28 @@ public abstract class SyGUIContract
     {
       final Optional<SyComponentType> c =
         g.onMouseMoved(new PVectorI2I<>(640 + 10, 480 + 10));
+      Assert.assertFalse(c.isPresent());
+    }
+  }
+
+  @Test public final void testWindowMouseOverTitlebarOffset()
+  {
+    final SyTheme t = SyThemeMotive.builder().build();
+    final SyGUIType g = this.createWithTheme("main", t);
+    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    w0.setBox(SyBoxes.moveAbsolute(w0.box(), 32, 32));
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(32 + 10, 32 + 10));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(32 + 640 + 10, 32 + 480 + 10));
       Assert.assertFalse(c.isPresent());
     }
   }
@@ -209,13 +257,11 @@ public abstract class SyGUIContract
       Assert.assertTrue(cc instanceof SyWindowTitlebarType);
     }
 
-    final PVectorReadable2IType<SySpaceViewportType> pos = w0.position();
-    Assert.assertEquals(5L, (long) pos.getXI());
-    Assert.assertEquals(10L, (long) pos.getYI());
-
-    final VectorReadable2IType size = w0.bounds();
-    Assert.assertEquals(640L, (long) size.getXI());
-    Assert.assertEquals(480L, (long) size.getYI());
+    final SyBoxType<SySpaceViewportType> box = w0.box();
+    Assert.assertEquals(5L, (long) box.minimumX());
+    Assert.assertEquals(10L, (long) box.minimumY());
+    Assert.assertEquals(640L, (long) box.width());
+    Assert.assertEquals(480L, (long) box.height());
   }
 
   @Test public final void testWindowClickNothing()
@@ -263,12 +309,10 @@ public abstract class SyGUIContract
 
     g.onMouseMoved(new PVectorI2I<>(800, 600));
 
-    final PVectorReadable2IType<SySpaceViewportType> pos = w0.position();
-    Assert.assertEquals(0L, (long) pos.getXI());
-    Assert.assertEquals(0L, (long) pos.getYI());
-
-    final VectorReadable2IType size = w0.bounds();
-    Assert.assertEquals(640L, (long) size.getXI());
-    Assert.assertEquals(480L, (long) size.getYI());
+    final SyBoxType<SySpaceViewportType> box = w0.box();
+    Assert.assertEquals(0L, (long) box.minimumX());
+    Assert.assertEquals(0L, (long) box.minimumY());
+    Assert.assertEquals(640L, (long) box.width());
+    Assert.assertEquals(480L, (long) box.height());
   }
 }

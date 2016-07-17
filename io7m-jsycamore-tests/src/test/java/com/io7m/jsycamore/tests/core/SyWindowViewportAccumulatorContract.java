@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.core.boxes.SyBox;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.VectorI2I;
 import com.io7m.jtensors.parameterized.PVectorI2I;
@@ -66,7 +68,7 @@ public abstract class SyWindowViewportAccumulatorContract
       final int w = rand.nextInt(bound);
       final int h = rand.nextInt(bound);
 
-      c.accumulate(new PVectorI2I<>(x,y), new VectorI2I(w, h));
+      c.accumulate(SyBoxes.create(x, y, w, h));
 
       final int new_x0 = c.minimumX();
       final int new_y0 = c.minimumY();
@@ -114,7 +116,7 @@ public abstract class SyWindowViewportAccumulatorContract
     }
 
     {
-      c.accumulate(new PVectorI2I<>(10, 15), new PVectorI2I<>(20, 30));
+      c.accumulate(SyBoxes.create(10, 15, 20, 30));
       final long width = (long) (c.maximumX() - c.minimumX());
       final long height = (long) (c.maximumY() - c.minimumY());
       Assert.assertEquals(10L, (long) c.minimumX());
@@ -126,7 +128,7 @@ public abstract class SyWindowViewportAccumulatorContract
     }
 
     {
-      c.accumulate(new PVectorI2I<>(0, 0), new PVectorI2I<>(10, 20));
+      c.accumulate(SyBoxes.create(0, 0, 10, 20));
       final long width = (long) (c.maximumX() - c.minimumX());
       final long height = (long) (c.maximumY() - c.minimumY());
       Assert.assertEquals(10L, (long) c.minimumX());

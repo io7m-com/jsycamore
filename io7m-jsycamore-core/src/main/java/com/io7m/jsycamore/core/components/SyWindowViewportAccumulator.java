@@ -18,8 +18,11 @@ package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jsycamore.core.SySpaceType;
+import com.io7m.jsycamore.core.boxes.SyBox;
+import com.io7m.jsycamore.core.boxes.SyBoxMutable;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
@@ -34,15 +37,15 @@ import java.util.ArrayDeque;
 public final class SyWindowViewportAccumulator implements
   SyWindowViewportAccumulatorType
 {
-  private final ArrayDeque<Item> saved;
-  private final Item current;
+  private final ArrayDeque<SyBox<SySpaceType>> saved;
+  private final SyBoxMutable<SySpaceType> current;
   private int base_width;
   private int base_height;
 
   private SyWindowViewportAccumulator()
   {
     this.saved = new ArrayDeque<>(16);
-    this.current = new Item(0, 0, 0, 0);
+    this.current = SyBoxMutable.create(0, 0, 0, 0);
   }
 
   /**
@@ -70,13 +73,13 @@ public final class SyWindowViewportAccumulator implements
   {
     final StringBuilder sb =
       new StringBuilder("[SyWindowViewportAccumulator ");
-    sb.append(this.current.x_min);
+    sb.append(this.current.minimumX());
     sb.append(" ");
-    sb.append(this.current.y_min);
+    sb.append(this.current.minimumY());
     sb.append(" ");
-    sb.append(this.current.x_max);
+    sb.append(this.current.maximumX());
     sb.append(" ");
-    sb.append(this.current.y_max);
+    sb.append(this.current.maximumY());
     sb.append("]");
     return sb.toString();
   }
@@ -92,31 +95,25 @@ public final class SyWindowViewportAccumulator implements
     this.saved.clear();
     this.base_width = width;
     this.base_height = height;
-    this.current.x_max = width;
-    this.current.y_max = height;
+
+    this.current.from(SyBoxes.create(0, 0, width, height));
   }
 
   @Override
   public void accumulate(
-    final PVectorReadable2IType<SySpaceParentRelativeType> in_position,
-    final VectorReadable2IType in_size)
+    final SyBoxType<SySpaceParentRelativeType> box)
   {
-    NullCheck.notNull(in_position);
-    NullCheck.notNull(in_size);
+    NullCheck.notNull(box);
 
-    this.saved.push(new Item(
-      this.current.x_min,
-      this.current.x_max,
-      this.current.y_min,
-      this.current.y_max));
+    this.saved.push(SyBox.copyOf(this.current));
 
-    final int original_x0 = this.current.x_min;
-    final int original_y0 = this.current.y_min;
-    final int original_x1 = this.current.x_max;
-    final int original_y1 = this.current.y_max;
+    final int original_x0 = this.current.minimumX();
+    final int original_y0 = this.current.minimumY();
+    final int original_x1 = this.current.maximumX();
+    final int original_y1 = this.current.maximumY();
 
-    final int move_x = in_position.getXI();
-    final int move_y = in_position.getYI();
+    final int move_x = box.minimumX();
+    final int move_y = box.minimumY();
 
     final int new_x0 =
       Math.addExact(original_x0, move_x);
@@ -127,8 +124,8 @@ public final class SyWindowViewportAccumulator implements
     final int my0 =
       SyWindowViewportAccumulator.clamp(new_y0, original_y0, original_y1);
 
-    final int size_x = in_size.getXI();
-    final int size_y = in_size.getYI();
+    final int size_x = box.width();
+    final int size_y = box.height();
     final int new_x1 = Math.addExact(new_x0, size_x);
     final int new_y1 = Math.addExact(new_y0, size_y);
     final int mx1 =
@@ -143,70 +140,45 @@ public final class SyWindowViewportAccumulator implements
     Assertive.require(mx0 <= mx1, "mx0 must be <= mx1");
     Assertive.require(my0 <= my1, "my0 must be <= my1");
 
-    this.current.x_min = mx0;
-    this.current.y_min = my0;
-    this.current.x_max = mx1;
-    this.current.y_max = my1;
+    this.current.setMinimumX(mx0);
+    this.current.setMaximumX(mx1);
+    this.current.setMinimumY(my0);
+    this.current.setMaximumY(my1);
   }
 
   @Override
   public int minimumX()
   {
-    return this.current.x_min;
+    return this.current.minimumX();
   }
 
   @Override
   public int minimumY()
   {
-    return this.current.y_min;
+    return this.current.minimumY();
   }
 
   @Override
   public int maximumX()
   {
-    return this.current.x_max;
+    return this.current.maximumX();
   }
 
   @Override
   public int maximumY()
   {
-    return this.current.y_max;
+    return this.current.maximumY();
   }
 
   @Override
   public void restore()
   {
     if (!this.saved.isEmpty()) {
-      final Item previous = this.saved.pop();
-      this.current.x_max = previous.x_max;
-      this.current.x_min = previous.x_min;
-      this.current.y_min = previous.y_min;
-      this.current.y_max = previous.y_max;
+      final SyBox<SySpaceType> previous = this.saved.pop();
+      this.current.from(previous);
     } else {
-      this.current.x_max = this.base_width;
-      this.current.x_min = 0;
-      this.current.y_min = 0;
-      this.current.y_max = this.base_height;
-    }
-  }
-
-  private static final class Item
-  {
-    private int x_min;
-    private int x_max;
-    private int y_min;
-    private int y_max;
-
-    Item(
-      final int in_x_min,
-      final int in_x_max,
-      final int in_y_min,
-      final int in_y_max)
-    {
-      this.x_min = in_x_min;
-      this.x_max = in_x_max;
-      this.y_min = in_y_min;
-      this.y_max = in_y_max;
+      this.current.from(
+        SyBoxes.create(0, 0, this.base_width, this.base_height));
     }
   }
 }

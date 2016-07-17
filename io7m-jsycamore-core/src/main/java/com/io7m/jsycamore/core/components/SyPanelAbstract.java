@@ -45,14 +45,14 @@ public abstract class SyPanelAbstract extends SyComponentAbstract implements
   }
 
   @Override
-  public final void setPanelTransparent(final boolean e)
-  {
-    this.transparent = e;
-  }
-
-  @Override
   public final boolean isPanelTransparent()
   {
     return this.transparent;
+  }
+
+  @Override
+  public final void setPanelTransparent(final boolean e)
+  {
+    this.transparent = e;
   }
 }

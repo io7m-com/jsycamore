@@ -16,37 +16,33 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
-
 /**
- * The theme parameters for windows.
+ * The elements that may appear in a title bar.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public enum SyThemeTitlebarElement
 {
   /**
-   * @return The theme parameters used for window titlebars
+   * The close button
    */
 
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
+  ELEMENT_CLOSE_BUTTON,
 
   /**
-   * @return The theme parameters used for window frames
+   * The maximize button
    */
 
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
+  ELEMENT_MAXIMIZE_BUTTON,
 
   /**
-   * @return A function that, given a box representing the window, will return
-   * the positions of the various window components
+   * The title text
    */
 
-  @Value.Parameter
-  SyThemeWindowArrangementFunctionType arranger();
+  ELEMENT_TITLE,
+
+  /**
+   * The icon
+   */
+
+  ELEMENT_ICON
 }

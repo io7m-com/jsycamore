@@ -20,8 +20,7 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -71,16 +70,14 @@ public final class SyGUIRendererAWTInefficient
     final int window_count = windows.size();
     for (int index = window_count - 1; index >= 0; --index) {
       final SyWindowType window = windows.get(index);
-      final VectorReadable2IType bounds = window.bounds();
+      final SyBoxType<SySpaceViewportType> box = window.box();
       final BufferedImage bi =
-        new BufferedImage(bounds.getXI(), bounds.getYI(), input.getType());
+        new BufferedImage(box.width(), box.height(), input.getType());
 
       this.window_renderer.render(bi, window);
       final AffineTransform transform = graphics.getTransform();
       try {
-        final PVectorReadable2IType<SySpaceViewportType> position =
-          window.position();
-        graphics.translate(position.getXI(), position.getYI());
+        graphics.translate(box.minimumX(), box.minimumY());
         graphics.drawImage(bi, 0, 0, null);
       } finally {
         graphics.setTransform(transform);

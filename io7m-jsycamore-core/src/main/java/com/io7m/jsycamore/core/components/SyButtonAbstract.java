@@ -50,6 +50,12 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
   private boolean pressed;
   private boolean over;
 
+  protected SyButtonAbstract(final BooleanSupplier in_detach_check)
+  {
+    super(in_detach_check);
+    this.listeners = new ArrayList<>(4);
+  }
+
   protected final boolean isPressed()
   {
     return this.pressed;
@@ -58,12 +64,6 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
   protected final boolean isOver()
   {
     return this.over;
-  }
-
-  protected SyButtonAbstract(final BooleanSupplier in_detach_check)
-  {
-    super(in_detach_check);
-    this.listeners = new ArrayList<>(4);
   }
 
   @Override

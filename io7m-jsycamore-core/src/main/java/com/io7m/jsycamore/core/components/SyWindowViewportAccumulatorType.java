@@ -17,8 +17,7 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 
 /**
  * <p>The type of accumulators that calculate <i>viewports</i> for sets of
@@ -38,9 +37,9 @@ import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 public interface SyWindowViewportAccumulatorType
 {
   /**
-   * <p>Reset the accumulator to the given base size. This is typically the width
-   * and height of a containing window. The width and height must be greater
-   * than or equal to {@code 0}.</p>
+   * <p>Reset the accumulator to the given base size. This is typically the
+   * width and height of a containing window. The width and height must be
+   * greater than or equal to {@code 0}.</p>
    *
    * <p>This will clear the internal accumulator stack.</p>
    *
@@ -53,17 +52,15 @@ public interface SyWindowViewportAccumulatorType
     int height);
 
   /**
-   * <p>Calculate a new viewport based on the given position and size.</p>
-   * <p>The calculated viewport will always be less than or equal to the
-   * previous viewport in size.</p>
+   * <p>Calculate a new viewport based on the given box.</p> <p>The calculated
+   * viewport will always be less than or equal to the previous viewport in
+   * size.</p>
    *
-   * @param position The position
-   * @param size     The size
+   * @param box The box
    */
 
   void accumulate(
-    PVectorReadable2IType<SySpaceParentRelativeType> position,
-    VectorReadable2IType size);
+    SyBoxType<SySpaceParentRelativeType> box);
 
   /**
    * @return The leftmost edge of the effective viewport
@@ -91,7 +88,7 @@ public interface SyWindowViewportAccumulatorType
 
   /**
    * <p>Restore the viewport that was calculated before the most recent call to
-   * {@link #accumulate(PVectorReadable2IType, VectorReadable2IType)}.</p>
+   * {@link #accumulate(SyBoxType)}.</p>
    *
    * <p>If more {@code restore} calls have been made than {@code accumulate}
    * calls, the viewport position is reset to {@code (0, 0)} and the size is

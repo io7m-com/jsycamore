@@ -27,9 +27,9 @@ import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jtensors.VectorM2I;
-import com.io7m.jtensors.VectorReadable2IType;
-import com.io7m.jtensors.parameterized.PVectorM2I;
+import com.io7m.jsycamore.core.boxes.SyBoxMutable;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
@@ -55,11 +55,10 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   private final JOTreeNodeType<SyComponentType> node;
+  private final SyBoxMutable<SySpaceParentRelativeType> box;
   private Optional<SyWindowType> window;
   private SyParentResizeBehavior resize_width;
   private SyParentResizeBehavior resize_height;
-  private PVectorM2I<SySpaceParentRelativeType> position;
-  private VectorM2I size;
   private boolean selectable = true;
   private boolean enabled = true;
   private SyVisibility visibility;
@@ -73,8 +72,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     this.resize_height = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.visibility = SyVisibility.VISIBILITY_VISIBLE;
     this.window = Optional.empty();
-    this.position = new PVectorM2I<>();
-    this.size = new VectorM2I();
+    this.box = SyBoxMutable.create(0, 0, 0, 0);
     this.node = JOTreeNode.createWithDetachCheck(this, in_detach_check);
   }
 
@@ -218,6 +216,12 @@ public abstract class SyComponentAbstract implements SyComponentType
   // CHECKSTYLE:ON
 
   @Override
+  public final SyBoxType<SySpaceParentRelativeType> box()
+  {
+    return this.box;
+  }
+
+  @Override
   public final Optional<SyComponentType> componentForWindowRelative(
     final PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
     final SyWindowViewportAccumulatorType context)
@@ -232,7 +236,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     }
 
     try {
-      context.accumulate(this.position, this.size);
+      context.accumulate(this.box);
 
       final int min_x = context.minimumX();
       final int min_y = context.minimumY();
@@ -404,45 +408,37 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final void setPosition(
-    final int x,
-    final int y)
+  public final void setBox(final SyBoxType<SySpaceParentRelativeType> new_box)
   {
-    this.position.set2I(x, y);
-  }
+    NullCheck.notNull(new_box);
 
-  @Override
-  public final void setBounds(
-    final int width,
-    final int height)
-  {
-    final int previous_w = this.size.getXI();
-    final int previous_h = this.size.getYI();
+    final int previous_w = this.box.width();
+    final int previous_h = this.box.height();
 
-    this.size.set2I(width, height);
+    this.box.from(new_box);
 
     final int delta_x =
-      Math.subtractExact(this.size.getXI(), previous_w);
+      Math.subtractExact(this.box.width(), previous_w);
     final int delta_y =
-      Math.subtractExact(this.size.getYI(), previous_h);
+      Math.subtractExact(this.box.height(), previous_h);
     final boolean resized =
       delta_x != 0 || delta_y != 0;
 
-    try {
-      if (SyComponentAbstract.LOG.isTraceEnabled()) {
-        SyComponentAbstract.LOG.trace(
-          "resized: ({}) {} ({}, {})",
-          this,
-          this.size,
-          Integer.valueOf(delta_x),
-          Integer.valueOf(delta_y));
-      }
-      this.resized(delta_x, delta_y);
-    } catch (final Throwable e) {
-      SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
-    }
-
     if (resized) {
+      try {
+        if (SyComponentAbstract.LOG.isTraceEnabled()) {
+          SyComponentAbstract.LOG.trace(
+            "resized: ({}) {} ({}, {})",
+            this,
+            this.box,
+            Integer.valueOf(delta_x),
+            Integer.valueOf(delta_y));
+        }
+        this.resized(delta_x, delta_y);
+      } catch (final Throwable e) {
+        SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+      }
+
       final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
       for (final JOTreeNodeType<SyComponentType> child_node : children) {
         final SyComponentType child = child_node.value();
@@ -462,22 +458,19 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int delta_x,
     final int delta_y)
   {
-    final int previous_x = this.position.getXI();
-    final int previous_y = this.position.getYI();
-    final int previous_w = this.size.getXI();
-    final int previous_h = this.size.getYI();
+    final SyBoxMutable<SySpaceParentRelativeType> new_box = SyBoxMutable.create();
+    new_box.from(this.box);
 
     switch (this.resize_width) {
       case BEHAVIOR_FIXED: {
         break;
       }
       case BEHAVIOR_RESIZE: {
-        final int new_w = Math.max(2, Math.addExact(previous_w, delta_x));
-        this.size.setXI(new_w);
+        new_box.from(SyBoxes.scaleFromBottomRight(new_box, delta_x, 0));
         break;
       }
       case BEHAVIOR_MOVE: {
-        this.position.setXI(Math.addExact(previous_x, delta_x));
+        new_box.from(SyBoxes.moveRelative(new_box, delta_x, 0));
         break;
       }
     }
@@ -487,48 +480,16 @@ public abstract class SyComponentAbstract implements SyComponentType
         break;
       }
       case BEHAVIOR_RESIZE: {
-        final int new_h = Math.max(2, Math.addExact(previous_h, delta_y));
-        this.size.setYI(new_h);
+        new_box.from(SyBoxes.scaleFromBottomRight(new_box, 0, delta_y));
         break;
       }
       case BEHAVIOR_MOVE: {
-        this.position.setYI(Math.addExact(previous_y, delta_y));
+        new_box.from(SyBoxes.moveRelative(new_box, 0, delta_y));
         break;
       }
     }
 
-    final int diff_x =
-      Math.subtractExact(this.size.getXI(), previous_w);
-    final int diff_y =
-      Math.subtractExact(this.size.getYI(), previous_h);
-    final boolean resized =
-      diff_x != 0 || diff_y != 0;
-
-    if (resized) {
-      try {
-        this.resized(delta_x, delta_y);
-      } catch (final Throwable e) {
-        SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
-      }
-
-      final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
-      for (final JOTreeNodeType<SyComponentType> child_node : children) {
-        final SyComponentType child = child_node.value();
-        child.onParentResized(diff_x, diff_y);
-      }
-    }
-  }
-
-  @Override
-  public final VectorReadable2IType size()
-  {
-    return this.size;
-  }
-
-  @Override
-  public final PVectorReadable2IType<SySpaceParentRelativeType> position()
-  {
-    return this.position;
+    this.setBox(new_box);
   }
 
   @Override
@@ -541,5 +502,18 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final SyParentResizeBehavior resizeBehaviorHeight()
   {
     return this.resize_height;
+  }
+
+  protected final String toNamedString(final String name)
+  {
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("[");
+    sb.append(name);
+    sb.append(" 0x");
+    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
+    SyBoxes.showToBuilder(this.box(), sb);
+    sb.append("]");
+    return sb.toString();
   }
 }

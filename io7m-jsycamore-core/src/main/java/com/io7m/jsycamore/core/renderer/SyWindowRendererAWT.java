@@ -19,11 +19,13 @@ package com.io7m.jsycamore.core.renderer;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
@@ -31,9 +33,7 @@ import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
-import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.VectorReadable3FType;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
@@ -90,6 +90,37 @@ public final class SyWindowRendererAWT implements
     return new Color(r, g, b);
   }
 
+  private static void drawOutline(
+    final Graphics2D graphics,
+    final SyThemeOutlineType outline,
+    final SyBoxType<SySpaceParentRelativeType> box,
+    final boolean active)
+  {
+    if (active) {
+      graphics.setPaint(SyWindowRendererAWT.toColor(outline.colorActive()));
+    } else {
+      graphics.setPaint(SyWindowRendererAWT.toColor(outline.colorInactive()));
+    }
+
+    final int x_min = box.minimumX() - 1;
+    final int y_min = box.minimumY() - 1;
+    final int x_max = box.maximumX();
+    final int y_max = box.maximumY();
+
+    if (outline.top()) {
+      graphics.drawLine(x_min, y_min, x_max, y_min);
+    }
+    if (outline.bottom()) {
+      graphics.drawLine(x_min, y_max, x_max, y_max);
+    }
+    if (outline.left()) {
+      graphics.drawLine(x_min, y_min + 1, x_min, y_max - 1);
+    }
+    if (outline.right()) {
+      graphics.drawLine(x_max, y_min + 1, x_max, y_max - 1);
+    }
+  }
+
   @Override
   public BufferedImage render(
     final BufferedImage input,
@@ -98,17 +129,6 @@ public final class SyWindowRendererAWT implements
     NullCheck.notNull(input);
     NullCheck.notNull(window);
 
-    final VectorReadable2IType window_size = window.bounds();
-
-    // XXX: Are these assertions really necessary? If anything, they should
-    //      be preconditions (Validation.validate()).
-    Assertive.require(
-      input.getWidth() >= window_size.getXI(),
-      "Image width must be >= window width");
-    Assertive.require(
-      input.getHeight() >= window_size.getYI(),
-      "Image height must be >= window height");
-
     final Graphics2D graphics = input.createGraphics();
     try {
       graphics.setRenderingHint(
@@ -116,11 +136,11 @@ public final class SyWindowRendererAWT implements
       graphics.setRenderingHint(
         RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-      graphics.setClip(0, 0, window_size.getXI(), window_size.getYI());
+      final SyBoxType<SySpaceViewportType> window_box = window.box();
+      graphics.setClip(0, 0, window_box.width(), window_box.height());
       this.renderFrame(graphics, window);
-      this.renderTitlebar(graphics, window);
       this.renderContent(input, window);
-      this.renderOutline(graphics, window);
+      this.renderTitlebar(graphics, window);
 
       return input;
     } finally {
@@ -139,98 +159,9 @@ public final class SyWindowRendererAWT implements
     this.component_renderer.render(context, content);
   }
 
-  private void renderOutline(
-    final Graphics2D graphics,
-    final SyWindowType window)
-  {
-    final AffineTransform old_transform = graphics.getTransform();
-    final Shape old_clip = graphics.getClip();
-
-    try {
-      if (window.focused()) {
-        this.renderOutlineActive(graphics, window);
-      } else {
-        this.renderOutlineInactive(graphics, window);
-      }
-    } finally {
-      graphics.setTransform(old_transform);
-      graphics.setClip(old_clip);
-    }
-  }
-
-  private void renderOutlineInactive(
-    final Graphics2D graphics,
-    final SyWindowType window)
-  {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final Optional<SyThemeOutlineType> outline_opt = window_theme.outline();
-    if (outline_opt.isPresent()) {
-      this.renderOutlineActual(
-        graphics, window, outline_opt.get().colorInactive());
-    }
-  }
-
-  private void renderOutlineActual(
-    final Graphics2D graphics,
-    final SyWindowReadableType window,
-    final VectorReadable3FType color)
-  {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowTitleBarType title_theme = window_theme.titleBar();
-    final VectorReadable2IType size = window.bounds();
-
-    graphics.setPaint(SyWindowRendererAWT.toColor(color));
-
-    final int max_y = size.getYI() - 1;
-    final int max_x = size.getXI() - 1;
-    switch (title_theme.verticalPlacement()) {
-      case PLACEMENT_TOP_INSIDE_FRAME:
-      case PLACEMENT_TOP_OVERLAP_FRAME: {
-        graphics.drawRect(0, 0, max_x, max_y);
-        break;
-      }
-      case PLACEMENT_TOP_ABOVE_FRAME: {
-        final SyComponentReadableType titlebar = window.titlebar();
-        final VectorReadable2IType title_size =
-          titlebar.size();
-        final PVectorReadable2IType<SySpaceParentRelativeType> title_pos =
-          titlebar.position();
-
-        final int title_min_x = title_pos.getXI() - 1;
-        final int title_max_x = title_min_x + title_size.getXI() + 1;
-        final int title_height = title_size.getYI();
-        graphics.drawLine(0, title_height, title_min_x, title_height);
-        graphics.drawLine(title_min_x, title_height, title_min_x, 0);
-        graphics.drawLine(title_min_x, 0, title_max_x, 0);
-        graphics.drawLine(title_max_x, 0, title_max_x, title_height);
-        graphics.drawLine(title_max_x, title_height, max_x, title_height);
-
-        graphics.drawLine(max_x, title_height, max_x, max_y);
-        graphics.drawLine(0, max_y, max_x, max_y);
-        graphics.drawLine(0, title_height, 0, max_y);
-        break;
-      }
-    }
-  }
-
-  private void renderOutlineActive(
-    final Graphics2D graphics,
-    final SyWindowType window)
-  {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final Optional<SyThemeOutlineType> outline_opt = window_theme.outline();
-    if (outline_opt.isPresent()) {
-      this.renderOutlineActual(
-        graphics, window, outline_opt.get().colorActive());
-    }
-  }
-
   private void renderTitlebar(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();
@@ -249,7 +180,7 @@ public final class SyWindowRendererAWT implements
 
   private void renderTitlebarInactive(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
@@ -260,12 +191,13 @@ public final class SyWindowRendererAWT implements
       titlebar,
       titlebar.colorInactive(),
       titlebar.embossInactive(),
-      titlebar.textColorInactive());
+      titlebar.textColorInactive(),
+      false);
   }
 
   private void renderTitlebarActive(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
@@ -276,7 +208,8 @@ public final class SyWindowRendererAWT implements
       titlebar,
       titlebar.colorActive(),
       titlebar.embossActive(),
-      titlebar.textColorActive());
+      titlebar.textColorActive(),
+      true);
   }
 
   private void renderTitleBarActual(
@@ -285,18 +218,22 @@ public final class SyWindowRendererAWT implements
     final SyThemeWindowTitleBarType titlebar_theme,
     final VectorReadable3FType titlebar_color,
     final Optional<SyThemeEmbossType> emboss_opt,
-    final VectorReadable3FType text_color)
+    final VectorReadable3FType text_color,
+    final boolean active)
   {
     final SyWindowTitlebarType titlebar = window.titlebar();
-    final PVectorReadable2IType<SySpaceParentRelativeType> bar_pos =
-      titlebar.position();
-    final VectorReadable2IType bar_size =
-      titlebar.size();
+    final SyBoxType<SySpaceParentRelativeType> titlebar_box = titlebar.box();
 
-    final int x = bar_pos.getXI();
-    final int y = bar_pos.getYI();
-    final int w = bar_size.getXI();
-    final int h = bar_size.getYI();
+    final Optional<SyThemeOutlineType> outline_opt = titlebar_theme.outline();
+    if (outline_opt.isPresent()) {
+      SyWindowRendererAWT.drawOutline(
+        graphics, outline_opt.get(), titlebar_box, active);
+    }
+
+    final int x = titlebar_box.minimumX();
+    final int y = titlebar_box.minimumY();
+    final int w = titlebar_box.width();
+    final int h = titlebar_box.height();
     graphics.clipRect(x, y, w, h);
     graphics.translate(x, y);
 
@@ -357,7 +294,7 @@ public final class SyWindowRendererAWT implements
 
   private void renderFrame(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();
@@ -376,7 +313,7 @@ public final class SyWindowRendererAWT implements
 
   private void renderFrameInactive(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
@@ -390,31 +327,34 @@ public final class SyWindowRendererAWT implements
         window_theme.titleBar(),
         frame_theme,
         window,
+        frame_theme.outline(),
         emboss,
         SyWindowRendererAWT.toColor(emboss.colorTop()),
         SyWindowRendererAWT.toColor(emboss.colorLeft()),
         SyWindowRendererAWT.toColor(emboss.colorRight()),
         SyWindowRendererAWT.toColor(emboss.colorBottom()),
-        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorInactive())));
+        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorInactive())),
+        false);
     } else {
       this.renderFrameUnembossedActual(
         graphics,
-        window_theme.titleBar(),
         frame_theme,
         window,
-        SyWindowRendererAWT.toColor(frame_theme.colorInactive()));
+        frame_theme.outline(),
+        SyWindowRendererAWT.toColor(frame_theme.colorInactive()),
+        false);
     }
   }
 
   private void renderFrameActive(
     final Graphics2D graphics,
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
     final SyThemeType theme = window.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
     final SyThemeWindowFrameType frame_theme = window_theme.frame();
-
     final Optional<SyThemeEmbossType> emboss_opt = frame_theme.embossActive();
+
     if (emboss_opt.isPresent()) {
       final SyThemeEmbossType emboss = emboss_opt.get();
       this.renderFrameEmbossedActual(
@@ -422,19 +362,22 @@ public final class SyWindowRendererAWT implements
         window_theme.titleBar(),
         frame_theme,
         window,
+        frame_theme.outline(),
         emboss,
         SyWindowRendererAWT.toColor(emboss.colorTop()),
         SyWindowRendererAWT.toColor(emboss.colorLeft()),
         SyWindowRendererAWT.toColor(emboss.colorRight()),
         SyWindowRendererAWT.toColor(emboss.colorBottom()),
-        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorActive())));
+        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorActive())),
+        true);
     } else {
       this.renderFrameUnembossedActual(
         graphics,
-        window_theme.titleBar(),
         frame_theme,
         window,
-        SyWindowRendererAWT.toColor(frame_theme.colorActive()));
+        frame_theme.outline(),
+        SyWindowRendererAWT.toColor(frame_theme.colorActive()),
+        true);
     }
   }
 
@@ -443,12 +386,14 @@ public final class SyWindowRendererAWT implements
     final SyThemeWindowTitleBarType titlebar_theme,
     final SyThemeWindowFrameType frame_theme,
     final SyWindowReadableType window,
+    final Optional<SyThemeOutlineType> outline_opt,
     final SyThemeEmbossType emboss,
     final Paint e_top,
     final Paint e_left,
     final Paint e_right,
     final Paint e_bottom,
-    final Optional<Paint> eo_fill)
+    final Optional<Paint> eo_fill,
+    final boolean active)
   {
     final int left_width = frame_theme.leftWidth();
     final int right_width = frame_theme.rightWidth();
@@ -456,15 +401,18 @@ public final class SyWindowRendererAWT implements
     final int bottom_height = frame_theme.bottomHeight();
 
     final SyWindowFrameType frame = window.frame();
-    final PVectorReadable2IType<SySpaceParentRelativeType> frame_position =
-      frame.position();
-    final VectorReadable2IType frame_size =
-      frame.size();
+    final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
 
-    final int frame_x = frame_position.getXI();
-    final int frame_y = frame_position.getYI();
-    final int frame_width = frame_size.getXI();
-    final int frame_height = frame_size.getYI();
+    if (outline_opt.isPresent()) {
+      SyWindowRendererAWT.drawOutline(
+        graphics, outline_opt.get(), frame_box, active);
+    }
+
+    final int frame_x = frame_box.minimumX();
+    final int frame_y = frame_box.minimumY();
+    final int frame_width = frame_box.width();
+    final int frame_height = frame_box.height();
+
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
     graphics.translate(frame_x, frame_y);
 
@@ -738,10 +686,11 @@ public final class SyWindowRendererAWT implements
 
   private void renderFrameUnembossedActual(
     final Graphics2D graphics,
-    final SyThemeWindowTitleBarType titlebar_theme,
     final SyThemeWindowFrameType frame_theme,
     final SyWindowReadableType window,
-    final Paint fill)
+    final Optional<SyThemeOutlineType> outline_opt,
+    final Paint fill,
+    final boolean active)
   {
     final int left_width = frame_theme.leftWidth();
     final int right_width = frame_theme.rightWidth();
@@ -749,28 +698,22 @@ public final class SyWindowRendererAWT implements
     final int bottom_height = frame_theme.bottomHeight();
 
     final SyWindowFrameType frame = window.frame();
-    final PVectorReadable2IType<SySpaceParentRelativeType> frame_position =
-      frame.position();
-    final VectorReadable2IType frame_size =
-      frame.size();
+    final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
 
-    final int frame_x = frame_position.getXI();
-    final int frame_y = frame_position.getYI();
-    final int frame_width = frame_size.getXI();
-    final int frame_height = frame_size.getYI();
+    if (outline_opt.isPresent()) {
+      SyWindowRendererAWT.drawOutline(
+        graphics, outline_opt.get(), frame_box, active);
+    }
+
+    final int frame_x = frame_box.minimumX();
+    final int frame_y = frame_box.minimumY();
+    final int frame_width = frame_box.width();
+    final int frame_height = frame_box.height();
+
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
     graphics.translate(frame_x, frame_y);
 
-    final int top_width = frame_width;
-    final int bottom_width = frame_width;
-    final int left_height = frame_height;
-    final int right_height = frame_height;
-
-    final int bottom_x = 0;
     final int bottom_y = frame_height - bottom_height;
-    final int left_y = 0;
-    final int right_y = 0;
-    final int top_x = 0;
 
     /**
      * Left frame.
@@ -778,7 +721,7 @@ public final class SyWindowRendererAWT implements
 
     if (left_width > 0) {
       graphics.setPaint(fill);
-      graphics.fillRect(0, left_y, left_width, left_height);
+      graphics.fillRect(0, 0, left_width, frame_height);
     }
 
     /**
@@ -788,7 +731,7 @@ public final class SyWindowRendererAWT implements
     if (right_width > 0) {
       graphics.setPaint(fill);
       graphics.fillRect(
-        frame_width - right_width, right_y, right_width, right_height);
+        frame_width - right_width, 0, right_width, frame_height);
     }
 
     /**
@@ -797,7 +740,7 @@ public final class SyWindowRendererAWT implements
 
     if (top_height > 0) {
       graphics.setPaint(fill);
-      graphics.fillRect(top_x, 0, top_width, top_height);
+      graphics.fillRect(0, 0, frame_width, top_height);
     }
 
     /**
@@ -806,31 +749,7 @@ public final class SyWindowRendererAWT implements
 
     if (bottom_height > 0) {
       graphics.setPaint(fill);
-      graphics.fillRect(bottom_x, bottom_y, bottom_width, bottom_height);
-    }
-
-    /**
-     * Corners.
-     */
-
-    if (top_height > 0 && left_width > 0) {
-      final int thickness_of_horizontal = top_height;
-      final int thickness_of_vertical = left_width;
-    }
-
-    if (top_height > 0 && right_width > 0) {
-      final int thickness_of_horizontal = top_height;
-      final int thickness_of_vertical = right_width;
-    }
-
-    if (bottom_height > 0 && left_width > 0) {
-      final int thickness_of_horizontal = bottom_height;
-      final int thickness_of_vertical = left_width;
-    }
-
-    if (bottom_height > 0 && right_width > 0) {
-      final int thickness_of_horizontal = bottom_height;
-      final int thickness_of_vertical = right_width;
+      graphics.fillRect(0, bottom_y, frame_width, bottom_height);
     }
   }
 }

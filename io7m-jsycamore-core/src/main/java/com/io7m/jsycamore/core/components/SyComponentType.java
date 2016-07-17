@@ -18,8 +18,10 @@ package com.io7m.jsycamore.core.components;
 
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 
 import java.util.Optional;
@@ -56,33 +58,19 @@ public interface SyComponentType extends SyComponentParentEventsType,
   void setResizeBehaviorHeight(SyParentResizeBehavior b);
 
   /**
+   * Set the component's position and bounds.
+   *
+   * @param box The box representing the new position and bounds
+   */
+
+  void setBox(SyBoxType<SySpaceParentRelativeType> box);
+
+  /**
    * @return The window to which the most distant ancestor of this component is
    * attached
    */
 
   Optional<SyWindowType> window();
-
-  /**
-   * Set the component position in parent-relative coordinates.
-   *
-   * @param x The X position
-   * @param y The Y position
-   */
-
-  void setPosition(
-    int x,
-    int y);
-
-  /**
-   * Set the bounds of this component.
-   *
-   * @param width  The width
-   * @param height The height
-   */
-
-  void setBounds(
-    int width,
-    int height);
 
   /**
    * @return The component tree node to which this component is attached

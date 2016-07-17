@@ -14,39 +14,33 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core.boxes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.SySpaceType;
 import org.immutables.value.Value;
 
 /**
- * The theme parameters for windows.
+ * The result of splitting a box along a vertical line.
+ *
+ * @param <S> The coordinate space
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
-public interface SyThemeWindowType
+public interface SyVerticalSplitType<S extends SySpaceType>
 {
   /**
-   * @return The theme parameters used for window titlebars
+   * @return The left half
    */
 
-  @Value.Parameter
-  SyThemeWindowTitleBarType titleBar();
+  @Value.Parameter(order = 0)
+  SyBoxType<S> left();
 
   /**
-   * @return The theme parameters used for window frames
+   * @return The right half
    */
 
-  @Value.Parameter
-  SyThemeWindowFrameType frame();
-
-  /**
-   * @return A function that, given a box representing the window, will return
-   * the positions of the various window components
-   */
-
-  @Value.Parameter
-  SyThemeWindowArrangementFunctionType arranger();
+  @Value.Parameter(order = 1)
+  SyBoxType<S> right();
 }

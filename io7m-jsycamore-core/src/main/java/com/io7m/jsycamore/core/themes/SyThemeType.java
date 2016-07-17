@@ -61,5 +61,5 @@ public interface SyThemeType
    */
 
   @Value.Parameter
-  SyThemeImageType/**/ imageTheme();
+  SyThemeImageType imageTheme();
 }

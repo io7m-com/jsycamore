@@ -19,7 +19,9 @@ package com.io7m.jsycamore.core.renderer;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyImageReadableType;
@@ -35,7 +37,6 @@ import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.VectorReadable3FType;
 
 import java.awt.Color;
@@ -82,6 +83,15 @@ public final class SyComponentRendererAWT implements
     final SyTextMeasurementType in_measurement)
   {
     return new SyComponentRendererAWT(in_cache, in_measurement);
+  }
+
+  private static Color toColor(
+    final VectorReadable3FType color)
+  {
+    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
+    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
+    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
+    return new Color(r, g, b);
   }
 
   @Override
@@ -131,7 +141,7 @@ public final class SyComponentRendererAWT implements
     final SyWindowViewportAccumulatorType viewport = context.viewport();
 
     try {
-      viewport.accumulate(object.position(), object.size());
+      viewport.accumulate(object.box());
 
       final int max_x = viewport.maximumX();
       final int min_x = viewport.minimumX();
@@ -185,13 +195,14 @@ public final class SyComponentRendererAWT implements
   {
     final SyThemeType theme = context.theme();
     final SyThemeImageType image_theme = theme.imageTheme();
+    final SyBoxType<SySpaceParentRelativeType> image_box = image.box();
 
     final SyImageReferenceType<BufferedImage> ref =
       this.cache.get(image.image());
 
     final BufferedImage actual = ref.value();
-    final int area_width = image.size().getXI();
-    final int area_height = image.size().getYI();
+    final int area_width = image_box.width();
+    final int area_height = image_box.height();
 
     int x = 0;
     switch (image.imageAlignmentHorizontal()) {
@@ -245,19 +256,18 @@ public final class SyComponentRendererAWT implements
   {
     final SyThemeType theme = context.theme();
     final SyThemeLabelType label_theme = theme.labelTheme();
+    final SyBoxType<SySpaceParentRelativeType> label_box = label.box();
 
     final String font = label_theme.textFont();
     graphics.setPaint(SyComponentRendererAWT.toColor(label_theme.textColor()));
     graphics.setFont(this.measurement.decodeFont(font));
 
-    final int label_width = label.size().getXI();
-    final int label_height = label.size().getYI();
     SyTextRenderer.renderText(
       this.measurement,
       graphics,
       font,
-      label_width,
-      label_height,
+      label_box.width(),
+      label_box.height(),
       label.textAlignmentHorizontal(),
       label.textAlignmentVertical(),
       label.text());
@@ -274,10 +284,10 @@ public final class SyComponentRendererAWT implements
 
     final SyThemeType theme = context.theme();
     final SyThemePanelType panel_theme = theme.panelTheme();
-    final VectorReadable2IType size = panel.size();
+    final SyBoxType<SySpaceParentRelativeType> panel_box = panel.box();
 
-    final int width = size.getXI();
-    final int height = size.getYI();
+    final int width = panel_box.width();
+    final int height = panel_box.height();
     final int fill_width;
     final int fill_height;
     final int fill_x;
@@ -323,11 +333,11 @@ public final class SyComponentRendererAWT implements
     final Graphics2D graphics,
     final SyButtonReadableType button)
   {
-    final VectorReadable2IType size = button.size();
+    final SyBoxType<SySpaceParentRelativeType> button_box = button.box();
     final SyThemeButtonType button_theme = context.theme().buttonTheme();
 
-    final int width = size.getXI();
-    final int height = size.getYI();
+    final int width = button_box.width();
+    final int height = button_box.height();
     final int fill_width;
     final int fill_height;
     final int fill_x;
@@ -444,14 +454,5 @@ public final class SyComponentRendererAWT implements
       graphics.setPaint(fill);
       graphics.fillRect(fill_x, fill_y, fill_width, fill_height);
     }
-  }
-
-  private static Color toColor(
-    final VectorReadable3FType color)
-  {
-    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
-    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
-    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
-    return new Color(r, g, b);
   }
 }

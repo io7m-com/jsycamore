@@ -22,9 +22,12 @@ import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButton;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyImage;
@@ -54,13 +57,10 @@ import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameCorner;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarVerticalPlacement;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarWidthBehavior;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
+import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
+import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jtensors.VectorI3F;
-import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorM2I;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import net.java.dev.designgridlayout.DesignGridLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,13 +112,16 @@ final class SyTDMainWindow extends JFrame
   SyTDMainWindow()
     throws IOException
   {
-    final SyThemeType theme = SyThemeStride.builder().build();
+    final SyThemeType theme = SyThemeBee.builder().build();
 
     this.gui = SyGUI.createWithTheme("main", theme);
-    this.window0 = this.gui.windowCreate(320, 240, "Files");
-    this.window0.setPosition(32, 32);
+    this.window0 = this.gui.windowCreate(
+      320,
+      240,
+      "Etiam mi urna, varius in imperdiet sit amet, feugiat sit amet sem. Mauris neque massa, pellentesque sed lectus et, venenatis euismod eros. Nunc finibus id eros.");
+    this.window0.setBox(SyBoxes.create(32, 32, 320, 240));
     this.window1 = this.gui.windowCreate(300, 240, "Other");
-    this.window1.setPosition(32, 300);
+    this.window1.setBox(SyBoxes.create(32, 300, 300, 240));
 
     final SyImageCacheResolverType resolver = i -> {
       SyTDMainWindow.LOG.debug("loading: {}", i.name());
@@ -137,7 +140,6 @@ final class SyTDMainWindow extends JFrame
       }
       return image;
     };
-
 
     this.io_executor = Executors.newSingleThreadExecutor();
 
@@ -170,22 +172,25 @@ final class SyTDMainWindow extends JFrame
 
     {
       final SyWindowContentPaneType content = this.window0.contentPane();
+      final SyBoxType<SySpaceParentRelativeType> content_box = content.box();
       final SyPanelType panel = SyPanel.create();
-      panel.setBounds(content.size().getXI(), content.size().getYI());
+      panel.setBox(SyBoxes.create(
+        0,
+        0,
+        content_box.width(),
+        content_box.height()));
       panel.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
       panel.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
       content.node().childAdd(panel.node());
 
       final SyButtonType button0 = SyButton.create();
-      button0.setBounds(64, 32);
-      button0.setPosition(16, 16);
+      button0.setBox(SyBoxes.create(16, 16, 64, 32));
       button0.buttonAddListener(b -> SyTDMainWindow.LOG.debug("click"));
       panel.node().childAdd(button0.node());
 
       final SyLabelType button0_label = SyLabel.create();
       button0_label.setText("Hello.");
-      button0_label.setBounds(64, 32);
-      button0_label.setPosition(0, 0);
+      button0_label.setBox(SyBoxes.create(0, 0, 64, 32));
       button0_label.setResizeBehaviorWidth(
         SyParentResizeBehavior.BEHAVIOR_RESIZE);
       button0_label.setResizeBehaviorHeight(
@@ -193,15 +198,13 @@ final class SyTDMainWindow extends JFrame
       button0.node().childAdd(button0_label.node());
 
       final SyButtonType button1 = SyButton.create();
-      button1.setBounds(64, 32);
-      button1.setPosition(16 + 64 + 16, 16);
+      button1.setBox(SyBoxes.create(16 + 64 + 16, 16, 64, 32));
       button1.setEnabled(false);
       panel.node().childAdd(button1.node());
 
       final SyLabelType label = SyLabel.create();
       label.setText("Hello.");
-      label.setBounds(64, 16);
-      label.setPosition(16, 64);
+      label.setBox(SyBoxes.create(16, 64, 64, 16));
       panel.node().childAdd(label.node());
 
       final SyImageType image =
@@ -212,27 +215,24 @@ final class SyTDMainWindow extends JFrame
             64,
             SyImageFormat.IMAGE_FORMAT_RGB_565,
             SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR));
-      image.setPosition(16 + 64 + 16, 64);
+      image.setBox(SyBoxes.create(16 + 64 + 16, 64, 64, 64));
       panel.node().childAdd(image.node());
     }
 
     {
       final SyButtonType button0 = SyButton.create();
-      button0.setBounds(64, 32);
-      button0.setPosition(16, 16);
+      button0.setBox(SyBoxes.create(16, 16, 64, 32));
       button0.buttonAddListener(b -> SyTDMainWindow.LOG.debug("click"));
       this.window1.contentPane().node().childAdd(button0.node());
 
       final SyButtonType button1 = SyButton.create();
-      button1.setBounds(64, 32);
-      button1.setPosition(16 + 64 + 16, 16);
+      button1.setBox(SyBoxes.create(16 + 64 + 16, 16, 64, 32));
       button1.setEnabled(false);
       this.window1.contentPane().node().childAdd(button1.node());
 
       final SyLabelType label = SyLabel.create();
       label.setText("Hello.");
-      label.setBounds(64, 16);
-      label.setPosition(16, 64);
+      label.setBox(SyBoxes.create(16, 64, 64, 16));
       this.window1.contentPane().node().childAdd(label.node());
     }
 
@@ -300,19 +300,16 @@ final class SyTDMainWindow extends JFrame
       final int window_count = windows.size();
       for (int index = window_count - 1; index >= 0; --index) {
         final SyWindowType window = windows.get(index);
-        final VectorReadable2IType bounds = window.bounds();
+        final SyBoxType<SySpaceViewportType> box = window.box();
+
         final BufferedImage bi =
           new BufferedImage(
-            bounds.getXI(),
-            bounds.getYI(),
-            BufferedImage.TYPE_4BYTE_ABGR_PRE);
+            box.width(), box.height(), BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
         win.window_renderer.render(bi, window);
         final AffineTransform transform = g2.getTransform();
         try {
-          final PVectorReadable2IType<SySpaceViewportType> position =
-            window.position();
-          g2.translate(position.getXI(), position.getYI());
+          g2.translate(box.minimumX(), box.minimumY());
           g2.drawImage(bi, 0, 0, null);
         } finally {
           g2.setTransform(transform);
@@ -344,11 +341,9 @@ final class SyTDMainWindow extends JFrame
     private final SyTDColorSelector titlebar_color_inactive;
     private final SyTDColorSelector titlebar_text_color_active;
     private final SyTDColorSelector titlebar_text_color_inactive;
-    private final SyTDComboBox<SyThemeWindowTitlebarWidthBehavior> titlebar_width_behaviour;
     private final SyTDEmbossSelector titlebar_emboss_active;
     private final SyTDEmbossSelector titlebar_emboss_inactive;
     private final SyTDIntegerSlider titlebar_height;
-    private final SyTDComboBox<SyThemeWindowTitlebarVerticalPlacement> titlebar_vertical_placement;
     private final SyTDComboBox<SyAlignmentHorizontal> titlebar_text_alignment;
     private final SyTDComboBox<SyAlignmentHorizontal> titlebar_alignment;
     private final SyTDFontSelector titlebar_text_font;
@@ -359,7 +354,7 @@ final class SyTDMainWindow extends JFrame
 
     Controls()
     {
-      final SyTheme base = SyThemeStride.builder().build();
+      final SyTheme base = SyThemeMotive.builder().build();
 
       this.theme_builder = SyTheme.builder();
       this.theme_button_builder = SyThemeButton.builder();
@@ -375,7 +370,7 @@ final class SyTDMainWindow extends JFrame
       this.theme_window_frame_builder = SyThemeWindowFrame.builder();
       this.theme_window_titlebar_builder = SyThemeWindowTitleBar.builder();
 
-      this.slider_frame_top = new SyTDIntegerSlider("Top thickness", 0, 16);
+      this.slider_frame_top = new SyTDIntegerSlider("Top thickness", 0, 64);
       this.slider_frame_top.setCurrent(5);
       this.slider_frame_top.setOnChangeListener(e -> this.updateTheme());
 
@@ -384,7 +379,7 @@ final class SyTDMainWindow extends JFrame
       this.slider_frame_bottom.setCurrent(5);
       this.slider_frame_bottom.setOnChangeListener(e -> this.updateTheme());
 
-      this.slider_frame_left = new SyTDIntegerSlider("Left thickness", 0, 16);
+      this.slider_frame_left = new SyTDIntegerSlider("Left thickness", 0, 64);
       this.slider_frame_left.setCurrent(5);
       this.slider_frame_left.setOnChangeListener(e -> this.updateTheme());
 
@@ -439,11 +434,6 @@ final class SyTDMainWindow extends JFrame
       this.titlebar_color_inactive =
         new SyTDColorSelector(new VectorI3F(0.5f, 0.5f, 0.5f));
       this.titlebar_color_inactive.addListener(this::updateTheme);
-      this.titlebar_width_behaviour =
-        new SyTDComboBox<>(SyThemeWindowTitlebarWidthBehavior.class);
-      this.titlebar_width_behaviour.setSelectedItem(
-        SyThemeWindowTitlebarWidthBehavior.WIDTH_RESIZE_INSIDE_FRAME);
-      this.titlebar_width_behaviour.addActionListener(e -> this.updateTheme());
 
       this.titlebar_text_font = new SyTDFontSelector("Text font");
       this.titlebar_text_font.addListener(this::updateTheme);
@@ -460,13 +450,6 @@ final class SyTDMainWindow extends JFrame
         new SyTDIntegerSlider("Height", 1, 32);
       this.titlebar_height.setCurrent(16);
       this.titlebar_height.setOnChangeListener(x -> this.updateTheme());
-
-      this.titlebar_vertical_placement =
-        new SyTDComboBox<>(SyThemeWindowTitlebarVerticalPlacement.class);
-      this.titlebar_vertical_placement.setSelectedItem(
-        SyThemeWindowTitlebarVerticalPlacement.PLACEMENT_TOP_OVERLAP_FRAME);
-      this.titlebar_vertical_placement.addActionListener(
-        x -> this.updateTheme());
 
       this.titlebar_text_alignment =
         new SyTDComboBox<>(SyAlignmentHorizontal.class);
@@ -511,8 +494,6 @@ final class SyTDMainWindow extends JFrame
       dg.row().left().add(this.largerLabel("Titlebar")).fill();
       dg.emptyRow();
       this.titlebar_height.controlsAddToLayout(dg);
-      dg.row().grid(new JLabel("Width behaviour")).add(this.titlebar_width_behaviour);
-      dg.row().grid(new JLabel("Vertical placement")).add(this.titlebar_vertical_placement);
       dg.row().grid(new JLabel("Text alignment")).add(this.titlebar_text_alignment);
       dg.row().grid(new JLabel("Horizontal alignment")).add(this.titlebar_alignment);
       this.titlebar_text_font.controlsAddToLayout(dg);
@@ -561,9 +542,6 @@ final class SyTDMainWindow extends JFrame
       this.theme_window_frame_builder.setBottomRightStyle(
         this.frame_corner_bottom_right.getSelectedItem());
 
-      this.theme_window_builder.setOutline(
-        this.outline.result());
-
       this.theme_window_titlebar_builder.setColorActive(
         this.titlebar_color_active.color());
       this.theme_window_titlebar_builder.setColorInactive(
@@ -572,20 +550,14 @@ final class SyTDMainWindow extends JFrame
         this.titlebar_text_color_inactive.color());
       this.theme_window_titlebar_builder.setTextColorActive(
         this.titlebar_text_color_active.color());
-      this.theme_window_titlebar_builder.setWidthBehavior(
-        this.titlebar_width_behaviour.getSelectedItem());
       this.theme_window_titlebar_builder.setEmbossActive(
         this.titlebar_emboss_active.result());
       this.theme_window_titlebar_builder.setEmbossInactive(
         this.titlebar_emboss_inactive.result());
       this.theme_window_titlebar_builder.setHeight(
         this.titlebar_height.value());
-      this.theme_window_titlebar_builder.setVerticalPlacement(
-        this.titlebar_vertical_placement.getSelectedItem());
       this.theme_window_titlebar_builder.setTextAlignment(
         this.titlebar_text_alignment.getSelectedItem());
-      this.theme_window_titlebar_builder.setHorizontalAlignment(
-        this.titlebar_alignment.getSelectedItem());
       this.theme_window_titlebar_builder.setTextFont(
         this.titlebar_text_font.fontString());
 
@@ -593,6 +565,9 @@ final class SyTDMainWindow extends JFrame
         this.theme_window_titlebar_builder.build());
       this.theme_window_builder.setFrame(
         this.theme_window_frame_builder.build());
+      this.theme_window_builder.setArranger(
+        SyThemeMotive::arrangeWindowComponents);
+
       this.theme_builder.setWindowTheme(
         this.theme_window_builder.build());
       this.theme_builder.setButtonTheme(
@@ -614,13 +589,13 @@ final class SyTDMainWindow extends JFrame
 
   private final class CanvasMouseAdapter extends MouseAdapter
   {
+    private final PVectorM2I<SySpaceViewportType> position =
+      new PVectorM2I<>();
+
     CanvasMouseAdapter()
     {
 
     }
-
-    private final PVectorM2I<SySpaceViewportType> position =
-      new PVectorM2I<>();
 
     @Override
     public void mouseMoved(final MouseEvent e)

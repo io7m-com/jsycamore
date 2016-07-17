@@ -152,6 +152,11 @@
         <artifactId>junit</artifactId>
         <version>4.12</version>
       </dependency>
+      <dependency>
+        <groupId>net.java.quickcheck</groupId>
+        <artifactId>quickcheck</artifactId>
+        <version>0.6</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
