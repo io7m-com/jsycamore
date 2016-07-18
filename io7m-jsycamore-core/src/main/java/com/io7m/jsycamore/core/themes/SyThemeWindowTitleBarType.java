@@ -17,13 +17,11 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jtensors.VectorI3F;
-import com.io7m.junreachable.UnreachableCodeException;
 import org.immutables.value.Value;
 
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * The style applied to a window titlebar.
@@ -34,198 +32,88 @@ import java.util.Optional;
 public interface SyThemeWindowTitleBarType
 {
   /**
-   * @return The titlebar outline, if any
+   * @return The width of buttons in the titlebar
    */
 
   @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  int buttonWidth();
+
+  /**
+   * @return The height of buttons in the titlebar
+   */
+
+  @Value.Parameter
+  int buttonHeight();
+
+  /**
+   * @return The vertical alignment of buttons within the titlebar
+   */
+
+  @Value.Parameter
+  SyAlignmentVertical buttonAlignment();
+
+  /**
+   * @return The theme for buttons in the titlebar
+   */
+
+  @Value.Parameter
+  SyThemeButtonType buttonTheme();
+
+  /**
+   * @return The padding for buttons in the titlebar
+   */
+
+  @Value.Parameter
+  SyThemePaddingType buttonPadding();
+
+  /**
+   * @return A comparator that will decide the order of components within a
+   * titlebar
+   */
+
+  @Value.Parameter
+  Comparator<SyThemeTitlebarElement> elementOrder();
 
   /**
    * @return The titlebar height
    */
 
   @Value.Parameter
-  @Value.Default
-  default int height()
-  {
-    return 16;
-  }
-
-  /**
-   * @return The padding around buttons on the titlebar
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default SyThemePaddingType buttonPadding()
-  {
-    return SyThemePadding.of(0, 0, 0, 0);
-  }
+  int height();
 
   /**
    * @return {@code true} iff the titlebar should display an icon
    */
 
   @Value.Parameter
-  @Value.Default
-  default boolean showIcon()
-  {
-    return false;
-  }
+  boolean showIcon();
 
   /**
-   * @return A function that is used to decide the order of elements appearing
-   * in a titlebar
+   * @return The titlebar panel theme
    */
 
   @Value.Parameter
-  @Value.Default
-  default Comparator<SyThemeTitlebarElement> elementOrder()
-  {
-    return (o1, o2) -> {
-      switch (o1) {
-        case ELEMENT_CLOSE_BUTTON: {
-          switch (o2) {
-            case ELEMENT_CLOSE_BUTTON:
-              return 0;
-            case ELEMENT_MAXIMIZE_BUTTON:
-            case ELEMENT_TITLE:
-            case ELEMENT_ICON:
-              return 1;
-          }
-          throw new UnreachableCodeException();
-        }
-        case ELEMENT_MAXIMIZE_BUTTON: {
-          switch (o2) {
-            case ELEMENT_CLOSE_BUTTON:
-              return -1;
-            case ELEMENT_MAXIMIZE_BUTTON:
-              return 0;
-            case ELEMENT_TITLE:
-            case ELEMENT_ICON:
-              return 1;
-          }
-          throw new UnreachableCodeException();
-        }
-        case ELEMENT_TITLE: {
-          switch (o2) {
-            case ELEMENT_CLOSE_BUTTON:
-            case ELEMENT_MAXIMIZE_BUTTON:
-              return -1;
-            case ELEMENT_TITLE:
-              return 0;
-            case ELEMENT_ICON:
-              return 1;
-          }
-          throw new UnreachableCodeException();
-        }
-        case ELEMENT_ICON: {
-          switch (o2) {
-            case ELEMENT_CLOSE_BUTTON:
-            case ELEMENT_MAXIMIZE_BUTTON:
-            case ELEMENT_TITLE:
-              return -1;
-            case ELEMENT_ICON:
-              return 0;
-          }
-          throw new UnreachableCodeException();
-        }
-      }
-
-      throw new UnreachableCodeException();
-    };
-  }
+  SyThemePanelType panelTheme();
 
   /**
-   * @return The titlebar text color when the window is active
+   * @return The titlebar text theme
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F textColorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
-
-  /**
-   * @return The titlebar text color when the window is not active
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F textColorInactive()
-  {
-    return new VectorI3F(0.2f, 0.2f, 0.2f);
-  }
-
-  /**
-   * @return The titlebar color when the window is active
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
-  }
-
-  /**
-   * @return The titlebar color when the window is inactive
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
-  }
-
-  /**
-   * @return The titlebar emboss style that will be used when the window is
-   * active
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossActive();
-
-  /**
-   * @return The titlebar emboss style that will be used when the window is
-   * inactive
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossInactive();
+  SyThemeLabelType textTheme();
 
   /**
    * @return The titlebar title text alignment
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyAlignmentHorizontal textAlignment()
-  {
-    return SyAlignmentHorizontal.ALIGN_CENTER;
-  }
+  SyAlignmentHorizontal textAlignment();
 
   /**
    * @return The padding around the title text
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyThemePaddingType textPadding()
-  {
-    return SyThemePadding.of(16, 16, 0, 0);
-  }
+  SyThemePaddingType textPadding();
 
-  /**
-   * @return The titlebar text font
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default String textFont()
-  {
-    return "Monospaced-plain-10";
-  }
 }

@@ -16,16 +16,22 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jfunctional.Pair;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.junreachable.UnimplementedCodeException;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.valid4j.Assertive;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Functions for handling titlebars.
@@ -39,37 +45,26 @@ public final class SyThemeTitlebars
   }
 
   /**
-   * Calculate the order in which any titlebar elements will appear.
+   * Calculate the order in which any titlebar elements will appear. The
+   * returned list will contain the order in which titlebar elements appear.
+   * There will be entries for all possible element types, even if that element
+   * would not actually appear in the titlebar.
+   *
+   * @param title_theme The titlebar theme
+   *
+   * @return A list indicating the order of elements
    */
 
-  private static List<SyThemeTitlebarElement> elementsOrder(
+  public static List<SyThemeTitlebarElement> elementsOrder(
     final SyThemeWindowTitleBarType title_theme)
   {
+    NullCheck.notNull(title_theme);
+
     final List<SyThemeTitlebarElement> elements =
       new ArrayList<>(SyThemeTitlebarElement.values().length);
     Collections.addAll(elements, SyThemeTitlebarElement.values());
     Collections.sort(elements, title_theme.elementOrder());
     return elements;
-  }
-
-  /**
-   * Determine how large a button will be given the title theme.
-   */
-
-  private static int buttonHeight(
-    final SyThemeWindowTitleBarType title_theme)
-  {
-    /**
-     * The height of a button is the titlebar height minus any top and
-     * bottom padding.
-     */
-
-    final SyThemePaddingType padding = title_theme.buttonPadding();
-    final int without_top =
-      Math.subtractExact(title_theme.height(), padding.paddingTop());
-    final int without_bottom =
-      Math.subtractExact(without_top, padding.paddingBottom());
-    return Math.max(0, without_bottom);
   }
 
   /**
@@ -83,8 +78,10 @@ public final class SyThemeTitlebars
     final boolean is_closeable,
     final boolean is_maximizable)
   {
+    NullCheck.notNull(title_theme);
+    NullCheck.notNull(elements);
+
     final SyThemePaddingType button_padding = title_theme.buttonPadding();
-    final int button_height = SyThemeTitlebars.buttonHeight(title_theme);
 
     int non_text_width = 0;
     final int button_pad_left = button_padding.paddingLeft();
@@ -95,7 +92,9 @@ public final class SyThemeTitlebars
         case ELEMENT_CLOSE_BUTTON: {
           if (is_closeable) {
             non_text_width = Math.addExact(non_text_width, button_pad_left);
-            non_text_width = Math.addExact(non_text_width, button_height);
+            non_text_width = Math.addExact(
+              non_text_width,
+              title_theme.buttonWidth());
             non_text_width = Math.addExact(non_text_width, button_pad_right);
           }
           break;
@@ -103,7 +102,9 @@ public final class SyThemeTitlebars
         case ELEMENT_MAXIMIZE_BUTTON: {
           if (is_maximizable) {
             non_text_width = Math.addExact(non_text_width, button_pad_left);
-            non_text_width = Math.addExact(non_text_width, button_height);
+            non_text_width = Math.addExact(
+              non_text_width,
+              title_theme.buttonWidth());
             non_text_width = Math.addExact(non_text_width, button_pad_right);
           }
           break;
@@ -114,7 +115,9 @@ public final class SyThemeTitlebars
         case ELEMENT_ICON: {
           if (title_theme.showIcon()) {
             non_text_width = Math.addExact(non_text_width, button_pad_left);
-            non_text_width = Math.addExact(non_text_width, button_height);
+            non_text_width = Math.addExact(
+              non_text_width,
+              title_theme.buttonWidth());
             non_text_width = Math.addExact(non_text_width, button_pad_right);
           }
           break;
@@ -177,7 +180,8 @@ public final class SyThemeTitlebars
      */
 
     final int text_content_width =
-      measurement.measureTextWidth(title_theme.textFont(), title_text);
+      measurement.measureTextWidth(
+        title_theme.textTheme().textFont(), title_text);
 
     final SyThemePaddingType text_padding =
       title_theme.textPadding();
@@ -193,5 +197,244 @@ public final class SyThemeTitlebars
       full_width <= maximum_width,
       "Maximum width calculation is correct");
     return full_width;
+  }
+
+  /**
+   * Produce an arrangement for a titlebar.
+   *
+   * @param maximum_space  The titlebar's box
+   * @param title_theme    The titlebar theme
+   * @param is_closeable   {@code true} iff the parent window is closeable
+   * @param is_maximizable {@code true} iff the parent window is maximizable
+   *
+   * @return An arrangement for components
+   */
+
+  public static SyThemeWindowTitlebarArrangementType arrange(
+    final SyBoxType<SySpaceParentRelativeType> maximum_space,
+    final SyThemeWindowTitleBarType title_theme,
+    final boolean is_closeable,
+    final boolean is_maximizable)
+  {
+    final SyBoxType<SySpaceParentRelativeType> maximum_origin =
+      SyBoxes.moveToOrigin(maximum_space);
+
+    final List<SyThemeTitlebarElement> elements =
+      SyThemeTitlebars.elementsOrder(title_theme);
+
+    final Pair<List<SyThemeTitlebarElement>, List<SyThemeTitlebarElement>> pair =
+      SyThemeTitlebars.sortElementsLeftRight(
+        title_theme, is_closeable, is_maximizable, elements);
+
+    final List<SyThemeTitlebarElement> left = pair.getLeft();
+    final List<SyThemeTitlebarElement> right = pair.getRight();
+
+    final SyThemePaddingType button_pad = title_theme.buttonPadding();
+    final int button_pad_left = button_pad.paddingLeft();
+    final int button_pad_right = button_pad.paddingRight();
+
+    final SyThemeWindowTitlebarArrangement.Builder arrangement =
+      SyThemeWindowTitlebarArrangement.builder();
+    arrangement.setCloseButtonBox(SyBoxes.create(0, 0, 0, 0));
+    arrangement.setMaximizeButtonBox(SyBoxes.create(0, 0, 0, 0));
+    arrangement.setTitle(SyBoxes.create(0, 0, 0, 0));
+    arrangement.setIconBox(SyBoxes.create(0, 0, 0, 0));
+
+    int text_min_x = 0;
+
+    final int button_width = title_theme.buttonWidth();
+
+    {
+      for (final SyThemeTitlebarElement element : left) {
+        switch (element) {
+          case ELEMENT_CLOSE_BUTTON: {
+            Assertive.require(is_closeable, "Window must be closeable");
+
+            text_min_x = Math.addExact(text_min_x, button_pad_left);
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_min_x);
+            arrangement.setCloseButtonBox(aligned);
+            text_min_x = Math.addExact(text_min_x, button_width);
+            text_min_x = Math.addExact(text_min_x, button_pad_right);
+            break;
+          }
+
+          case ELEMENT_MAXIMIZE_BUTTON: {
+            Assertive.require(is_maximizable, "Window must be maximizable");
+
+            text_min_x = Math.addExact(text_min_x, button_pad_left);
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_min_x);
+            arrangement.setMaximizeButtonBox(aligned);
+            text_min_x = Math.addExact(text_min_x, button_width);
+            text_min_x = Math.addExact(text_min_x, button_pad_right);
+            break;
+          }
+
+          case ELEMENT_TITLE: {
+            throw new UnreachableCodeException();
+          }
+
+          case ELEMENT_ICON: {
+            Assertive.require(title_theme.showIcon(), "Icon must be shown");
+
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_min_x);
+            arrangement.setIconBox(aligned);
+            text_min_x = Math.addExact(text_min_x, button_width);
+            break;
+          }
+        }
+      }
+    }
+
+    int text_max_x = maximum_origin.maximumX();
+
+    {
+      for (int index = right.size() - 1; index >= 0; --index) {
+        final SyThemeTitlebarElement element = right.get(index);
+        switch (element) {
+          case ELEMENT_CLOSE_BUTTON: {
+            Assertive.require(is_closeable, "Window must be closeable");
+
+            text_max_x = Math.subtractExact(text_max_x, button_pad_right);
+            text_max_x = Math.subtractExact(text_max_x, button_width);
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_max_x);
+            arrangement.setCloseButtonBox(aligned);
+            text_max_x = Math.subtractExact(text_max_x, button_pad_left);
+            break;
+          }
+
+          case ELEMENT_MAXIMIZE_BUTTON: {
+            Assertive.require(is_maximizable, "Window must be maximizable");
+
+            text_max_x = Math.subtractExact(text_max_x, button_pad_right);
+            text_max_x = Math.subtractExact(text_max_x, button_width);
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_max_x);
+            arrangement.setMaximizeButtonBox(aligned);
+            text_max_x = Math.subtractExact(text_max_x, button_pad_left);
+            break;
+          }
+
+          case ELEMENT_TITLE: {
+            throw new UnreachableCodeException();
+          }
+
+          case ELEMENT_ICON: {
+            Assertive.require(title_theme.showIcon(), "Icon must be shown");
+
+            text_max_x = Math.subtractExact(text_max_x, button_width);
+            final SyBoxType<SySpaceParentRelativeType> aligned =
+              SyThemeTitlebars.alignedButton(
+                maximum_origin,
+                title_theme,
+                text_max_x);
+            arrangement.setIconBox(aligned);
+            break;
+          }
+        }
+      }
+    }
+
+    Assertive.require(
+      text_min_x <= text_max_x, "Text minimum X <= Text maximum X");
+
+    arrangement.setTitle(SyBox.of(
+      text_min_x,
+      text_max_x,
+      0,
+      maximum_origin.maximumY()));
+    return arrangement.build();
+  }
+
+  private static SyBoxType<SySpaceParentRelativeType> alignedButton(
+    final SyBoxType<SySpaceParentRelativeType> container,
+    final SyThemeWindowTitleBarType title_theme,
+    final int x)
+  {
+    final SyBoxType<SySpaceParentRelativeType> box_unaligned = SyBoxes.create(
+      x, 0, title_theme.buttonWidth(), title_theme.buttonHeight());
+
+    final SyThemePaddingType padding = title_theme.buttonPadding();
+    switch (title_theme.buttonAlignment()) {
+      case ALIGN_TOP: {
+        return SyBoxes.alignVerticallyTopOffset(
+          container, box_unaligned, padding.paddingTop());
+      }
+      case ALIGN_BOTTOM: {
+        return SyBoxes.alignVerticallyBottomOffset(
+          container, box_unaligned, padding.paddingBottom());
+      }
+      case ALIGN_CENTER: {
+        return SyBoxes.alignVerticallyCenter(container, box_unaligned);
+      }
+    }
+    return box_unaligned;
+  }
+
+  private static Pair<List<SyThemeTitlebarElement>, List<SyThemeTitlebarElement>> sortElementsLeftRight(
+    final SyThemeWindowTitleBarType title_theme,
+    final boolean is_closeable,
+    final boolean is_maximizable,
+    final List<SyThemeTitlebarElement> elements)
+  {
+    final List<SyThemeTitlebarElement> elements_left =
+      new ArrayList<>(elements.size() / 2);
+    final List<SyThemeTitlebarElement> elements_right =
+      new ArrayList<>(elements.size() / 2);
+
+    List<SyThemeTitlebarElement> elements_out = elements_left;
+
+    final Iterator<SyThemeTitlebarElement> iter = elements.iterator();
+    while (iter.hasNext()) {
+      final SyThemeTitlebarElement element = iter.next();
+      switch (element) {
+        case ELEMENT_CLOSE_BUTTON: {
+          if (is_closeable) {
+            elements_out.add(element);
+          }
+          break;
+        }
+
+        case ELEMENT_MAXIMIZE_BUTTON: {
+          if (is_maximizable) {
+            elements_out.add(element);
+          }
+          break;
+        }
+
+        case ELEMENT_TITLE: {
+          Assertive.require(Objects.equals(elements_out, elements_left));
+          elements_out = elements_right;
+          break;
+        }
+
+        case ELEMENT_ICON: {
+          if (title_theme.showIcon()) {
+            elements_out.add(element);
+          }
+          break;
+        }
+      }
+    }
+
+    return Pair.pair(elements_left, elements_right);
   }
 }

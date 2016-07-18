@@ -59,7 +59,7 @@ public final class WindowDump
   public static void main(final String[] args)
     throws IOException
   {
-    final SyTheme theme_base = SyThemeBee.builder().build();
+    final SyTheme theme_base = SyThemeStride.builder().build();
 
     final SyGUIType gui =
       SyGUI.createWithTheme("main", theme_base);

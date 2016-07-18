@@ -17,27 +17,22 @@
 package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.SyWindowTitlebarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
-import com.io7m.jtensors.VectorReadable3FType;
 import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.RenderingHints;
@@ -81,46 +76,6 @@ public final class SyWindowRendererAWT implements
     return new SyWindowRendererAWT(in_measurement, in_component_renderer);
   }
 
-  private static Color toColor(
-    final VectorReadable3FType color)
-  {
-    final float r = Math.min(1.0f, Math.max(0.0f, color.getXF()));
-    final float g = Math.min(1.0f, Math.max(0.0f, color.getYF()));
-    final float b = Math.min(1.0f, Math.max(0.0f, color.getZF()));
-    return new Color(r, g, b);
-  }
-
-  private static void drawOutline(
-    final Graphics2D graphics,
-    final SyThemeOutlineType outline,
-    final SyBoxType<SySpaceParentRelativeType> box,
-    final boolean active)
-  {
-    if (active) {
-      graphics.setPaint(SyWindowRendererAWT.toColor(outline.colorActive()));
-    } else {
-      graphics.setPaint(SyWindowRendererAWT.toColor(outline.colorInactive()));
-    }
-
-    final int x_min = box.minimumX() - 1;
-    final int y_min = box.minimumY() - 1;
-    final int x_max = box.maximumX();
-    final int y_max = box.maximumY();
-
-    if (outline.top()) {
-      graphics.drawLine(x_min, y_min, x_max, y_min);
-    }
-    if (outline.bottom()) {
-      graphics.drawLine(x_min, y_max, x_max, y_max);
-    }
-    if (outline.left()) {
-      graphics.drawLine(x_min, y_min + 1, x_min, y_max - 1);
-    }
-    if (outline.right()) {
-      graphics.drawLine(x_max, y_min + 1, x_max, y_max - 1);
-    }
-  }
-
   @Override
   public BufferedImage render(
     final BufferedImage input,
@@ -128,6 +83,9 @@ public final class SyWindowRendererAWT implements
   {
     NullCheck.notNull(input);
     NullCheck.notNull(window);
+
+    final SyComponentRendererAWTContext context =
+      SyComponentRendererAWTContext.of(window.viewportAccumulator(), input);
 
     final Graphics2D graphics = input.createGraphics();
     try {
@@ -139,156 +97,12 @@ public final class SyWindowRendererAWT implements
       final SyBoxType<SySpaceViewportType> window_box = window.box();
       graphics.setClip(0, 0, window_box.width(), window_box.height());
       this.renderFrame(graphics, window);
-      this.renderContent(input, window);
-      this.renderTitlebar(graphics, window);
+      this.component_renderer.render(context, window.contentPane());
+      this.component_renderer.render(context, window.titlebar());
 
       return input;
     } finally {
       graphics.dispose();
-    }
-  }
-
-  private void renderContent(
-    final BufferedImage output,
-    final SyWindowType window)
-  {
-    final SyComponentReadableType content = window.contentPane();
-    final SyComponentRendererAWTContext context =
-      SyComponentRendererAWTContext.of(
-        window.viewportAccumulator(), output, window.theme());
-    this.component_renderer.render(context, content);
-  }
-
-  private void renderTitlebar(
-    final Graphics2D graphics,
-    final SyWindowReadableType window)
-  {
-    final AffineTransform old_transform = graphics.getTransform();
-    final Shape old_clip = graphics.getClip();
-
-    try {
-      if (window.focused()) {
-        this.renderTitlebarActive(graphics, window);
-      } else {
-        this.renderTitlebarInactive(graphics, window);
-      }
-    } finally {
-      graphics.setTransform(old_transform);
-      graphics.setClip(old_clip);
-    }
-  }
-
-  private void renderTitlebarInactive(
-    final Graphics2D graphics,
-    final SyWindowReadableType window)
-  {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowTitleBarType titlebar = window_theme.titleBar();
-    this.renderTitleBarActual(
-      graphics,
-      window,
-      titlebar,
-      titlebar.colorInactive(),
-      titlebar.embossInactive(),
-      titlebar.textColorInactive(),
-      false);
-  }
-
-  private void renderTitlebarActive(
-    final Graphics2D graphics,
-    final SyWindowReadableType window)
-  {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowTitleBarType titlebar = window_theme.titleBar();
-    this.renderTitleBarActual(
-      graphics,
-      window,
-      titlebar,
-      titlebar.colorActive(),
-      titlebar.embossActive(),
-      titlebar.textColorActive(),
-      true);
-  }
-
-  private void renderTitleBarActual(
-    final Graphics2D graphics,
-    final SyWindowReadableType window,
-    final SyThemeWindowTitleBarType titlebar_theme,
-    final VectorReadable3FType titlebar_color,
-    final Optional<SyThemeEmbossType> emboss_opt,
-    final VectorReadable3FType text_color,
-    final boolean active)
-  {
-    final SyWindowTitlebarType titlebar = window.titlebar();
-    final SyBoxType<SySpaceParentRelativeType> titlebar_box = titlebar.box();
-
-    final Optional<SyThemeOutlineType> outline_opt = titlebar_theme.outline();
-    if (outline_opt.isPresent()) {
-      SyWindowRendererAWT.drawOutline(
-        graphics, outline_opt.get(), titlebar_box, active);
-    }
-
-    final int x = titlebar_box.minimumX();
-    final int y = titlebar_box.minimumY();
-    final int w = titlebar_box.width();
-    final int h = titlebar_box.height();
-    graphics.clipRect(x, y, w, h);
-    graphics.translate(x, y);
-
-    /**
-     * Render actual bar.
-     */
-
-    final Color fill = SyWindowRendererAWT.toColor(titlebar_color);
-    final Optional<Paint> fill_opt = Optional.of(fill);
-
-    if (emboss_opt.isPresent()) {
-      final SyThemeEmbossType emboss = emboss_opt.get();
-      final Paint left = SyWindowRendererAWT.toColor(emboss.colorLeft());
-      final Color right = SyWindowRendererAWT.toColor(emboss.colorRight());
-      final Color bottom = SyWindowRendererAWT.toColor(emboss.colorBottom());
-      final Color top = SyWindowRendererAWT.toColor(emboss.colorTop());
-
-      this.embossed.rectangle(
-        graphics,
-        0,
-        0,
-        w,
-        h,
-        emboss.size(),
-        left,
-        right,
-        top,
-        bottom,
-        fill_opt);
-    } else {
-      graphics.setPaint(fill);
-      graphics.fillRect(0, 0, w, h);
-    }
-
-    /**
-     * Render window text.
-     */
-
-    {
-      final String text_font = titlebar_theme.textFont();
-      final String text = " " + titlebar.text() + " ";
-
-      final Color text_paint = SyWindowRendererAWT.toColor(text_color);
-      graphics.setFont(this.measurement.decodeFont(text_font));
-      graphics.setPaint(text_paint);
-
-      SyTextRenderer.renderText(
-        this.measurement,
-        graphics,
-        text_font,
-        w,
-        h,
-        titlebar_theme.textAlignment(),
-        SyAlignmentVertical.ALIGN_CENTER,
-        text);
     }
   }
 
@@ -329,11 +143,11 @@ public final class SyWindowRendererAWT implements
         window,
         frame_theme.outline(),
         emboss,
-        SyWindowRendererAWT.toColor(emboss.colorTop()),
-        SyWindowRendererAWT.toColor(emboss.colorLeft()),
-        SyWindowRendererAWT.toColor(emboss.colorRight()),
-        SyWindowRendererAWT.toColor(emboss.colorBottom()),
-        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorInactive())),
+        SyDrawing.toColor(emboss.colorTop()),
+        SyDrawing.toColor(emboss.colorLeft()),
+        SyDrawing.toColor(emboss.colorRight()),
+        SyDrawing.toColor(emboss.colorBottom()),
+        Optional.of(SyDrawing.toColor(frame_theme.colorInactive())),
         false);
     } else {
       this.renderFrameUnembossedActual(
@@ -341,7 +155,7 @@ public final class SyWindowRendererAWT implements
         frame_theme,
         window,
         frame_theme.outline(),
-        SyWindowRendererAWT.toColor(frame_theme.colorInactive()),
+        SyDrawing.toColor(frame_theme.colorInactive()),
         false);
     }
   }
@@ -364,11 +178,11 @@ public final class SyWindowRendererAWT implements
         window,
         frame_theme.outline(),
         emboss,
-        SyWindowRendererAWT.toColor(emboss.colorTop()),
-        SyWindowRendererAWT.toColor(emboss.colorLeft()),
-        SyWindowRendererAWT.toColor(emboss.colorRight()),
-        SyWindowRendererAWT.toColor(emboss.colorBottom()),
-        Optional.of(SyWindowRendererAWT.toColor(frame_theme.colorActive())),
+        SyDrawing.toColor(emboss.colorTop()),
+        SyDrawing.toColor(emboss.colorLeft()),
+        SyDrawing.toColor(emboss.colorRight()),
+        SyDrawing.toColor(emboss.colorBottom()),
+        Optional.of(SyDrawing.toColor(frame_theme.colorActive())),
         true);
     } else {
       this.renderFrameUnembossedActual(
@@ -376,7 +190,7 @@ public final class SyWindowRendererAWT implements
         frame_theme,
         window,
         frame_theme.outline(),
-        SyWindowRendererAWT.toColor(frame_theme.colorActive()),
+        SyDrawing.toColor(frame_theme.colorActive()),
         true);
     }
   }
@@ -403,15 +217,23 @@ public final class SyWindowRendererAWT implements
     final SyWindowFrameType frame = window.frame();
     final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
 
-    if (outline_opt.isPresent()) {
-      SyWindowRendererAWT.drawOutline(
-        graphics, outline_opt.get(), frame_box, active);
-    }
+    final int frame_x;
+    final int frame_y;
+    final int frame_width;
+    final int frame_height;
 
-    final int frame_x = frame_box.minimumX();
-    final int frame_y = frame_box.minimumY();
-    final int frame_width = frame_box.width();
-    final int frame_height = frame_box.height();
+    if (outline_opt.isPresent()) {
+      SyDrawing.drawOutline(graphics, outline_opt.get(), frame_box, active);
+      frame_x = frame_box.minimumX() + 1;
+      frame_y = frame_box.minimumY() + 1;
+      frame_width = frame_box.width() - 2;
+      frame_height = frame_box.height() - 2;
+    } else {
+      frame_x = frame_box.minimumX();
+      frame_y = frame_box.minimumY();
+      frame_width = frame_box.width();
+      frame_height = frame_box.height();
+    }
 
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
     graphics.translate(frame_x, frame_y);
@@ -701,7 +523,7 @@ public final class SyWindowRendererAWT implements
     final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
 
     if (outline_opt.isPresent()) {
-      SyWindowRendererAWT.drawOutline(
+      SyDrawing.drawOutline(
         graphics, outline_opt.get(), frame_box, active);
     }
 

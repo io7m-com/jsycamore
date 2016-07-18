@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jsycamore.core.components.SyButtonReadableType;
+import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
 
 /**
@@ -37,4 +39,16 @@ public interface SyWindowTitlebarType extends SyPanelReadableType
    */
 
   void setText(final String in_text);
+
+  /**
+   * @return Read-only access to the close button within the titlebar
+   */
+
+  SyButtonReadableType closeButton();
+
+  /**
+   * @return Read-only access to the title label within the titlebar
+   */
+
+  SyLabelReadableType titleLabel();
 }

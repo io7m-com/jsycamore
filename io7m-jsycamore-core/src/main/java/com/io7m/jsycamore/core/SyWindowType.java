@@ -39,6 +39,14 @@ public interface SyWindowType extends SyWindowEventsType,
   void setCloseable(boolean c);
 
   /**
+   * Set whether or not the window should have a maximize box.
+   *
+   * @param c {@code true} iff the window should have a maximize box
+   */
+
+  void setMaximizable(boolean c);
+
+  /**
    * @return Writable access to the content pane
    */
 

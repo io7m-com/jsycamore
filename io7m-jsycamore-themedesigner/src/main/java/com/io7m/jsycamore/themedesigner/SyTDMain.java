@@ -16,42 +16,27 @@
 
 package com.io7m.jsycamore.themedesigner;
 
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
-import java.io.IOException;
+import com.io7m.junreachable.UnreachableCodeException;
 
 /**
- * Main program.
+ * Main program entry point.
  */
 
 public final class SyTDMain
 {
   private SyTDMain()
   {
-
+    throw new UnreachableCodeException();
   }
 
   /**
-   * Main entry point.
+   * Main function.
    *
-   * @param args Command line arguments (ignored)
+   * @param args Command line arguments
    */
 
   public static void main(final String[] args)
   {
-    SwingUtilities.invokeLater(() -> {
-      try {
-        final SyTDMainWindow w = new SyTDMainWindow();
-        w.setMinimumSize(new Dimension(640, 480));
-        w.setPreferredSize(new Dimension(800, 600));
-        w.pack();
-        w.setVisible(true);
-        w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      } catch (final IOException e) {
-        e.printStackTrace();
-        System.exit(1);
-      }
-    });
+    // Nothing yet
   }
 }

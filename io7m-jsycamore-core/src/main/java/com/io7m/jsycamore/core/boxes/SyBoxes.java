@@ -41,16 +41,6 @@ public final class SyBoxes
     return Math.max(Math.min(x, maximum), minimum);
   }
 
-  private static int alignCenter1D(
-    final int k,
-    final int outer_length,
-    final int inner_length)
-  {
-    final int outer_half = outer_length / 2;
-    final int inner_half = inner_length / 2;
-    return Math.subtractExact(Math.addExact(k, outer_half), inner_half);
-  }
-
   /**
    * Brand a given box as belonging to a different coordinate space. Mixing up
    * coordinate spaces is a common source of difficult-to-locate bugs. Use at
@@ -114,6 +104,21 @@ public final class SyBoxes
   }
 
   /**
+   * Move the given box to {@code (0, 0)}.
+   *
+   * @param box The box
+   * @param <S> The coordinate space of the box
+   *
+   * @return A moved box
+   */
+
+  public static <S extends SySpaceType> SyBoxType<S> moveToOrigin(
+    final SyBoxType<S> box)
+  {
+    return SyBoxes.create(0, 0, box.width(), box.height());
+  }
+
+  /**
    * Create a box of width {@code width} and height {@code height}, placing the
    * top left corner at {@code (x, y)}.
    *
@@ -158,11 +163,9 @@ public final class SyBoxes
 
     final int outer_width = outer.width();
     final int inner_width = inner.width();
-
-    final int x_min =
-      SyBoxes.alignCenter1D(outer.minimumX(), outer_width, inner_width);
-    final int x_max = Math.addExact(x_min, inner_width);
-    return SyBox.of(x_min, x_max, inner.minimumY(), inner.maximumY());
+    final int xm0 = Math.addExact(outer.minimumX(), outer_width / 2);
+    final int xm1 = Math.subtractExact(xm0, inner_width / 2);
+    return SyBoxes.create(xm1, inner.minimumY(), inner_width, inner.height());
   }
 
   /**
@@ -361,10 +364,9 @@ public final class SyBoxes
     final int outer_height = outer.height();
     final int inner_height = inner.height();
 
-    final int y_min =
-      SyBoxes.alignCenter1D(outer.minimumY(), outer_height, inner_height);
-    final int y_max = Math.addExact(y_min, inner_height);
-    return SyBox.of(inner.minimumX(), inner.maximumX(), y_min, y_max);
+    final int ym0 = Math.addExact(outer.minimumY(), outer_height / 2);
+    final int ym1 = Math.subtractExact(ym0, inner_height / 2);
+    return SyBoxes.create(inner.minimumX(), ym1, inner.width(), inner_height);
   }
 
   /**
@@ -579,21 +581,8 @@ public final class SyBoxes
     NullCheck.notNull(outer);
     NullCheck.notNull(inner);
 
-    final int outer_width = outer.width();
-    final int inner_width = inner.width();
-
-    final int x_min =
-      SyBoxes.alignCenter1D(outer.minimumX(), outer_width, inner_width);
-
-    final int outer_height = outer.height();
-    final int inner_height = inner.height();
-
-    final int y_min =
-      SyBoxes.alignCenter1D(outer.minimumY(), outer_height, inner_height);
-
-    final int y_max = Math.addExact(y_min, inner_height);
-    final int x_max = Math.addExact(x_min, inner_width);
-    return SyBox.of(x_min, x_max, y_min, y_max);
+    return SyBoxes.alignVerticallyCenter(
+      outer, SyBoxes.alignHorizontallyCenter(outer, inner));
   }
 
   /**

@@ -18,7 +18,6 @@ package com.io7m.jsycamore.core.renderer;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
 import org.immutables.value.Value;
 
 import java.awt.image.BufferedImage;
@@ -44,11 +43,4 @@ public interface SyComponentRendererAWTContextType
 
   @Value.Parameter
   BufferedImage image();
-
-  /**
-   * @return The current theme
-   */
-
-  @Value.Parameter
-  SyThemeType theme();
 }

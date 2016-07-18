@@ -17,29 +17,27 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jranges.RangeCheckException;
+import com.io7m.jsycamore.core.SyGUIType;
+import com.io7m.jsycamore.core.SyMouseButton;
+import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
+import com.io7m.jsycamore.core.SyWindowTitlebarType;
+import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
-import com.io7m.jsycamore.core.SyWindowTitlebarType;
-import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jtensors.VectorReadable2IType;
 import com.io7m.jtensors.parameterized.PVectorI2I;
-import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.valid4j.Assertive;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +46,9 @@ public abstract class SyGUIContract
 {
   protected abstract SyGUIType create(String name);
 
-  protected abstract SyGUIType createWithTheme(String name, SyThemeType theme);
+  protected abstract SyGUIType createWithTheme(
+    String name,
+    SyThemeType theme);
 
   @Rule public ExpectedException expected = ExpectedException.none();
 
@@ -148,7 +148,8 @@ public abstract class SyGUIContract
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
   }
 
-  @Test public final void testWindowMouseOverFrame()
+  @Test
+  public final void testWindowMouseOverFrame()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -169,7 +170,8 @@ public abstract class SyGUIContract
     }
   }
 
-  @Test public final void testWindowMouseOverContentPane()
+  @Test
+  public final void testWindowMouseOverContentPane()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -190,7 +192,8 @@ public abstract class SyGUIContract
     }
   }
 
-  @Test public final void testWindowMouseOverTitlebar()
+  @Test
+  public final void testWindowMouseOverTitlebar()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -198,10 +201,13 @@ public abstract class SyGUIContract
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseMoved(new PVectorI2I<>(10, 10));
+        g.onMouseMoved(new PVectorI2I<>(320, 10));
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
     }
 
     {
@@ -211,7 +217,8 @@ public abstract class SyGUIContract
     }
   }
 
-  @Test public final void testWindowMouseOverTitlebarOffset()
+  @Test
+  public final void testWindowMouseOverTitlebarOffset()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -220,10 +227,13 @@ public abstract class SyGUIContract
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseMoved(new PVectorI2I<>(32 + 10, 32 + 10));
+        g.onMouseMoved(new PVectorI2I<>(32 + 320 + 10, 32 + 10));
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
     }
 
     {
@@ -233,7 +243,8 @@ public abstract class SyGUIContract
     }
   }
 
-  @Test public final void testWindowMouseOverTitlebarDragLeftButton()
+  @Test
+  public final void testWindowMouseOverTitlebarDragLeftButton()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -241,30 +252,39 @@ public abstract class SyGUIContract
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseDown(new PVectorI2I<>(10, 10), SyMouseButton.MOUSE_BUTTON_LEFT);
+        g.onMouseDown(
+          new PVectorI2I<>(320, 10),
+          SyMouseButton.MOUSE_BUTTON_LEFT);
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
     }
 
-    g.onMouseMoved(new PVectorI2I<>(15, 20));
+    g.onMouseMoved(new PVectorI2I<>(320 + 15, 20));
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseUp(new PVectorI2I<>(15, 20), SyMouseButton.MOUSE_BUTTON_LEFT);
+        g.onMouseUp(new PVectorI2I<>(320 + 15, 20), SyMouseButton.MOUSE_BUTTON_LEFT);
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
     }
 
     final SyBoxType<SySpaceViewportType> box = w0.box();
-    Assert.assertEquals(5L, (long) box.minimumX());
+    Assert.assertEquals(15L, (long) box.minimumX());
     Assert.assertEquals(10L, (long) box.minimumY());
     Assert.assertEquals(640L, (long) box.width());
     Assert.assertEquals(480L, (long) box.height());
   }
 
-  @Test public final void testWindowClickNothing()
+  @Test
+  public final void testWindowClickNothing()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -272,18 +292,23 @@ public abstract class SyGUIContract
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseDown(new PVectorI2I<>(800, 600), SyMouseButton.MOUSE_BUTTON_LEFT);
+        g.onMouseDown(
+          new PVectorI2I<>(800, 600),
+          SyMouseButton.MOUSE_BUTTON_LEFT);
       Assert.assertFalse(c.isPresent());
     }
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseUp(new PVectorI2I<>(800, 600), SyMouseButton.MOUSE_BUTTON_LEFT);
+        g.onMouseUp(
+          new PVectorI2I<>(800, 600),
+          SyMouseButton.MOUSE_BUTTON_LEFT);
       Assert.assertFalse(c.isPresent());
     }
   }
 
-  @Test public final void testWindowMouseOverTitlebarDragRightButton()
+  @Test
+  public final void testWindowMouseOverTitlebarDragRightButton()
   {
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
@@ -291,20 +316,28 @@ public abstract class SyGUIContract
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseDown(new PVectorI2I<>(10, 10), SyMouseButton.MOUSE_BUTTON_RIGHT);
+        g.onMouseDown(
+          new PVectorI2I<>(320, 10),
+          SyMouseButton.MOUSE_BUTTON_RIGHT);
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof SyWindowTitlebarType);
     }
 
-    g.onMouseMoved(new PVectorI2I<>(15, 20));
+    g.onMouseMoved(new PVectorI2I<>(320 + 15, 20));
 
     {
       final Optional<SyComponentType> c =
-        g.onMouseUp(new PVectorI2I<>(15, 20), SyMouseButton.MOUSE_BUTTON_RIGHT);
+        g.onMouseUp(new PVectorI2I<>(320 + 15, 20), SyMouseButton.MOUSE_BUTTON_RIGHT);
       Assert.assertTrue(c.isPresent());
       final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowTitlebarType);
+      Assert.assertTrue(
+        cc instanceof SyLabelReadableType);
+      Assert.assertTrue(
+        cc.node().parent().get().value() instanceof SyWindowTitlebarType);
     }
 
     g.onMouseMoved(new PVectorI2I<>(800, 600));

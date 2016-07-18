@@ -17,59 +17,43 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jtensors.VectorI3F;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.immutables.value.Value;
 
-import java.util.Optional;
-
 /**
- * A panel theme specification.
+ * The boxes for components that appear in window titlebars.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemePanelType
+public interface SyThemeWindowTitlebarArrangementType
 {
   /**
-   * @return The base color used for active panels
+   * @return The box that will be used for the close button
    */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  @Value.Parameter(order = 0)
+  SyBoxType<SySpaceParentRelativeType> closeButtonBox();
 
   /**
-   * @return The base color used for inactive panels
+   * @return The box that will be used for the maximize button
    */
 
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  @Value.Parameter(order = 1)
+  SyBoxType<SySpaceParentRelativeType> maximizeButtonBox();
 
   /**
-   * @return The embossing used for active panels
+   * @return The box that will be used for the icon
    */
 
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossActive();
+  @Value.Parameter(order = 2)
+  SyBoxType<SySpaceParentRelativeType> iconBox();
 
   /**
-   * @return The embossing used for inactive panels
+   * @return The box that will be used for the title
    */
 
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossInactive();
-
-  /**
-   * @return The outline used for panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  @Value.Parameter(order = 3)
+  SyBoxType<SySpaceParentRelativeType> title();
 }

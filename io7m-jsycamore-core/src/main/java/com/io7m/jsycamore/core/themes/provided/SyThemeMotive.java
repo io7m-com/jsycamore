@@ -18,6 +18,7 @@ package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
@@ -34,8 +35,10 @@ import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlines;
+import com.io7m.jsycamore.core.themes.SyThemePadding;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
+import com.io7m.jsycamore.core.themes.SyThemeTitlebarElement;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangement;
@@ -123,19 +126,39 @@ public final class SyThemeMotive
     theme_titlebar_emboss_inactive_b.setColorRight(color_inactive_darker);
     theme_titlebar_emboss_inactive_b.setColorBottom(color_inactive_darker);
 
+    final SyThemePanel.Builder theme_titlebar_panel_b = SyThemePanel.builder();
+    theme_titlebar_panel_b.setColorActive(spec.colorActive());
+    theme_titlebar_panel_b.setColorInactive(color_inactive_base);
+    theme_titlebar_panel_b.setEmbossActive(theme_titlebar_emboss_active_b.build());
+    theme_titlebar_panel_b.setEmbossInactive(theme_titlebar_emboss_inactive_b.build());
+
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
-    theme_titlebar_b.setTextFont("Monospaced 10");
-    theme_titlebar_b.setColorActive(spec.colorActive());
-    theme_titlebar_b.setColorInactive(color_inactive_base);
-    theme_titlebar_b.setTextColorActive(text_color_active);
-    theme_titlebar_b.setTextColorInactive(text_color_inactive);
-    theme_titlebar_b.setEmbossActive(
-      Optional.of(theme_titlebar_emboss_active_b.build()));
-    theme_titlebar_b.setEmbossInactive(
-      Optional.of(theme_titlebar_emboss_inactive_b.build()));
-    theme_titlebar_b.setTextAlignment(
-      SyAlignmentHorizontal.ALIGN_CENTER);
+    theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
+
+    final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
+    theme_titlebar_text_b.setTextFont("Monospaced 10");
+    theme_titlebar_text_b.setTextColorActive(text_color_active);
+    theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
+    theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_CENTER);
+    theme_titlebar_b.setTextPadding(SyThemePadding.of(2, 2, 0, 0));
+    theme_titlebar_b.setTextTheme(theme_titlebar_text_b.build());
+
+    theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
+    theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 0, 0, 0));
+    theme_titlebar_b.setButtonHeight(16);
+    theme_titlebar_b.setButtonWidth(16);
+    theme_titlebar_b.setButtonTheme(SyThemeMotive.createThemeButton(
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker,
+      1,
+      false));
+    theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
+    theme_titlebar_b.setElementOrder(SyThemeMotive::elementOrder);
+    theme_titlebar_b.setHeight(16);
+    theme_titlebar_b.setShowIcon(false);
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
@@ -176,7 +199,8 @@ public final class SyThemeMotive
     theme_frame_b.setOutline(SyThemeOutline.of(
       true, true, true, true,
       new VectorI3F(0.0f, 0.0f, 0.0f),
-      new VectorI3F(0.3f, 0.3f, 0.3f)));
+      new VectorI3F(0.3f, 0.3f, 0.3f),
+      true));
 
     theme.setWindowTheme(
       SyThemeWindow.of(
@@ -193,7 +217,9 @@ public final class SyThemeMotive
       background,
       background_lighter,
       background_lighter_lighter,
-      background_darker));
+      background_darker,
+      2,
+      true));
 
     theme.setLabelTheme(SyThemeMotive.createThemeLabel(spec.foregroundColor()));
     theme.setImageTheme(SyThemeMotive.createThemeImage(background_darker));
@@ -229,17 +255,20 @@ public final class SyThemeMotive
 
     final SyThemeWindowFrameType frame_theme = theme_window.frame();
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame =
-      SyThemeOutlines.scaleForOutlineOptional(
-        window_box, frame_theme.outline());
+    final SyBoxType<SySpaceParentRelativeType> box_frame = window_box;
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
+    final SyBoxType<SySpaceParentRelativeType> box_frame_inner_initial =
       SyBoxes.hollowOut(
         box_frame,
         frame_theme.leftWidth(),
         frame_theme.rightWidth(),
         frame_theme.topHeight(),
         frame_theme.bottomHeight());
+
+    final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
+      SyThemeOutlines.scaleForOutlineOptional(
+        box_frame_inner_initial,
+        frame_theme.outline());
 
     /**
      * Calculate a titlebar that appears at the top of the inside of the
@@ -248,16 +277,12 @@ public final class SyThemeMotive
 
     final SyThemeWindowTitleBarType titlebar_theme = theme_window.titleBar();
 
-    final SyBoxType<SySpaceParentRelativeType> box_titlebar_initial =
+    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
       SyBoxes.create(
         box_frame_inner.minimumX(),
         box_frame_inner.minimumY(),
         box_frame_inner.width(),
         titlebar_theme.height());
-
-    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
-      SyThemeOutlines.scaleForOutlineOptional(
-        box_titlebar_initial, titlebar_theme.outline());
 
     /**
      * The content area is whatever space is left over.
@@ -280,7 +305,7 @@ public final class SyThemeMotive
     final VectorI3F color)
   {
     final SyThemeImage.Builder b = SyThemeImage.builder();
-    b.setOutline(SyThemeOutline.of(true, true, true, true, color, color));
+    b.setOutline(SyThemeOutline.of(true, true, true, true, color, color, true));
     return b.build();
   }
 
@@ -290,8 +315,15 @@ public final class SyThemeMotive
     final VectorI3F background_darker)
   {
     final SyThemePanel.Builder b = SyThemePanel.builder();
-    b.setColor(background);
-    b.setEmboss(SyThemeEmboss.of(
+    b.setColorActive(background);
+    b.setColorInactive(background);
+    b.setEmbossActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1));
+    b.setEmbossInactive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
       background_lighter,
@@ -303,7 +335,8 @@ public final class SyThemeMotive
   private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
   {
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
-    b.setTextColor(foreground);
+    b.setTextColorActive(foreground);
+    b.setTextColorInactive(foreground);
     b.setTextFont("Monospaced-plain-10");
     return b.build();
   }
@@ -312,17 +345,20 @@ public final class SyThemeMotive
     final VectorI3F background,
     final VectorI3F background_lighter,
     final VectorI3F background_lighter_lighter,
-    final VectorI3F background_darker)
+    final VectorI3F background_darker,
+    final int emboss,
+    final boolean outline)
   {
     final SyThemeButton.Builder theme_button_b =
       SyThemeButton.builder();
 
-    theme_button_b.setOutline(Optional.of(SyThemeOutline.of(
-      true, true, true, true,
-      background_darker,
-      background_darker)));
-
-    final int emboss_size = 2;
+    if (outline) {
+      theme_button_b.setOutline(Optional.of(SyThemeOutline.of(
+        true, true, true, true,
+        background_darker,
+        background_darker,
+        true)));
+    }
 
     theme_button_b.setColorActive(background);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
@@ -330,7 +366,7 @@ public final class SyThemeMotive
       background_darker,
       background_lighter,
       background_darker,
-      emboss_size
+      emboss
     ));
 
     theme_button_b.setColorDisabled(background);
@@ -341,7 +377,7 @@ public final class SyThemeMotive
       background,
       background_lighter_lighter,
       background,
-      emboss_size
+      emboss
     ));
 
     theme_button_b.setColorPressed(background);
@@ -350,10 +386,75 @@ public final class SyThemeMotive
       background_lighter,
       background_darker,
       background_lighter,
-      emboss_size
+      emboss
     ));
 
     return theme_button_b.build();
+  }
+
+  private static int elementOrder(
+    final SyThemeTitlebarElement e0,
+    final SyThemeTitlebarElement e1)
+  {
+    switch (e0) {
+      case ELEMENT_CLOSE_BUTTON: {
+        switch (e1) {
+          case ELEMENT_CLOSE_BUTTON:
+            return 0;
+          case ELEMENT_MAXIMIZE_BUTTON:
+            return -1;
+          case ELEMENT_TITLE:
+            return -1;
+          case ELEMENT_ICON:
+            return 1;
+        }
+        break;
+      }
+
+      case ELEMENT_MAXIMIZE_BUTTON: {
+        switch (e1) {
+          case ELEMENT_CLOSE_BUTTON:
+            return 1;
+          case ELEMENT_MAXIMIZE_BUTTON:
+            return 0;
+          case ELEMENT_TITLE:
+            return 1;
+          case ELEMENT_ICON:
+            return 1;
+        }
+        break;
+      }
+
+      case ELEMENT_TITLE: {
+        switch (e1) {
+          case ELEMENT_CLOSE_BUTTON:
+            return 1;
+          case ELEMENT_MAXIMIZE_BUTTON:
+            return -1;
+          case ELEMENT_TITLE:
+            return 0;
+          case ELEMENT_ICON:
+            return 1;
+        }
+        break;
+      }
+
+      case ELEMENT_ICON: {
+        switch (e1) {
+          case ELEMENT_CLOSE_BUTTON:
+            return -1;
+          case ELEMENT_MAXIMIZE_BUTTON:
+            return -1;
+          case ELEMENT_TITLE:
+            return -1;
+          case ELEMENT_ICON:
+            return 0;
+        }
+        break;
+      }
+    }
+
+    throw new UnreachableCodeException();
   }
 
   /**

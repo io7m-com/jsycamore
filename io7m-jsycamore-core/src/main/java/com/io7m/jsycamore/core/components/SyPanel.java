@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,5 +62,11 @@ public final class SyPanel extends SyPanelAbstract
     sb.append(this.box().minimumY());
     sb.append("]");
     return sb.toString();
+  }
+
+  @Override
+  public SyThemePanelType theme()
+  {
+    return this.windowTheme().panelTheme();
   }
 }

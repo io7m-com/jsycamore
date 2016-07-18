@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+
 /**
  * The default implementation of the {@link SyButtonType} interface.
  */
@@ -55,5 +57,11 @@ public final class SyButton extends SyButtonAbstract
     sb.append(this.box().minimumY());
     sb.append("]");
     return sb.toString();
+  }
+
+  @Override
+  public SyThemeButtonType theme()
+  {
+    return this.windowTheme().buttonTheme();
   }
 }

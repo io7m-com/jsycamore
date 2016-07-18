@@ -22,6 +22,7 @@ import org.immutables.value.Value;
 
 /**
  * The result of splitting a box along a horizontal line.
+ *
  * @param <S> The type of coordinate space
  */
 

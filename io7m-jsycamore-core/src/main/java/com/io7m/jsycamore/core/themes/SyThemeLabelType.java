@@ -29,14 +29,25 @@ import org.immutables.value.Value;
 public interface SyThemeLabelType
 {
   /**
-   * @return The base color used for text
+   * @return The base color used for the text of active labels
    */
 
   @Value.Parameter
   @Value.Default
-  default VectorI3F textColor()
+  default VectorI3F textColorActive()
   {
     return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
+
+  /**
+   * @return The base color used for the text of inactive labels
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F textColorInactive()
+  {
+    return new VectorI3F(0.3f, 0.3f, 0.3f);
   }
 
   /**

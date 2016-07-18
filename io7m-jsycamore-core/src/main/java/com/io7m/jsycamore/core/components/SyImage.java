@@ -18,6 +18,7 @@ package com.io7m.jsycamore.core.components;
 
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.core.themes.SyThemeImageType;
 
 /**
  * The default implementation of the {@link SyImageType}.
@@ -58,5 +59,11 @@ public final class SyImage extends SyImageAbstract
     sb.append(this.box().minimumY());
     sb.append("]");
     return sb.toString();
+  }
+
+  @Override
+  public SyThemeImageType theme()
+  {
+    return this.windowTheme().imageTheme();
   }
 }

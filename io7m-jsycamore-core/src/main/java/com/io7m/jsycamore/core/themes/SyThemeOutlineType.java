@@ -77,20 +77,23 @@ public interface SyThemeOutlineType
    */
 
   @Value.Parameter(order = 4)
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
+  VectorI3F colorActive();
 
   /**
    * @return The color of the outline when the element is inactive
    */
 
   @Value.Parameter(order = 5)
+  VectorI3F colorInactive();
+
+  /**
+   * @return {@code true} iff corner pixels should be rendered
+   */
+
+  @Value.Parameter(order = 6)
   @Value.Default
-  default VectorI3F colorInactive()
+  default boolean corners()
   {
-    return new VectorI3F(0.2f, 0.2f, 0.2f);
+    return true;
   }
 }

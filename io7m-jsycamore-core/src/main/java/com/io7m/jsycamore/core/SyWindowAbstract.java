@@ -25,14 +25,22 @@ import com.io7m.jsycamore.core.boxes.SyBoxMutable;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButtonAbstract;
+import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyLabelAbstract;
+import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
 import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemePanelType;
+import com.io7m.jsycamore.core.themes.SyThemeTitlebars;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarArrangementType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.jtensors.parameterized.PVectorM2I;
@@ -92,7 +100,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.transform_context = SyWindowViewportAccumulator.create();
     this.theme_override = Optional.empty();
     this.closeable = true;
-    this.maximizable = false;
+    this.maximizable = true;
 
     this.recalculateBounds(this.box);
   }
@@ -194,12 +202,13 @@ public abstract class SyWindowAbstract implements SyWindowType
         root_box);
 
     this.box.from(window_box);
-    this.root.setBox(root_box);
-    this.root.frame.box_inner.from(boxes.frameExclusionBox());
-    this.root.frame.setBox(boxes.frameBox());
+    this.root.titlebar.text.setTextAlignmentHorizontal(
+      theme.windowTheme().titleBar().textAlignment());
     this.root.titlebar.setBox(boxes.titlebarBox());
+    this.root.frame.setBox(boxes.frameBox());
+    this.root.frame.box_inner.from(boxes.frameExclusionBox());
     this.root.content_pane.setBox(boxes.contentBox());
-
+    this.root.setBox(root_box);
     this.transform_context.reset(window_box.width(), window_box.height());
   }
 
@@ -289,10 +298,10 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.closeable = c;
 
     if (this.isCloseable()) {
-      this.root.titlebar.close_box.setVisibility(
+      this.root.titlebar.close_button.setVisibility(
         SyVisibility.VISIBILITY_VISIBLE);
     } else {
-      this.root.titlebar.close_box.setVisibility(
+      this.root.titlebar.close_button.setVisibility(
         SyVisibility.VISIBILITY_INVISIBLE);
     }
 
@@ -305,6 +314,22 @@ public abstract class SyWindowAbstract implements SyWindowType
     return this.maximizable;
   }
 
+  @Override
+  public final void setMaximizable(final boolean c)
+  {
+    this.maximizable = c;
+
+    if (this.isMaximizable()) {
+      this.root.titlebar.maximize_button.setVisibility(
+        SyVisibility.VISIBILITY_VISIBLE);
+    } else {
+      this.root.titlebar.maximize_button.setVisibility(
+        SyVisibility.VISIBILITY_INVISIBLE);
+    }
+
+    this.recalculateBoundsRefresh();
+  }
+
   private final class TitlebarText extends SyLabelAbstract
   {
     TitlebarText()
@@ -314,14 +339,21 @@ public abstract class SyWindowAbstract implements SyWindowType
         return false;
       });
     }
+
+    @Override
+    public SyThemeLabelType theme()
+    {
+      return SyWindowAbstract.this.theme().windowTheme().titleBar().textTheme();
+    }
   }
 
   private final class Titlebar extends SyPanelAbstract implements
     SyWindowTitlebarType
   {
     private final PVectorM2I<SySpaceViewportType> window_drag_start;
-    private final TitlebarCloseButton close_box;
+    private final TitlebarCloseButton close_button;
     private final TitlebarText text;
+    private final TitlebarMaximizeButton maximize_button;
 
     Titlebar(final String in_text)
     {
@@ -331,16 +363,38 @@ public abstract class SyWindowAbstract implements SyWindowType
       });
 
       NullCheck.notNull(in_text);
-      this.setPanelTransparent(true);
 
       this.text = new TitlebarText();
       this.text.setText(in_text);
       this.node().childAdd(this.text.node());
 
-      this.close_box = new TitlebarCloseButton();
-      this.node().childAdd(this.close_box.node());
+      this.maximize_button = new TitlebarMaximizeButton();
+      this.close_button = new TitlebarCloseButton();
+      this.node().childAdd(this.close_button.node());
+      this.node().childAdd(this.maximize_button.node());
 
       this.window_drag_start = new PVectorM2I<>();
+    }
+
+    @Override
+    public void resized(
+      final int delta_x,
+      final int delta_y)
+    {
+      final SyThemeType theme = SyWindowAbstract.this.theme();
+      final SyThemeWindowType theme_window = theme.windowTheme();
+      final SyThemeWindowTitleBarType theme_titlebar = theme_window.titleBar();
+
+      final SyThemeWindowTitlebarArrangementType arranged =
+        SyThemeTitlebars.arrange(
+          this.box(),
+          theme_titlebar,
+          SyWindowAbstract.this.isCloseable(),
+          SyWindowAbstract.this.isMaximizable());
+
+      this.close_button.setBox(arranged.closeButtonBox());
+      this.maximize_button.setBox(arranged.maximizeButtonBox());
+      this.text.setBox(arranged.title());
     }
 
     @Override
@@ -454,6 +508,25 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.text.setText(NullCheck.notNull(in_text));
       SyWindowAbstract.this.recalculateBoundsRefresh();
     }
+
+    @Override
+    public SyButtonReadableType closeButton()
+    {
+      return this.close_button;
+    }
+
+    @Override
+    public SyLabelReadableType titleLabel()
+    {
+      return this.text;
+    }
+
+    @Override
+    public SyThemePanelType theme()
+    {
+      final SyThemeType theme = SyWindowAbstract.this.theme();
+      return theme.windowTheme().titleBar().panelTheme();
+    }
   }
 
   private final class TitlebarCloseButton extends SyButtonAbstract implements
@@ -465,6 +538,32 @@ public abstract class SyWindowAbstract implements SyWindowType
         SyWindowAbstract.LOG.debug("refusing to detach close box");
         return false;
       });
+    }
+
+    @Override
+    public SyThemeButtonType theme()
+    {
+      final SyThemeType theme = SyWindowAbstract.this.theme();
+      return theme.windowTheme().titleBar().buttonTheme();
+    }
+  }
+
+  private final class TitlebarMaximizeButton extends SyButtonAbstract implements
+    SyWindowCloseBoxType
+  {
+    TitlebarMaximizeButton()
+    {
+      super(() -> {
+        SyWindowAbstract.LOG.debug("refusing to detach maximize button");
+        return false;
+      });
+    }
+
+    @Override
+    public SyThemeButtonType theme()
+    {
+      final SyThemeType theme = SyWindowAbstract.this.theme();
+      return theme.windowTheme().titleBar().buttonTheme();
     }
   }
 
@@ -485,6 +584,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     public String toString()
     {
       return this.toNamedString("ContentPane");
+    }
+
+    @Override
+    public SyThemePanelType theme()
+    {
+      return this.windowTheme().panelTheme();
     }
   }
 
@@ -520,6 +625,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       return this.toNamedString("Frame");
     }
+
+    @Override
+    public SyThemePanelType theme()
+    {
+      return this.windowTheme().panelTheme();
+    }
   }
 
   private final class WindowRoot extends SyPanelAbstract
@@ -552,6 +663,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     public String toString()
     {
       return this.toNamedString("WindowRoot");
+    }
+
+    @Override
+    public SyThemePanelType theme()
+    {
+      return this.windowTheme().panelTheme();
     }
   }
 

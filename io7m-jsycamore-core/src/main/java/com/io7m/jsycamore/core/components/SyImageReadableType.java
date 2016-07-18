@@ -20,6 +20,7 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.core.themes.SyThemeImageType;
 
 import java.util.function.BiFunction;
 
@@ -29,6 +30,12 @@ import java.util.function.BiFunction;
 
 public interface SyImageReadableType extends SyComponentReadableType
 {
+  /**
+   * @return The current theme for the image
+   */
+
+  SyThemeImageType theme();
+
   /**
    * @return The image
    */

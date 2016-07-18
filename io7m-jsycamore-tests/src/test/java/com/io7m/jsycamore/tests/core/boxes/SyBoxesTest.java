@@ -530,14 +530,39 @@ public final class SyBoxesTest
     Assert.assertEquals(10L, (long) inner.width());
     Assert.assertEquals(10L, (long) inner.height());
 
-    final SyBoxType<SySpaceType> aligned = SyBoxes.alignHorizontallyCenter(
-      outer,
-      inner);
+    final SyBoxType<SySpaceType> aligned =
+      SyBoxes.alignVerticallyCenter(outer, inner);
 
     Assert.assertEquals(10L, (long) aligned.width());
     Assert.assertEquals(10L, (long) aligned.height());
-    Assert.assertEquals(45L, (long) aligned.minimumX());
-    Assert.assertEquals(55L, (long) aligned.maximumX());
+    Assert.assertEquals(0L, (long) aligned.minimumX());
+    Assert.assertEquals(10L, (long) aligned.maximumX());
+    Assert.assertEquals(45L, (long) aligned.minimumY());
+    Assert.assertEquals(55L, (long) aligned.maximumY());
+  }
+
+  @Test
+  public void testAlignVerticallyCenterSpecific2()
+    throws Exception
+  {
+    final SyBoxType<SySpaceType> outer = SyBox.of(6, 634, 0, 16);
+    final SyBoxType<SySpaceType> inner = SyBox.of(3, 13, 6, 16);
+
+    Assert.assertEquals(628L, (long) outer.width());
+    Assert.assertEquals(16L, (long) outer.height());
+    Assert.assertEquals(10L, (long) inner.width());
+    Assert.assertEquals(10L, (long) inner.height());
+
+    final SyBoxType<SySpaceType> aligned =
+      SyBoxes.alignVerticallyCenter(outer, inner);
+
+    Assert.assertEquals(10L, (long) aligned.width());
+    Assert.assertEquals(10L, (long) aligned.height());
+
+    Assert.assertEquals(3L, (long) aligned.minimumX());
+    Assert.assertEquals(13L, (long) aligned.maximumX());
+    Assert.assertEquals(3L, (long) aligned.minimumY());
+    Assert.assertEquals(13L, (long) aligned.maximumY());
   }
 
   @Test
@@ -1959,6 +1984,13 @@ public final class SyBoxesTest
             SyBoxes.scaleFromTopLeft(outer, x_diff, y_diff);
 
           Assert.assertEquals(
+            (long) Math.max(0, outer.width() + x_diff),
+            (long) resized.width());
+          Assert.assertEquals(
+            (long) Math.max(0, outer.height() + y_diff),
+            (long) resized.height());
+
+          Assert.assertEquals(
             (long) outer.maximumX(),
             (long) resized.maximumX());
           Assert.assertEquals(
@@ -1987,6 +2019,13 @@ public final class SyBoxesTest
 
           final SyBoxType<SySpaceType> resized =
             SyBoxes.scaleFromTopRight(outer, x_diff, y_diff);
+
+          Assert.assertEquals(
+            (long) Math.max(0, outer.width() + x_diff),
+            (long) resized.width());
+          Assert.assertEquals(
+            (long) Math.max(0, outer.height() + y_diff),
+            (long) resized.height());
 
           Assert.assertEquals(
             (long) outer.minimumX(),
@@ -2019,6 +2058,13 @@ public final class SyBoxesTest
             SyBoxes.scaleFromBottomRight(outer, x_diff, y_diff);
 
           Assert.assertEquals(
+            (long) Math.max(0, outer.width() + x_diff),
+            (long) resized.width());
+          Assert.assertEquals(
+            (long) Math.max(0, outer.height() + y_diff),
+            (long) resized.height());
+
+          Assert.assertEquals(
             (long) outer.minimumX(),
             (long) resized.minimumX());
           Assert.assertEquals(
@@ -2049,11 +2095,48 @@ public final class SyBoxesTest
             SyBoxes.scaleFromBottomLeft(outer, x_diff, y_diff);
 
           Assert.assertEquals(
+            (long) Math.max(0, outer.width() + x_diff),
+            (long) resized.width());
+          Assert.assertEquals(
+            (long) Math.max(0, outer.height() + y_diff),
+            (long) resized.height());
+
+          Assert.assertEquals(
             (long) outer.maximumX(),
             (long) resized.maximumX());
           Assert.assertEquals(
             (long) outer.minimumY(),
             (long) resized.minimumY());
+        }
+      });
+  }
+
+  @Test
+  public void testScaleFromCenterAll()
+    throws Exception
+  {
+    final Generator<Integer> int_gen = PrimitiveGenerators.integers(-400, 400);
+    final Generator<SyBoxType<SySpaceType>> generator = new SyBoxGenerator<>();
+    QuickCheck.forAllVerbose(
+      generator,
+      new AbstractCharacteristic<SyBoxType<SySpaceType>>()
+      {
+        @Override
+        protected void doSpecify(final SyBoxType<SySpaceType> outer)
+          throws Throwable
+        {
+          final int x_diff = int_gen.next().intValue();
+          final int y_diff = int_gen.next().intValue();
+
+          final SyBoxType<SySpaceType> resized =
+            SyBoxes.scaleFromCenter(outer, x_diff, y_diff);
+
+          Assert.assertEquals(
+            (long) Math.max(0, outer.width() + x_diff),
+            (long) resized.width());
+          Assert.assertEquals(
+            (long) Math.max(0, outer.height() + y_diff),
+            (long) resized.height());
         }
       });
   }

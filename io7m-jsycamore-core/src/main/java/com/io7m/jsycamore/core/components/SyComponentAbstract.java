@@ -30,6 +30,7 @@ import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxMutable;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
@@ -424,21 +425,21 @@ public abstract class SyComponentAbstract implements SyComponentType
     final boolean resized =
       delta_x != 0 || delta_y != 0;
 
-    if (resized) {
-      try {
-        if (SyComponentAbstract.LOG.isTraceEnabled()) {
-          SyComponentAbstract.LOG.trace(
-            "resized: ({}) {} ({}, {})",
-            this,
-            this.box,
-            Integer.valueOf(delta_x),
-            Integer.valueOf(delta_y));
-        }
-        this.resized(delta_x, delta_y);
-      } catch (final Throwable e) {
-        SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+    try {
+      if (SyComponentAbstract.LOG.isTraceEnabled()) {
+        SyComponentAbstract.LOG.trace(
+          "resized: ({}) {} ({}, {})",
+          this,
+          this.box,
+          Integer.valueOf(delta_x),
+          Integer.valueOf(delta_y));
       }
+      this.resized(delta_x, delta_y);
+    } catch (final Throwable e) {
+      SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+    }
 
+    if (resized) {
       final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
       for (final JOTreeNodeType<SyComponentType> child_node : children) {
         final SyComponentType child = child_node.value();
@@ -515,5 +516,17 @@ public abstract class SyComponentAbstract implements SyComponentType
     SyBoxes.showToBuilder(this.box(), sb);
     sb.append("]");
     return sb.toString();
+  }
+
+  protected final SyThemeType windowTheme()
+  {
+    final Optional<SyWindowType> window_opt = this.window();
+    if (window_opt.isPresent()) {
+      final SyWindowType w = window_opt.get();
+      return w.theme();
+    }
+
+    throw new IllegalStateException(
+      "Cannot retrieve a theme for a component that is not attached to a window.");
   }
 }

@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 
 import java.util.function.BiFunction;
 
@@ -26,6 +27,12 @@ import java.util.function.BiFunction;
 
 public interface SyButtonReadableType extends SyComponentReadableType
 {
+  /**
+   * @return The current theme for the button
+   */
+
+  SyThemeButtonType theme();
+
   /**
    * @return The current state of the button
    */
