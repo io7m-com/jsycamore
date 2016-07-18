@@ -387,7 +387,7 @@ public abstract class SyWindowAbstract implements SyWindowType
 
       final SyThemeWindowTitlebarArrangementType arranged =
         SyThemeTitlebars.arrange(
-          this.box(),
+          super.box(),
           theme_titlebar,
           SyWindowAbstract.this.isCloseable(),
           SyWindowAbstract.this.isMaximizable());
@@ -406,7 +406,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       sb.append(" \"");
       sb.append(this.text.text());
       sb.append("\" ");
-      SyBoxes.showToBuilder(this.box(), sb);
+      SyBoxes.showToBuilder(super.box(), sb);
       sb.append("]");
       return sb.toString();
     }
