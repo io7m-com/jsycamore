@@ -140,9 +140,9 @@ public final class SyThemeStride
 
     theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
     theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
-    theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 3, 0, 0));
-    theme_titlebar_b.setButtonHeight(11);
-    theme_titlebar_b.setButtonWidth(11);
+    theme_titlebar_b.setButtonPadding(SyThemePadding.of(3, 3, 0, 0));
+    theme_titlebar_b.setButtonHeight(15);
+    theme_titlebar_b.setButtonWidth(15);
     theme_titlebar_b.setButtonTheme(SyThemeStride.createThemeButton(
       spec,
       background,
@@ -153,11 +153,11 @@ public final class SyThemeStride
       false));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeStride::elementOrder);
-    theme_titlebar_b.setHeight(16);
+    theme_titlebar_b.setHeight(21);
     theme_titlebar_b.setShowIcon(false);
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
-    theme_titlebar_text_b.setTextFont("Monospaced 10");
+    theme_titlebar_text_b.setTextFont("Sans-bold-11");
     theme_titlebar_text_b.setTextColorActive(text_color_active);
     theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
     theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_CENTER);
@@ -238,9 +238,9 @@ public final class SyThemeStride
       case ELEMENT_CLOSE_BUTTON: {
         switch (e1) {
           case ELEMENT_CLOSE_BUTTON:
-            return 1;
+            return 0;
           case ELEMENT_MAXIMIZE_BUTTON:
-            return -1;
+            return 1;
           case ELEMENT_TITLE:
             return 1;
           case ELEMENT_ICON:
@@ -251,11 +251,11 @@ public final class SyThemeStride
       case ELEMENT_MAXIMIZE_BUTTON: {
         switch (e1) {
           case ELEMENT_CLOSE_BUTTON:
-            return 1;
+            return -1;
           case ELEMENT_MAXIMIZE_BUTTON:
             return 0;
           case ELEMENT_TITLE:
-            return 1;
+            return -1;
           case ELEMENT_ICON:
             return 1;
 
@@ -267,7 +267,7 @@ public final class SyThemeStride
           case ELEMENT_CLOSE_BUTTON:
             return -1;
           case ELEMENT_MAXIMIZE_BUTTON:
-            return -1;
+            return 1;
           case ELEMENT_TITLE:
             return 0;
           case ELEMENT_ICON:
