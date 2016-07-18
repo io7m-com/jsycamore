@@ -144,9 +144,11 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     SyButtonAbstract.LOG.trace(
       "mousePressed: {} {} {}", mouse_position, button, actual);
 
+    this.over = true;
     switch (button) {
       case MOUSE_BUTTON_LEFT: {
         this.pressed = true;
+        this.over = true;
         return true;
       }
       case MOUSE_BUTTON_MIDDLE:
@@ -178,7 +180,6 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
             this.clicked();
           } finally {
             this.pressed = false;
-            this.over = false;
           }
         }
 
@@ -191,7 +192,7 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
       }
     }
 
-    return false;
+    throw new UnreachableCodeException();
   }
 
   protected void buttonOnClick()

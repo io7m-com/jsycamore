@@ -14,13 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import com.io7m.jtensors.VectorI2I;
-import com.io7m.jtensors.parameterized.PVectorI2I;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

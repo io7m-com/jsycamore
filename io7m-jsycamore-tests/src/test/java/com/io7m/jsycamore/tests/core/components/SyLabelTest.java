@@ -14,17 +14,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.components.SyLabel;
+import com.io7m.jsycamore.core.components.SyLabelType;
 
-public final class SyWindowViewportAccumulatorTest extends
-  SyWindowViewportAccumulatorContract
+public final class SyLabelTest extends SyLabelContract
 {
   @Override
-  protected SyWindowViewportAccumulatorType create()
+  protected SyLabelType create()
   {
-    return SyWindowViewportAccumulator.create();
+    return SyLabel.create();
   }
 }

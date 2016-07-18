@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.tests.core.images;
 
 import com.io7m.jsycamore.core.images.SyImageAWT;
 import com.io7m.jsycamore.core.images.SyImageFormat;

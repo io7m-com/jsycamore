@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.tests.core.themes;
 
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
