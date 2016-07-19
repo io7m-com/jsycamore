@@ -92,17 +92,17 @@ public interface SyThemeButtonType
 
   @Value.Parameter
   @Value.Default
-  default VectorI3F colorDisabled()
+  default VectorI3F colorInactive()
   {
     return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
 
   /**
-   * @return The embossing used for disabled buttons
+   * @return The embossing used for inactive buttons
    */
 
   @Value.Parameter
-  Optional<SyThemeEmbossType> embossDisabled();
+  Optional<SyThemeEmbossType> embossInactive();
 
   /**
    * @return The outline used for buttons

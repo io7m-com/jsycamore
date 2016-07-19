@@ -238,7 +238,7 @@ public final class SyAWTComponentRenderer implements
         graphics,
         outline_opt.get(),
         SyBoxes.moveToOrigin(box),
-        image.isEnabled());
+        image.isActive());
     }
   }
 
@@ -297,7 +297,7 @@ public final class SyAWTComponentRenderer implements
 
     final Optional<SyThemeEmbossType> emboss;
     final VectorReadable3FType color;
-    if (panel.isEnabled()) {
+    if (panel.isActive()) {
       emboss = panel_theme.embossActive();
       color = panel_theme.colorActive();
     } else {
@@ -316,7 +316,7 @@ public final class SyAWTComponentRenderer implements
 
     if (outline.isPresent()) {
       SyAWTDrawing.drawOutline(
-        graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isEnabled());
+        graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isActive());
     }
   }
 
@@ -348,15 +348,15 @@ public final class SyAWTComponentRenderer implements
       fill_height = height;
     }
 
-    if (!button.isEnabled()) {
+    if (!button.isActive()) {
       this.renderOptionallyEmbossedFill(
         graphics,
         fill_width,
         fill_height,
         fill_x,
         fill_y,
-        button_theme.embossDisabled(),
-        button_theme.colorDisabled());
+        button_theme.embossInactive(),
+        button_theme.colorInactive());
     } else {
       switch (button.buttonState()) {
         case BUTTON_ACTIVE: {
@@ -397,7 +397,7 @@ public final class SyAWTComponentRenderer implements
 
     if (outline.isPresent()) {
       SyAWTDrawing.drawOutline(
-        graphics, outline.get(), SyBoxes.moveToOrigin(box), button.isEnabled());
+        graphics, outline.get(), SyBoxes.moveToOrigin(box), button.isActive());
     }
   }
 

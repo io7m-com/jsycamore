@@ -88,15 +88,16 @@ public final class SyThemeMotive
     final VectorI3F background_darker =
       VectorI3F.scale(background, spec.colorDarkFactor());
 
+    final VectorI3F color_active_base = spec.colorActive();
     final VectorI3F color_active_lighter =
-      VectorI3F.scale(spec.colorActive(), spec.colorLightFactor());
+      VectorI3F.scale(color_active_base, spec.colorLightFactor());
     final VectorI3F color_active_darker =
-      VectorI3F.scale(spec.colorActive(), spec.colorDarkFactor());
+      VectorI3F.scale(color_active_base, spec.colorDarkFactor());
 
     final float average =
-      (spec.colorActive().getXF()
-        + spec.colorActive().getYF()
-        + spec.colorActive().getZF()) / 3.0f;
+      (color_active_base.getXF()
+        + color_active_base.getYF()
+        + color_active_base.getZF()) / 3.0f;
 
     final VectorI3F color_inactive_base =
       new VectorI3F(average, average, average);
@@ -127,7 +128,7 @@ public final class SyThemeMotive
     theme_titlebar_emboss_inactive_b.setColorBottom(color_inactive_darker);
 
     final SyThemePanel.Builder theme_titlebar_panel_b = SyThemePanel.builder();
-    theme_titlebar_panel_b.setColorActive(spec.colorActive());
+    theme_titlebar_panel_b.setColorActive(color_active_base);
     theme_titlebar_panel_b.setColorInactive(color_inactive_base);
     theme_titlebar_panel_b.setEmbossActive(theme_titlebar_emboss_active_b.build());
     theme_titlebar_panel_b.setEmbossInactive(theme_titlebar_emboss_inactive_b.build());
@@ -148,11 +149,13 @@ public final class SyThemeMotive
     theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 0, 0, 0));
     theme_titlebar_b.setButtonHeight(16);
     theme_titlebar_b.setButtonWidth(16);
-    theme_titlebar_b.setButtonTheme(SyThemeMotive.createThemeButton(
-      background,
-      background_lighter,
-      background_lighter_lighter,
-      background_darker,
+    theme_titlebar_b.setButtonTheme(SyThemeMotive.createThemeTitlebarButton(
+      color_active_base,
+      color_active_lighter,
+      color_active_darker,
+      color_inactive_base,
+      color_inactive_lighter,
+      color_inactive_darker,
       1,
       false));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
@@ -182,7 +185,7 @@ public final class SyThemeMotive
     theme_frame_b.setTopHeight(5);
     theme_frame_b.setLeftWidth(5);
     theme_frame_b.setRightWidth(5);
-    theme_frame_b.setColorActive(spec.colorActive());
+    theme_frame_b.setColorActive(color_active_base);
     theme_frame_b.setColorInactive(color_inactive_base);
 
     theme_frame_b.setTopLeftStyle(
@@ -369,7 +372,7 @@ public final class SyThemeMotive
       emboss
     ));
 
-    theme_button_b.setColorDisabled(background);
+    theme_button_b.setColorInactive(background);
 
     theme_button_b.setColorOver(background_lighter);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
@@ -386,6 +389,58 @@ public final class SyThemeMotive
       background_lighter,
       background_darker,
       background_lighter,
+      emboss
+    ));
+
+    return theme_button_b.build();
+  }
+
+  private static SyThemeButtonType createThemeTitlebarButton(
+    final VectorI3F color_active,
+    final VectorI3F color_active_lighter,
+    final VectorI3F color_active_darker,
+    final VectorI3F color_inactive,
+    final VectorI3F color_inactive_lighter,
+    final VectorI3F color_inactive_darker,
+    final int emboss,
+    final boolean outline)
+  {
+    final SyThemeButton.Builder theme_button_b =
+      SyThemeButton.builder();
+
+    theme_button_b.setColorActive(color_active);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      color_active_lighter,
+      color_active_darker,
+      color_active_lighter,
+      color_active_darker,
+      emboss
+    ));
+
+    theme_button_b.setColorInactive(color_inactive);
+    theme_button_b.setEmbossInactive(SyThemeEmboss.of(
+      color_inactive_lighter,
+      color_inactive_darker,
+      color_inactive_lighter,
+      color_inactive_darker,
+      emboss
+    ));
+
+    theme_button_b.setColorOver(color_active);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      color_active_lighter,
+      color_active_darker,
+      color_active_lighter,
+      color_active_darker,
+      emboss
+    ));
+
+    theme_button_b.setColorPressed(color_active_darker);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      color_active,
+      color_active_darker,
+      color_active,
+      color_active_darker,
       emboss
     ));
 

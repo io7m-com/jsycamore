@@ -87,7 +87,6 @@ public final class SyThemeBee
     final VectorI3F background_darker =
       VectorI3F.scale(background, spec.colorDarkFactor());
 
-
     final VectorI3F title_color_active_lighter =
       SyColors.rotate(spec.titlebarColorActive(), spec.colorLightDegrees());
     final VectorI3F title_color_active_darker =
@@ -144,8 +143,8 @@ public final class SyThemeBee
     theme_titlebar_button_b.setEmbossOver(theme_titlebar_emboss_active);
     theme_titlebar_button_b.setColorActive(spec.titlebarColorActive());
     theme_titlebar_button_b.setEmbossActive(theme_titlebar_emboss_active);
-    theme_titlebar_button_b.setColorDisabled(spec.titlebarColorActive());
-    theme_titlebar_button_b.setEmbossDisabled(theme_titlebar_emboss_active);
+    theme_titlebar_button_b.setColorInactive(spec.titlebarColorInactive());
+    theme_titlebar_button_b.setEmbossInactive(theme_titlebar_emboss_inactive);
 
     /*
      * Titlebar panel theme.
@@ -396,6 +395,7 @@ public final class SyThemeBee
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
     b.setTextColorActive(foreground);
     b.setTextColorInactive(foreground);
+    b.setTextFont("Sans-plain-12");
     return b.build();
   }
 
@@ -424,7 +424,7 @@ public final class SyThemeBee
       1
     ));
 
-    theme_button_b.setColorDisabled(background);
+    theme_button_b.setColorInactive(background);
 
     theme_button_b.setColorOver(background_lighter);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(

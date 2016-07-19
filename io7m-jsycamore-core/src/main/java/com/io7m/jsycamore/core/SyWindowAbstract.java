@@ -24,6 +24,7 @@ import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxMutable;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonAbstract;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
@@ -285,15 +286,15 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public void onWindowGainsFocus()
+  public final void onWindowGainsFocus()
   {
-    // XXX: Nothing yet
+    this.root.titlebar.setActive(SyActive.ACTIVE);
   }
 
   @Override
-  public void onWindowLosesFocus()
+  public final void onWindowLosesFocus()
   {
-    // XXX: Nothing yet
+    this.root.titlebar.setActive(SyActive.INACTIVE);
   }
 
   @Override

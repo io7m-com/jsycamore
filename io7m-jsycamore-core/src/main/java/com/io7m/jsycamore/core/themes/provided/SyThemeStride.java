@@ -324,7 +324,7 @@ public final class SyThemeStride
       SyBox.of(
         0,
         window_box.maximumX(),
-        box_titlebar.minimumY(),
+        box_titlebar.maximumY() - 1,
         window_box.maximumY());
 
     final SyThemeWindowFrameType frame_theme = theme_window.frame();
@@ -411,7 +411,7 @@ public final class SyThemeStride
       emboss
     ));
 
-    theme_button_b.setColorDisabled(background);
+    theme_button_b.setColorInactive(background);
 
     theme_button_b.setColorOver(background_lighter);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(

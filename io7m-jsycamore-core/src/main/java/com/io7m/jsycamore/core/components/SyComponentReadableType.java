@@ -34,14 +34,22 @@ import java.util.function.BiFunction;
 public interface SyComponentReadableType
 {
   /**
-   * Components may be enabled and disabled. A component that is disabled will
+   * Components may be active or inactive. A component that is inactive will
    * not receive input events, and will typically be rendered as "greyed" out by
    * renderers.
    *
-   * @return {@code true} iff this component is enabled
+   * @return {@code true} iff this component is active
    */
 
-  boolean isEnabled();
+  boolean isActive();
+
+  /**
+   * @return This component's activity
+   *
+   * @see SyComponentType#setActive(SyActive)
+   */
+
+  SyActive activity();
 
   /**
    * Determine whether this component is visible or not based on the visibility

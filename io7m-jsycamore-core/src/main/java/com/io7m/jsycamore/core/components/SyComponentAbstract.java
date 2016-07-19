@@ -61,8 +61,8 @@ public abstract class SyComponentAbstract implements SyComponentType
   private SyParentResizeBehavior resize_width;
   private SyParentResizeBehavior resize_height;
   private boolean selectable = true;
-  private boolean enabled = true;
   private SyVisibility visibility;
+  private SyActive active;
 
   protected SyComponentAbstract(
     final BooleanSupplier in_detach_check)
@@ -72,6 +72,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     this.resize_width = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.resize_height = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.visibility = SyVisibility.VISIBILITY_VISIBLE;
+    this.active = SyActive.ACTIVE;
     this.window = Optional.empty();
     this.box = SyBoxMutable.create(0, 0, 0, 0);
     this.node = JOTreeNode.createWithDetachCheck(this, in_detach_check);
@@ -148,6 +149,40 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
+  public final SyActive activity()
+  {
+    return this.active;
+  }
+
+  @Override
+  public final boolean isActive()
+  {
+    /**
+     * If a component is set to inactive, it is unconditionally inactive.
+     * Otherwise, it is active if its parent is active. If there is no
+     * parent, the component is active.
+     */
+
+    switch (this.active) {
+      case INACTIVE: {
+        return false;
+      }
+
+      case ACTIVE: {
+        final Optional<JOTreeNodeType<SyComponentType>> parent_opt =
+          this.node.parent();
+        if (parent_opt.isPresent()) {
+          final SyComponentType parent = parent_opt.get().value();
+          return parent.isActive();
+        }
+        return true;
+      }
+    }
+
+    throw new UnreachableCodeException();
+  }
+
+  @Override
   public final SyVisibility visibility()
   {
     return this.visibility;
@@ -160,15 +195,9 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final boolean isEnabled()
+  public final void setActive(final SyActive e)
   {
-    return this.enabled;
-  }
-
-  @Override
-  public final void setEnabled(final boolean e)
-  {
-    this.enabled = e;
+    this.active = NullCheck.notNull(e, "Activity");
   }
 
   @Override
@@ -295,7 +324,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final SyComponentType actual)
   {
     boolean consumed = true;
-    if (this.isEnabled()) {
+    if (this.isActive()) {
       consumed = this.mouseHeld(
         mouse_position_first, mouse_position_now, button, actual);
     }
@@ -320,7 +349,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final SyComponentType actual)
   {
     boolean consumed = true;
-    if (this.isEnabled()) {
+    if (this.isActive()) {
       consumed = this.mousePressed(mouse_position, button, actual);
     }
 
@@ -343,7 +372,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final SyComponentType actual)
   {
     boolean consumed = true;
-    if (this.isEnabled()) {
+    if (this.isActive()) {
       consumed =
         this.mouseReleased(mouse_position, button, actual);
     }
@@ -364,7 +393,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final void onMouseNoLongerOver()
   {
     boolean consumed = true;
-    if (this.isEnabled()) {
+    if (this.isActive()) {
       consumed = this.mouseNoLongerOver();
     }
 
@@ -386,7 +415,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final SyComponentType actual)
   {
     boolean consumed = true;
-    if (this.isEnabled()) {
+    if (this.isActive()) {
       consumed = this.mouseOver(mouse_position, actual);
     }
 

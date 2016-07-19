@@ -114,14 +114,14 @@ public interface SyComponentType extends SyComponentParentEventsType,
     BiFunction<A, SyImageType, B> on_image);
 
   /**
-   * Enable/disable this component.
+   * Set this component as active/inactive.
    *
-   * @param e {@code true} iff the component should be enabled
+   * @param e The activity specification
    *
-   * @see SyComponentReadableType#isEnabled()
+   * @see SyComponentReadableType#isActive()
    */
 
-  void setEnabled(boolean e);
+  void setActive(SyActive e);
 
   /**
    * Set this component's visibility.

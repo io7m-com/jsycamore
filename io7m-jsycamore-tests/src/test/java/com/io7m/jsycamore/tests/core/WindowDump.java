@@ -23,9 +23,15 @@ import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
+import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.components.SyActive;
+import com.io7m.jsycamore.core.components.SyButton;
+import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.components.SyLabel;
+import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
@@ -171,13 +177,44 @@ public final class WindowDump
 
     final SyWindowContentPaneType content = w.contentPane();
     {
-      final SyPanelType c = SyPanel.create();
-      c.setBox(SyBoxes.create(
+      final SyPanelType panel = SyPanel.create();
+      panel.setBox(SyBoxes.create(
         0,
         0,
         content.box().width(),
         content.box().height()));
-      content.node().childAdd(c.node());
+      content.node().childAdd(panel.node());
+
+      {
+        final SyButtonType button = SyButton.create();
+        button.setBox(SyBoxes.create(8, 8, 64, 32));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        panel.node().childAdd(button.node());
+
+        final SyLabelType label = SyLabel.create();
+        label.setBox(SyBoxes.create(0, 0, 64, 32));
+        label.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        label.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        label.setText("Hello");
+        button.node().childAdd(label.node());
+      }
+
+      {
+        final SyButtonType button = SyButton.create();
+        button.setBox(SyBoxes.create(8 + 64 + 8, 8, 64, 32));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setActive(SyActive.INACTIVE);
+        panel.node().childAdd(button.node());
+
+        final SyLabelType label = SyLabel.create();
+        label.setBox(SyBoxes.create(0, 0, 64, 32));
+        label.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        label.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        label.setText("Hello");
+        button.node().childAdd(label.node());
+      }
     }
 
     return w;
