@@ -16,16 +16,20 @@
 
 package com.io7m.jsycamore.awt;
 
+import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jtensors.VectorI4F;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.awt.image.DataBuffer;
 import java.awt.image.DirectColorModel;
+import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.util.Hashtable;
 import java.util.Optional;
@@ -37,6 +41,7 @@ import java.util.Optional;
 public final class SyAWTImage
 {
   private static final DirectColorModel COLOR_MODEL_RGBA_4444;
+  private static final VectorI4F ONE_V4;
 
   static {
     COLOR_MODEL_RGBA_4444 = new DirectColorModel(
@@ -48,6 +53,8 @@ public final class SyAWTImage
       0b0000_0000_0000_1111,
       false,
       DataBuffer.TYPE_USHORT);
+
+    ONE_V4 = new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f);
   }
 
   private SyAWTImage()
@@ -69,10 +76,70 @@ public final class SyAWTImage
     final SyImageSpecificationType spec,
     final BufferedImage image)
   {
+    NullCheck.notNull(spec, "Image specification");
+    NullCheck.notNull(image, "Image");
+
     if (SyAWTImage.matchesExpected(spec, image)) {
+      return SyAWTImage.applyFilter(spec, image);
+    }
+    return SyAWTImage.applyFilter(spec, SyAWTImage.applyRescale(spec, image));
+  }
+
+  private static BufferedImage applyFilter(
+    final SyImageSpecificationType spec,
+    final BufferedImage image)
+  {
+    final VectorI4F filter = spec.filter();
+    if (filter.equals(SyAWTImage.ONE_V4)) {
       return image;
     }
-    return SyAWTImage.applyRescale(spec, image);
+
+    float[] scale = null;
+    float[] offsets = null;
+    switch (spec.format()) {
+      case IMAGE_FORMAT_GREY_8: {
+        offsets = new float[1];
+        offsets[0] = 0.0f;
+
+        scale = new float[1];
+        scale[0] = filter.getXF();
+        break;
+      }
+      case IMAGE_FORMAT_RGB_565:
+      case IMAGE_FORMAT_RGB_888: {
+        offsets = new float[3];
+        offsets[0] = 0.0f;
+        offsets[1] = 0.0f;
+        offsets[2] = 0.0f;
+
+        scale = new float[3];
+        scale[0] = filter.getXF();
+        scale[1] = filter.getYF();
+        scale[2] = filter.getZF();
+        break;
+      }
+      case IMAGE_FORMAT_RGBA_8888:
+      case IMAGE_FORMAT_RGBA_4444: {
+        offsets = new float[4];
+        offsets[0] = 0.0f;
+        offsets[1] = 0.0f;
+        offsets[2] = 0.0f;
+        offsets[3] = 0.0f;
+
+        scale = new float[4];
+        scale[0] = filter.getXF();
+        scale[1] = filter.getYF();
+        scale[2] = filter.getZF();
+        scale[3] = filter.getWF();
+        break;
+      }
+    }
+
+    NullCheck.notNull(scale, "scale");
+    NullCheck.notNull(offsets, "offsets");
+
+    final BufferedImageOp rs = new RescaleOp(scale, offsets, null);
+    return rs.filter(image, image);
   }
 
   private static BufferedImage applyRescale(
@@ -113,7 +180,8 @@ public final class SyAWTImage
     }
   }
 
-  private static BufferedImage createCompatible(final SyImageSpecificationType spec)
+  private static BufferedImage createCompatible(
+    final SyImageSpecificationType spec)
   {
     switch (spec.format()) {
       case IMAGE_FORMAT_GREY_8: {

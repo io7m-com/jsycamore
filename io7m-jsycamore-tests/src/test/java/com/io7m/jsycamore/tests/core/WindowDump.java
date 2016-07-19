@@ -30,6 +30,8 @@ import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButton;
 import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.components.SyImage;
+import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyPanel;
@@ -38,6 +40,7 @@ import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
 import com.io7m.jsycamore.core.images.SyImageFormat;
+import com.io7m.jsycamore.core.images.SyImageReferenceType;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
@@ -47,6 +50,7 @@ import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
+import com.io7m.jtensors.VectorI4F;
 
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
@@ -60,6 +64,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public final class WindowDump
 {
@@ -69,7 +74,7 @@ public final class WindowDump
   }
 
   public static void main(final String[] args)
-    throws IOException
+    throws Exception
   {
     final List<SyTheme> themes = new ArrayList<>();
     themes.add(SyThemeFenestra.builder().build());
@@ -78,9 +83,11 @@ public final class WindowDump
     themes.add(SyThemeStride.builder().build());
     // Collections.shuffle(themes, new Random());
 
+    final ExecutorService io_executor = Executors.newFixedThreadPool(4);
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer;
     final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
     final SyAWTTextMeasurement text_measure = SyAWTTextMeasurement.create();
+    final SyImageCacheType<BufferedImage> image_cache;
 
     {
       final SyImageCacheResolverType resolver = i -> {
@@ -100,19 +107,18 @@ public final class WindowDump
         return loaded;
       };
 
-      final ExecutorService io_executor = Executors.newSingleThreadExecutor();
-
       final SyImageSpecification image_spec = SyImageSpecification.of(
         "/com/io7m/jsycamore/tests/awt/circle-x-8x.png",
         64,
         64,
         SyImageFormat.IMAGE_FORMAT_GREY_8,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
         SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
       final BufferedImage image_default =
         loader.load(image_spec, resolver.resolve(image_spec));
 
-      final SyImageCacheType<BufferedImage> cache =
+      image_cache =
         SyBufferedImageCacheCaffeine.create(
           resolver,
           loader,
@@ -122,15 +128,13 @@ public final class WindowDump
           1_000_000L);
 
       component_renderer =
-        SyAWTComponentRenderer.create(cache, text_measure, text_measure);
+        SyAWTComponentRenderer.create(image_cache, text_measure, text_measure);
       window_renderer =
         SyAWTWindowRenderer.create(component_renderer);
     }
 
-    final SyGUIType gui = SyGUI.createWithTheme(
-      text_measure,
-      "main",
-      themes.get(0));
+    final SyGUIType gui =
+      SyGUI.createWithTheme(text_measure, "main", themes.get(0));
 
     final BufferedImage output_image =
       new BufferedImage(
@@ -138,12 +142,28 @@ public final class WindowDump
         themes.size() * (16 + 240 + 16),
         BufferedImage.TYPE_4BYTE_ABGR);
 
+    final SyImageSpecification icon_spec = SyImageSpecification.of(
+      "/com/io7m/jsycamore/tests/awt/paper.png",
+      16,
+      16,
+      SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+      SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST);
+
+    {
+      final SyImageReferenceType<BufferedImage> f = image_cache.get(icon_spec);
+      f.future().get(10L, TimeUnit.SECONDS);
+    }
+
     final Graphics2D output = output_image.createGraphics();
     int y = 16;
     for (int index = 0; index < themes.size(); ++index) {
       final SyTheme theme = themes.get(index);
       final SyWindowType w_inactive = WindowDump.createWindow(gui, theme);
+      w_inactive.titleBar().setIcon(Optional.of(icon_spec));
+
       final SyWindowType w_active = WindowDump.createWindow(gui, theme);
+      w_active.titleBar().setIcon(Optional.of(icon_spec));
 
       {
         final BufferedImage active_image =
@@ -166,6 +186,9 @@ public final class WindowDump
     }
 
     ImageIO.write(output_image, "PNG", new File("/tmp/window.png"));
+
+    io_executor.shutdown();
+    io_executor.awaitTermination(5L, TimeUnit.SECONDS);
   }
 
   private static SyWindowType createWindow(
@@ -214,6 +237,54 @@ public final class WindowDump
         label.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         label.setText("Hello");
         button.node().childAdd(label.node());
+      }
+
+      {
+        final SyImageSpecification spec = SyImageSpecification.of(
+          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          64,
+          64,
+          SyImageFormat.IMAGE_FORMAT_RGB_888,
+          new VectorI4F(1.0f, 0.0f, 0.0f, 1.0f),
+          SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
+
+        final SyImageType image = SyImage.create(spec);
+        image.setBox(SyBoxes.create(8, 8 + 32 + 8, 64, 64));
+        image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        panel.node().childAdd(image.node());
+      }
+
+      {
+        final SyImageSpecification spec = SyImageSpecification.of(
+          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          64,
+          64,
+          SyImageFormat.IMAGE_FORMAT_RGB_888,
+          new VectorI4F(0.0f, 1.0f, 0.0f, 1.0f),
+          SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
+
+        final SyImageType image = SyImage.create(spec);
+        image.setBox(SyBoxes.create(8 + 64 + 8, 8 + 32 + 8, 64, 64));
+        image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        panel.node().childAdd(image.node());
+      }
+
+      {
+        final SyImageSpecification spec = SyImageSpecification.of(
+          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          64,
+          64,
+          SyImageFormat.IMAGE_FORMAT_RGB_888,
+          new VectorI4F(0.0f, 0.0f, 1.0f, 1.0f),
+          SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
+
+        final SyImageType image = SyImage.create(spec);
+        image.setBox(SyBoxes.create(8 + 64 + 8 + 64 + 8, 8 + 32 + 8, 64, 64));
+        image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        panel.node().childAdd(image.node());
       }
     }
 

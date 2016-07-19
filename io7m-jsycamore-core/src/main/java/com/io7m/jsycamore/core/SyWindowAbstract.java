@@ -28,21 +28,26 @@ import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonAbstract;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyImageAbstract;
+import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabelAbstract;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
+import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
-import com.io7m.jsycamore.core.themes.SyThemeTitlebars;
+import com.io7m.jsycamore.core.themes.SyThemeTitleBars;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementFunctionType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarArrangementType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarArrangementType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.jtensors.parameterized.PVectorM2I;
@@ -216,7 +221,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       "Frame box must contain frame exclusion box");
     Assertive.require(
       SyBoxes.contains(root_box, boxes.titlebarBox()),
-      "Root box must contain titlebar box");
+      "Root box must contain titleBar box");
 
     this.box.from(window_box);
     this.root.titlebar.text.setTextAlignmentHorizontal(
@@ -230,7 +235,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public final SyWindowTitlebarType titlebar()
+  public final SyWindowTitleBarType titleBar()
   {
     return this.root.titlebar;
   }
@@ -352,7 +357,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     TitlebarText()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach titlebar text");
+        SyWindowAbstract.LOG.debug("refusing to detach titleBar text");
         return false;
       });
     }
@@ -364,18 +369,79 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
+  private final class TitlebarIcon extends SyPanelAbstract implements
+    SyPanelType
+  {
+    private Optional<TitlebarIconImage> image;
+
+    TitlebarIcon()
+    {
+      super(
+        () -> {
+          SyWindowAbstract.LOG.debug("refusing to detach title bar icon");
+          return false;
+        });
+
+      this.setPanelTransparent(true);
+      this.image = Optional.empty();
+    }
+
+    @Override
+    public SyThemePanelType theme()
+    {
+      return this.windowTheme().panelTheme();
+    }
+
+    void setIcon(final Optional<SyImageSpecificationType> in_icon)
+    {
+      NullCheck.notNull(in_icon, "Icon");
+
+      if (this.image.isPresent()) {
+        final SyImageType i = this.image.get();
+        this.node().childRemove(i.node());
+      }
+
+      if (in_icon.isPresent()) {
+        final SyImageSpecificationType icon = in_icon.get();
+        final SyImageType i = new TitlebarIconImage(icon);
+        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
+        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
+        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
+        this.node().childAdd(i.node());
+      }
+    }
+
+    private final class TitlebarIconImage extends SyImageAbstract implements
+      SyImageType
+    {
+      TitlebarIconImage(
+        final SyImageSpecificationType in_image)
+      {
+        super(in_image, () -> true);
+      }
+
+      @Override
+      public SyThemeImageType theme()
+      {
+        final SyThemeType theme = SyWindowAbstract.this.theme();
+        return theme.windowTheme().titleBar().iconTheme();
+      }
+    }
+  }
+
   private final class Titlebar extends SyPanelAbstract implements
-    SyWindowTitlebarType
+    SyWindowTitleBarType
   {
     private final PVectorM2I<SySpaceViewportType> window_drag_start;
     private final TitlebarCloseButton close_button;
     private final TitlebarText text;
     private final TitlebarMaximizeButton maximize_button;
+    private final TitlebarIcon icon;
 
     Titlebar(final String in_text)
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach titlebar");
+        SyWindowAbstract.LOG.debug("refusing to detach title bar");
         return false;
       });
 
@@ -385,8 +451,10 @@ public abstract class SyWindowAbstract implements SyWindowType
       this.text.setText(in_text);
       this.node().childAdd(this.text.node());
 
+      this.icon = new TitlebarIcon();
       this.maximize_button = new TitlebarMaximizeButton();
       this.close_button = new TitlebarCloseButton();
+      this.node().childAdd(this.icon.node());
       this.node().childAdd(this.close_button.node());
       this.node().childAdd(this.maximize_button.node());
 
@@ -402,8 +470,8 @@ public abstract class SyWindowAbstract implements SyWindowType
       final SyThemeWindowType theme_window = theme.windowTheme();
       final SyThemeWindowTitleBarType theme_titlebar = theme_window.titleBar();
 
-      final SyThemeWindowTitlebarArrangementType arranged =
-        SyThemeTitlebars.arrange(
+      final SyThemeWindowTitleBarArrangementType arranged =
+        SyThemeTitleBars.arrange(
           super.box(),
           theme_titlebar,
           SyWindowAbstract.this.isCloseable(),
@@ -411,6 +479,7 @@ public abstract class SyWindowAbstract implements SyWindowType
 
       this.close_button.setBox(arranged.closeButtonBox());
       this.maximize_button.setBox(arranged.maximizeButtonBox());
+      this.icon.setBox(arranged.iconBox());
       this.text.setBox(arranged.title());
     }
 
@@ -451,10 +520,10 @@ public abstract class SyWindowAbstract implements SyWindowType
 
           Assertive.ensure(
             window_start_box.width() == window_new_box.width(),
-            "Dragging a titlebar must not resize width");
+            "Dragging a titleBar must not resize width");
           Assertive.ensure(
             window_start_box.height() == window_new_box.height(),
-            "Dragging a titlebar must not resize height");
+            "Dragging a titleBar must not resize height");
 
           SyWindowAbstract.this.setBox(window_new_box);
           return true;
@@ -524,6 +593,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       this.text.setText(NullCheck.notNull(in_text));
       SyWindowAbstract.this.recalculateBoundsRefresh();
+    }
+
+    @Override
+    public void setIcon(final Optional<SyImageSpecificationType> in_icon)
+    {
+      this.icon.setIcon(in_icon);
     }
 
     @Override

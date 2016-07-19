@@ -21,6 +21,7 @@ import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
+import com.io7m.jtensors.VectorI4F;
 
 public final class SyImageTest extends SyImageContract
 {
@@ -32,6 +33,7 @@ public final class SyImageTest extends SyImageContract
       32,
       32,
       SyImageFormat.IMAGE_FORMAT_RGB_565,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
     return SyImage.create(spec);
   }

@@ -34,8 +34,8 @@ import java.util.function.BiFunction;
 public interface SyComponentReadableType
 {
   /**
-   * Components may be active or inactive. A component that is inactive will
-   * not receive input events, and will typically be rendered as "greyed" out by
+   * Components may be active or inactive. A component that is inactive will not
+   * receive input events, and will typically be rendered as "greyed" out by
    * renderers.
    *
    * @return {@code true} iff this component is active

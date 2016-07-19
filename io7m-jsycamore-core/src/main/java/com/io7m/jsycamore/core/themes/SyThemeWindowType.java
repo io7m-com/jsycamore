@@ -29,7 +29,7 @@ import org.immutables.value.Value;
 public interface SyThemeWindowType
 {
   /**
-   * @return The theme parameters used for window titlebars
+   * @return The theme parameters used for window title bars
    */
 
   @Value.Parameter

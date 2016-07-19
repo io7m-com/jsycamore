@@ -67,10 +67,10 @@ public interface SyWindowReadableType extends SyGUIElementType
   SyWindowFrameType frame();
 
   /**
-   * @return The window titlebar
+   * @return The window title bar
    */
 
-  SyWindowTitlebarType titlebar();
+  SyWindowTitleBarType titleBar();
 
   /**
    * @return {@code true} iff the window currently has focus

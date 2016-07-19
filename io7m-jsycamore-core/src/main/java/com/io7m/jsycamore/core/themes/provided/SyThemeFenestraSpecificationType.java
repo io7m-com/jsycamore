@@ -106,7 +106,8 @@ public interface SyThemeFenestraSpecificationType
   }
 
   /**
-   * @return The general foreground color used for text on inactive components, etc
+   * @return The general foreground color used for text on inactive components,
+   * etc
    */
 
   @Value.Parameter

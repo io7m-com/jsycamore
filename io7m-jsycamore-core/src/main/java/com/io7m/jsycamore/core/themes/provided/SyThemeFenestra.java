@@ -37,7 +37,7 @@ import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
-import com.io7m.jsycamore.core.themes.SyThemeTitlebarElement;
+import com.io7m.jsycamore.core.themes.SyThemeTitleBarElement;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangement;
@@ -50,6 +50,8 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import java.util.Optional;
 
 /**
  * A 1990s style consumer computer theme.
@@ -146,14 +148,18 @@ public final class SyThemeFenestra
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeFenestra::elementOrder);
     theme_titlebar_b.setHeight(18);
-    theme_titlebar_b.setShowIcon(true);
+    theme_titlebar_b.setIconPresent(true);
+    theme_titlebar_b.setIconHeight(16);
+    theme_titlebar_b.setIconWidth(16);
+    theme_titlebar_b.setIconTheme(SyThemeImage.of(Optional.empty()));
+    theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
     theme_titlebar_text_b.setTextFont("Sans-bold-11");
     theme_titlebar_text_b.setTextColorActive(text_color_active);
     theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
     theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_LEFT);
-    theme_titlebar_b.setTextPadding(SyThemePadding.of(0, 0, 0, 0));
+    theme_titlebar_b.setTextPadding(SyThemePadding.of(4, 0, 0, 0));
     theme_titlebar_b.setTextTheme(theme_titlebar_text_b.build());
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
@@ -220,8 +226,8 @@ public final class SyThemeFenestra
   }
 
   private static int elementOrder(
-    final SyThemeTitlebarElement e0,
-    final SyThemeTitlebarElement e1)
+    final SyThemeTitleBarElement e0,
+    final SyThemeTitleBarElement e1)
   {
     switch (e0) {
       case ELEMENT_CLOSE_BUTTON: {

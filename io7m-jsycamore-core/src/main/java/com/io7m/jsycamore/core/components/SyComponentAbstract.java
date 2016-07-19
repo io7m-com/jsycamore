@@ -183,6 +183,12 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
+  public final void setActive(final SyActive e)
+  {
+    this.active = NullCheck.notNull(e, "Activity");
+  }
+
+  @Override
   public final SyVisibility visibility()
   {
     return this.visibility;
@@ -192,12 +198,6 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final void setVisibility(final SyVisibility v)
   {
     this.visibility = NullCheck.notNull(v);
-  }
-
-  @Override
-  public final void setActive(final SyActive e)
-  {
-    this.active = NullCheck.notNull(e, "Activity");
   }
 
   @Override

@@ -94,7 +94,7 @@ public final class SyAWTWindowRenderer implements
       graphics.setClip(0, 0, window_box.width(), window_box.height());
       this.renderFrame(graphics, window);
       this.component_renderer.render(context, window.contentPane());
-      this.component_renderer.render(context, window.titlebar());
+      this.component_renderer.render(context, window.titleBar());
 
       return input;
     } finally {

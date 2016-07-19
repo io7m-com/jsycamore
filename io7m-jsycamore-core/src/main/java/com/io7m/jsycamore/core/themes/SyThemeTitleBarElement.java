@@ -14,41 +14,35 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
-
-import com.io7m.jsycamore.core.components.SyButtonReadableType;
-import com.io7m.jsycamore.core.components.SyLabelReadableType;
-import com.io7m.jsycamore.core.components.SyPanelReadableType;
+package com.io7m.jsycamore.core.themes;
 
 /**
- * The type of titlebars for windows.
+ * The elements that may appear in a title bar.
  */
 
-public interface SyWindowTitlebarType extends SyPanelReadableType
+public enum SyThemeTitleBarElement
 {
   /**
-   * @return The title text
+   * The close button
    */
 
-  String text();
+  ELEMENT_CLOSE_BUTTON,
 
   /**
-   * Set the text of the titlebar
-   *
-   * @param in_text The text
+   * The maximize button
    */
 
-  void setText(final String in_text);
+  ELEMENT_MAXIMIZE_BUTTON,
 
   /**
-   * @return Read-only access to the close button within the titlebar
+   * The title text
    */
 
-  SyButtonReadableType closeButton();
+  ELEMENT_TITLE,
 
   /**
-   * @return Read-only access to the title label within the titlebar
+   * The icon
    */
 
-  SyLabelReadableType titleLabel();
+  ELEMENT_ICON
 }

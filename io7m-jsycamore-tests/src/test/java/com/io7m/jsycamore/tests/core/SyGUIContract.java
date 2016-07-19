@@ -22,7 +22,7 @@ import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
-import com.io7m.jsycamore.core.SyWindowTitlebarType;
+import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
@@ -37,7 +37,6 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.valid4j.Assertive;
 
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +104,7 @@ public abstract class SyGUIContract
 
     final SyWindowType w = g.windowCreate(640, 480, "Window 0");
     Assert.assertEquals(g.theme(), w.theme());
-    Assert.assertEquals("Window 0", w.titlebar().text());
+    Assert.assertEquals("Window 0", w.titleBar().text());
 
     final List<SyWindowType> windows = g.windowsOpenOrdered();
     Assert.assertEquals(1L, (long) windows.size());
@@ -207,7 +206,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
@@ -233,7 +232,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
@@ -260,7 +259,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(new PVectorI2I<>(320 + 15, 20));
@@ -273,7 +272,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof  SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     final SyBoxType<SySpaceViewportType> box = w0.box();
@@ -324,7 +323,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(new PVectorI2I<>(320 + 15, 20));
@@ -337,7 +336,7 @@ public abstract class SyGUIContract
       Assert.assertTrue(
         cc instanceof SyLabelReadableType);
       Assert.assertTrue(
-        cc.node().parent().get().value() instanceof SyWindowTitlebarType);
+        cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(new PVectorI2I<>(800, 600));

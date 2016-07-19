@@ -34,35 +34,35 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Functions for handling titlebars.
+ * Functions for handling title bars.
  */
 
-public final class SyThemeTitlebars
+public final class SyThemeTitleBars
 {
-  private SyThemeTitlebars()
+  private SyThemeTitleBars()
   {
     throw new UnimplementedCodeException();
   }
 
   /**
-   * Calculate the order in which any titlebar elements will appear. The
-   * returned list will contain the order in which titlebar elements appear.
+   * Calculate the order in which any title bar elements will appear. The
+   * returned list will contain the order in which title bar elements appear.
    * There will be entries for all possible element types, even if that element
-   * would not actually appear in the titlebar.
+   * would not actually appear in the title bar.
    *
-   * @param title_theme The titlebar theme
+   * @param title_theme The title bar theme
    *
    * @return A list indicating the order of elements
    */
 
-  public static List<SyThemeTitlebarElement> elementsOrder(
+  public static List<SyThemeTitleBarElement> elementsOrder(
     final SyThemeWindowTitleBarType title_theme)
   {
     NullCheck.notNull(title_theme);
 
-    final List<SyThemeTitlebarElement> elements =
-      new ArrayList<>(SyThemeTitlebarElement.values().length);
-    Collections.addAll(elements, SyThemeTitlebarElement.values());
+    final List<SyThemeTitleBarElement> elements =
+      new ArrayList<>(SyThemeTitleBarElement.values().length);
+    Collections.addAll(elements, SyThemeTitleBarElement.values());
     Collections.sort(elements, title_theme.elementOrder());
     return elements;
   }
@@ -74,7 +74,7 @@ public final class SyThemeTitlebars
 
   private static int nonTextWidthRequired(
     final SyThemeWindowTitleBarType title_theme,
-    final List<SyThemeTitlebarElement> elements,
+    final List<SyThemeTitleBarElement> elements,
     final boolean is_closeable,
     final boolean is_maximizable)
   {
@@ -87,7 +87,7 @@ public final class SyThemeTitlebars
     final int button_pad_left = button_padding.paddingLeft();
     final int button_pad_right = button_padding.paddingRight();
     for (int index = 0; index < elements.size(); ++index) {
-      final SyThemeTitlebarElement element = elements.get(index);
+      final SyThemeTitleBarElement element = elements.get(index);
       switch (element) {
         case ELEMENT_CLOSE_BUTTON: {
           if (is_closeable) {
@@ -113,7 +113,7 @@ public final class SyThemeTitlebars
           break;
         }
         case ELEMENT_ICON: {
-          if (title_theme.showIcon()) {
+          if (title_theme.iconPresent()) {
             non_text_width = Math.addExact(non_text_width, button_pad_left);
             non_text_width = Math.addExact(
               non_text_width,
@@ -130,20 +130,20 @@ public final class SyThemeTitlebars
 
   /**
    * Calculate the minimum amount of horizontal space needed to contain all of
-   * the content that will appear in the titlebar.
+   * the content that will appear in the title bar.
    *
    * @param measurement    A measurement interface
-   * @param maximum        The maximum possible area that the titlebar can
+   * @param maximum        The maximum possible area that the title bar can
    *                       cover
-   * @param title_theme    The titlebar theme
-   * @param title_text     The titlebar text
-   * @param is_closeable   {@code true} iff the titlebar is attached to a window
-   *                       that is closeable
-   * @param is_maximizable {@code true} iff the titlebar is attached to a window
-   *                       that is maximizable
+   * @param title_theme    The title bar theme
+   * @param title_text     The title bar text
+   * @param is_closeable   {@code true} iff the title bar is attached to a
+   *                       window that is closeable
+   * @param is_maximizable {@code true} iff the title bar is attached to a
+   *                       window that is maximizable
    *
    * @return The minimum width that is required to hold the contents of the
-   * titlebar
+   * title bar
    */
 
   public static int minimumWidthRequired(
@@ -160,14 +160,14 @@ public final class SyThemeTitlebars
     NullCheck.notNull(title_text);
 
     /*
-     * Work out how much space is required for anything that isn't the titlebar
+     * Work out how much space is required for anything that isn't the titleBar
      * text.
      */
 
-    final List<SyThemeTitlebarElement> elements =
-      SyThemeTitlebars.elementsOrder(title_theme);
+    final List<SyThemeTitleBarElement> elements =
+      SyThemeTitleBars.elementsOrder(title_theme);
     final int non_text_width =
-      SyThemeTitlebars.nonTextWidthRequired(
+      SyThemeTitleBars.nonTextWidthRequired(
         title_theme, elements, is_closeable, is_maximizable);
 
     final int maximum_width = maximum.width();
@@ -176,7 +176,7 @@ public final class SyThemeTitlebars
 
     /*
      * Given the amount of remaining space, work out the smallest amount of
-     * that remaining space that can contain the titlebar text.
+     * that remaining space that can contain the title bar text.
      */
 
     final int text_content_width =
@@ -200,17 +200,17 @@ public final class SyThemeTitlebars
   }
 
   /**
-   * Produce an arrangement for a titlebar.
+   * Produce an arrangement for a title bar.
    *
-   * @param maximum_space  The titlebar's box
-   * @param title_theme    The titlebar theme
+   * @param maximum_space  The title bar's box
+   * @param title_theme    The title bar theme
    * @param is_closeable   {@code true} iff the parent window is closeable
    * @param is_maximizable {@code true} iff the parent window is maximizable
    *
    * @return An arrangement for components
    */
 
-  public static SyThemeWindowTitlebarArrangementType arrange(
+  public static SyThemeWindowTitleBarArrangementType arrange(
     final SyBoxType<SySpaceParentRelativeType> maximum_space,
     final SyThemeWindowTitleBarType title_theme,
     final boolean is_closeable,
@@ -219,22 +219,22 @@ public final class SyThemeTitlebars
     final SyBoxType<SySpaceParentRelativeType> maximum_origin =
       SyBoxes.moveToOrigin(maximum_space);
 
-    final List<SyThemeTitlebarElement> elements =
-      SyThemeTitlebars.elementsOrder(title_theme);
+    final List<SyThemeTitleBarElement> elements =
+      SyThemeTitleBars.elementsOrder(title_theme);
 
-    final Pair<List<SyThemeTitlebarElement>, List<SyThemeTitlebarElement>> pair =
-      SyThemeTitlebars.sortElementsLeftRight(
+    final Pair<List<SyThemeTitleBarElement>, List<SyThemeTitleBarElement>> pair =
+      SyThemeTitleBars.sortElementsLeftRight(
         title_theme, is_closeable, is_maximizable, elements);
 
-    final List<SyThemeTitlebarElement> left = pair.getLeft();
-    final List<SyThemeTitlebarElement> right = pair.getRight();
+    final List<SyThemeTitleBarElement> left = pair.getLeft();
+    final List<SyThemeTitleBarElement> right = pair.getRight();
 
     final SyThemePaddingType button_pad = title_theme.buttonPadding();
     final int button_pad_left = button_pad.paddingLeft();
     final int button_pad_right = button_pad.paddingRight();
 
-    final SyThemeWindowTitlebarArrangement.Builder arrangement =
-      SyThemeWindowTitlebarArrangement.builder();
+    final SyThemeWindowTitleBarArrangement.Builder arrangement =
+      SyThemeWindowTitleBarArrangement.builder();
     arrangement.setCloseButtonBox(SyBoxes.create(0, 0, 0, 0));
     arrangement.setMaximizeButtonBox(SyBoxes.create(0, 0, 0, 0));
     arrangement.setTitle(SyBoxes.create(0, 0, 0, 0));
@@ -245,14 +245,14 @@ public final class SyThemeTitlebars
     final int button_width = title_theme.buttonWidth();
 
     {
-      for (final SyThemeTitlebarElement element : left) {
+      for (final SyThemeTitleBarElement element : left) {
         switch (element) {
           case ELEMENT_CLOSE_BUTTON: {
             Assertive.require(is_closeable, "Window must be closeable");
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+              SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
                 text_min_x);
@@ -267,7 +267,7 @@ public final class SyThemeTitlebars
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+              SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
                 text_min_x);
@@ -282,15 +282,14 @@ public final class SyThemeTitlebars
           }
 
           case ELEMENT_ICON: {
-            Assertive.require(title_theme.showIcon(), "Icon must be shown");
+            Assertive.require(title_theme.iconPresent(), "Icon must be shown");
 
-            final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+            arrangement.setIconBox(
+              SyThemeTitleBars.alignedIcon(
                 maximum_origin,
                 title_theme,
-                text_min_x);
-            arrangement.setIconBox(aligned);
-            text_min_x = Math.addExact(text_min_x, button_width);
+                text_min_x));
+            text_min_x = Math.addExact(text_min_x, title_theme.iconWidth());
             break;
           }
         }
@@ -301,7 +300,7 @@ public final class SyThemeTitlebars
 
     {
       for (int index = right.size() - 1; index >= 0; --index) {
-        final SyThemeTitlebarElement element = right.get(index);
+        final SyThemeTitleBarElement element = right.get(index);
         switch (element) {
           case ELEMENT_CLOSE_BUTTON: {
             Assertive.require(is_closeable, "Window must be closeable");
@@ -309,7 +308,7 @@ public final class SyThemeTitlebars
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
             final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+              SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
                 text_max_x);
@@ -324,7 +323,7 @@ public final class SyThemeTitlebars
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
             final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+              SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
                 text_max_x);
@@ -338,20 +337,29 @@ public final class SyThemeTitlebars
           }
 
           case ELEMENT_ICON: {
-            Assertive.require(title_theme.showIcon(), "Icon must be shown");
+            Assertive.require(title_theme.iconPresent(), "Icon must be shown");
 
-            text_max_x = Math.subtractExact(text_max_x, button_width);
-            final SyBoxType<SySpaceParentRelativeType> aligned =
-              SyThemeTitlebars.alignedButton(
+            arrangement.setIconBox(
+              SyThemeTitleBars.alignedIcon(
                 maximum_origin,
                 title_theme,
-                text_max_x);
-            arrangement.setIconBox(aligned);
+                text_max_x));
+            text_max_x = Math.subtractExact(
+              text_max_x,
+              title_theme.iconWidth());
             break;
           }
         }
       }
     }
+
+    final SyThemePaddingType text_pad = title_theme.textPadding();
+    final int text_pad_left = text_pad.paddingLeft();
+    final int text_pad_right = text_pad.paddingRight();
+    text_min_x = Math.max(0, Math.addExact(text_min_x, text_pad_left));
+    text_max_x = Math.max(
+      text_min_x,
+      Math.subtractExact(text_max_x, text_pad_right));
 
     Assertive.require(
       text_min_x <= text_max_x, "Text minimum X <= Text maximum X");
@@ -362,6 +370,29 @@ public final class SyThemeTitlebars
       0,
       maximum_origin.maximumY()));
     return arrangement.build();
+  }
+
+  private static SyBoxType<SySpaceParentRelativeType> alignedIcon(
+    final SyBoxType<SySpaceParentRelativeType> container,
+    final SyThemeWindowTitleBarType title_theme,
+    final int x)
+  {
+    final SyBoxType<SySpaceParentRelativeType> box_unaligned =
+      SyBoxes.create(x, 0, title_theme.iconWidth(), title_theme.iconHeight());
+
+    switch (title_theme.buttonAlignment()) {
+      case ALIGN_TOP: {
+        return SyBoxes.alignVerticallyTop(container, box_unaligned);
+      }
+      case ALIGN_BOTTOM: {
+        return SyBoxes.alignVerticallyBottom(container, box_unaligned);
+      }
+      case ALIGN_CENTER: {
+        return SyBoxes.alignVerticallyCenter(container, box_unaligned);
+      }
+    }
+
+    throw new UnreachableCodeException();
   }
 
   private static SyBoxType<SySpaceParentRelativeType> alignedButton(
@@ -386,25 +417,26 @@ public final class SyThemeTitlebars
         return SyBoxes.alignVerticallyCenter(container, box_unaligned);
       }
     }
-    return box_unaligned;
+
+    throw new UnreachableCodeException();
   }
 
-  private static Pair<List<SyThemeTitlebarElement>, List<SyThemeTitlebarElement>> sortElementsLeftRight(
+  private static Pair<List<SyThemeTitleBarElement>, List<SyThemeTitleBarElement>> sortElementsLeftRight(
     final SyThemeWindowTitleBarType title_theme,
     final boolean is_closeable,
     final boolean is_maximizable,
-    final List<SyThemeTitlebarElement> elements)
+    final List<SyThemeTitleBarElement> elements)
   {
-    final List<SyThemeTitlebarElement> elements_left =
+    final List<SyThemeTitleBarElement> elements_left =
       new ArrayList<>(elements.size() / 2);
-    final List<SyThemeTitlebarElement> elements_right =
+    final List<SyThemeTitleBarElement> elements_right =
       new ArrayList<>(elements.size() / 2);
 
-    List<SyThemeTitlebarElement> elements_out = elements_left;
+    List<SyThemeTitleBarElement> elements_out = elements_left;
 
-    final Iterator<SyThemeTitlebarElement> iter = elements.iterator();
+    final Iterator<SyThemeTitleBarElement> iter = elements.iterator();
     while (iter.hasNext()) {
-      final SyThemeTitlebarElement element = iter.next();
+      final SyThemeTitleBarElement element = iter.next();
       switch (element) {
         case ELEMENT_CLOSE_BUTTON: {
           if (is_closeable) {
@@ -427,7 +459,7 @@ public final class SyThemeTitlebars
         }
 
         case ELEMENT_ICON: {
-          if (title_theme.showIcon()) {
+          if (title_theme.iconPresent()) {
             elements_out.add(element);
           }
           break;

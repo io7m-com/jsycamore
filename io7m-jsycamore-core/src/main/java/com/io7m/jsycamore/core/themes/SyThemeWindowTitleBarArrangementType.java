@@ -22,12 +22,12 @@ import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.immutables.value.Value;
 
 /**
- * The boxes for components that appear in window titlebars.
+ * The boxes for components that appear in window title bars.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemeWindowTitlebarArrangementType
+public interface SyThemeWindowTitleBarArrangementType
 {
   /**
    * @return The box that will be used for the close button

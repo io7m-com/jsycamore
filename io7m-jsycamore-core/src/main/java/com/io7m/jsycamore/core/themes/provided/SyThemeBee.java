@@ -38,8 +38,8 @@ import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
-import com.io7m.jsycamore.core.themes.SyThemeTitlebarElement;
-import com.io7m.jsycamore.core.themes.SyThemeTitlebars;
+import com.io7m.jsycamore.core.themes.SyThemeTitleBarElement;
+import com.io7m.jsycamore.core.themes.SyThemeTitleBars;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.SyThemeWindow;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangement;
@@ -52,6 +52,8 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import java.util.Optional;
 
 /**
  * A 1990s style multimedia theme.
@@ -173,7 +175,11 @@ public final class SyThemeBee
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeBee::elementOrder);
     theme_titlebar_b.setHeight(19);
-    theme_titlebar_b.setShowIcon(false);
+    theme_titlebar_b.setIconPresent(false);
+    theme_titlebar_b.setIconHeight(0);
+    theme_titlebar_b.setIconWidth(0);
+    theme_titlebar_b.setIconTheme(SyThemeImage.of(Optional.empty()));
+    theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
 
     /*
      * Titlebar text.
@@ -255,8 +261,8 @@ public final class SyThemeBee
   }
 
   private static int elementOrder(
-    final SyThemeTitlebarElement e0,
-    final SyThemeTitlebarElement e1)
+    final SyThemeTitleBarElement e0,
+    final SyThemeTitleBarElement e1)
   {
     switch (e0) {
       case ELEMENT_CLOSE_BUTTON: {
@@ -341,11 +347,11 @@ public final class SyThemeBee
     final SyThemeWindowType theme_window = theme.windowTheme();
     final SyThemeWindowTitleBarType titlebar_theme = theme_window.titleBar();
 
-    final int titlebar_width = SyThemeTitlebars.minimumWidthRequired(
+    final int titlebar_width = SyThemeTitleBars.minimumWidthRequired(
       measurement,
       window_box,
       titlebar_theme,
-      window.titlebar().text(),
+      window.titleBar().text(),
       window.isCloseable(),
       window.isMaximizable());
 

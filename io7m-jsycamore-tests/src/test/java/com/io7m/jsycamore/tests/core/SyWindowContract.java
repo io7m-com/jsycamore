@@ -17,26 +17,14 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
-import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeType;
-import com.io7m.jsycamore.core.SyAlignmentHorizontal;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
-import com.io7m.jsycamore.core.SyWindowFrameType;
-import com.io7m.jsycamore.core.SyWindowTitlebarType;
+import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeButton;
-import com.io7m.jsycamore.core.themes.SyThemeImage;
-import com.io7m.jsycamore.core.themes.SyThemeLabel;
-import com.io7m.jsycamore.core.themes.SyThemePanel;
 import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jsycamore.core.themes.SyThemeWindow;
-import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
 import org.junit.Assert;
@@ -69,7 +57,7 @@ public abstract class SyWindowContract
     Assert.assertEquals(0L, (long) box.minimumX());
     Assert.assertEquals(0L, (long) box.minimumY());
 
-    final SyWindowTitlebarType titlebar = w.titlebar();
+    final SyWindowTitleBarType titlebar = w.titleBar();
     Assert.assertEquals("Main 0", titlebar.text());
 
     Assert.assertTrue(w.focused());
@@ -122,7 +110,7 @@ public abstract class SyWindowContract
   {
     final SyWindowType w = this.create(640, 480, "Main 0");
 
-    final SyWindowTitlebarType titlebar = w.titlebar();
+    final SyWindowTitleBarType titlebar = w.titleBar();
     Assert.assertEquals("Main 0", titlebar.text());
 
     titlebar.setText("Main 1");
@@ -143,7 +131,7 @@ public abstract class SyWindowContract
   public final void testDetachTitlebarDenied()
   {
     final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyWindowTitlebarType titlebar = w.titlebar();
+    final SyWindowTitleBarType titlebar = w.titleBar();
 
     final SyWindowContentPaneType content = w.contentPane();
     final JOTreeNodeType<SyComponentType> c_node = content.node();

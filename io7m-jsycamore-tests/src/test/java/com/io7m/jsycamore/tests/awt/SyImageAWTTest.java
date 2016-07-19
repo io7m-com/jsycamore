@@ -21,6 +21,7 @@ import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jtensors.VectorI4F;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,6 +54,7 @@ public final class SyImageAWTTest
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
@@ -74,6 +76,7 @@ public final class SyImageAWTTest
         32,
         32,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
         v);
 
       final BufferedImage filtered = SyAWTImage.filter(spec, image);
@@ -101,6 +104,7 @@ public final class SyImageAWTTest
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGB_565,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
@@ -130,6 +134,7 @@ public final class SyImageAWTTest
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGB_888,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
@@ -159,6 +164,7 @@ public final class SyImageAWTTest
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_GREY_8,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
@@ -188,6 +194,7 @@ public final class SyImageAWTTest
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGBA_4444,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);

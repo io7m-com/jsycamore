@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.core.images;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI4F;
 import org.immutables.value.Value;
 
 /**
@@ -59,6 +60,17 @@ public interface SyImageSpecificationType
 
   @Value.Parameter
   SyImageFormat format();
+
+  /**
+   * @return The color value by which the image will be multiplied
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI4F filter()
+  {
+    return new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f);
+  }
 
   /**
    * @return The scaling interpolation, if scaling is required

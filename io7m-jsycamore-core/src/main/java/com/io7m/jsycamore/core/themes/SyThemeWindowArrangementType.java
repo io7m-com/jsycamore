@@ -44,7 +44,7 @@ public interface SyThemeWindowArrangementType
   SyBoxType<SySpaceParentRelativeType> frameExclusionBox();
 
   /**
-   * @return The box that will be used for the titlebar
+   * @return The box that will be used for the titleBar
    */
 
   @Value.Parameter(order = 2)

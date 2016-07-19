@@ -24,7 +24,7 @@ import org.immutables.value.Value;
 import java.util.Comparator;
 
 /**
- * The style applied to a window titlebar.
+ * The style applied to a window title bar.
  */
 
 @SyImmutableStyleType
@@ -32,35 +32,35 @@ import java.util.Comparator;
 public interface SyThemeWindowTitleBarType
 {
   /**
-   * @return The width of buttons in the titlebar
+   * @return The width of buttons in the title bar
    */
 
   @Value.Parameter
   int buttonWidth();
 
   /**
-   * @return The height of buttons in the titlebar
+   * @return The height of buttons in the title bar
    */
 
   @Value.Parameter
   int buttonHeight();
 
   /**
-   * @return The vertical alignment of buttons within the titlebar
+   * @return The vertical alignment of buttons within the title bar
    */
 
   @Value.Parameter
   SyAlignmentVertical buttonAlignment();
 
   /**
-   * @return The theme for buttons in the titlebar
+   * @return The theme for buttons in the title bar
    */
 
   @Value.Parameter
   SyThemeButtonType buttonTheme();
 
   /**
-   * @return The padding for buttons in the titlebar
+   * @return The padding for buttons in the title bar
    */
 
   @Value.Parameter
@@ -68,42 +68,70 @@ public interface SyThemeWindowTitleBarType
 
   /**
    * @return A comparator that will decide the order of components within a
-   * titlebar
+   * title bar
    */
 
   @Value.Parameter
-  Comparator<SyThemeTitlebarElement> elementOrder();
+  Comparator<SyThemeTitleBarElement> elementOrder();
 
   /**
-   * @return The titlebar height
+   * @return The title bar height
    */
 
   @Value.Parameter
   int height();
 
   /**
-   * @return {@code true} iff the titlebar should display an icon
+   * @return {@code true} iff the title bar should display an icon
    */
 
   @Value.Parameter
-  boolean showIcon();
+  boolean iconPresent();
 
   /**
-   * @return The titlebar panel theme
+   * @return The width of icons in the title bar
+   */
+
+  @Value.Parameter
+  int iconWidth();
+
+  /**
+   * @return The height of icons in the title bar
+   */
+
+  @Value.Parameter
+  int iconHeight();
+
+  /**
+   * @return The vertical alignment of icons in the title bar
+   */
+
+  @Value.Parameter
+  SyAlignmentVertical iconAlignment();
+
+  /**
+   * @return The theme for icons in the title bar
+   */
+
+  @Value.Parameter
+  SyThemeImageType iconTheme();
+
+  /**
+   * @return The title bar panel theme
    */
 
   @Value.Parameter
   SyThemePanelType panelTheme();
 
   /**
-   * @return The titlebar text theme
+   * @return The title bar text theme
    */
 
   @Value.Parameter
   SyThemeLabelType textTheme();
 
   /**
-   * @return The titlebar title text alignment
+   * @return The title bar title text alignment
    */
 
   @Value.Parameter
