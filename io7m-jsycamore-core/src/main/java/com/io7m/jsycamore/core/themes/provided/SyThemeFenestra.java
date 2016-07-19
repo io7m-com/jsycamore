@@ -52,12 +52,12 @@ import com.io7m.jtensors.VectorI3F;
 import com.io7m.junreachable.UnreachableCodeException;
 
 /**
- * A 1990s style object-based workstation theme.
+ * A 1990s style consumer computer theme.
  */
 
-public final class SyThemeStride
+public final class SyThemeFenestra
 {
-  private SyThemeStride()
+  private SyThemeFenestra()
   {
     throw new UnreachableCodeException();
   }
@@ -71,7 +71,7 @@ public final class SyThemeStride
    */
 
   public static SyTheme.Builder builderFrom(
-    final SyThemeStrideSpecificationType spec)
+    final SyThemeFenestraSpecificationType spec)
   {
     NullCheck.notNull(spec);
 
@@ -127,23 +127,15 @@ public final class SyThemeStride
       SyThemePanel.builder();
     theme_titlebar_panel_b.setColorActive(spec.titlebarColorActive());
     theme_titlebar_panel_b.setColorInactive(title_color_inactive_base);
-    theme_titlebar_panel_b.setEmbossActive(theme_titlebar_emboss_active_b.build());
-    theme_titlebar_panel_b.setEmbossInactive(theme_titlebar_emboss_inactive_b.build());
-    theme_titlebar_panel_b.setOutline(SyThemeOutline.of(
-      true, true, true, false,
-      new VectorI3F(0.0f, 0.0f, 0.0f),
-      new VectorI3F(0.3f, 0.3f, 0.3f),
-      true));
 
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
 
     theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
-    theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
-    theme_titlebar_b.setButtonPadding(SyThemePadding.of(3, 3, 0, 0));
-    theme_titlebar_b.setButtonHeight(15);
-    theme_titlebar_b.setButtonWidth(15);
-    theme_titlebar_b.setButtonTheme(SyThemeStride.createThemeButton(
+    theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 3, 0, 0));
+    theme_titlebar_b.setButtonHeight(14);
+    theme_titlebar_b.setButtonWidth(16);
+    theme_titlebar_b.setButtonTheme(SyThemeFenestra.createThemeButton(
       spec,
       background,
       background_lighter,
@@ -152,16 +144,16 @@ public final class SyThemeStride
       1,
       false));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
-    theme_titlebar_b.setElementOrder(SyThemeStride::elementOrder);
-    theme_titlebar_b.setHeight(21);
-    theme_titlebar_b.setShowIcon(false);
+    theme_titlebar_b.setElementOrder(SyThemeFenestra::elementOrder);
+    theme_titlebar_b.setHeight(18);
+    theme_titlebar_b.setShowIcon(true);
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
     theme_titlebar_text_b.setTextFont("Sans-bold-11");
     theme_titlebar_text_b.setTextColorActive(text_color_active);
     theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
-    theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_CENTER);
-    theme_titlebar_b.setTextPadding(SyThemePadding.of(2, 2, 0, 0));
+    theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_LEFT);
+    theme_titlebar_b.setTextPadding(SyThemePadding.of(0, 0, 0, 0));
     theme_titlebar_b.setTextTheme(theme_titlebar_text_b.build());
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
@@ -182,17 +174,12 @@ public final class SyThemeStride
 
     final SyThemeWindowFrame.Builder theme_frame_b =
       SyThemeWindowFrame.builder();
-    theme_frame_b.setBottomHeight(5);
-    theme_frame_b.setTopHeight(0);
-    theme_frame_b.setLeftWidth(0);
-    theme_frame_b.setRightWidth(0);
+    theme_frame_b.setBottomHeight(4);
+    theme_frame_b.setTopHeight(18 + (4 * 2));
+    theme_frame_b.setLeftWidth(4);
+    theme_frame_b.setRightWidth(4);
     theme_frame_b.setColorActive(spec.frameColor());
     theme_frame_b.setColorInactive(spec.frameColor());
-    theme_frame_b.setOutline(SyThemeOutline.of(
-      true, true, true, true,
-      new VectorI3F(0.0f, 0.0f, 0.0f),
-      new VectorI3F(0.3f, 0.3f, 0.3f),
-      true));
 
     theme_frame_b.setTopLeftStyle(
       SyThemeWindowFrameCorner.FRAME_CORNER_NONE);
@@ -210,9 +197,9 @@ public final class SyThemeStride
       SyThemeWindow.of(
         theme_titlebar_b.build(),
         theme_frame_b.build(),
-        SyThemeStride::arrangeWindowComponents));
+        SyThemeFenestra::arrangeWindowComponents));
 
-    theme.setButtonTheme(SyThemeStride.createThemeButton(
+    theme.setButtonTheme(SyThemeFenestra.createThemeButton(
       spec,
       background,
       background_lighter,
@@ -222,11 +209,11 @@ public final class SyThemeStride
       true));
 
     theme.setPanelTheme(
-      SyThemeStride.createThemePanel(background, background_darker));
+      SyThemeFenestra.createThemePanel(background, background_darker));
     theme.setLabelTheme(
-      SyThemeStride.createThemeLabel(spec.foregroundColor()));
+      SyThemeFenestra.createThemeLabel(spec.foregroundColor()));
     theme.setImageTheme(
-      SyThemeStride.createThemeImage(background_darker));
+      SyThemeFenestra.createThemeImage(background_darker));
     return theme;
   }
 
@@ -255,7 +242,7 @@ public final class SyThemeStride
           case ELEMENT_MAXIMIZE_BUTTON:
             return 0;
           case ELEMENT_TITLE:
-            return -1;
+            return 1;
           case ELEMENT_ICON:
             return 1;
 
@@ -267,7 +254,7 @@ public final class SyThemeStride
           case ELEMENT_CLOSE_BUTTON:
             return -1;
           case ELEMENT_MAXIMIZE_BUTTON:
-            return 1;
+            return -1;
           case ELEMENT_TITLE:
             return 0;
           case ELEMENT_ICON:
@@ -317,24 +304,34 @@ public final class SyThemeStride
     final SyThemeWindowType theme_window = theme.windowTheme();
     final SyThemeWindowTitleBarType titlebar_theme = theme_window.titleBar();
 
-    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
-      SyBoxes.create(0, 0, window_box.width(), titlebar_theme.height());
-
-    final SyBox<SySpaceParentRelativeType> box_frame =
-      SyBox.of(
-        0,
-        window_box.maximumX(),
-        box_titlebar.minimumY(),
-        window_box.maximumY());
-
     final SyThemeWindowFrameType frame_theme = theme_window.frame();
+    final int frame_left = frame_theme.leftWidth();
+    final int frame_right = frame_theme.rightWidth();
+    final int frame_top = frame_theme.topHeight();
+    final int frame_bottom = frame_theme.bottomHeight();
+
+    final int emboss_size =
+      (window.focused() ? frame_theme.embossActive() : frame_theme.embossInactive())
+        .map(emboss -> Integer.valueOf(emboss.size()))
+        .orElse(Integer.valueOf(0)).intValue();
+
+    final int pad_top = ((frame_top - titlebar_theme.height()) / 2) - emboss_size;
+    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
+      SyBoxes.create(
+        (frame_left / 2) + emboss_size,
+        pad_top,
+        window_box.maximumX() - (frame_right + 2),
+        titlebar_theme.height());
+
+    final SyBoxType<SySpaceParentRelativeType> box_frame =
+      SyBoxes.create(0, 0, window_box.width(), window_box.height());
+
     final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
-      SyBoxes.hollowOut(
-        box_frame,
-        frame_theme.leftWidth() + 1,
-        frame_theme.rightWidth() + 1,
-        frame_theme.topHeight() + 1,
-        frame_theme.bottomHeight() + 1);
+      SyBox.of(
+        box_titlebar.minimumX(),
+        box_titlebar.maximumX(),
+        box_titlebar.maximumY() + pad_top,
+        (box_frame.maximumY() - frame_bottom) + emboss_size);
 
     return SyThemeWindowArrangement.of(
       box_frame,
@@ -366,24 +363,13 @@ public final class SyThemeStride
   {
     final SyThemePanel.Builder theme_panel_b =
       SyThemePanel.builder();
-
-    theme_panel_b.setOutline(
-      SyThemeOutline.of(
-        true,
-        true,
-        true,
-        true,
-        background_darker,
-        background_darker,
-        true));
-
     theme_panel_b.setColorActive(background);
     theme_panel_b.setColorInactive(background);
     return theme_panel_b.build();
   }
 
   private static SyThemeButtonType createThemeButton(
-    final SyThemeStrideSpecificationType spec,
+    final SyThemeFenestraSpecificationType spec,
     final VectorI3F background,
     final VectorI3F background_lighter,
     final VectorI3F background_lighter_lighter,
@@ -440,7 +426,7 @@ public final class SyThemeStride
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeStride.builderFrom(
-      SyThemeStrideSpecification.builder().build());
+    return SyThemeFenestra.builderFrom(
+      SyThemeFenestraSpecification.builder().build());
   }
 }

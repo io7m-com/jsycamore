@@ -23,7 +23,11 @@ import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
+import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.components.SyPanel;
+import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
@@ -33,14 +37,23 @@ import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyTheme;
+import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
+import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
+import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 
 import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -54,15 +67,16 @@ public final class WindowDump
   public static void main(final String[] args)
     throws IOException
   {
-    final SyTheme theme_base = SyThemeStride.builder().build();
+    final List<SyTheme> themes = new ArrayList<>();
+    themes.add(SyThemeFenestra.builder().build());
+    themes.add(SyThemeMotive.builder().build());
+    themes.add(SyThemeBee.builder().build());
+    themes.add(SyThemeStride.builder().build());
+    Collections.shuffle(themes, new Random());
 
-    final SyAWTTextMeasurement text_measure =
-      SyAWTTextMeasurement.create();
-
-    final SyGUIType gui =
-      SyGUI.createWithTheme(text_measure, "main", theme_base);
-    final SyWindowType w =
-      gui.windowCreate(320, 240, "Main");
+    final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer;
+    final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
+    final SyAWTTextMeasurement text_measure = SyAWTTextMeasurement.create();
 
     {
       final SyImageCacheResolverType resolver = i -> {
@@ -75,11 +89,11 @@ public final class WindowDump
       };
 
       final SyImageCacheLoaderType<BufferedImage> loader = (i, is) -> {
-        final BufferedImage image = ImageIO.read(is);
-        if (image == null) {
-          throw new IOException("Could not parse image " + i.name());
+        final BufferedImage loaded = ImageIO.read(is);
+        if (loaded == null) {
+          throw new IOException("Could not parse output_image " + i.name());
         }
-        return image;
+        return loaded;
       };
 
       final ExecutorService io_executor = Executors.newSingleThreadExecutor();
@@ -103,20 +117,71 @@ public final class WindowDump
           image_default,
           1_000_000L);
 
-      final BufferedImage image =
-        new BufferedImage(
-          w.box().width(),
-          w.box().height(),
-          BufferedImage.TYPE_4BYTE_ABGR);
-
-      final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer =
+      component_renderer =
         SyAWTComponentRenderer.create(cache, text_measure, text_measure);
-      final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer =
+      window_renderer =
         SyAWTWindowRenderer.create(component_renderer);
-
-      window_renderer.render(image, w);
-
-      ImageIO.write(image, "PNG", new File("/tmp/window.png"));
     }
+
+    final SyGUIType gui = SyGUI.createWithTheme(
+      text_measure,
+      "main",
+      themes.get(0));
+
+    final BufferedImage output_image =
+      new BufferedImage(
+        16 + 320 + 16 + 320 + 16,
+        themes.size() * (16 + 240 + 16),
+        BufferedImage.TYPE_4BYTE_ABGR);
+
+    final Graphics2D output = output_image.createGraphics();
+    int y = 16;
+    for (int index = 0; index < themes.size(); ++index) {
+      final SyTheme theme = themes.get(index);
+      final SyWindowType w_inactive = WindowDump.createWindow(gui, theme);
+      final SyWindowType w_active = WindowDump.createWindow(gui, theme);
+
+      {
+        final BufferedImage active_image =
+          new BufferedImage(320, 240, BufferedImage.TYPE_4BYTE_ABGR);
+
+        window_renderer.render(active_image, w_active);
+        output.drawImage(active_image, 16, y, null);
+      }
+
+      {
+        final BufferedImage inactive_image =
+          new BufferedImage(320, 240, BufferedImage.TYPE_4BYTE_ABGR);
+
+        window_renderer.render(inactive_image, w_inactive);
+        output.drawImage(inactive_image, 16 + 320 + 16, y, null);
+      }
+
+      y += 240;
+      y += 16;
+    }
+
+    ImageIO.write(output_image, "PNG", new File("/tmp/window.png"));
+  }
+
+  private static SyWindowType createWindow(
+    final SyGUIType gui,
+    final SyTheme theme)
+  {
+    final SyWindowType w = gui.windowCreate(320, 240, "Main");
+
+    final SyWindowContentPaneType content = w.contentPane();
+    {
+      final SyPanelType c = SyPanel.create();
+      c.setBox(SyBoxes.create(
+        0,
+        0,
+        content.box().width(),
+        content.box().height()));
+      content.node().childAdd(c.node());
+    }
+
+    w.setTheme(Optional.of(theme));
+    return w;
   }
 }

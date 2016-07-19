@@ -166,12 +166,12 @@ public final class SyThemeBee
 
     theme_titlebar_b.setPanelTheme(theme_titlebar_panel_b.build());
     theme_titlebar_b.setButtonPadding(SyThemePadding.of(3, 3, 0, 0));
-    theme_titlebar_b.setButtonHeight(10);
-    theme_titlebar_b.setButtonWidth(10);
+    theme_titlebar_b.setButtonHeight(13);
+    theme_titlebar_b.setButtonWidth(13);
     theme_titlebar_b.setButtonTheme(theme_titlebar_button_b.build());
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeBee::elementOrder);
-    theme_titlebar_b.setHeight(16);
+    theme_titlebar_b.setHeight(19);
     theme_titlebar_b.setShowIcon(false);
 
     /*
@@ -179,11 +179,11 @@ public final class SyThemeBee
      */
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
-    theme_titlebar_text_b.setTextFont("Monospaced 10");
+    theme_titlebar_text_b.setTextFont("Sans-bold-10");
     theme_titlebar_text_b.setTextColorActive(text_color_active);
     theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
-    theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_LEFT);
-    theme_titlebar_b.setTextPadding(SyThemePadding.of(2, 2, 0, 0));
+    theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_CENTER);
+    theme_titlebar_b.setTextPadding(SyThemePadding.of(8, 8, 0, 0));
     theme_titlebar_b.setTextTheme(theme_titlebar_text_b.build());
 
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
@@ -360,10 +360,10 @@ public final class SyThemeBee
     final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
       SyBoxes.hollowOut(
         box_frame,
-        frame_theme.leftWidth(),
-        frame_theme.rightWidth(),
-        frame_theme.topHeight(),
-        frame_theme.bottomHeight());
+        frame_theme.leftWidth() + 1,
+        frame_theme.rightWidth() + 1,
+        frame_theme.topHeight() + 1,
+        frame_theme.bottomHeight() + 1);
 
     return SyThemeWindowArrangement.of(
       box_frame,

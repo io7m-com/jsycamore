@@ -38,6 +38,7 @@ import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jsycamore.core.themes.SyThemeTitlebars;
 import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementFunctionType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowArrangementType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitlebarArrangementType;
@@ -195,11 +196,26 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     final SyBoxType<SySpaceParentRelativeType> root_box =
       SyBoxes.create(0, 0, new_box.width(), new_box.height());
+    final SyThemeWindowArrangementFunctionType arranger =
+      window_theme.arranger();
     final SyThemeWindowArrangementType boxes =
-      window_theme.arranger().apply(
+      arranger.apply(
         this.gui.textMeasurement(),
         this,
         root_box);
+
+    Assertive.require(
+      SyBoxes.contains(root_box, boxes.contentBox()),
+      "Root box must contain content box");
+    Assertive.require(
+      SyBoxes.contains(root_box, boxes.frameBox()),
+      "Root box must contain frame box");
+    Assertive.require(
+      SyBoxes.contains(boxes.frameBox(), boxes.frameExclusionBox()),
+      "Frame box must contain frame exclusion box");
+    Assertive.require(
+      SyBoxes.contains(root_box, boxes.titlebarBox()),
+      "Root box must contain titlebar box");
 
     this.box.from(window_box);
     this.root.titlebar.text.setTextAlignmentHorizontal(
