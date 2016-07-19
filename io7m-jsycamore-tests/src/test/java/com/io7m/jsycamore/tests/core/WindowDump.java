@@ -87,7 +87,7 @@ public final class WindowDump
       final ExecutorService io_executor = Executors.newSingleThreadExecutor();
 
       final SyImageSpecification image_spec = SyImageSpecification.of(
-        "circle-x-8x.png",
+        "/com/io7m/jsycamore/tests/core/images/circle-x-8x.png",
         64,
         64,
         SyImageFormat.IMAGE_FORMAT_GREY_8,
