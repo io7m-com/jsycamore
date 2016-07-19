@@ -15,12 +15,13 @@
   <url>http://github.com/io7m/jsycamore</url>
 
   <modules>
+    <module>io7m-jsycamore-awt</module>
+    <module>io7m-jsycamore-caffeine</module>
     <module>io7m-jsycamore-checkstyle</module>
     <module>io7m-jsycamore-core</module>
     <module>io7m-jsycamore-documentation</module>
     <module>io7m-jsycamore-tests</module>
     <module>io7m-jsycamore-themedesigner</module>
-    <module>io7m-jsycamore-caffeine</module>
   </modules>
 
   <properties>
@@ -261,6 +262,7 @@
                 <encoding>UTF-8</encoding>
                 <consoleOutput>true</consoleOutput>
                 <failsOnError>true</failsOnError>
+                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
               </configuration>
               <goals>
                 <goal>check</goal>
@@ -293,6 +295,8 @@
           <configuration>
             <source>1.8</source>
             <target>1.8</target>
+            <!-- Prevents an endPosTable exception during compilation -->
+            <useIncrementalCompilation>false</useIncrementalCompilation>
           </configuration>
         </plugin>
 

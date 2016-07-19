@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.images;
+package com.io7m.jsycamore.tests.awt;
 
-import com.io7m.jsycamore.core.images.SyImageAWT;
+import com.io7m.jsycamore.awt.SyAWTImage;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
@@ -55,7 +55,7 @@ public final class SyImageAWTTest
       SyImageFormat.IMAGE_FORMAT_RGBA_8888,
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
-    final BufferedImage filtered = SyImageAWT.filter(spec, image);
+    final BufferedImage filtered = SyAWTImage.filter(spec, image);
     Assert.assertSame(image, filtered);
   }
 
@@ -76,13 +76,13 @@ public final class SyImageAWTTest
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
         v);
 
-      final BufferedImage filtered = SyImageAWT.filter(spec, image);
+      final BufferedImage filtered = SyAWTImage.filter(spec, image);
       Assert.assertNotSame(image, filtered);
 
       Assert.assertEquals(32L, (long) filtered.getWidth());
       Assert.assertEquals(32L, (long) filtered.getHeight());
 
-      final BufferedImage filtered_again = SyImageAWT.filter(spec, filtered);
+      final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
       Assert.assertSame(filtered_again, filtered);
     }
   }
@@ -103,7 +103,7 @@ public final class SyImageAWTTest
       SyImageFormat.IMAGE_FORMAT_RGB_565,
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
-    final BufferedImage filtered = SyImageAWT.filter(spec, image);
+    final BufferedImage filtered = SyAWTImage.filter(spec, image);
     Assert.assertNotSame(image, filtered);
 
     Assert.assertEquals(64L, (long) filtered.getWidth());
@@ -112,7 +112,7 @@ public final class SyImageAWTTest
       (long) BufferedImage.TYPE_USHORT_565_RGB,
       (long) filtered.getType());
 
-    final BufferedImage filtered_again = SyImageAWT.filter(spec, filtered);
+    final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
     Assert.assertSame(filtered_again, filtered);
   }
 
@@ -132,7 +132,7 @@ public final class SyImageAWTTest
       SyImageFormat.IMAGE_FORMAT_RGB_888,
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
-    final BufferedImage filtered = SyImageAWT.filter(spec, image);
+    final BufferedImage filtered = SyAWTImage.filter(spec, image);
     Assert.assertNotSame(image, filtered);
 
     Assert.assertEquals(64L, (long) filtered.getWidth());
@@ -141,7 +141,7 @@ public final class SyImageAWTTest
       (long) BufferedImage.TYPE_3BYTE_BGR,
       (long) filtered.getType());
 
-    final BufferedImage filtered_again = SyImageAWT.filter(spec, filtered);
+    final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
     Assert.assertSame(filtered_again, filtered);
   }
 
@@ -161,7 +161,7 @@ public final class SyImageAWTTest
       SyImageFormat.IMAGE_FORMAT_GREY_8,
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
-    final BufferedImage filtered = SyImageAWT.filter(spec, image);
+    final BufferedImage filtered = SyAWTImage.filter(spec, image);
     Assert.assertNotSame(image, filtered);
 
     Assert.assertEquals(64L, (long) filtered.getWidth());
@@ -170,7 +170,7 @@ public final class SyImageAWTTest
       (long) BufferedImage.TYPE_BYTE_GRAY,
       (long) filtered.getType());
 
-    final BufferedImage filtered_again = SyImageAWT.filter(spec, filtered);
+    final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
     Assert.assertSame(filtered_again, filtered);
   }
 
@@ -190,7 +190,7 @@ public final class SyImageAWTTest
       SyImageFormat.IMAGE_FORMAT_RGBA_4444,
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
-    final BufferedImage filtered = SyImageAWT.filter(spec, image);
+    final BufferedImage filtered = SyAWTImage.filter(spec, image);
     Assert.assertNotSame(image, filtered);
 
     Assert.assertEquals(64L, (long) filtered.getWidth());

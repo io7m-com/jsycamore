@@ -14,13 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.renderer.SyGUIRendererType;
+import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -31,12 +33,12 @@ import java.util.List;
  * A very inefficient GUI renderer using AWT.
  */
 
-public final class SyGUIRendererAWTInefficient
+public final class SyAWTGUIRendererInefficient
   implements SyGUIRendererType<BufferedImage, BufferedImage>
 {
   private final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
 
-  private SyGUIRendererAWTInefficient(
+  private SyAWTGUIRendererInefficient(
     final SyWindowRendererType<BufferedImage, BufferedImage> in_window_renderer)
   {
     this.window_renderer = NullCheck.notNull(in_window_renderer);
@@ -53,7 +55,7 @@ public final class SyGUIRendererAWTInefficient
   public static SyGUIRendererType<BufferedImage, BufferedImage> create(
     final SyWindowRendererType<BufferedImage, BufferedImage> in_window_renderer)
   {
-    return new SyGUIRendererAWTInefficient(in_window_renderer);
+    return new SyAWTGUIRendererInefficient(in_window_renderer);
   }
 
   @Override

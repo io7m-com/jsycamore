@@ -16,8 +16,11 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.awt.SyAWTComponentRenderer;
+import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
+import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
+import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyWindowType;
@@ -27,17 +30,9 @@ import com.io7m.jsycamore.core.images.SyImageCacheType;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererAWT;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererAWTContextType;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererAWT;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeWindow;
-import com.io7m.jsycamore.core.themes.SyThemeWindowFrame;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 
 import javax.imageio.ImageIO;
@@ -61,8 +56,11 @@ public final class WindowDump
   {
     final SyTheme theme_base = SyThemeStride.builder().build();
 
+    final SyAWTTextMeasurement text_measure =
+      SyAWTTextMeasurement.create();
+
     final SyGUIType gui =
-      SyGUI.createWithTheme("main", theme_base);
+      SyGUI.createWithTheme(text_measure, "main", theme_base);
     final SyWindowType w =
       gui.windowCreate(320, 240, "Main");
 
@@ -87,7 +85,7 @@ public final class WindowDump
       final ExecutorService io_executor = Executors.newSingleThreadExecutor();
 
       final SyImageSpecification image_spec = SyImageSpecification.of(
-        "/com/io7m/jsycamore/tests/core/images/circle-x-8x.png",
+        "/com/io7m/jsycamore/tests/awt/circle-x-8x.png",
         64,
         64,
         SyImageFormat.IMAGE_FORMAT_GREY_8,
@@ -98,12 +96,12 @@ public final class WindowDump
 
       final SyImageCacheType<BufferedImage> cache =
         SyBufferedImageCacheCaffeine.create(
-        resolver,
-        loader,
-        io_executor,
-        image_default,
-        image_default,
-        1_000_000L);
+          resolver,
+          loader,
+          io_executor,
+          image_default,
+          image_default,
+          1_000_000L);
 
       final BufferedImage image =
         new BufferedImage(
@@ -111,10 +109,10 @@ public final class WindowDump
           w.box().height(),
           BufferedImage.TYPE_4BYTE_ABGR);
 
-      final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> component_renderer =
-        SyComponentRendererAWT.create(cache, gui.textMeasurement());
+      final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer =
+        SyAWTComponentRenderer.create(cache, text_measure, text_measure);
       final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer =
-        SyWindowRendererAWT.create(gui.textMeasurement(), component_renderer);
+        SyAWTWindowRenderer.create(component_renderer);
 
       window_renderer.render(image, w);
 

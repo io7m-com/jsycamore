@@ -14,9 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyTextMeasurementType;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.awt.Font;
@@ -30,12 +31,13 @@ import java.util.WeakHashMap;
  */
 
 @NotThreadSafe
-public final class SyTextMeasurement implements SyTextMeasurementType
+public final class SyAWTTextMeasurement implements SyTextMeasurementType,
+  SyAWTFontCacheType
 {
   private final Graphics2D graphics;
   private final WeakHashMap<String, Font> font_cache;
 
-  private SyTextMeasurement()
+  private SyAWTTextMeasurement()
   {
     final BufferedImage image =
       new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR_PRE);
@@ -47,9 +49,9 @@ public final class SyTextMeasurement implements SyTextMeasurementType
    * @return A new text measurement instance
    */
 
-  public static SyTextMeasurementType create()
+  public static SyAWTTextMeasurement create()
   {
-    return new SyTextMeasurement();
+    return new SyAWTTextMeasurement();
   }
 
   @Override

@@ -14,8 +14,10 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.images;
+package com.io7m.jsycamore.awt;
 
+import com.io7m.jsycamore.core.images.SyImageFormat;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.awt.Graphics2D;
@@ -32,7 +34,7 @@ import java.util.Optional;
  * Functions to process {@link java.awt.image.BufferedImage} values.
  */
 
-public final class SyImageAWT
+public final class SyAWTImage
 {
   private static final DirectColorModel COLOR_MODEL_RGBA_4444;
 
@@ -48,7 +50,7 @@ public final class SyImageAWT
       DataBuffer.TYPE_USHORT);
   }
 
-  private SyImageAWT()
+  private SyAWTImage()
   {
     throw new UnreachableCodeException();
   }
@@ -67,10 +69,10 @@ public final class SyImageAWT
     final SyImageSpecificationType spec,
     final BufferedImage image)
   {
-    if (SyImageAWT.matchesExpected(spec, image)) {
+    if (SyAWTImage.matchesExpected(spec, image)) {
       return image;
     }
-    return SyImageAWT.applyRescale(spec, image);
+    return SyAWTImage.applyRescale(spec, image);
   }
 
   private static BufferedImage applyRescale(
@@ -78,7 +80,7 @@ public final class SyImageAWT
     final BufferedImage image)
   {
     final BufferedImage output =
-      SyImageAWT.createCompatible(spec);
+      SyAWTImage.createCompatible(spec);
 
     final Graphics2D graphics = output.createGraphics();
     try {
@@ -132,13 +134,13 @@ public final class SyImageAWT
       }
       case IMAGE_FORMAT_RGBA_4444: {
         final WritableRaster raster =
-          SyImageAWT.COLOR_MODEL_RGBA_4444.createCompatibleWritableRaster(
+          SyAWTImage.COLOR_MODEL_RGBA_4444.createCompatibleWritableRaster(
             spec.width(), spec.height());
 
         @SuppressWarnings("UseOfObsoleteCollectionType")
         final Hashtable<Object, Object> props = new Hashtable<>();
         return new BufferedImage(
-          SyImageAWT.COLOR_MODEL_RGBA_4444,
+          SyAWTImage.COLOR_MODEL_RGBA_4444,
           raster,
           false,
           props);
@@ -160,7 +162,7 @@ public final class SyImageAWT
       return false;
     }
 
-    final Optional<SyImageFormat> format_opt = SyImageAWT.formatFor(image);
+    final Optional<SyImageFormat> format_opt = SyAWTImage.formatFor(image);
     return format_opt.isPresent() && format_opt.get() == spec.format();
   }
 

@@ -45,7 +45,7 @@ public final class SyUnreachableTest
     throws Exception
   {
     SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.images.SyImageAWT");
+      "com.io7m.jsycamore.awt.SyAWTImage");
   }
 
   @Test(expected = UnreachableCodeException.class)

@@ -10,11 +10,11 @@
     <artifactId>io7m-jsycamore</artifactId>
     <version>0.1.0</version>
   </parent>
-  <artifactId>io7m-jsycamore-tests</artifactId>
+  <artifactId>io7m-jsycamore-awt</artifactId>
 
   <packaging>jar</packaging>
-  <name>io7m-jsycamore-tests</name>
-  <description>OpenGL GUI library (Unit tests)</description>
+  <name>io7m-jsycamore-awt</name>
+  <description>OpenGL GUI library (AWT code)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <scm>
@@ -26,35 +26,25 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>io7m-jsycamore-awt</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>io7m-jsycamore-caffeine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>io7m-jsycamore-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.java.quickcheck</groupId>
-      <artifactId>quickcheck</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Check style -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

@@ -14,33 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
-
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import org.immutables.value.Value;
-
-import java.awt.image.BufferedImage;
-
 /**
- * The type of AWT-based component renderer contexts.
+ * AWT implementation.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-public interface SyComponentRendererAWTContextType
-{
-  /**
-   * @return A viewport accumulator
-   */
-
-  @Value.Parameter
-  SyWindowViewportAccumulatorType viewport();
-
-  /**
-   * @return The output image
-   */
-
-  @Value.Parameter
-  BufferedImage image();
-}
+@com.io7m.jnull.NonNullByDefault
+package com.io7m.jsycamore.awt;

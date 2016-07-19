@@ -16,8 +16,6 @@
 
 package com.io7m.jsycamore.core;
 
-import java.awt.Font;
-
 /**
  * The type of text measurement interfaces.
  */
@@ -46,16 +44,6 @@ public interface SyTextMeasurementType
   int measureTextWidth(
     String font,
     String text);
-
-  /**
-   * Load, cache, and return the font with the given name.
-   *
-   * @param font The font name (such as "Monospaced 10")
-   *
-   * @return A font
-   */
-
-  Font decodeFont(String font);
 
   /**
    * Measure the maximum descent of text rendered using the given font.

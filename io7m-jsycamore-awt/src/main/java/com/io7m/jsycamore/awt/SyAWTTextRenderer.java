@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
@@ -22,9 +22,9 @@ import com.io7m.jsycamore.core.SyTextMeasurementType;
 
 import java.awt.Graphics2D;
 
-final class SyTextRenderer
+final class SyAWTTextRenderer
 {
-  private SyTextRenderer()
+  private SyAWTTextRenderer()
   {
 
   }

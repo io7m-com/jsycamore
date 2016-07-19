@@ -14,16 +14,17 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
+import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -46,34 +47,29 @@ import java.util.Optional;
  */
 
 @NotThreadSafe
-public final class SyWindowRendererAWT implements
+public final class SyAWTWindowRenderer implements
   SyWindowRendererType<BufferedImage, BufferedImage>
 {
-  private final SyEmbossed embossed;
-  private final SyTextMeasurementType measurement;
-  private final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> component_renderer;
+  private final SyAWTEmbossed embossed;
+  private final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer;
 
-  private SyWindowRendererAWT(
-    final SyTextMeasurementType in_measurement,
-    final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> in_component_renderer)
+  private SyAWTWindowRenderer(
+    final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> in_component_renderer)
   {
-    this.measurement = NullCheck.notNull(in_measurement);
     this.component_renderer = NullCheck.notNull(in_component_renderer);
-    this.embossed = new SyEmbossed();
+    this.embossed = new SyAWTEmbossed();
   }
 
   /**
-   * @param in_measurement        A text measurement interface
    * @param in_component_renderer A component renderer
    *
    * @return A new renderer
    */
 
   public static SyWindowRendererType<BufferedImage, BufferedImage> create(
-    final SyTextMeasurementType in_measurement,
-    final SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage> in_component_renderer)
+    final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> in_component_renderer)
   {
-    return new SyWindowRendererAWT(in_measurement, in_component_renderer);
+    return new SyAWTWindowRenderer(in_component_renderer);
   }
 
   @Override
@@ -84,8 +80,8 @@ public final class SyWindowRendererAWT implements
     NullCheck.notNull(input);
     NullCheck.notNull(window);
 
-    final SyComponentRendererAWTContext context =
-      SyComponentRendererAWTContext.of(window.viewportAccumulator(), input);
+    final SyAWTComponentRendererContext context =
+      SyAWTComponentRendererContext.of(window.viewportAccumulator(), input);
 
     final Graphics2D graphics = input.createGraphics();
     try {
@@ -143,11 +139,11 @@ public final class SyWindowRendererAWT implements
         window,
         frame_theme.outline(),
         emboss,
-        SyDrawing.toColor(emboss.colorTop()),
-        SyDrawing.toColor(emboss.colorLeft()),
-        SyDrawing.toColor(emboss.colorRight()),
-        SyDrawing.toColor(emboss.colorBottom()),
-        Optional.of(SyDrawing.toColor(frame_theme.colorInactive())),
+        SyAWTDrawing.toColor(emboss.colorTop()),
+        SyAWTDrawing.toColor(emboss.colorLeft()),
+        SyAWTDrawing.toColor(emboss.colorRight()),
+        SyAWTDrawing.toColor(emboss.colorBottom()),
+        Optional.of(SyAWTDrawing.toColor(frame_theme.colorInactive())),
         false);
     } else {
       this.renderFrameUnembossedActual(
@@ -155,7 +151,7 @@ public final class SyWindowRendererAWT implements
         frame_theme,
         window,
         frame_theme.outline(),
-        SyDrawing.toColor(frame_theme.colorInactive()),
+        SyAWTDrawing.toColor(frame_theme.colorInactive()),
         false);
     }
   }
@@ -178,11 +174,11 @@ public final class SyWindowRendererAWT implements
         window,
         frame_theme.outline(),
         emboss,
-        SyDrawing.toColor(emboss.colorTop()),
-        SyDrawing.toColor(emboss.colorLeft()),
-        SyDrawing.toColor(emboss.colorRight()),
-        SyDrawing.toColor(emboss.colorBottom()),
-        Optional.of(SyDrawing.toColor(frame_theme.colorActive())),
+        SyAWTDrawing.toColor(emboss.colorTop()),
+        SyAWTDrawing.toColor(emboss.colorLeft()),
+        SyAWTDrawing.toColor(emboss.colorRight()),
+        SyAWTDrawing.toColor(emboss.colorBottom()),
+        Optional.of(SyAWTDrawing.toColor(frame_theme.colorActive())),
         true);
     } else {
       this.renderFrameUnembossedActual(
@@ -190,7 +186,7 @@ public final class SyWindowRendererAWT implements
         frame_theme,
         window,
         frame_theme.outline(),
-        SyDrawing.toColor(frame_theme.colorActive()),
+        SyAWTDrawing.toColor(frame_theme.colorActive()),
         true);
     }
   }
@@ -223,7 +219,7 @@ public final class SyWindowRendererAWT implements
     final int frame_height;
 
     if (outline_opt.isPresent()) {
-      SyDrawing.drawOutline(graphics, outline_opt.get(), frame_box, active);
+      SyAWTDrawing.drawOutline(graphics, outline_opt.get(), frame_box, active);
       frame_x = frame_box.minimumX() + 1;
       frame_y = frame_box.minimumY() + 1;
       frame_width = frame_box.width() - 2;
@@ -430,7 +426,7 @@ public final class SyWindowRendererAWT implements
       final int thickness_of_vertical = left_width;
       this.embossed.drawEmbossedL(
         graphics,
-        SyEmbossed.LShape.L_SHAPE_NW,
+        SyAWTEmbossed.LShape.L_SHAPE_NW,
         0,
         0,
         thickness_of_horizontal,
@@ -450,7 +446,7 @@ public final class SyWindowRendererAWT implements
       final int thickness_of_vertical = right_width;
       this.embossed.drawEmbossedL(
         graphics,
-        SyEmbossed.LShape.L_SHAPE_NE,
+        SyAWTEmbossed.LShape.L_SHAPE_NE,
         frame_width - top_right_len,
         0,
         thickness_of_horizontal,
@@ -470,7 +466,7 @@ public final class SyWindowRendererAWT implements
       final int thickness_of_vertical = left_width;
       this.embossed.drawEmbossedL(
         graphics,
-        SyEmbossed.LShape.L_SHAPE_SW,
+        SyAWTEmbossed.LShape.L_SHAPE_SW,
         0,
         frame_height - bottom_left_len,
         thickness_of_horizontal,
@@ -490,7 +486,7 @@ public final class SyWindowRendererAWT implements
       final int thickness_of_vertical = right_width;
       this.embossed.drawEmbossedL(
         graphics,
-        SyEmbossed.LShape.L_SHAPE_SE,
+        SyAWTEmbossed.LShape.L_SHAPE_SE,
         frame_width - bottom_right_len,
         frame_height - bottom_right_len,
         thickness_of_horizontal,
@@ -523,7 +519,7 @@ public final class SyWindowRendererAWT implements
     final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
 
     if (outline_opt.isPresent()) {
-      SyDrawing.drawOutline(
+      SyAWTDrawing.drawOutline(
         graphics, outline_opt.get(), frame_box, active);
     }
 

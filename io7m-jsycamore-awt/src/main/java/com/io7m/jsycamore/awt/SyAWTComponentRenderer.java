@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jfunctional.Unit;
 import com.io7m.jnull.NullCheck;
@@ -31,6 +31,7 @@ import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
 import com.io7m.jsycamore.core.images.SyImageReferenceType;
+import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
@@ -52,42 +53,48 @@ import java.util.Optional;
  * An AWT-based component renderer.
  */
 
-public final class SyComponentRendererAWT implements
-  SyComponentRendererType<SyComponentRendererAWTContextType, BufferedImage>
+public final class SyAWTComponentRenderer implements
+  SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage>
 {
-  private final SyEmbossed embossed;
+  private final SyAWTEmbossed embossed;
   private final SyTextMeasurementType measurement;
-  private final SyImageCacheType<BufferedImage> cache;
+  private final SyAWTFontCacheType font_cache;
+  private final SyImageCacheType<BufferedImage> image_cache;
 
-  private SyComponentRendererAWT(
-    final SyImageCacheType<BufferedImage> in_cache,
+  private SyAWTComponentRenderer(
+    final SyImageCacheType<BufferedImage> in_image_cache,
+    final SyAWTFontCacheType in_font_cache,
     final SyTextMeasurementType in_measurement)
   {
-    this.cache = NullCheck.notNull(in_cache);
+    this.image_cache = NullCheck.notNull(in_image_cache);
+    this.font_cache = NullCheck.notNull(in_font_cache);
     this.measurement = NullCheck.notNull(in_measurement);
-    this.embossed = new SyEmbossed();
+    this.embossed = new SyAWTEmbossed();
   }
 
   /**
    * Construct a new renderer.
    *
-   * @param in_cache       An image cache
+   * @param in_image_cache An image cache
    * @param in_measurement A text measurement interface
+   * @param in_font_cache  A font cache
    *
    * @return A new renderer
    */
 
   public static SyComponentRendererType<
-    SyComponentRendererAWTContextType, BufferedImage> create(
-    final SyImageCacheType<BufferedImage> in_cache,
-    final SyTextMeasurementType in_measurement)
+    SyAWTComponentRendererContextType, BufferedImage> create(
+    final SyImageCacheType<BufferedImage> in_image_cache,
+    final SyTextMeasurementType in_measurement,
+    final SyAWTFontCacheType in_font_cache)
   {
-    return new SyComponentRendererAWT(in_cache, in_measurement);
+    return new SyAWTComponentRenderer(
+      in_image_cache, in_font_cache, in_measurement);
   }
 
   @Override
   public BufferedImage render(
-    final SyComponentRendererAWTContextType context,
+    final SyAWTComponentRendererContextType context,
     final SyComponentReadableType object)
   {
     NullCheck.notNull(context);
@@ -115,7 +122,7 @@ public final class SyComponentRendererAWT implements
   }
 
   private void renderActual(
-    final SyComponentRendererAWTContextType context,
+    final SyAWTComponentRendererContextType context,
     final Graphics2D graphics,
     final AffineTransform initial_transform,
     final Shape initial_clip,
@@ -187,7 +194,7 @@ public final class SyComponentRendererAWT implements
     final SyBoxType<SySpaceParentRelativeType> box = image.box();
 
     final SyImageReferenceType<BufferedImage> ref =
-      this.cache.get(image.image());
+      this.image_cache.get(image.image());
 
     final BufferedImage actual = ref.value();
     final int area_width = box.width();
@@ -227,7 +234,7 @@ public final class SyComponentRendererAWT implements
 
     final Optional<SyThemeOutlineType> outline_opt = theme.outline();
     if (outline_opt.isPresent()) {
-      SyDrawing.drawOutline(
+      SyAWTDrawing.drawOutline(
         graphics,
         outline_opt.get(),
         SyBoxes.moveToOrigin(box),
@@ -243,10 +250,10 @@ public final class SyComponentRendererAWT implements
     final SyBoxType<SySpaceParentRelativeType> box = label.box();
 
     final String font = label_theme.textFont();
-    graphics.setPaint(SyDrawing.toColor(label_theme.textColorActive()));
-    graphics.setFont(this.measurement.decodeFont(font));
+    graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorActive()));
+    graphics.setFont(this.font_cache.decodeFont(font));
 
-    SyTextRenderer.renderText(
+    SyAWTTextRenderer.renderText(
       this.measurement,
       graphics,
       font,
@@ -308,7 +315,7 @@ public final class SyComponentRendererAWT implements
       color);
 
     if (outline.isPresent()) {
-      SyDrawing.drawOutline(
+      SyAWTDrawing.drawOutline(
         graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isEnabled());
     }
   }
@@ -389,7 +396,7 @@ public final class SyComponentRendererAWT implements
     }
 
     if (outline.isPresent()) {
-      SyDrawing.drawOutline(
+      SyAWTDrawing.drawOutline(
         graphics, outline.get(), SyBoxes.moveToOrigin(box), button.isEnabled());
     }
   }
@@ -403,7 +410,7 @@ public final class SyComponentRendererAWT implements
     final Optional<SyThemeEmbossType> emboss_opt,
     final VectorReadable3FType fill_color)
   {
-    final Color fill = SyDrawing.toColor(fill_color);
+    final Color fill = SyAWTDrawing.toColor(fill_color);
 
     if (emboss_opt.isPresent()) {
       final SyThemeEmbossType emboss = emboss_opt.get();
@@ -414,10 +421,10 @@ public final class SyComponentRendererAWT implements
         fill_width,
         fill_height,
         emboss.size(),
-        SyDrawing.toColor(emboss.colorLeft()),
-        SyDrawing.toColor(emboss.colorRight()),
-        SyDrawing.toColor(emboss.colorTop()),
-        SyDrawing.toColor(emboss.colorBottom()),
+        SyAWTDrawing.toColor(emboss.colorLeft()),
+        SyAWTDrawing.toColor(emboss.colorRight()),
+        SyAWTDrawing.toColor(emboss.colorTop()),
+        SyAWTDrawing.toColor(emboss.colorBottom()),
         Optional.of(fill));
     } else {
       graphics.setPaint(fill);

@@ -23,7 +23,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.Policy;
 import com.github.benmanes.caffeine.cache.Weigher;
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.images.SyImageAWT;
+import com.io7m.jsycamore.awt.SyAWTImage;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
@@ -40,7 +40,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A {@link BufferedImage} cache backed by {@code caffeine}.
@@ -48,7 +47,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<BufferedImage>
 {
-  private final AtomicBoolean closed;
   private final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache;
   private final BufferedImage image_default;
   private final BufferedImage image_error;
@@ -63,7 +61,6 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     this.cache = NullCheck.notNull(in_cache);
     this.image_default = NullCheck.notNull(in_default);
     this.image_error = NullCheck.notNull(in_error);
-    this.closed = new AtomicBoolean(false);
     this.size_max = in_size_max;
   }
 
@@ -124,7 +121,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     return CompletableFuture.supplyAsync(() -> {
       try (final InputStream is = in_resolver.resolve(in_image_spec)) {
         final BufferedImage image = in_loader.load(in_image_spec, is);
-        return SyImageAWT.filter(in_image_spec, image);
+        return SyAWTImage.filter(in_image_spec, image);
       } catch (final IOException e) {
         throw new UncheckedIOException(e);
       }

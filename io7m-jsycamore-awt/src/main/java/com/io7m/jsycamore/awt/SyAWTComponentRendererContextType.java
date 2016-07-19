@@ -14,26 +14,33 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.awt;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import org.immutables.value.Value;
 
-public final class SyGUITest extends SyGUIContract
+import java.awt.image.BufferedImage;
+
+/**
+ * The type of AWT-based component renderer contexts.
+ */
+
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyAWTComponentRendererContextType
 {
-  @Override
-  protected SyGUIType create(final String name)
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), name);
-  }
+  /**
+   * @return A viewport accumulator
+   */
 
-  @Override
-  protected SyGUIType createWithTheme(
-    final String name,
-    final SyThemeType theme)
-  {
-    return SyGUI.createWithTheme(SyAWTTextMeasurement.create(), name, theme);
-  }
+  @Value.Parameter
+  SyWindowViewportAccumulatorType viewport();
+
+  /**
+   * @return The output image
+   */
+
+  @Value.Parameter
+  BufferedImage image();
 }

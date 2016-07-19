@@ -83,30 +83,35 @@ public final class SyGUI implements SyGUIType
   /**
    * Create a new GUI.
    *
-   * @param in_name The GUI name, for debugging purposes
+   * @param in_measure A text measurement interface
+   * @param in_name    The GUI name, for debugging purposes
    *
    * @return A new GUI
    */
 
-  public static SyGUIType create(final String in_name)
+  public static SyGUIType create(
+    final SyTextMeasurementType in_measure,
+    final String in_name)
   {
-    return SyGUI.createWithTheme(in_name, SyThemeDefault.get());
+    return SyGUI.createWithTheme(in_measure, in_name, SyThemeDefault.get());
   }
 
   /**
    * Create a new GUI.
    *
-   * @param in_name  The GUI name, for debugging purposes
-   * @param in_theme The default theme
+   * @param in_measure A text measurement interface
+   * @param in_name    The GUI name, for debugging purposes
+   * @param in_theme   The default theme
    *
    * @return A new GUI
    */
 
   public static SyGUIType createWithTheme(
+    final SyTextMeasurementType in_measure,
     final String in_name,
     final SyThemeType in_theme)
   {
-    return new SyGUI(in_name, SyTextMeasurement.create(), in_theme);
+    return new SyGUI(in_name, in_measure, in_theme);
   }
 
   @Override

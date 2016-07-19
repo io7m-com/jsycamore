@@ -14,26 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core;
+package com.io7m.jsycamore.awt;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
+import java.awt.Font;
 
-public final class SyGUITest extends SyGUIContract
+/**
+ * A caching interface for decoding fonts.
+ */
+
+public interface SyAWTFontCacheType
 {
-  @Override
-  protected SyGUIType create(final String name)
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), name);
-  }
+  /**
+   * Load, cache, and return the font with the given name.
+   *
+   * @param font The font name (such as "Monospaced 10")
+   *
+   * @return A font
+   */
 
-  @Override
-  protected SyGUIType createWithTheme(
-    final String name,
-    final SyThemeType theme)
-  {
-    return SyGUI.createWithTheme(SyAWTTextMeasurement.create(), name, theme);
-  }
+  Font decodeFont(String font);
 }

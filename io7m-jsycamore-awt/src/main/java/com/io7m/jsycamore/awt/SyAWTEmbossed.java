@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import org.valid4j.Assertive;
@@ -30,7 +30,7 @@ import java.util.Optional;
  * Functions to render embossed shapes.
  */
 
-public final class SyEmbossed
+public final class SyAWTEmbossed
 {
   private final Polygon poly;
 
@@ -38,7 +38,7 @@ public final class SyEmbossed
    * Construct an embossed renderer.
    */
 
-  public SyEmbossed()
+  public SyAWTEmbossed()
   {
     this.poly = new Polygon();
   }

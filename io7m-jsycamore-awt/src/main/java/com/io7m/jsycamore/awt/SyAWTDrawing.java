@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.renderer;
+package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
@@ -30,9 +30,9 @@ import java.awt.Graphics2D;
  * Functions for drawing in AWT contexts.
  */
 
-public final class SyDrawing
+public final class SyAWTDrawing
 {
-  private SyDrawing()
+  private SyAWTDrawing()
   {
     throw new UnreachableCodeException();
   }
@@ -82,9 +82,9 @@ public final class SyDrawing
     final int y_max = box.maximumY();
 
     if (active) {
-      graphics.setPaint(SyDrawing.toColor(outline.colorActive()));
+      graphics.setPaint(SyAWTDrawing.toColor(outline.colorActive()));
     } else {
-      graphics.setPaint(SyDrawing.toColor(outline.colorInactive()));
+      graphics.setPaint(SyAWTDrawing.toColor(outline.colorInactive()));
     }
 
     if (outline.left()) {
