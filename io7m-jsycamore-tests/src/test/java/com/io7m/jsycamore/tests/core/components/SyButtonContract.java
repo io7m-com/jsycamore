@@ -175,4 +175,45 @@ public abstract class SyButtonContract
 
     Assert.assertEquals(0L, (long) pressed.get());
   }
+
+  @Test
+  public final void testNoOver()
+  {
+    final SyButtonType button = this.create();
+    button.setBox(SyBoxes.create(0, 0, 32, 32));
+
+    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+
+    {
+      final boolean over_event = button.mouseNoLongerOver();
+      Assert.assertTrue(over_event);
+      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    }
+  }
+
+  @Test
+  public final void testReleaseWithoutPress()
+  {
+    final AtomicInteger pressed = new AtomicInteger(0);
+    final SyButtonType button = this.create();
+    button.setBox(SyBoxes.create(0, 0, 32, 32));
+
+    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+
+    final SyButtonListenerType listener = b -> pressed.incrementAndGet();
+    button.buttonAddListener(listener);
+
+    Assert.assertEquals(0L, (long) pressed.get());
+
+    {
+      final boolean released_event = button.mouseReleased(
+        new PVectorI2I<>(0, 0),
+        SyMouseButton.MOUSE_BUTTON_LEFT,
+        button);
+      Assert.assertTrue(released_event);
+      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    }
+
+    Assert.assertEquals(0L, (long) pressed.get());
+  }
 }
