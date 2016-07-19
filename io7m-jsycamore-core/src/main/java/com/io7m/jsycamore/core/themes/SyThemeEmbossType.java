@@ -33,53 +33,33 @@ public interface SyThemeEmbossType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorTop()
-  {
-    return new VectorI3F(0.9f, 0.9f, 0.9f);
-  }
+  VectorI3F colorTop();
 
   /**
    * @return The color used for the bottom edges of embossed shapes
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorBottom()
-  {
-    return new VectorI3F(0.4f, 0.4f, 0.4f);
-  }
+  VectorI3F colorBottom();
 
   /**
    * @return The color used for the left edges of embossed shapes
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorLeft()
-  {
-    return new VectorI3F(0.7f, 0.7f, 0.7f);
-  }
+  VectorI3F colorLeft();
 
   /**
    * @return The color used for the right edges of embossed shapes
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorRight()
-  {
-    return new VectorI3F(0.5f, 0.5f, 0.5f);
-  }
+  VectorI3F colorRight();
 
   /**
    * @return The size of embossed edges
    */
 
   @Value.Parameter
-  @Value.Default
-  default int size()
-  {
-    return 2;
-  }
+  int size();
 }

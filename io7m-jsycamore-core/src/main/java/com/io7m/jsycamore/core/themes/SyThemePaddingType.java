@@ -32,42 +32,26 @@ public interface SyThemePaddingType
    */
 
   @Value.Parameter
-  @Value.Default
-  default int paddingLeft()
-  {
-    return 0;
-  }
+  int paddingLeft();
 
   /**
    * @return The size of the right padding
    */
 
   @Value.Parameter
-  @Value.Default
-  default int paddingRight()
-  {
-    return 0;
-  }
+  int paddingRight();
 
   /**
    * @return The size of the top padding
    */
 
   @Value.Parameter
-  @Value.Default
-  default int paddingTop()
-  {
-    return 0;
-  }
+  int paddingTop();
 
   /**
    * @return The size of the bottom padding
    */
 
   @Value.Parameter
-  @Value.Default
-  default int paddingBottom()
-  {
-    return 0;
-  }
+  int paddingBottom();
 }

@@ -33,31 +33,19 @@ public interface SyThemeLabelType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F textColorActive()
-  {
-    return new VectorI3F(0.0f, 0.0f, 0.0f);
-  }
+  VectorI3F textColorActive();
 
   /**
    * @return The base color used for the text of inactive labels
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F textColorInactive()
-  {
-    return new VectorI3F(0.3f, 0.3f, 0.3f);
-  }
+  VectorI3F textColorInactive();
 
   /**
    * @return The font used for labels
    */
 
   @Value.Parameter
-  @Value.Default
-  default String textFont()
-  {
-    return "Sans-plain-12";
-  }
+  String textFont();
 }

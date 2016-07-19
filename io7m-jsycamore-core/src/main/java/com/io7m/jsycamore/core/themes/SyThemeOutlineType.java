@@ -33,44 +33,28 @@ public interface SyThemeOutlineType
    */
 
   @Value.Parameter(order = 0)
-  @Value.Default
-  default boolean left()
-  {
-    return true;
-  }
+  boolean left();
 
   /**
    * @return {@code true} iff the right edge should have an outline
    */
 
   @Value.Parameter(order = 1)
-  @Value.Default
-  default boolean right()
-  {
-    return true;
-  }
+  boolean right();
 
   /**
    * @return {@code true} iff the top edge should have an outline
    */
 
   @Value.Parameter(order = 2)
-  @Value.Default
-  default boolean top()
-  {
-    return true;
-  }
+  boolean top();
 
   /**
    * @return {@code true} iff the bottom edge should have an outline
    */
 
   @Value.Parameter(order = 3)
-  @Value.Default
-  default boolean bottom()
-  {
-    return true;
-  }
+  boolean bottom();
 
   /**
    * @return The color of the outline when the element is active
@@ -91,9 +75,5 @@ public interface SyThemeOutlineType
    */
 
   @Value.Parameter(order = 6)
-  @Value.Default
-  default boolean corners()
-  {
-    return true;
-  }
+  boolean corners();
 }

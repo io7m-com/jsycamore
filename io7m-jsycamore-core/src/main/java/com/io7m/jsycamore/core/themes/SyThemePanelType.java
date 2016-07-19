@@ -35,22 +35,14 @@ public interface SyThemePanelType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorActive();
 
   /**
    * @return The base color used for inactive panels
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorInactive();
 
   /**
    * @return The embossing used for active panels

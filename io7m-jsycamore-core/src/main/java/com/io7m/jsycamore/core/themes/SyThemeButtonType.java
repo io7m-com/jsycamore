@@ -35,11 +35,7 @@ public interface SyThemeButtonType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorActive();
 
   /**
    * @return The embossing used for active buttons
@@ -54,11 +50,7 @@ public interface SyThemeButtonType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorOver()
-  {
-    return new VectorI3F(0.85f, 0.85f, 0.85f);
-  }
+  VectorI3F colorOver();
 
   /**
    * @return The embossing used for active buttons that are currently under the
@@ -73,11 +65,7 @@ public interface SyThemeButtonType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorPressed()
-  {
-    return new VectorI3F(0.75f, 0.75f, 0.75f);
-  }
+  VectorI3F colorPressed();
 
   /**
    * @return The embossing used for pressed buttons
@@ -91,11 +79,7 @@ public interface SyThemeButtonType
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorInactive();
 
   /**
    * @return The embossing used for inactive buttons

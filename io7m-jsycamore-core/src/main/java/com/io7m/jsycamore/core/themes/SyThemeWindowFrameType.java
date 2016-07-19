@@ -118,44 +118,28 @@ public interface SyThemeWindowFrameType
    */
 
   @Value.Parameter
-  @Value.Default
-  default int leftWidth()
-  {
-    return 16;
-  }
+  int leftWidth();
 
   /**
    * @return The width of the right edge of window frames
    */
 
   @Value.Parameter
-  @Value.Default
-  default int rightWidth()
-  {
-    return 16;
-  }
+  int rightWidth();
 
   /**
    * @return The width of the top edge of window frames
    */
 
   @Value.Parameter
-  @Value.Default
-  default int topHeight()
-  {
-    return 16;
-  }
+  int topHeight();
 
   /**
    * @return The width of the bottom edge of window frames
    */
 
   @Value.Parameter
-  @Value.Default
-  default int bottomHeight()
-  {
-    return 16;
-  }
+  int bottomHeight();
 
   /**
    * @return The embossing used when windows are active
@@ -176,66 +160,42 @@ public interface SyThemeWindowFrameType
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyThemeWindowFrameCorner bottomLeftStyle()
-  {
-    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
-  }
+  SyThemeWindowFrameCorner bottomLeftStyle();
 
   /**
    * @return The style used for the bottom right frame corner
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyThemeWindowFrameCorner bottomRightStyle()
-  {
-    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
-  }
+  SyThemeWindowFrameCorner bottomRightStyle();
 
   /**
    * @return The style used for the top left frame corner
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyThemeWindowFrameCorner topLeftStyle()
-  {
-    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
-  }
+  SyThemeWindowFrameCorner topLeftStyle();
 
   /**
    * @return The style used for the top right frame corner
    */
 
   @Value.Parameter
-  @Value.Default
-  default SyThemeWindowFrameCorner topRightStyle()
-  {
-    return SyThemeWindowFrameCorner.FRAME_CORNER_NONE;
-  }
+  SyThemeWindowFrameCorner topRightStyle();
 
   /**
    * @return The base color used for active window frames
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorActive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorActive();
 
   /**
    * @return The base color used for inactive window frames
    */
 
   @Value.Parameter
-  @Value.Default
-  default VectorI3F colorInactive()
-  {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
-  }
+  VectorI3F colorInactive();
 
   /**
    * @return The frame outline, if any

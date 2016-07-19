@@ -19,6 +19,8 @@ package com.io7m.jsycamore.tests.core.themes;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBeeSpecification;
+import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
+import com.io7m.jsycamore.core.themes.provided.SyThemeFenestraSpecification;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotiveSpecification;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
@@ -35,6 +37,16 @@ public final class SyThemeTest
       SyThemeMotive.builder().build();
     final SyTheme u =
       SyThemeMotive.builderFrom(SyThemeMotiveSpecification.builder().build()).build();
+    Assert.assertEquals(t, u);
+  }
+
+  @Test
+  public void testInstantiateFenestra()
+  {
+    final SyTheme t =
+      SyThemeFenestra.builder().build();
+    final SyTheme u =
+      SyThemeFenestra.builderFrom(SyThemeFenestraSpecification.builder().build()).build();
     Assert.assertEquals(t, u);
   }
 
