@@ -90,6 +90,20 @@ public abstract class SyWindowContract
   }
 
   @Test
+  public final void testMaximizable()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+
+    Assert.assertTrue(w.isMaximizable());
+    w.setMaximizable(true);
+    Assert.assertTrue(w.isMaximizable());
+    w.setMaximizable(false);
+    Assert.assertFalse(w.isMaximizable());
+    w.setMaximizable(true);
+    Assert.assertTrue(w.isMaximizable());
+  }
+
+  @Test
   public final void testTheme()
   {
     final SyThemeType theme_default = SyThemeDefault.get();
