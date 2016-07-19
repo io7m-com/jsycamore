@@ -249,8 +249,13 @@ public final class SyAWTComponentRenderer implements
     final SyThemeLabelType label_theme = label.theme();
     final SyBoxType<SySpaceParentRelativeType> box = label.box();
 
+    if (label.isActive()) {
+      graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorActive()));
+    } else {
+      graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorInactive()));
+    }
+
     final String font = label_theme.textFont();
-    graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorActive()));
     graphics.setFont(this.font_cache.decodeFont(font));
 
     SyAWTTextRenderer.renderText(

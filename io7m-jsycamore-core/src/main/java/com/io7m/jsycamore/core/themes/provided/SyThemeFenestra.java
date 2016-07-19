@@ -211,7 +211,9 @@ public final class SyThemeFenestra
     theme.setPanelTheme(
       SyThemeFenestra.createThemePanel(background, background_darker));
     theme.setLabelTheme(
-      SyThemeFenestra.createThemeLabel(spec.foregroundColor()));
+      SyThemeFenestra.createThemeLabel(
+        spec.foregroundColorActive(),
+        spec.foregroundColorInactive()));
     theme.setImageTheme(
       SyThemeFenestra.createThemeImage(background_darker));
     return theme;
@@ -348,11 +350,13 @@ public final class SyThemeFenestra
     return b.build();
   }
 
-  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  private static SyThemeLabelType createThemeLabel(
+    final VectorI3F foreground_active,
+    final VectorI3F foreground_inactive)
   {
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
-    b.setTextColorActive(foreground);
-    b.setTextColorInactive(foreground);
+    b.setTextColorActive(foreground_active);
+    b.setTextColorInactive(foreground_inactive);
     b.setTextFont("Sans-plain-11");
     return b.build();
   }
@@ -383,7 +387,7 @@ public final class SyThemeFenestra
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true, true, true, true,
-        spec.foregroundColor(),
+        spec.foregroundColorActive(),
         background_darker,
         true));
     }
@@ -435,7 +439,7 @@ public final class SyThemeFenestra
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true, true, true, true,
-        spec.foregroundColor(),
+        spec.foregroundColorActive(),
         background_darker,
         true));
     }

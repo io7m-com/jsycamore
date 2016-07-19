@@ -224,7 +224,9 @@ public final class SyThemeMotive
       2,
       true));
 
-    theme.setLabelTheme(SyThemeMotive.createThemeLabel(spec.foregroundColor()));
+    theme.setLabelTheme(SyThemeMotive.createThemeLabel(
+      spec.foregroundColorActive(),
+      spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeMotive.createThemeImage(background_darker));
     return theme;
   }
@@ -335,11 +337,13 @@ public final class SyThemeMotive
     return b.build();
   }
 
-  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  private static SyThemeLabelType createThemeLabel(
+    final VectorI3F foreground_active,
+    final VectorI3F foreground_inactive)
   {
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
-    b.setTextColorActive(foreground);
-    b.setTextColorInactive(foreground);
+    b.setTextColorActive(foreground_active);
+    b.setTextColorInactive(foreground_inactive);
     b.setTextFont("Monospaced-plain-10");
     return b.build();
   }

@@ -128,8 +128,19 @@ public interface SyThemeBeeSpecificationType
 
   @Value.Parameter
   @Value.Default
-  default VectorI3F foregroundColor()
+  default VectorI3F foregroundColorActive()
   {
     return new VectorI3F(0.0f, 0.0f, 0.0f);
+  }
+
+  /**
+   * @return The general foreground color used for text on disabled components, etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F foregroundColorDisabled()
+  {
+    return new VectorI3F(0.4f, 0.4f, 0.4f);
   }
 }

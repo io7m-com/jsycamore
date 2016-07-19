@@ -247,7 +247,9 @@ public final class SyThemeBee
       background_darker));
 
     theme.setPanelTheme(SyThemeBee.createThemePanel(background));
-    theme.setLabelTheme(SyThemeBee.createThemeLabel(spec.foregroundColor()));
+    theme.setLabelTheme(SyThemeBee.createThemeLabel(
+      spec.foregroundColorActive(),
+      spec.foregroundColorDisabled()));
     theme.setImageTheme(SyThemeBee.createThemeImage(background_darker));
     return theme;
   }
@@ -390,11 +392,13 @@ public final class SyThemeBee
     return b.build();
   }
 
-  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  private static SyThemeLabelType createThemeLabel(
+    final VectorI3F foreground_active,
+    final VectorI3F foreground_inactive)
   {
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
-    b.setTextColorActive(foreground);
-    b.setTextColorInactive(foreground);
+    b.setTextColorActive(foreground_active);
+    b.setTextColorInactive(foreground_inactive);
     b.setTextFont("Sans-plain-12");
     return b.build();
   }
@@ -411,7 +415,7 @@ public final class SyThemeBee
 
     theme_button_b.setOutline(SyThemeOutline.of(
       true, true, true, true,
-      spec.foregroundColor(),
+      spec.foregroundColorActive(),
       background_darker,
       true));
 

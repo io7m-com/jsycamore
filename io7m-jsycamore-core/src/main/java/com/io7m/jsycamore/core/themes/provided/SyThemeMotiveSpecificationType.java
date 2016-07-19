@@ -80,8 +80,20 @@ public interface SyThemeMotiveSpecificationType
 
   @Value.Parameter
   @Value.Default
-  default VectorI3F foregroundColor()
+  default VectorI3F foregroundColorActive()
   {
     return new VectorI3F(1.0f, 1.0f, 1.0f);
+  }
+
+  /**
+   * @return The general foreground color used for text on inactive components,
+   * etc
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F foregroundColorInactive()
+  {
+    return new VectorI3F(0.44f, 0.52f, 0.58f);
   }
 }

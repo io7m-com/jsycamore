@@ -143,7 +143,7 @@ public final class SyThemeStride
     theme_titlebar_b.setButtonPadding(SyThemePadding.of(3, 3, 0, 0));
     theme_titlebar_b.setButtonHeight(15);
     theme_titlebar_b.setButtonWidth(15);
-    theme_titlebar_b.setButtonTheme(SyThemeStride.createThemeButton(
+    theme_titlebar_b.setButtonTheme(SyThemeStride.createThemeTitlebarButton(
       spec,
       background,
       background_lighter,
@@ -224,7 +224,9 @@ public final class SyThemeStride
     theme.setPanelTheme(
       SyThemeStride.createThemePanel(background, background_darker));
     theme.setLabelTheme(
-      SyThemeStride.createThemeLabel(spec.foregroundColor()));
+      SyThemeStride.createThemeLabel(
+        spec.foregroundColorActive(),
+        spec.foregroundColorInactive()));
     theme.setImageTheme(
       SyThemeStride.createThemeImage(background_darker));
     return theme;
@@ -351,11 +353,13 @@ public final class SyThemeStride
     return b.build();
   }
 
-  private static SyThemeLabelType createThemeLabel(final VectorI3F foreground)
+  private static SyThemeLabelType createThemeLabel(
+    final VectorI3F foreground_active,
+    final VectorI3F foreground_inactive)
   {
     final SyThemeLabel.Builder b = SyThemeLabel.builder();
-    b.setTextColorActive(foreground);
-    b.setTextColorInactive(foreground);
+    b.setTextColorActive(foreground_active);
+    b.setTextColorInactive(foreground_inactive);
     b.setTextFont("Sans 10");
     return b.build();
   }
@@ -397,7 +401,7 @@ public final class SyThemeStride
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true, true, true, true,
-        spec.foregroundColor(),
+        spec.foregroundColorActive(),
         background_darker,
         true));
     }
@@ -412,6 +416,65 @@ public final class SyThemeStride
     ));
 
     theme_button_b.setColorInactive(background);
+
+    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      background_lighter_lighter,
+      background,
+      background_lighter_lighter,
+      background,
+      emboss
+    ));
+
+    theme_button_b.setColorPressed(background);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      emboss
+    ));
+
+    return theme_button_b.build();
+  }
+
+  private static SyThemeButtonType createThemeTitlebarButton(
+    final SyThemeStrideSpecificationType spec,
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker,
+    final int emboss,
+    final boolean outline)
+  {
+    final SyThemeButton.Builder theme_button_b =
+      SyThemeButton.builder();
+
+    if (outline) {
+      theme_button_b.setOutline(SyThemeOutline.of(
+        true, true, true, true,
+        spec.foregroundColorActive(),
+        background_darker,
+        true));
+    }
+
+    theme_button_b.setColorActive(background);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      emboss
+    ));
+
+    theme_button_b.setColorInactive(background);
+    theme_button_b.setEmbossInactive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      emboss
+    ));
 
     theme_button_b.setColorOver(background_lighter);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
