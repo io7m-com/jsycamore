@@ -114,7 +114,7 @@ public interface SyThemeStrideSpecificationType
   @Value.Default
   default float colorLightFactor()
   {
-    return 1.6f;
+    return 3.0f;
   }
 
   /**
