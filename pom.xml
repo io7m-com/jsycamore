@@ -92,9 +92,9 @@
         <version>[1.0.0, 2.0.0)</version>
       </dependency>
       <dependency>
-        <groupId>com.io7m.jareas</groupId>
-        <artifactId>io7m-jareas-core</artifactId>
-        <version>0.2.0</version>
+        <groupId>com.io7m.jranges</groupId>
+        <artifactId>io7m-jranges-core</artifactId>
+        <version>[2.0.1, 3.0.0)</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jorchard</groupId>
@@ -116,11 +116,6 @@
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
         <version>2.2.6</version>
-      </dependency>
-      <dependency>
-        <groupId>it.unimi.dsi</groupId>
-        <artifactId>fastutil</artifactId>
-        <version>7.0.12</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>

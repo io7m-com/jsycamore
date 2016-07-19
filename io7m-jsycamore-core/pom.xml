@@ -33,8 +33,8 @@
       <artifactId>io7m-junreachable-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.io7m.jareas</groupId>
-      <artifactId>io7m-jareas-core</artifactId>
+      <groupId>com.io7m.jranges</groupId>
+      <artifactId>io7m-jranges-core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.io7m.jorchard</groupId>
@@ -45,10 +45,6 @@
       <artifactId>io7m-jtensors-core</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>it.unimi.dsi</groupId>
-      <artifactId>fastutil</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
