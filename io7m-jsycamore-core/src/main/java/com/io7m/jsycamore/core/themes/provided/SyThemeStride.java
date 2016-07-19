@@ -150,7 +150,7 @@ public final class SyThemeStride
       background_lighter_lighter,
       background_darker,
       1,
-      false));
+      true));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeStride::elementOrder);
     theme_titlebar_b.setHeight(21);

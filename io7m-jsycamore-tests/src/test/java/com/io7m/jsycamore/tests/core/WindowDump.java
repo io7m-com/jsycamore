@@ -50,10 +50,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -72,7 +70,7 @@ public final class WindowDump
     themes.add(SyThemeMotive.builder().build());
     themes.add(SyThemeBee.builder().build());
     themes.add(SyThemeStride.builder().build());
-    Collections.shuffle(themes, new Random());
+    // Collections.shuffle(themes, new Random());
 
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer;
     final SyWindowRendererType<BufferedImage, BufferedImage> window_renderer;
@@ -169,6 +167,7 @@ public final class WindowDump
     final SyTheme theme)
   {
     final SyWindowType w = gui.windowCreate(320, 240, "Main");
+    w.setTheme(Optional.of(theme));
 
     final SyWindowContentPaneType content = w.contentPane();
     {
@@ -181,7 +180,6 @@ public final class WindowDump
       content.node().childAdd(c.node());
     }
 
-    w.setTheme(Optional.of(theme));
     return w;
   }
 }

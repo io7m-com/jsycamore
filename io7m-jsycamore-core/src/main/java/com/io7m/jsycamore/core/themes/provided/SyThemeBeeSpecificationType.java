@@ -83,6 +83,10 @@ public interface SyThemeBeeSpecificationType
     return new VectorI3F(0.8f, 0.8f, 0.8f);
   }
 
+  default float colorLightDegrees() { return 10.0f; }
+
+  default float colorDarkDegrees() { return -10.0f; }
+
   /**
    * @return The factor by which to scale the active color to produce the light
    * shade for embossing

@@ -25,6 +25,7 @@ import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.themes.SyColors;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
@@ -86,10 +87,11 @@ public final class SyThemeBee
     final VectorI3F background_darker =
       VectorI3F.scale(background, spec.colorDarkFactor());
 
+
     final VectorI3F title_color_active_lighter =
-      VectorI3F.scale(spec.titlebarColorActive(), spec.colorLightFactor());
+      SyColors.rotate(spec.titlebarColorActive(), spec.colorLightDegrees());
     final VectorI3F title_color_active_darker =
-      VectorI3F.scale(spec.titlebarColorActive(), spec.colorDarkFactor());
+      SyColors.rotate(spec.titlebarColorActive(), spec.colorDarkDegrees());
 
     final VectorI3F frame_color_lighter =
       VectorI3F.scale(spec.frameColor(), spec.colorLightFactor());
@@ -99,9 +101,9 @@ public final class SyThemeBee
     final VectorI3F title_color_inactive_base =
       spec.titlebarColorInactive();
     final VectorI3F color_inactive_lighter =
-      VectorI3F.scale(title_color_inactive_base, spec.colorLightFactor());
+      SyColors.rotate(title_color_inactive_base, spec.colorLightDegrees());
     final VectorI3F color_inactive_darker =
-      VectorI3F.scale(title_color_inactive_base, spec.colorDarkFactor());
+      SyColors.rotate(title_color_inactive_base, spec.colorDarkDegrees());
 
     final VectorI3F text_color_active =
       spec.titlebarTextColorActive();
@@ -408,7 +410,7 @@ public final class SyThemeBee
       SyThemeButton.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
-      true, false, true, true,
+      true, true, true, true,
       spec.foregroundColor(),
       background_darker,
       true));
