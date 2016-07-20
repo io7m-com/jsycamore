@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SyMouseButton;
@@ -29,14 +30,77 @@ import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.jtensors.parameterized.PVectorI2I;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class SyImageContract
+public abstract class SyImageContract extends SyComponentContract
 {
+  @Override
   protected abstract SyImageType create();
+
+  @Test
+  public void testWindowlessTheme()
+  {
+    final SyImageType c = this.create();
+
+    this.expected.expect(IllegalStateException.class);
+    c.theme();
+  }
+
+  @Test
+  public final void testMatch()
+  {
+    final SyImageType image = this.create();
+    final AtomicBoolean called = new AtomicBoolean(false);
+
+    image.matchComponent(
+      this,
+      (x, button) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, panel) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, b_image) -> {
+        called.set(true);
+        return Unit.unit();
+      });
+
+    Assert.assertTrue(called.get());
+  }
+
+  @Test
+  public final void testMatchReadable()
+  {
+    final SyImageType image = this.create();
+    final AtomicBoolean called = new AtomicBoolean(false);
+
+    image.matchComponentReadable(
+      this,
+      (x, button) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, panel) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, b_image) -> {
+        called.set(true);
+        return Unit.unit();
+
+      });
+
+    Assert.assertTrue(called.get());
+  }
 
   @Test
   public final void testIdentities()

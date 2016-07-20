@@ -19,23 +19,35 @@ package com.io7m.jsycamore.tests.core.components;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class SyLabelContract extends SyComponentContract
+public abstract class SyPanelContract extends SyComponentContract
 {
   @Override
-  protected abstract SyLabelType create();
+  protected abstract SyPanelType create();
+
+  @Test
+  public void testTransparency()
+  {
+    final SyPanelType c = this.create();
+
+    Assert.assertFalse(c.isPanelTransparent());
+    c.setPanelTransparent(true);
+    Assert.assertTrue(c.isPanelTransparent());
+    c.setPanelTransparent(false);
+    Assert.assertFalse(c.isPanelTransparent());
+  }
 
   @Test
   public void testWindowlessTheme()
   {
-    final SyLabelType c = this.create();
+    final SyPanelType c = this.create();
 
     this.expected.expect(IllegalStateException.class);
     c.theme();
@@ -44,20 +56,20 @@ public abstract class SyLabelContract extends SyComponentContract
   @Test
   public final void testMatch()
   {
-    final SyLabelType label = this.create();
+    final SyPanelType panel = this.create();
     final AtomicBoolean called = new AtomicBoolean(false);
 
-    label.matchComponent(
+    panel.matchComponent(
       this,
       (x, button) -> {
         throw new UnreachableCodeException();
       },
-      (x, panel) -> {
-        throw new UnreachableCodeException();
-      },
-      (x, b_label) -> {
+      (x, b_panel) -> {
         called.set(true);
         return Unit.unit();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
       },
       (x, image) -> {
         throw new UnreachableCodeException();
@@ -69,41 +81,25 @@ public abstract class SyLabelContract extends SyComponentContract
   @Test
   public final void testMatchReadable()
   {
-    final SyLabelType label = this.create();
+    final SyPanelType panel = this.create();
     final AtomicBoolean called = new AtomicBoolean(false);
 
-    label.matchComponentReadable(
+    panel.matchComponentReadable(
       this,
       (x, button) -> {
         throw new UnreachableCodeException();
       },
-      (x, panel) -> {
-        throw new UnreachableCodeException();
-      },
-      (x, b_label) -> {
+      (x, b_panel) -> {
         called.set(true);
         return Unit.unit();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
       },
       (x, image) -> {
         throw new UnreachableCodeException();
       });
 
     Assert.assertTrue(called.get());
-  }
-
-  @Test
-  public final void testIdentities()
-  {
-    final SyLabelType label = this.create();
-
-    for (final SyAlignmentHorizontal a : SyAlignmentHorizontal.values()) {
-      label.setTextAlignmentHorizontal(a);
-      Assert.assertEquals(a, label.textAlignmentHorizontal());
-    }
-
-    for (final SyAlignmentVertical a : SyAlignmentVertical.values()) {
-      label.setTextAlignmentVertical(a);
-      Assert.assertEquals(a, label.textAlignmentVertical());
-    }
   }
 }

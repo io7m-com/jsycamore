@@ -96,10 +96,28 @@ public abstract class SyWindowViewportAccumulatorContract
   }
 
   @Test
+  public final void testRestoreEmpty()
+  {
+    final SyWindowViewportAccumulatorType c = this.create();
+    c.reset(1000, 500);
+    Assert.assertEquals(0L, (long) c.minimumX());
+    Assert.assertEquals(0L, (long) c.minimumY());
+    Assert.assertEquals(1000L, (long) c.maximumX());
+    Assert.assertEquals(500L, (long) c.maximumY());
+
+    c.restore();
+    Assert.assertEquals(0L, (long) c.minimumX());
+    Assert.assertEquals(0L, (long) c.minimumY());
+    Assert.assertEquals(1000L, (long) c.maximumX());
+    Assert.assertEquals(500L, (long) c.maximumY());
+  }
+
+  @Test
   public final void testAccumulate()
   {
     final SyWindowViewportAccumulatorType c = this.create();
     c.reset(1000, 500);
+    final String previous = c.toString();
 
     {
       final long width = (long) (c.maximumX() - c.minimumX());
@@ -110,6 +128,7 @@ public abstract class SyWindowViewportAccumulatorContract
       Assert.assertEquals(500L, (long) c.maximumY());
       Assert.assertEquals(1000L, width);
       Assert.assertEquals(500L, height);
+      Assert.assertEquals(previous, c.toString());
     }
 
     {
@@ -122,6 +141,7 @@ public abstract class SyWindowViewportAccumulatorContract
       Assert.assertEquals(45L, (long) c.maximumY());
       Assert.assertEquals(20L, width);
       Assert.assertEquals(30L, height);
+      Assert.assertNotEquals(previous, c.toString());
     }
 
     {
@@ -134,6 +154,7 @@ public abstract class SyWindowViewportAccumulatorContract
       Assert.assertEquals(35L, (long) c.maximumY());
       Assert.assertEquals(10L, width);
       Assert.assertEquals(20L, height);
+      Assert.assertNotEquals(previous, c.toString());
     }
 
     {
@@ -146,6 +167,7 @@ public abstract class SyWindowViewportAccumulatorContract
       Assert.assertEquals(45L, (long) c.maximumY());
       Assert.assertEquals(20L, width);
       Assert.assertEquals(30L, height);
+      Assert.assertNotEquals(previous, c.toString());
     }
 
     {
@@ -158,6 +180,7 @@ public abstract class SyWindowViewportAccumulatorContract
       Assert.assertEquals(500L, (long) c.maximumY());
       Assert.assertEquals(1000L, width);
       Assert.assertEquals(500L, height);
+      Assert.assertEquals(previous, c.toString());
     }
   }
 }

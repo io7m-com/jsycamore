@@ -16,21 +16,85 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButtonListenerType;
 import com.io7m.jsycamore.core.components.SyButtonState;
 import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jtensors.parameterized.PVectorI2I;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class SyButtonContract
+public abstract class SyButtonContract extends SyComponentContract
 {
+  @Override
   protected abstract SyButtonType create();
+
+  @Test
+  public void testWindowlessTheme()
+  {
+    final SyButtonType c = this.create();
+
+    this.expected.expect(IllegalStateException.class);
+    c.theme();
+  }
+
+  @Test
+  public final void testMatch()
+  {
+    final SyButtonType button = this.create();
+    final AtomicBoolean called = new AtomicBoolean(false);
+
+    button.matchComponent(
+      this,
+      (x, b_button) -> {
+        called.set(true);
+        return Unit.unit();
+      },
+      (x, panel) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, image) -> {
+        throw new UnreachableCodeException();
+      });
+
+    Assert.assertTrue(called.get());
+  }
+
+  @Test
+  public final void testMatchReadable()
+  {
+    final SyButtonType button = this.create();
+    final AtomicBoolean called = new AtomicBoolean(false);
+
+    button.matchComponentReadable(
+      this,
+      (x, b_button) -> {
+        called.set(true);
+        return Unit.unit();
+      },
+      (x, panel) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, label) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, image) -> {
+        throw new UnreachableCodeException();
+      });
+
+    Assert.assertTrue(called.get());
+  }
 
   @Test
   public final void testOver()
