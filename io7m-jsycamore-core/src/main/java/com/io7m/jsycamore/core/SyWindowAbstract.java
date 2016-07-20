@@ -69,9 +69,11 @@ import java.util.Optional;
 public abstract class SyWindowAbstract implements SyWindowType
 {
   private static final Logger LOG;
+  private static final Logger LOG_FOCUS;
 
   static {
     LOG = LoggerFactory.getLogger(SyWindowAbstract.class);
+    LOG_FOCUS = LoggerFactory.getLogger(SyWindowAbstract.LOG.getName() + ".focus");
   }
 
   private final SyGUIType gui;
@@ -293,12 +295,14 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void onWindowGainsFocus()
   {
+    SyWindowAbstract.LOG_FOCUS.trace("focus gained: {}", this);
     this.root.titlebar.setActive(SyActive.ACTIVE);
   }
 
   @Override
   public final void onWindowLosesFocus()
   {
+    SyWindowAbstract.LOG_FOCUS.trace("focus lost: {}", this);
     this.root.titlebar.setActive(SyActive.INACTIVE);
   }
 
@@ -352,9 +356,9 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.recalculateBoundsRefresh();
   }
 
-  private final class TitlebarText extends SyLabelAbstract
+  private final class TitleBarText extends SyLabelAbstract
   {
-    TitlebarText()
+    TitleBarText()
     {
       super(() -> {
         SyWindowAbstract.LOG.debug("refusing to detach titleBar text");
@@ -367,23 +371,35 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       return SyWindowAbstract.this.theme().windowTheme().titleBar().textTheme();
     }
+
+    @Override
+    public String toString()
+    {
+      return this.toNamedString("TitleBarText");
+    }
   }
 
-  private final class TitlebarIcon extends SyPanelAbstract implements
+  private final class TitleBarIcon extends SyPanelAbstract implements
     SyPanelType
   {
-    private Optional<TitlebarIconImage> image;
+    private Optional<TitleBarIconImage> image;
 
-    TitlebarIcon()
+    TitleBarIcon()
     {
       super(
         () -> {
-          SyWindowAbstract.LOG.debug("refusing to detach title bar icon");
+          SyWindowAbstract.LOG.warn("refusing to detach title bar icon");
           return false;
         });
 
       this.setPanelTransparent(true);
       this.image = Optional.empty();
+    }
+
+    @Override
+    public String toString()
+    {
+      return this.toNamedString("TitleBarIcon");
     }
 
     @Override
@@ -403,7 +419,7 @@ public abstract class SyWindowAbstract implements SyWindowType
 
       if (in_icon.isPresent()) {
         final SyImageSpecificationType icon = in_icon.get();
-        final SyImageType i = new TitlebarIconImage(icon);
+        final SyImageType i = new TitleBarIconImage(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
         i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
@@ -411,10 +427,10 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
     }
 
-    private final class TitlebarIconImage extends SyImageAbstract implements
+    private final class TitleBarIconImage extends SyImageAbstract implements
       SyImageType
     {
-      TitlebarIconImage(
+      TitleBarIconImage(
         final SyImageSpecificationType in_image)
       {
         super(in_image, () -> true);
@@ -426,34 +442,40 @@ public abstract class SyWindowAbstract implements SyWindowType
         final SyThemeType theme = SyWindowAbstract.this.theme();
         return theme.windowTheme().titleBar().iconTheme();
       }
+
+      @Override
+      public String toString()
+      {
+        return this.toNamedString("TitleBarIconImage");
+      }
     }
   }
 
-  private final class Titlebar extends SyPanelAbstract implements
+  private final class TitleBar extends SyPanelAbstract implements
     SyWindowTitleBarType
   {
     private final PVectorM2I<SySpaceViewportType> window_drag_start;
-    private final TitlebarCloseButton close_button;
-    private final TitlebarText text;
-    private final TitlebarMaximizeButton maximize_button;
-    private final TitlebarIcon icon;
+    private final TitleBarCloseButton close_button;
+    private final TitleBarText text;
+    private final TitleBarMaximizeButton maximize_button;
+    private final TitleBarIcon icon;
 
-    Titlebar(final String in_text)
+    TitleBar(final String in_text)
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach title bar");
+        SyWindowAbstract.LOG.warn("refusing to detach title bar");
         return false;
       });
 
       NullCheck.notNull(in_text);
 
-      this.text = new TitlebarText();
+      this.text = new TitleBarText();
       this.text.setText(in_text);
       this.node().childAdd(this.text.node());
 
-      this.icon = new TitlebarIcon();
-      this.maximize_button = new TitlebarMaximizeButton();
-      this.close_button = new TitlebarCloseButton();
+      this.icon = new TitleBarIcon();
+      this.maximize_button = new TitleBarMaximizeButton();
+      this.close_button = new TitleBarCloseButton();
       this.node().childAdd(this.icon.node());
       this.node().childAdd(this.close_button.node());
       this.node().childAdd(this.maximize_button.node());
@@ -487,7 +509,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     public String toString()
     {
       final StringBuilder sb = new StringBuilder(128);
-      sb.append("[Titlebar 0x");
+      sb.append("[TitleBar 0x");
       sb.append(Integer.toHexString(this.hashCode()));
       sb.append(" \"");
       sb.append(this.text.text());
@@ -621,13 +643,13 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitlebarCloseButton extends SyButtonAbstract implements
+  private final class TitleBarCloseButton extends SyButtonAbstract implements
     SyWindowCloseBoxType
   {
-    TitlebarCloseButton()
+    TitleBarCloseButton()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach close box");
+        SyWindowAbstract.LOG.warn("refusing to detach close box");
         return false;
       });
     }
@@ -637,16 +659,22 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       final SyThemeType theme = SyWindowAbstract.this.theme();
       return theme.windowTheme().titleBar().buttonTheme();
+    }
+
+    @Override
+    public String toString()
+    {
+      return this.toNamedString("TitleBarCloseButton");
     }
   }
 
-  private final class TitlebarMaximizeButton extends SyButtonAbstract implements
+  private final class TitleBarMaximizeButton extends SyButtonAbstract implements
     SyWindowCloseBoxType
   {
-    TitlebarMaximizeButton()
+    TitleBarMaximizeButton()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach maximize button");
+        SyWindowAbstract.LOG.warn("refusing to detach maximize button");
         return false;
       });
     }
@@ -656,6 +684,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       final SyThemeType theme = SyWindowAbstract.this.theme();
       return theme.windowTheme().titleBar().buttonTheme();
+    }
+
+    @Override
+    public String toString()
+    {
+      return this.toNamedString("TitleBarMaximizeButton");
     }
   }
 
@@ -665,7 +699,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     ContentPane()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach content pane");
+        SyWindowAbstract.LOG.warn("refusing to detach content pane");
         return false;
       });
 
@@ -693,7 +727,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     Frame()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach frame");
+        SyWindowAbstract.LOG.warn("refusing to detach frame");
         return false;
       });
 
@@ -727,21 +761,21 @@ public abstract class SyWindowAbstract implements SyWindowType
 
   private final class WindowRoot extends SyPanelAbstract
   {
-    private final Titlebar titlebar;
+    private final TitleBar titlebar;
     private final Frame frame;
     private final ContentPane content_pane;
 
     WindowRoot(final String in_text)
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach window root");
+        SyWindowAbstract.LOG.warn("refusing to detach window root");
         return false;
       });
 
       this.setWindow(Optional.of(SyWindowAbstract.this));
       this.setSelectable(false);
 
-      this.titlebar = new Titlebar(in_text);
+      this.titlebar = new TitleBar(in_text);
       this.frame = new Frame();
       this.content_pane = new ContentPane();
 

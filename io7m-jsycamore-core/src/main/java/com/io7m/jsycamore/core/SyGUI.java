@@ -47,9 +47,11 @@ import java.util.Set;
 public final class SyGUI implements SyGUIType
 {
   private static final Logger LOG;
+  private static final Logger LOG_MOUSE;
 
   static {
     LOG = LoggerFactory.getLogger(SyGUI.class);
+    LOG_MOUSE = LoggerFactory.getLogger(LOG.getName() + ".mouse");
   }
 
   private final SyTextMeasurementType text_measurement;
@@ -123,15 +125,38 @@ public final class SyGUI implements SyGUIType
     NullCheck.notNull(title);
 
     final SyWindowType w = new Window(width, height, title);
+    this.windows_open.add(w);
+    this.windows_open_order.add(w);
+    this.windowFocusActual(w);
+    return w;
+  }
+
+  private void windowFocusActual(final SyWindowType window)
+  {
+    SyGUI.LOG.debug("windowFocusActual: {}", window);
+
+    Assertive.require(
+      this.windows_open.contains(window),
+      "The window must be open to receive focus");
+    Assertive.require(
+      !this.windows_closed.contains(window),
+      "The window must not be both open and closed");
+
+    final int index = this.windows_open_order.indexOf(window);
+    Assertive.require(
+      index >= 0,
+      "The window must be present in the ordered window list");
+
     if (!this.windows_open_order.isEmpty()) {
       final SyWindowType current = this.windows_open_order.get(0);
-      current.onWindowLosesFocus();
+      if (!Objects.equals(current, window)) {
+        current.onWindowLosesFocus();
+      }
     }
 
-    this.windows_open.add(w);
-    this.windows_open_order.add(0, w);
-    w.onWindowGainsFocus();
-    return w;
+    this.windows_open_order.remove(index);
+    this.windows_open_order.add(0, window);
+    window.onWindowGainsFocus();
   }
 
   @Override
@@ -279,19 +304,19 @@ public final class SyGUI implements SyGUIType
         if (this.component_over.isPresent()) {
           final SyComponentType previous = this.component_over.get();
           if (!Objects.equals(previous, current)) {
-            SyGUI.LOG.trace("onMouseNoLongerOver: {}", previous);
+            SyGUI.LOG_MOUSE.trace("onMouseNoLongerOver: {}", previous);
             previous.onMouseNoLongerOver();
             this.component_over = Optional.empty();
           }
         }
 
-        SyGUI.LOG.trace("onMouseOver: {}", current);
+        SyGUI.LOG_MOUSE.trace("onMouseOver: {}", current);
         this.component_over = component_opt;
         current.onMouseOver(position, current);
       } else {
         if (this.component_over.isPresent()) {
           final SyComponentType previous = this.component_over.get();
-          SyGUI.LOG.trace("onMouseNoLongerOver: {}", previous);
+          SyGUI.LOG_MOUSE.trace("onMouseNoLongerOver: {}", previous);
           previous.onMouseNoLongerOver();
           this.component_over = Optional.empty();
         }
@@ -350,7 +375,7 @@ public final class SyGUI implements SyGUIType
         state.component_clicked_last = component_opt;
         PVectorM2I.copy(position, state.position_clicked_last);
 
-        SyGUI.LOG.trace("onMousePressed: {}", component);
+        SyGUI.LOG_MOUSE.trace("onMousePressed: {}", component);
         component.onMousePressed(position, button, component);
         return state.component_clicked_last;
       }
@@ -375,26 +400,6 @@ public final class SyGUI implements SyGUIType
     }
 
     return state;
-  }
-
-  private void windowFocusActual(final SyWindowType window)
-  {
-    SyGUI.LOG.debug("windowFocusActual: {}", window);
-
-    Assertive.require(
-      this.windows_open.contains(window),
-      "The window must be open to receive focus");
-    Assertive.require(
-      !this.windows_closed.contains(window),
-      "The window must not be both open and closed");
-
-    final int index = this.windows_open_order.indexOf(window);
-    Assertive.require(
-      index >= 0,
-      "The window must be present in the ordered window list");
-
-    this.windows_open_order.remove(index);
-    this.windows_open_order.add(0, window);
   }
 
   private Optional<SyComponentType> componentForPosition(
@@ -443,7 +448,7 @@ public final class SyGUI implements SyGUIType
 
     switch (state.state) {
       case MOUSE_STATE_UP: {
-        SyGUI.LOG.error("mouse button {} is already up", button);
+        SyGUI.LOG_MOUSE.error("mouse button {} is already up", button);
         break;
       }
       case MOUSE_STATE_DOWN: {
@@ -458,10 +463,10 @@ public final class SyGUI implements SyGUIType
             final PVectorWritable2IType<SySpaceWindowRelativeType> w_position =
               new PVectorM2I<>();
             window.transformViewportRelative(position, w_position);
-            SyGUI.LOG.trace("onMouseReleased: {}", component);
+            SyGUI.LOG_MOUSE.trace("onMouseReleased: {}", component);
             component.onMouseReleased(position, button, component);
           } else {
-            SyGUI.LOG.error("onMouseReleased: {} has no window", component);
+            SyGUI.LOG_MOUSE.error("onMouseReleased: {} has no window", component);
           }
         }
 

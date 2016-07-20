@@ -50,9 +50,11 @@ import java.util.function.BooleanSupplier;
 public abstract class SyComponentAbstract implements SyComponentType
 {
   private static final Logger LOG;
+  private static final Logger LOG_RESIZE;
 
   static {
     LOG = LoggerFactory.getLogger(SyComponentAbstract.class);
+    LOG_RESIZE = LoggerFactory.getLogger(LOG.getName() + ".resize");
   }
 
   private final JOTreeNodeType<SyComponentType> node;
@@ -455,8 +457,8 @@ public abstract class SyComponentAbstract implements SyComponentType
       delta_x != 0 || delta_y != 0;
 
     try {
-      if (SyComponentAbstract.LOG.isTraceEnabled()) {
-        SyComponentAbstract.LOG.trace(
+      if (SyComponentAbstract.LOG_RESIZE.isTraceEnabled()) {
+        SyComponentAbstract.LOG_RESIZE.trace(
           "resized: ({}) {} ({}, {})",
           this,
           this.box,

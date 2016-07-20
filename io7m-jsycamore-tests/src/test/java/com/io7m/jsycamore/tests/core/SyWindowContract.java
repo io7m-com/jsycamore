@@ -187,4 +187,22 @@ public abstract class SyWindowContract
 
     Assert.assertEquals((long) all.size(), caught);
   }
+
+  @Test
+  public final void testOnFocus()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+    final SyWindowTitleBarType tb = w.titleBar();
+
+    Assert.assertTrue(tb.isActive());
+    Assert.assertTrue(tb.isVisible());
+
+    w.onWindowLosesFocus();
+    Assert.assertFalse(tb.isActive());
+    Assert.assertTrue(tb.isVisible());
+
+    w.onWindowGainsFocus();
+    Assert.assertTrue(tb.isActive());
+    Assert.assertTrue(tb.isVisible());
+  }
 }

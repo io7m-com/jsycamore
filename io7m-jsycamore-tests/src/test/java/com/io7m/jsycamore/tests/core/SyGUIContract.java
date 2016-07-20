@@ -24,14 +24,17 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
+import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 import com.io7m.jtensors.parameterized.PVectorI2I;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -145,6 +148,34 @@ public abstract class SyGUIContract
     Assert.assertTrue(w1.focused());
     Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
+  }
+
+  @Test
+  public final void testWindowFocusMulti()
+  {
+    final SyGUIType g =
+      this.createWithTheme("main", SyThemeStride.builder().build());
+
+    final SyWindowType w0 = g.windowCreate(320, 240, "Window 0");
+    final SyWindowType w1 = g.windowCreate(320, 240, "Window 1");
+    w1.setBox(SyBoxes.create(320, 0, 320, 240));
+
+    Assert.assertFalse(w0.focused());
+    Assert.assertTrue(w1.focused());
+
+    {
+      g.onMouseDown(
+        new PVectorI2I<>(2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
+      Assert.assertTrue(w0.focused());
+      Assert.assertFalse(w1.focused());
+    }
+
+    {
+      g.onMouseDown(
+        new PVectorI2I<>(320 + 2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
+      Assert.assertTrue(w1.focused());
+      Assert.assertFalse(w0.focused());
+    }
   }
 
   @Test
