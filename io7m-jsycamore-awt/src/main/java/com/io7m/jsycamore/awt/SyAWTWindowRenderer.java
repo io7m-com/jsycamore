@@ -110,7 +110,7 @@ public final class SyAWTWindowRenderer implements
     final Shape old_clip = graphics.getClip();
 
     try {
-      if (window.focused()) {
+      if (window.isFocused()) {
         this.renderFrameActive(graphics, window);
       } else {
         this.renderFrameInactive(graphics, window);

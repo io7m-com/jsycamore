@@ -76,4 +76,6 @@ public interface SyWindowType extends SyWindowEventsType,
    */
 
   SyWindowViewportAccumulatorType viewportAccumulator();
+
+
 }

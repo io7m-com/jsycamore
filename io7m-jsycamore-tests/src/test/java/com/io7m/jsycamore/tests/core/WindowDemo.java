@@ -198,6 +198,14 @@ public final class WindowDemo
         SwingUtilities.invokeLater(() -> {
           Collections.shuffle(this.themes, this.random);
           this.gui.setTheme(this.themes.get(0));
+
+          if (!this.window0.isOpen()) {
+            this.gui.windowOpen(this.window0);
+          }
+          if (!this.window1.isOpen()) {
+            this.gui.windowOpen(this.window1);
+          }
+
           this.repaint();
         });
       }, 3L, 3L, TimeUnit.SECONDS);

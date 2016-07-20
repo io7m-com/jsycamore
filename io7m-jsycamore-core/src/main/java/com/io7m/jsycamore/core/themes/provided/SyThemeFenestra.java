@@ -322,7 +322,7 @@ public final class SyThemeFenestra
     final int frame_bottom = frame_theme.bottomHeight();
 
     final int emboss_size =
-      (window.focused() ? frame_theme.embossActive() : frame_theme.embossInactive())
+      (window.isFocused() ? frame_theme.embossActive() : frame_theme.embossInactive())
         .map(emboss -> Integer.valueOf(emboss.size()))
         .orElse(Integer.valueOf(0)).intValue();
 

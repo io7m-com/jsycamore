@@ -51,12 +51,43 @@ public interface SyGUIType extends SyGUIMouseEventsType
   /**
    * @param w A window
    *
-   * @return {@code true} iff {@code w} is currently focused
+   * @return {@code true} iff {@code w} is currently isFocused
    *
    * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
    */
 
   boolean windowIsFocused(SyWindowType w);
+
+  /**
+   * @param w A window
+   *
+   * @return {@code true} iff {@code w} is currently open
+   *
+   * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
+   */
+
+  boolean windowIsOpen(SyWindowType w);
+
+  /**
+   * Open the window. The window, once opened, has focus. If the window is
+   * already open, the window gains focus.
+   *
+   * @param w A window
+   *
+   * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
+   */
+
+  void windowOpen(SyWindowType w);
+
+  /**
+   * Close the window. If the window is already closed, this has no effect.
+   *
+   * @param w A window
+   *
+   * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
+   */
+
+  void windowClose(SyWindowType w);
 
   /**
    * Bring {@code w} to the front.

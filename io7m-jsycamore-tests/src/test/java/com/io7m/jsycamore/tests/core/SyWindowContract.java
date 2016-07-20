@@ -18,6 +18,7 @@ package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
 import com.io7m.jorchard.core.JOTreeNodeType;
+import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
@@ -68,7 +69,27 @@ public abstract class SyWindowContract
     final SyWindowTitleBarType titlebar = w.titleBar();
     Assert.assertEquals("Main 0", titlebar.text());
 
-    Assert.assertTrue(w.focused());
+    Assert.assertTrue(w.isFocused());
+  }
+
+  @Test
+  public final void testOpenClose()
+  {
+    final SyWindowType w = this.create(640, 480, "Main 0");
+    final SyGUIType g = w.gui();
+
+    Assert.assertTrue(w.isOpen());
+    Assert.assertTrue(w.isFocused());
+
+    g.windowClose(w);
+
+    Assert.assertFalse(w.isOpen());
+    Assert.assertFalse(w.isFocused());
+
+    g.windowOpen(w);
+
+    Assert.assertTrue(w.isOpen());
+    Assert.assertTrue(w.isFocused());
   }
 
   @Test

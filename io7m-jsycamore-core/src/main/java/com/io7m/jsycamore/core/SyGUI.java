@@ -131,34 +131,6 @@ public final class SyGUI implements SyGUIType
     return w;
   }
 
-  private void windowFocusActual(final SyWindowType window)
-  {
-    SyGUI.LOG.debug("windowFocusActual: {}", window);
-
-    Assertive.require(
-      this.windows_open.contains(window),
-      "The window must be open to receive focus");
-    Assertive.require(
-      !this.windows_closed.contains(window),
-      "The window must not be both open and closed");
-
-    final int index = this.windows_open_order.indexOf(window);
-    Assertive.require(
-      index >= 0,
-      "The window must be present in the ordered window list");
-
-    if (!this.windows_open_order.isEmpty()) {
-      final SyWindowType current = this.windows_open_order.get(0);
-      if (!Objects.equals(current, window)) {
-        current.onWindowLosesFocus();
-      }
-    }
-
-    this.windows_open_order.remove(index);
-    this.windows_open_order.add(0, window);
-    window.onWindowGainsFocus();
-  }
-
   @Override
   public List<SyWindowType> windowsOpenOrdered()
   {
@@ -204,10 +176,109 @@ public final class SyGUI implements SyGUIType
   }
 
   @Override
+  public boolean windowIsOpen(final SyWindowType w)
+  {
+    this.checkGUI(w);
+    return this.windows_open.contains(w);
+  }
+
+  @Override
+  public void windowOpen(final SyWindowType w)
+  {
+    this.checkGUI(w);
+
+    try {
+      this.windows_closed.remove(w);
+      this.windows_open.add(w);
+      this.windows_open_order.add(w);
+      this.windowFocusActual(w);
+    } finally {
+      this.windowCheckInvariants();
+    }
+  }
+
+  @Override
+  public void windowClose(final SyWindowType w)
+  {
+    this.checkGUI(w);
+
+    try {
+      if (this.windowIsOpen(w)) {
+        if (this.windowIsFocused(w)) {
+          w.onWindowLosesFocus();
+        }
+
+        this.windows_open.remove(w);
+        this.windows_open_order.remove(w);
+        this.windows_closed.add(w);
+        w.onWindowClosed();
+
+        if (!this.windows_open_order.isEmpty()) {
+          this.windowFocusActual(this.windows_open_order.get(0));
+        }
+      }
+    } finally {
+      this.windowCheckInvariants();
+    }
+  }
+
+  private void windowCheckInvariants()
+  {
+    for (final SyWindowType w : this.windows_open) {
+      Assertive.require(
+        this.windows_open_order.contains(w),
+        "Window order list must contain all open windows");
+      Assertive.require(
+        !this.windows_closed.contains(w),
+        "Window closed set must not contain an open window");
+    }
+
+    for (final SyWindowType w : this.windows_open_order) {
+      Assertive.require(
+        this.windows_open.contains(w),
+        "Window open set must contain all ordered windows");
+      Assertive.require(
+        !this.windows_closed.contains(w),
+        "Window closed set must not contain an open window");
+    }
+  }
+
+  private void windowFocusActual(final SyWindowType window)
+  {
+    SyGUI.LOG.debug("windowFocusActual: {}", window);
+
+    Assertive.require(
+      this.windows_open.contains(window),
+      "The window must be open to receive focus");
+    Assertive.require(
+      !this.windows_closed.contains(window),
+      "The window must not be both open and closed");
+
+    final int index = this.windows_open_order.indexOf(window);
+    Assertive.require(
+      index >= 0, "The window must be present in the ordered window list");
+
+    if (!this.windows_open_order.isEmpty()) {
+      final SyWindowType current = this.windows_open_order.get(0);
+      if (!Objects.equals(current, window)) {
+        current.onWindowLosesFocus();
+      }
+    }
+
+    this.windows_open_order.remove(index);
+    this.windows_open_order.add(0, window);
+    window.onWindowGainsFocus();
+  }
+
+  @Override
   public void windowFocus(final SyWindowType w)
   {
     this.checkGUI(w);
-    this.windowFocusActual(w);
+    try {
+      this.windowFocusActual(w);
+    } finally {
+      this.windowCheckInvariants();
+    }
   }
 
   @Override

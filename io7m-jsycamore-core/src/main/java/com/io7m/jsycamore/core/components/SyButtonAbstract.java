@@ -179,7 +179,19 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
           try {
             this.clicked();
           } finally {
+
+            /*
+             * Both "pressed" and "over" are cancelled here because if the
+             * button is moved for any reason by the result of pressing the
+             * button, there will not be a "mouse no longer" over event
+             * delivered to the button. A concrete example of this is when
+             * the button represents a window close box: The window will be
+             * closed and therefore the button will not receive any subsequent
+             * mouse events after the button is pressed.
+             */
+
             this.pressed = false;
+            this.over = false;
           }
         }
 

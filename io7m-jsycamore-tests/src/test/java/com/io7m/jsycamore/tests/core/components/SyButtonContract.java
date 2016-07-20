@@ -149,7 +149,7 @@ public abstract class SyButtonContract extends SyComponentContract
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
       Assert.assertTrue(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
 
     Assert.assertEquals(1L, (long) pressed.get());
@@ -173,7 +173,7 @@ public abstract class SyButtonContract extends SyComponentContract
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
       Assert.assertTrue(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
 
     Assert.assertEquals(1L, (long) pressed.get());

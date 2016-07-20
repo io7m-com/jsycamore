@@ -244,9 +244,15 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public final boolean focused()
+  public final boolean isFocused()
   {
     return this.gui.windowIsFocused(this);
+  }
+
+  @Override
+  public final boolean isOpen()
+  {
+    return this.gui.windowIsOpen(this);
   }
 
   private boolean isInBoundsWindowRelative(
@@ -305,6 +311,12 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     SyWindowAbstract.LOG_FOCUS.trace("focus lost: {}", this);
     this.root.titlebar.setActive(SyActive.INACTIVE);
+  }
+
+  @Override
+  public final void onWindowClosed()
+  {
+    SyWindowAbstract.LOG_FOCUS.trace("closed: {}", this);
   }
 
   @Override
@@ -664,6 +676,12 @@ public abstract class SyWindowAbstract implements SyWindowType
         SyWindowAbstract.LOG.warn("refusing to detach close box");
         return false;
       });
+    }
+
+    @Override
+    protected void buttonOnClick()
+    {
+      SyWindowAbstract.this.gui.windowClose(SyWindowAbstract.this);
     }
 
     @Override

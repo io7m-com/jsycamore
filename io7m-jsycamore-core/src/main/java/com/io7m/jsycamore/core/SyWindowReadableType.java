@@ -76,7 +76,13 @@ public interface SyWindowReadableType extends SyGUIElementType
    * @return {@code true} iff the window currently has focus
    */
 
-  boolean focused();
+  boolean isFocused();
+
+  /**
+   * @return {@code true} iff the window is currently open
+   */
+
+  boolean isOpen();
 
   /**
    * Transform a viewport-relative position to window-relative form.

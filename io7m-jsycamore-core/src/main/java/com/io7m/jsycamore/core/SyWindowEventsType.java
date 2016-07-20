@@ -33,4 +33,10 @@ public interface SyWindowEventsType
    */
 
   void onWindowLosesFocus();
+
+  /**
+   * The window has been closed.
+   */
+
+  void onWindowClosed();
 }

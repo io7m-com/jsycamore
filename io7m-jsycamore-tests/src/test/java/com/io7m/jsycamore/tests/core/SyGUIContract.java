@@ -24,15 +24,14 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
+import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 import com.io7m.jtensors.parameterized.PVectorI2I;
@@ -113,7 +112,7 @@ public abstract class SyGUIContract
     Assert.assertEquals(1L, (long) windows.size());
     Assert.assertEquals(w, windows.get(0));
     Assert.assertTrue(g.windowIsFocused(w));
-    Assert.assertTrue(w.focused());
+    Assert.assertTrue(w.isFocused());
 
     final SyBoxType<SySpaceViewportType> window_box = w.box();
 
@@ -130,24 +129,97 @@ public abstract class SyGUIContract
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
     final SyWindowType w1 = g.windowCreate(640, 480, "Window 1");
 
-    Assert.assertFalse(w0.focused());
-    Assert.assertTrue(w1.focused());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isFocused());
     Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
 
     g.windowFocus(w0);
 
-    Assert.assertTrue(w0.focused());
-    Assert.assertFalse(w1.focused());
+    Assert.assertTrue(w0.isFocused());
+    Assert.assertFalse(w1.isFocused());
     Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w0));
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w1));
 
     g.windowFocus(w1);
 
-    Assert.assertFalse(w0.focused());
-    Assert.assertTrue(w1.focused());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isFocused());
     Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
     Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
+  }
+
+  @Test
+  public final void testWindowThemeChange()
+  {
+    final SyTheme theme = SyThemeFenestra.builder().build();
+    final SyThemeType theme_default = SyThemeDefault.get();
+
+    final SyGUIType g = this.create("main");
+    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
+
+    Assert.assertEquals(theme_default, g.theme());
+    Assert.assertEquals(theme_default, w0.theme());
+
+    g.setTheme(theme);
+
+    Assert.assertEquals(theme, g.theme());
+    Assert.assertEquals(theme, w0.theme());
+  }
+
+  @Test
+  public final void testWindowOpenCloseMulti()
+  {
+    final SyGUIType g = this.create("main");
+    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
+    final SyWindowType w1 = g.windowCreate(640, 480, "Main 1");
+
+    Assert.assertTrue(w0.isOpen());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isOpen());
+    Assert.assertTrue(w1.isFocused());
+
+    g.windowClose(w1);
+
+    Assert.assertTrue(w0.isOpen());
+    Assert.assertTrue(w0.isFocused());
+    Assert.assertFalse(w1.isOpen());
+    Assert.assertFalse(w1.isFocused());
+
+    g.windowOpen(w1);
+
+    Assert.assertTrue(w0.isOpen());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isOpen());
+    Assert.assertTrue(w1.isFocused());
+
+    g.windowClose(w0);
+
+    Assert.assertFalse(w0.isOpen());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isOpen());
+    Assert.assertTrue(w1.isFocused());
+
+    g.windowClose(w1);
+
+    Assert.assertFalse(w0.isOpen());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertFalse(w1.isOpen());
+    Assert.assertFalse(w1.isFocused());
+
+    g.windowOpen(w0);
+
+    Assert.assertTrue(w0.isOpen());
+    Assert.assertTrue(w0.isFocused());
+    Assert.assertFalse(w1.isOpen());
+    Assert.assertFalse(w1.isFocused());
+
+    g.windowOpen(w1);
+
+    Assert.assertTrue(w0.isOpen());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isOpen());
+    Assert.assertTrue(w1.isFocused());
   }
 
   @Test
@@ -160,21 +232,21 @@ public abstract class SyGUIContract
     final SyWindowType w1 = g.windowCreate(320, 240, "Window 1");
     w1.setBox(SyBoxes.create(320, 0, 320, 240));
 
-    Assert.assertFalse(w0.focused());
-    Assert.assertTrue(w1.focused());
+    Assert.assertFalse(w0.isFocused());
+    Assert.assertTrue(w1.isFocused());
 
     {
       g.onMouseDown(
         new PVectorI2I<>(2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(w0.focused());
-      Assert.assertFalse(w1.focused());
+      Assert.assertTrue(w0.isFocused());
+      Assert.assertFalse(w1.isFocused());
     }
 
     {
       g.onMouseDown(
         new PVectorI2I<>(320 + 2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(w1.focused());
-      Assert.assertFalse(w0.focused());
+      Assert.assertTrue(w1.isFocused());
+      Assert.assertFalse(w0.isFocused());
     }
   }
 
