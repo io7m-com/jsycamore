@@ -33,6 +33,7 @@ import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabelAbstract;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelAbstract;
+import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
@@ -419,12 +420,17 @@ public abstract class SyWindowAbstract implements SyWindowType
 
       if (in_icon.isPresent()) {
         final SyImageSpecificationType icon = in_icon.get();
-        final SyImageType i = new TitleBarIconImage(icon);
-        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
-        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
+        final TitleBarIconImage i = new TitleBarIconImage(icon);
+        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
         this.node().childAdd(i.node());
+        this.image = Optional.of(i);
       }
+
+      Assertive.ensure(
+        this.node().children().size() <= 1,
+        "Titlebar icon must not leak components");
     }
 
     private final class TitleBarIconImage extends SyImageAbstract implements
@@ -621,6 +627,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     public void setIcon(final Optional<SyImageSpecificationType> in_icon)
     {
       this.icon.setIcon(in_icon);
+    }
+
+    @Override
+    public SyPanelReadableType iconPanel()
+    {
+      return this.icon;
     }
 
     @Override

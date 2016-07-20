@@ -24,9 +24,17 @@ import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyPanelReadableType;
+import com.io7m.jsycamore.core.images.SyImageFormat;
+import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.core.images.SyImageSpecification;
+import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
+import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
+import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
+import com.io7m.jtensors.VectorI4F;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -204,5 +212,57 @@ public abstract class SyWindowContract
     w.onWindowGainsFocus();
     Assert.assertTrue(tb.isActive());
     Assert.assertTrue(tb.isVisible());
+  }
+
+  @Test
+  public final void testThemeIconCorrect()
+  {
+    final SyTheme theme_start = SyThemeMotive.builder().build();
+    final SyTheme theme_next = SyThemeFenestra.builder().build();
+
+    Assert.assertFalse(theme_start.windowTheme().titleBar().iconPresent());
+    Assert.assertTrue(theme_next.windowTheme().titleBar().iconPresent());
+
+    final SyImageSpecification icon_spec = SyImageSpecification.of(
+      "/com/io7m/jsycamore/tests/awt/paper.png",
+      16,
+      16,
+      SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+      new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+      SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST);
+
+    final SyWindowType w = this.create(640, 480, "Main 0");
+    w.setTheme(Optional.of(theme_start));
+
+    final SyWindowTitleBarType tb = w.titleBar();
+    final SyPanelReadableType icon = tb.iconPanel();
+
+    Assert.assertEquals(0L, (long) icon.nodeReadable().childrenReadable().size());
+    Assert.assertEquals(0L, (long) icon.box().width());
+    Assert.assertEquals(0L, (long) icon.box().height());
+
+    tb.setIcon(Optional.of(icon_spec));
+
+    Assert.assertEquals(1L, (long) icon.nodeReadable().childrenReadable().size());
+    Assert.assertEquals(0L, (long) icon.box().width());
+    Assert.assertEquals(0L, (long) icon.box().height());
+
+    w.setTheme(Optional.of(theme_next));
+
+    Assert.assertEquals(1L, (long) icon.nodeReadable().childrenReadable().size());
+    Assert.assertEquals(16L, (long) icon.box().width());
+    Assert.assertEquals(16L, (long) icon.box().height());
+
+    w.setTheme(Optional.of(theme_start));
+
+    Assert.assertEquals(1L, (long) icon.nodeReadable().childrenReadable().size());
+    Assert.assertEquals(0L, (long) icon.box().width());
+    Assert.assertEquals(0L, (long) icon.box().height());
+
+    tb.setIcon(Optional.empty());
+
+    Assert.assertEquals(0L, (long) icon.nodeReadable().childrenReadable().size());
+    Assert.assertEquals(0L, (long) icon.box().width());
+    Assert.assertEquals(0L, (long) icon.box().height());
   }
 }

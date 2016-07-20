@@ -52,6 +52,12 @@ public interface SyWindowTitleBarType extends SyPanelReadableType
   void setIcon(Optional<SyImageSpecificationType> icon);
 
   /**
+   * @return The icon panel
+   */
+
+  SyPanelReadableType iconPanel();
+
+  /**
    * @return Read-only access to the close button within the title bar
    */
 

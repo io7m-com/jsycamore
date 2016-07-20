@@ -108,9 +108,9 @@ public final class WindowDemo
 
       this.themes = new ArrayList<>();
       this.themes.add(SyThemeMotive.builder().build());
+      this.themes.add(SyThemeFenestra.builder().build());
       this.themes.add(SyThemeBee.builder().build());
       this.themes.add(SyThemeStride.builder().build());
-      this.themes.add(SyThemeFenestra.builder().build());
 
       final SyImageCacheResolverType resolver = specification -> {
         final InputStream stream = WindowDemo.class.getResourceAsStream(
