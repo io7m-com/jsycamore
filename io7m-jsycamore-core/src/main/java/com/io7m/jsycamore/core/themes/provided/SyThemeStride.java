@@ -242,6 +242,9 @@ public final class SyThemeStride
     final SyThemeTitleBarElement e0,
     final SyThemeTitleBarElement e1)
   {
+    NullCheck.notNull(e0, "Left");
+    NullCheck.notNull(e1, "Right");
+
     switch (e0) {
       case ELEMENT_CLOSE_BUTTON: {
         switch (e1) {
@@ -254,7 +257,7 @@ public final class SyThemeStride
           case ELEMENT_ICON:
             return 1;
         }
-        break;
+        throw new UnreachableCodeException();
       }
       case ELEMENT_MAXIMIZE_BUTTON: {
         switch (e1) {
@@ -268,7 +271,7 @@ public final class SyThemeStride
             return 1;
 
         }
-        break;
+        throw new UnreachableCodeException();
       }
       case ELEMENT_TITLE: {
         switch (e1) {
@@ -282,7 +285,7 @@ public final class SyThemeStride
             return 1;
 
         }
-        break;
+        throw new UnreachableCodeException();
       }
       case ELEMENT_ICON: {
         switch (e1) {
@@ -295,7 +298,7 @@ public final class SyThemeStride
           case ELEMENT_ICON:
             return 0;
         }
-        break;
+        throw new UnreachableCodeException();
       }
     }
 
