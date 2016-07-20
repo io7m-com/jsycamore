@@ -118,9 +118,18 @@ public final class SyThemeBee
     theme_titlebar_emboss_active_b.setColorLeft(title_color_active_lighter);
     theme_titlebar_emboss_active_b.setColorRight(title_color_active_darker);
     theme_titlebar_emboss_active_b.setColorBottom(title_color_active_darker);
-
     final SyThemeEmboss theme_titlebar_emboss_active =
       theme_titlebar_emboss_active_b.build();
+
+    final SyThemeEmboss.Builder theme_titlebar_emboss_pressed_b =
+      SyThemeEmboss.builder();
+    theme_titlebar_emboss_pressed_b.setSize(1);
+    theme_titlebar_emboss_pressed_b.setColorTop(title_color_active_darker);
+    theme_titlebar_emboss_pressed_b.setColorLeft(title_color_active_darker);
+    theme_titlebar_emboss_pressed_b.setColorRight(title_color_active_lighter);
+    theme_titlebar_emboss_pressed_b.setColorBottom(title_color_active_lighter);
+    final SyThemeEmboss theme_titlebar_emboss_pressed =
+      theme_titlebar_emboss_pressed_b.build();
 
     final SyThemeEmboss.Builder theme_titlebar_emboss_inactive_b =
       SyThemeEmboss.builder();
@@ -129,7 +138,6 @@ public final class SyThemeBee
     theme_titlebar_emboss_inactive_b.setColorLeft(color_inactive_lighter);
     theme_titlebar_emboss_inactive_b.setColorRight(color_inactive_darker);
     theme_titlebar_emboss_inactive_b.setColorBottom(color_inactive_darker);
-
     final SyThemeEmboss theme_titlebar_emboss_inactive =
       theme_titlebar_emboss_inactive_b.build();
 
@@ -140,7 +148,7 @@ public final class SyThemeBee
     final SyThemeButton.Builder theme_titlebar_button_b =
       SyThemeButton.builder();
     theme_titlebar_button_b.setColorPressed(spec.titlebarColorActive());
-    theme_titlebar_button_b.setEmbossPressed(theme_titlebar_emboss_active);
+    theme_titlebar_button_b.setEmbossPressed(theme_titlebar_emboss_pressed);
     theme_titlebar_button_b.setColorOver(spec.titlebarColorActive());
     theme_titlebar_button_b.setEmbossOver(theme_titlebar_emboss_active);
     theme_titlebar_button_b.setColorActive(spec.titlebarColorActive());
