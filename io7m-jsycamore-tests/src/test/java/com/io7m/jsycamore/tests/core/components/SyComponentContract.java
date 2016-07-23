@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
@@ -33,6 +34,8 @@ import java.util.Optional;
 
 public abstract class SyComponentContract
 {
+  protected abstract SyGUIType gui();
+
   protected abstract SyComponentType create();
 
   @Rule public ExpectedException expected = ExpectedException.none();

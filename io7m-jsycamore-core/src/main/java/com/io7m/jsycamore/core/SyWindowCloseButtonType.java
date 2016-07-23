@@ -16,13 +16,13 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.components.SyButtonReadableType;
+import com.io7m.jsycamore.core.components.SyButtonRepeatingReadableType;
 
 /**
  * The type of close buttons for windows.
  */
 
-public interface SyWindowCloseButtonType extends SyButtonReadableType
+public interface SyWindowCloseButtonType extends SyButtonRepeatingReadableType
 {
 
 }

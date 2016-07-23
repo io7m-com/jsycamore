@@ -46,9 +46,8 @@ public abstract class SyImageContract extends SyComponentContract
   public void testWindowlessTheme()
   {
     final SyImageType c = this.create();
-
-    this.expected.expect(IllegalStateException.class);
-    c.theme();
+    Assert.assertFalse(c.window().isPresent());
+    Assert.assertFalse(c.theme().isPresent());
   }
 
   @Test

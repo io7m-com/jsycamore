@@ -168,6 +168,25 @@ public abstract class SyGUIContract
   }
 
   @Test
+  public final void testWindowThemeChangeOpenClosed()
+  {
+    final SyTheme theme = SyThemeFenestra.builder().build();
+    final SyThemeType theme_default = SyThemeDefault.get();
+
+    final SyGUIType g = this.create("main");
+    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
+
+    Assert.assertEquals(theme_default, g.theme());
+    Assert.assertEquals(theme_default, w0.theme());
+
+    g.windowClose(w0);
+    g.setTheme(theme);
+
+    Assert.assertEquals(theme, g.theme());
+    Assert.assertEquals(theme, w0.theme());
+  }
+
+  @Test
   public final void testWindowOpenCloseMulti()
   {
     final SyGUIType g = this.create("main");
@@ -291,6 +310,48 @@ public abstract class SyGUIContract
       final Optional<SyComponentType> c =
         g.onMouseMoved(new PVectorI2I<>(640 + 32, 480 + 32));
       Assert.assertFalse(c.isPresent());
+    }
+  }
+
+  @Test
+  public final void testWindowMouseOverMulti()
+  {
+    final SyTheme t = SyThemeMotive.builder().build();
+    final SyGUIType g = this.createWithTheme("main", t);
+    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(320, 10));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyLabelReadableType);
+      Assert.assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(325, 10));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyLabelReadableType);
+      Assert.assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(320, 100));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
+    }
+
+    {
+      final Optional<SyComponentType> c =
+        g.onMouseMoved(new PVectorI2I<>(325, 100));
+      Assert.assertTrue(c.isPresent());
+      final SyComponentType cc = c.get();
+      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
     }
   }
 

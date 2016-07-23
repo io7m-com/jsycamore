@@ -28,7 +28,7 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyButton;
+import com.io7m.jsycamore.core.components.SyButtonRepeating;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageType;
@@ -209,7 +209,7 @@ public final class WindowDump
       content.node().childAdd(panel.node());
 
       {
-        final SyButtonType button = SyButton.create();
+        final SyButtonType button = SyButtonRepeating.create();
         button.setBox(SyBoxes.create(8, 8, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
@@ -224,7 +224,7 @@ public final class WindowDump
       }
 
       {
-        final SyButtonType button = SyButton.create();
+        final SyButtonType button = SyButtonRepeating.create();
         button.setBox(SyBoxes.create(8 + 64 + 8, 8, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);

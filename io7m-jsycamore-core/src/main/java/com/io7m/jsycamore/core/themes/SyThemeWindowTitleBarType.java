@@ -71,7 +71,7 @@ public interface SyThemeWindowTitleBarType
    */
 
   @Value.Parameter
-  SyThemeButtonType buttonTheme();
+  SyThemeButtonRepeatingType buttonTheme();
 
   /**
    * @return The padding for buttons in the title bar

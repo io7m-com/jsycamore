@@ -29,8 +29,10 @@ import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeButton;
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeating;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
@@ -223,7 +225,17 @@ public final class SyThemeFenestra
         theme_frame_b.build(),
         SyThemeFenestra::arrangeWindowComponents));
 
-    theme.setButtonTheme(SyThemeFenestra.createThemeButton(
+    theme.setButtonRepeatingTheme(SyThemeFenestra.createThemeButtonRepeating(
+      spec,
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker,
+      1,
+      true));
+
+
+    theme.setButtonCheckboxTheme(SyThemeFenestra.createThemeButtonCheckbox(
       spec,
       background,
       background_lighter,
@@ -240,6 +252,69 @@ public final class SyThemeFenestra
         spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
+  }
+
+  private static SyThemeButtonCheckboxType createThemeButtonCheckbox(
+    final SyThemeFenestraSpecificationType spec,
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker,
+    final int emboss,
+    final boolean outline)
+  {
+    final SyThemeButtonCheckbox.Builder theme_button_b =
+      SyThemeButtonCheckbox.builder();
+
+    if (outline) {
+      theme_button_b.setOutline(SyThemeOutline.of(
+        true, true, true, true,
+        spec.foregroundColorActive(),
+        background_darker,
+        true));
+    }
+
+    final VectorI3F base = new VectorI3F(1.0f, 1.0f, 1.0f);
+
+    theme_button_b.setColorActive(base);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      emboss
+    ));
+
+    theme_button_b.setColorInactive(background);
+
+    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      emboss
+    ));
+
+    theme_button_b.setColorPressed(base);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      emboss
+    ));
+
+    theme_button_b.setCheckedIcon(
+      SyImageSpecification.of(
+        "/com/io7m/jsycamore/core/themes/provided/fenestra-check.png",
+        16,
+        16,
+        SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+        SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
+
+    return theme_button_b.build();
   }
 
   private static int elementOrder(
@@ -390,7 +465,7 @@ public final class SyThemeFenestra
     return theme_panel_b.build();
   }
 
-  private static SyThemeButtonType createThemeButton(
+  private static SyThemeButtonRepeatingType createThemeButtonRepeating(
     final SyThemeFenestraSpecificationType spec,
     final VectorI3F background,
     final VectorI3F background_lighter,
@@ -399,8 +474,8 @@ public final class SyThemeFenestra
     final int emboss,
     final boolean outline)
   {
-    final SyThemeButton.Builder theme_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_button_b =
+      SyThemeButtonRepeating.builder();
 
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
@@ -442,7 +517,7 @@ public final class SyThemeFenestra
     return theme_button_b.build();
   }
 
-  private static SyThemeButtonType createThemeTitlebarButton(
+  private static SyThemeButtonRepeatingType createThemeTitlebarButton(
     final SyThemeFenestraSpecificationType spec,
     final VectorI3F background,
     final VectorI3F background_lighter,
@@ -451,8 +526,8 @@ public final class SyThemeFenestra
     final int emboss,
     final boolean outline)
   {
-    final SyThemeButton.Builder theme_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_button_b =
+      SyThemeButtonRepeating.builder();
 
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(

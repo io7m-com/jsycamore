@@ -32,7 +32,9 @@ import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyButton;
+import com.io7m.jsycamore.core.components.SyButtonRepeating;
+import com.io7m.jsycamore.core.components.SyButtonCheckbox;
+import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
@@ -273,7 +275,7 @@ public final class WindowDemo
         content.node().childAdd(panel.node());
 
         {
-          final SyButtonType button = SyButton.create();
+          final SyButtonType button = SyButtonRepeating.create();
           button.setBox(SyBoxes.create(8, 8, 64, 32));
           panel.node().childAdd(button.node());
 
@@ -284,7 +286,7 @@ public final class WindowDemo
         }
 
         {
-          final SyButtonType button = SyButton.create();
+          final SyButtonType button = SyButtonRepeating.create();
           button.setBox(SyBoxes.create(8 + 64 + 8, 8, 64, 32));
           button.setActive(SyActive.INACTIVE);
           panel.node().childAdd(button.node());
@@ -296,16 +298,28 @@ public final class WindowDemo
         }
 
         {
+          int y_index = 0;
           final int y_start = 8;
           final int y_end = y_start + (4 * (16 + 2));
           for (int y = y_start; y < y_end; y += 16 + 2) {
             final int x_start = 8 + 64 + 8 + 64 + 8;
             final int x_end = x_start + (4 * (16 + 2));
+            int x_index = 0;
             for (int x = x_start; x < x_end; x += 16 + 2) {
-              final SyButtonType button = SyButton.create();
+              final SyButtonCheckboxType button = SyButtonCheckbox.create();
               button.setBox(SyBoxes.create(x, y, 16, 16));
               panel.node().childAdd(button.node());
+
+              if (x_index % 2 == 0 && y_index % 2 == 0) {
+                button.setActive(SyActive.INACTIVE);
+              }
+              if (x_index % 3 == 0 && y_index % 3 == 0) {
+                button.setChecked(true);
+              }
+
+              ++x_index;
             }
+            ++y_index;
           }
         }
       }

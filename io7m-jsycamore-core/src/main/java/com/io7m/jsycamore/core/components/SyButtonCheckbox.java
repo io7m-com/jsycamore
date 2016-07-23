@@ -16,45 +16,41 @@
 
 package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.themes.SyThemePanelType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 /**
- * The default implementation of the {@link SyPanelType} interface.
+ * The default implementation of the {@link SyButtonCheckboxType} interface.
  */
 
-public final class SyPanel extends SyPanelAbstract
+public final class SyButtonCheckbox extends SyButtonCheckboxAbstract
 {
-  private static final Logger LOG;
-
-  static {
-    LOG = LoggerFactory.getLogger(SyPanel.class);
-  }
-
-  private SyPanel()
+  private SyButtonCheckbox()
   {
     super(() -> true);
   }
 
   /**
-   * @return A new panel
+   * @return A new button
    */
 
-  public static SyPanelType create()
+  public static SyButtonCheckboxType create()
   {
-    return new SyPanel();
+    return new SyButtonCheckbox();
   }
 
   @Override
   public String toString()
   {
     final StringBuilder sb = new StringBuilder(128);
-    sb.append("[SyPanel 0x");
+    sb.append("[SyButtonCheckbox 0x");
     sb.append(Integer.toHexString(this.hashCode()));
+    sb.append(" ");
+    sb.append(" [checked ").append(this.isChecked()).append("]");
+    sb.append(" [pressed ").append(this.isPressed()).append("]");
+    sb.append(" [over ").append(this.isOver()).append("]");
     sb.append(" ");
     sb.append(this.box().width());
     sb.append("x");
@@ -68,8 +64,8 @@ public final class SyPanel extends SyPanelAbstract
   }
 
   @Override
-  public Optional<SyThemePanelType> theme()
+  public Optional<SyThemeButtonCheckboxType> theme()
   {
-    return this.windowTheme().map(SyThemeType::panelTheme);
+    return this.windowTheme().map(SyThemeType::buttonCheckboxTheme);
   }
 }

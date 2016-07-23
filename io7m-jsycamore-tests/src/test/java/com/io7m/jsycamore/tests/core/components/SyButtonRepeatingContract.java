@@ -24,6 +24,7 @@ import com.io7m.jsycamore.core.components.SyButtonListenerType;
 import com.io7m.jsycamore.core.components.SyButtonState;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
@@ -32,7 +33,7 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class SyButtonContract extends SyComponentContract
+public abstract class SyButtonRepeatingContract extends SyComponentContract
 {
   @Override
   protected abstract SyButtonType create();
@@ -41,9 +42,8 @@ public abstract class SyButtonContract extends SyComponentContract
   public void testWindowlessTheme()
   {
     final SyButtonType c = this.create();
-
-    this.expected.expect(IllegalStateException.class);
-    c.theme();
+    Assert.assertFalse(c.window().isPresent());
+    Assert.assertFalse(c.theme().isPresent());
   }
 
   @Test

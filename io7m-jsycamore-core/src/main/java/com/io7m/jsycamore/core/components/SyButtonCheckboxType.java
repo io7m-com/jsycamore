@@ -14,25 +14,20 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+/**
+ * The type of checkboxes.
+ */
 
-public final class SyLabelTest extends SyLabelContract
+public interface SyButtonCheckboxType extends SyButtonType,
+  SyButtonCheckboxReadableType
 {
-  @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
+  /**
+   * Set whether or not the button is checked.
+   *
+   * @param checked {@code true} iff the button is checked
+   */
 
-  @Override
-  protected SyLabelType create()
-  {
-    return SyLabel.create();
-  }
+  void setChecked(boolean checked);
 }

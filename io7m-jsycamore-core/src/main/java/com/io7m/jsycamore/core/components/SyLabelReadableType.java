@@ -21,6 +21,7 @@ import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
@@ -30,10 +31,11 @@ import java.util.function.BiFunction;
 public interface SyLabelReadableType extends SyComponentReadableType
 {
   /**
-   * @return The current theme for the label
+   * @return The current theme for the label iff the component is attached to a
+   * window
    */
 
-  SyThemeLabelType theme();
+  Optional<SyThemeLabelType> theme();
 
   /**
    * @return The label text

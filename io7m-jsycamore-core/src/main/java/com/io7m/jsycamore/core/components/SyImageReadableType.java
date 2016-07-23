@@ -22,6 +22,7 @@ import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
@@ -31,10 +32,11 @@ import java.util.function.BiFunction;
 public interface SyImageReadableType extends SyComponentReadableType
 {
   /**
-   * @return The current theme for the image
+   * @return The current theme for the image iff the component is attached to a
+   * window
    */
 
-  SyThemeImageType theme();
+  Optional<SyThemeImageType> theme();
 
   /**
    * @return The image

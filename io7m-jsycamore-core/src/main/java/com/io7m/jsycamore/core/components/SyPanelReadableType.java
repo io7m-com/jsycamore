@@ -19,6 +19,7 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
@@ -31,7 +32,7 @@ public interface SyPanelReadableType extends SyComponentReadableType
    * @return The current theme for the panel
    */
 
-  SyThemePanelType theme();
+  Optional<SyThemePanelType> theme();
 
   /**
    * A panel may be made <i>transparent</i> iff it is intended to be used a

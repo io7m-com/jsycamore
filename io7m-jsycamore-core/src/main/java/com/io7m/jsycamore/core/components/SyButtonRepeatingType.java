@@ -14,25 +14,14 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+/**
+ * The type of repeating buttons.
+ */
 
-public final class SyLabelTest extends SyLabelContract
+public interface SyButtonRepeatingType extends SyButtonType,
+  SyButtonRepeatingReadableType
 {
-  @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
-
-  @Override
-  protected SyLabelType create()
-  {
-    return SyLabel.create();
-  }
+  // No extra functions
 }

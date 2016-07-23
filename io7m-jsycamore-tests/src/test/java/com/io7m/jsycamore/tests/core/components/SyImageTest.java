@@ -16,6 +16,9 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
+import com.io7m.jsycamore.core.SyGUI;
+import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.images.SyImageFormat;
@@ -25,6 +28,12 @@ import com.io7m.jtensors.VectorI4F;
 
 public final class SyImageTest extends SyImageContract
 {
+  @Override
+  protected SyGUIType gui()
+  {
+    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+  }
+
   @Override
   protected SyImageType create()
   {

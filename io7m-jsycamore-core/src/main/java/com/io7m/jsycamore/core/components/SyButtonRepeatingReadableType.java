@@ -14,16 +14,19 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.components.SyButton;
-import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 
-public final class SyButtonTest extends SyButtonContract
+import java.util.Optional;
+
+/**
+ * The type of readable repeating buttons.
+ */
+
+public interface SyButtonRepeatingReadableType extends SyButtonReadableType
 {
+  @SuppressWarnings("unchecked")
   @Override
-  protected SyButtonType create()
-  {
-    return SyButton.create();
-  }
+  Optional<SyThemeButtonRepeatingType> theme();
 }

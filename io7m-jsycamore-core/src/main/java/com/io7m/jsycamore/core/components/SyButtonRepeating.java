@@ -16,15 +16,19 @@
 
 package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+
+import java.util.Optional;
 
 /**
  * The default implementation of the {@link SyButtonType} interface.
  */
 
-public final class SyButton extends SyButtonAbstract
+public final class SyButtonRepeating extends SyButtonRepeatingAbstract implements
+  SyButtonRepeatingType
 {
-  private SyButton()
+  private SyButtonRepeating()
   {
     super(() -> true);
   }
@@ -35,14 +39,14 @@ public final class SyButton extends SyButtonAbstract
 
   public static SyButtonType create()
   {
-    return new SyButton();
+    return new SyButtonRepeating();
   }
 
   @Override
   public String toString()
   {
     final StringBuilder sb = new StringBuilder(128);
-    sb.append("[SyButton 0x");
+    sb.append("[SyButtonRepeating 0x");
     sb.append(Integer.toHexString(this.hashCode()));
     sb.append(" ");
     sb.append(" [pressed ").append(this.isPressed()).append("]");
@@ -59,9 +63,10 @@ public final class SyButton extends SyButtonAbstract
     return sb.toString();
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public SyThemeButtonType theme()
+  public Optional<SyThemeButtonRepeatingType> theme()
   {
-    return this.windowTheme().buttonTheme();
+    return this.windowTheme().map(SyThemeType::buttonRepeatingTheme);
   }
 }

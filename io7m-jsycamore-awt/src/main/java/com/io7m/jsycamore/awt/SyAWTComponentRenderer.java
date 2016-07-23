@@ -39,6 +39,7 @@ import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jtensors.VectorReadable3FType;
+import org.valid4j.Assertive;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -90,6 +91,22 @@ public final class SyAWTComponentRenderer implements
   {
     return new SyAWTComponentRenderer(
       in_image_cache, in_font_cache, in_measurement);
+  }
+
+  private static IllegalStateException notAttached(
+    final SyComponentReadableType c)
+  {
+    Assertive.require(
+      !c.windowReadable().isPresent(),
+      "Component is not attached to a window");
+
+    final StringBuilder sb = new StringBuilder(128);
+    sb.append("Cannot render a component that is not attached to a window.");
+    sb.append(System.lineSeparator());
+    sb.append("  Component: ");
+    sb.append(c);
+    sb.append(System.lineSeparator());
+    return new IllegalStateException(sb.toString());
   }
 
   @Override
@@ -190,7 +207,12 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyImageReadableType image)
   {
-    final SyThemeImageType theme = image.theme();
+    final Optional<SyThemeImageType> theme_opt = image.theme();
+    if (!theme_opt.isPresent()) {
+      throw SyAWTComponentRenderer.notAttached(image);
+    }
+
+    final SyThemeImageType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = image.box();
 
     final SyImageReferenceType<BufferedImage> ref =
@@ -237,16 +259,21 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyLabelReadableType label)
   {
-    final SyThemeLabelType label_theme = label.theme();
+    final Optional<SyThemeLabelType> theme_opt = label.theme();
+    if (!theme_opt.isPresent()) {
+      throw SyAWTComponentRenderer.notAttached(label);
+    }
+
+    final SyThemeLabelType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = label.box();
 
     if (label.isActive()) {
-      graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorActive()));
+      graphics.setPaint(SyAWTDrawing.toColor(theme.textColorActive()));
     } else {
-      graphics.setPaint(SyAWTDrawing.toColor(label_theme.textColorInactive()));
+      graphics.setPaint(SyAWTDrawing.toColor(theme.textColorInactive()));
     }
 
-    final String font = label_theme.textFont();
+    final String font = theme.textFont();
     graphics.setFont(this.font_cache.decodeFont(font));
 
     SyAWTTextRenderer.renderText(
@@ -264,11 +291,16 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyPanelReadableType panel)
   {
+    final Optional<SyThemePanelType> theme_opt = panel.theme();
+    if (!theme_opt.isPresent()) {
+      throw SyAWTComponentRenderer.notAttached(panel);
+    }
+
     if (panel.isPanelTransparent()) {
       return;
     }
 
-    final SyThemePanelType panel_theme = panel.theme();
+    final SyThemePanelType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = panel.box();
 
     final int width = box.width();
@@ -278,7 +310,7 @@ public final class SyAWTComponentRenderer implements
     final int fill_x;
     final int fill_y;
 
-    final Optional<SyThemeOutlineType> outline = panel_theme.outline();
+    final Optional<SyThemeOutlineType> outline = theme.outline();
     if (outline.isPresent()) {
       fill_x = 1;
       fill_y = 1;
@@ -294,11 +326,11 @@ public final class SyAWTComponentRenderer implements
     final Optional<SyThemeEmbossType> emboss;
     final VectorReadable3FType color;
     if (panel.isActive()) {
-      emboss = panel_theme.embossActive();
-      color = panel_theme.colorActive();
+      emboss = theme.embossActive();
+      color = theme.colorActive();
     } else {
-      emboss = panel_theme.embossInactive();
-      color = panel_theme.colorInactive();
+      emboss = theme.embossInactive();
+      color = theme.colorInactive();
     }
 
     this.renderOptionallyEmbossedFill(
@@ -320,7 +352,12 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyButtonReadableType button)
   {
-    final SyThemeButtonType button_theme = button.theme();
+    final Optional<SyThemeButtonType> theme_opt = button.theme();
+    if (!theme_opt.isPresent()) {
+      throw SyAWTComponentRenderer.notAttached(button);
+    }
+
+    final SyThemeButtonType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = button.box();
 
     final int width = box.width();
@@ -331,7 +368,7 @@ public final class SyAWTComponentRenderer implements
     final int fill_x;
     final int fill_y;
 
-    final Optional<SyThemeOutlineType> outline = button_theme.outline();
+    final Optional<SyThemeOutlineType> outline = theme.outline();
     if (outline.isPresent()) {
       fill_x = 1;
       fill_y = 1;
@@ -351,8 +388,8 @@ public final class SyAWTComponentRenderer implements
         fill_height,
         fill_x,
         fill_y,
-        button_theme.embossInactive(),
-        button_theme.colorInactive());
+        theme.embossInactive(),
+        theme.colorInactive());
     } else {
       switch (button.buttonState()) {
         case BUTTON_ACTIVE: {
@@ -362,8 +399,8 @@ public final class SyAWTComponentRenderer implements
             fill_height,
             fill_x,
             fill_y,
-            button_theme.embossActive(),
-            button_theme.colorActive());
+            theme.embossActive(),
+            theme.colorActive());
           break;
         }
         case BUTTON_OVER: {
@@ -373,8 +410,8 @@ public final class SyAWTComponentRenderer implements
             fill_height,
             fill_x,
             fill_y,
-            button_theme.embossOver(),
-            button_theme.colorOver());
+            theme.embossOver(),
+            theme.colorOver());
           break;
         }
         case BUTTON_PRESSED: {
@@ -384,8 +421,8 @@ public final class SyAWTComponentRenderer implements
             fill_height,
             fill_x,
             fill_y,
-            button_theme.embossPressed(),
-            button_theme.colorPressed());
+            theme.embossPressed(),
+            theme.colorPressed());
           break;
         }
       }

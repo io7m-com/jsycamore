@@ -14,25 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 
-public final class SyLabelTest extends SyLabelContract
+import java.util.Optional;
+
+/**
+ * The type of readable checkboxes.
+ */
+
+public interface SyButtonCheckboxReadableType extends SyButtonReadableType
 {
+  @SuppressWarnings("unchecked")
   @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
+  Optional<SyThemeButtonCheckboxType> theme();
 
-  @Override
-  protected SyLabelType create()
-  {
-    return SyLabel.create();
-  }
+  /**
+   * @return {@code true} iff the box is checked
+   */
+
+  boolean isChecked();
 }

@@ -16,13 +16,14 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.components.SyButtonReadableType;
+import com.io7m.jsycamore.core.components.SyButtonRepeatingReadableType;
 
 /**
  * The type of maximize buttons for windows.
  */
 
-public interface SyWindowMaximizeButtonType extends SyButtonReadableType
+public interface SyWindowMaximizeButtonType extends
+  SyButtonRepeatingReadableType
 {
 
 }

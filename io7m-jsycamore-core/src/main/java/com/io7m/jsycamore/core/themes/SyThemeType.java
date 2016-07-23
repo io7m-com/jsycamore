@@ -36,11 +36,18 @@ public interface SyThemeType
   SyThemeWindowType windowTheme();
 
   /**
-   * @return The theme used for buttons
+   * @return The theme used for repeating buttons
    */
 
   @Value.Parameter
-  SyThemeButtonType buttonTheme();
+  SyThemeButtonRepeatingType buttonRepeatingTheme();
+
+  /**
+   * @return The theme used for checkbox buttons
+   */
+
+  @Value.Parameter
+  SyThemeButtonCheckboxType buttonCheckboxTheme();
 
   /**
    * @return The theme used for panels

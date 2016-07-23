@@ -17,6 +17,9 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+
+import java.util.Optional;
 
 /**
  * The default implementation of the {@link SyLabelType}.
@@ -39,8 +42,8 @@ public final class SyLabel extends SyLabelAbstract
   }
 
   @Override
-  public SyThemeLabelType theme()
+  public Optional<SyThemeLabelType> theme()
   {
-    return this.windowTheme().labelTheme();
+    return this.windowTheme().map(SyThemeType::labelTheme);
   }
 }

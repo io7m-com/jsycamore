@@ -19,6 +19,9 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
+import com.io7m.jsycamore.core.themes.SyThemeType;
+
+import java.util.Optional;
 
 /**
  * The default implementation of the {@link SyImageType}.
@@ -62,8 +65,8 @@ public final class SyImage extends SyImageAbstract
   }
 
   @Override
-  public SyThemeImageType theme()
+  public Optional<SyThemeImageType> theme()
   {
-    return this.windowTheme().imageTheme();
+    return this.windowTheme().map(SyThemeType::imageTheme);
   }
 }

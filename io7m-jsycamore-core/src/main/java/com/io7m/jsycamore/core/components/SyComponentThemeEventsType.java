@@ -14,25 +14,17 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+/**
+ * The theme event interface exposed by components.
+ */
 
-public final class SyLabelTest extends SyLabelContract
+public interface SyComponentThemeEventsType
 {
-  @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
+  /**
+   * The theme has changed.
+   */
 
-  @Override
-  protected SyLabelType create()
-  {
-    return SyLabel.create();
-  }
+  void onThemeChanged();
 }

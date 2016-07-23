@@ -25,8 +25,8 @@ import com.io7m.jsycamore.core.boxes.SyBoxMutable;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyButtonAbstract;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
+import com.io7m.jsycamore.core.components.SyButtonRepeatingAbstract;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageAbstract;
@@ -40,7 +40,7 @@ import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
@@ -114,13 +114,13 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.closeable = true;
     this.maximizable = true;
 
-    this.recalculateBounds(this.box);
+    this.recalculateBounds(this.box, true);
   }
 
   @Override
   public final void setBox(final SyBoxType<SySpaceViewportType> in_box)
   {
-    this.recalculateBounds(NullCheck.notNull(in_box));
+    this.recalculateBounds(NullCheck.notNull(in_box), false);
   }
 
   @Override
@@ -148,19 +148,20 @@ public abstract class SyWindowAbstract implements SyWindowType
       return;
     }
 
-    this.recalculateBoundsRefresh();
+    this.recalculateBoundsRefresh(true);
   }
 
   @Override
   public final void setTheme(final Optional<SyThemeType> in_theme)
   {
     this.theme_override = NullCheck.notNull(in_theme);
-    this.recalculateBoundsRefresh();
+    this.recalculateBoundsRefresh(true);
   }
 
-  private void recalculateBoundsRefresh()
+  private void recalculateBoundsRefresh(
+    final boolean theme_changed)
   {
-    this.recalculateBounds(SyBox.copyOf(this.box));
+    this.recalculateBounds(SyBox.copyOf(this.box), theme_changed);
   }
 
   @Override
@@ -193,7 +194,8 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   private void recalculateBounds(
-    final SyBoxType<? extends SySpaceType> new_box)
+    final SyBoxType<? extends SySpaceType> new_box,
+    final boolean theme_changed)
   {
     final SyThemeType theme = this.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
@@ -243,6 +245,10 @@ public abstract class SyWindowAbstract implements SyWindowType
       window_theme.titleBar().buttonCloseIcon());
 
     this.transform_context.reset(window_box.width(), window_box.height());
+
+    if (theme_changed) {
+      this.root.content_pane.onThemeChanged();
+    }
   }
 
   @Override
@@ -352,7 +358,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         SyVisibility.VISIBILITY_INVISIBLE);
     }
 
-    this.recalculateBoundsRefresh();
+    this.recalculateBoundsRefresh(false);
   }
 
   @Override
@@ -374,7 +380,43 @@ public abstract class SyWindowAbstract implements SyWindowType
         SyVisibility.VISIBILITY_INVISIBLE);
     }
 
-    this.recalculateBoundsRefresh();
+    this.recalculateBoundsRefresh(false);
+  }
+
+  private abstract static class IconButton extends SyButtonRepeatingAbstract
+  {
+    private Optional<SyImageType> image;
+
+    IconButton(final BooleanSupplier in_detach_check)
+    {
+      super(in_detach_check);
+      this.image = Optional.empty();
+    }
+
+    final void setIcon(
+      final Optional<SyImageSpecificationType> in_icon)
+    {
+      NullCheck.notNull(in_icon, "Icon");
+
+      if (this.image.isPresent()) {
+        final SyImageType i = this.image.get();
+        this.node().childRemove(i.node());
+      }
+
+      if (in_icon.isPresent()) {
+        final SyImageSpecificationType icon = in_icon.get();
+        final SyImageType i = SyImage.create(icon);
+        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
+        this.node().childAdd(i.node());
+        this.image = Optional.of(i);
+      }
+
+      Assertive.ensure(
+        this.node().children().size() <= 1,
+        "Icon button must not leak components");
+    }
   }
 
   private final class TitleBarText extends SyLabelAbstract
@@ -388,15 +430,16 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemeLabelType theme()
-    {
-      return SyWindowAbstract.this.theme().windowTheme().titleBar().textTheme();
-    }
-
-    @Override
     public String toString()
     {
       return this.toNamedString("TitleBarText");
+    }
+
+    @Override
+    public Optional<SyThemeLabelType> theme()
+    {
+      return Optional.of(
+        SyWindowAbstract.this.theme().windowTheme().titleBar().textTheme());
     }
   }
 
@@ -424,9 +467,9 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemePanelType theme()
+    public Optional<SyThemePanelType> theme()
     {
-      return this.windowTheme().panelTheme();
+      return Optional.of(SyWindowAbstract.this.theme().panelTheme());
     }
 
     void setIcon(final Optional<SyImageSpecificationType> in_icon)
@@ -463,10 +506,10 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       @Override
-      public SyThemeImageType theme()
+      public Optional<SyThemeImageType> theme()
       {
         final SyThemeType theme = SyWindowAbstract.this.theme();
-        return theme.windowTheme().titleBar().iconTheme();
+        return Optional.of(theme.windowTheme().titleBar().iconTheme());
       }
 
       @Override
@@ -640,7 +683,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     public void setText(final String in_text)
     {
       this.text.setText(NullCheck.notNull(in_text));
-      SyWindowAbstract.this.recalculateBoundsRefresh();
+      SyWindowAbstract.this.recalculateBoundsRefresh(false);
     }
 
     @Override
@@ -668,10 +711,10 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemePanelType theme()
+    public Optional<SyThemePanelType> theme()
     {
       final SyThemeType theme = SyWindowAbstract.this.theme();
-      return theme.windowTheme().titleBar().panelTheme();
+      return Optional.of(theme.windowTheme().titleBar().panelTheme());
     }
   }
 
@@ -692,11 +735,12 @@ public abstract class SyWindowAbstract implements SyWindowType
       SyWindowAbstract.this.gui.windowClose(SyWindowAbstract.this);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public SyThemeButtonType theme()
+    public Optional<SyThemeButtonRepeatingType> theme()
     {
       final SyThemeType theme = SyWindowAbstract.this.theme();
-      return theme.windowTheme().titleBar().buttonTheme();
+      return Optional.of(theme.windowTheme().titleBar().buttonTheme());
     }
 
     @Override
@@ -717,11 +761,12 @@ public abstract class SyWindowAbstract implements SyWindowType
       });
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public SyThemeButtonType theme()
+    public Optional<SyThemeButtonRepeatingType> theme()
     {
       final SyThemeType theme = SyWindowAbstract.this.theme();
-      return theme.windowTheme().titleBar().buttonTheme();
+      return Optional.of(theme.windowTheme().titleBar().buttonTheme());
     }
 
     @Override
@@ -751,9 +796,9 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemePanelType theme()
+    public Optional<SyThemePanelType> theme()
     {
-      return this.windowTheme().panelTheme();
+      return Optional.of(SyWindowAbstract.this.theme().panelTheme());
     }
   }
 
@@ -791,9 +836,9 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemePanelType theme()
+    public Optional<SyThemePanelType> theme()
     {
-      return this.windowTheme().panelTheme();
+      return Optional.of(SyWindowAbstract.this.theme().panelTheme());
     }
   }
 
@@ -830,45 +875,9 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public SyThemePanelType theme()
+    public Optional<SyThemePanelType> theme()
     {
-      return this.windowTheme().panelTheme();
-    }
-  }
-
-  private abstract static class IconButton extends SyButtonAbstract
-  {
-    private Optional<SyImageType> image;
-
-    IconButton(final BooleanSupplier in_detach_check)
-    {
-      super(in_detach_check);
-      this.image = Optional.empty();
-    }
-
-    final void setIcon(
-      final Optional<SyImageSpecificationType> in_icon)
-    {
-      NullCheck.notNull(in_icon, "Icon");
-
-      if (this.image.isPresent()) {
-        final SyImageType i = this.image.get();
-        this.node().childRemove(i.node());
-      }
-
-      if (in_icon.isPresent()) {
-        final SyImageSpecificationType icon = in_icon.get();
-        final SyImageType i = SyImage.create(icon);
-        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
-        this.node().childAdd(i.node());
-        this.image = Optional.of(i);
-      }
-
-      Assertive.ensure(
-        this.node().children().size() <= 1,
-        "Icon button must not leak components");
+      return Optional.of(SyWindowAbstract.this.theme().panelTheme());
     }
   }
 }

@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
@@ -26,8 +25,6 @@ import java.util.Optional;
  * A button theme specification.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
 public interface SyThemeButtonType
 {
   /**

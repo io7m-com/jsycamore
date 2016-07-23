@@ -14,25 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.components;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+/**
+ * Interface describing an object that can receive theme events.
+ *
+ * @param <T> The type of object that received the initial event (not
+ *            necessarily the same type of object as the one receiving the event
+ *            now).
+ */
 
-public final class SyLabelTest extends SyLabelContract
+public interface SyThemeListenerType<T>
 {
-  @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
+  /**
+   * React to the fact that the theme has changed.
+   */
 
-  @Override
-  protected SyLabelType create()
+  default void themeHasChanged()
   {
-    return SyLabel.create();
+
   }
 }

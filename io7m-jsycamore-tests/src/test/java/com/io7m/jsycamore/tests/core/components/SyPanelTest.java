@@ -16,11 +16,20 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
+import com.io7m.jsycamore.core.SyGUI;
+import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
 
 public final class SyPanelTest extends SyPanelContract
 {
+  @Override
+  protected SyGUIType gui()
+  {
+    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+  }
+
   @Override
   protected SyPanelType create()
   {

@@ -37,6 +37,7 @@ import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -319,6 +320,28 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
+  public final void onThemeChanged()
+  {
+    this.themeHasChanged();
+
+    final Collection<JOTreeNodeType<SyComponentType>> children =
+      this.node.children();
+
+    /**
+     * Copy the list of children so that if a child detaches, a concurrent
+     * modification error is avoided.
+     */
+
+    final Iterable<JOTreeNodeType<SyComponentType>> children_copy =
+      new ArrayList<>(children);
+
+    for (final JOTreeNodeType<SyComponentType> child_node : children_copy) {
+      final SyComponentType child = child_node.value();
+      child.onThemeChanged();
+    }
+  }
+
+  @Override
   public final void onMouseHeld(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position_first,
     final PVectorReadable2IType<SySpaceViewportType> mouse_position_now,
@@ -471,8 +494,18 @@ public abstract class SyComponentAbstract implements SyComponentType
     }
 
     if (resized) {
-      final Collection<JOTreeNodeType<SyComponentType>> children = this.node.children();
-      for (final JOTreeNodeType<SyComponentType> child_node : children) {
+      final Collection<JOTreeNodeType<SyComponentType>> children =
+        this.node.children();
+
+      /**
+       * Copy the list of children so that if a child detaches, a concurrent
+       * modification error is avoided.
+       */
+
+      final Iterable<JOTreeNodeType<SyComponentType>> children_copy =
+        new ArrayList<>(children);
+
+      for (final JOTreeNodeType<SyComponentType> child_node : children_copy) {
         final SyComponentType child = child_node.value();
         child.onParentResized(delta_x, delta_y);
       }
@@ -549,15 +582,8 @@ public abstract class SyComponentAbstract implements SyComponentType
     return sb.toString();
   }
 
-  protected final SyThemeType windowTheme()
+  protected final Optional<SyThemeType> windowTheme()
   {
-    final Optional<SyWindowType> window_opt = this.window();
-    if (window_opt.isPresent()) {
-      final SyWindowType w = window_opt.get();
-      return w.theme();
-    }
-
-    throw new IllegalStateException(
-      "Cannot retrieve a theme for a component that is not attached to a window.");
+    return this.window().map(SyWindowReadableType::theme);
   }
 }

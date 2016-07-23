@@ -30,8 +30,10 @@ import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.themes.SyColors;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeButton;
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeating;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
@@ -146,8 +148,8 @@ public final class SyThemeBee
      * Title bar button theme.
      */
 
-    final SyThemeButton.Builder theme_titlebar_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_titlebar_button_b =
+      SyThemeButtonRepeating.builder();
     theme_titlebar_button_b.setColorPressed(spec.titlebarColorActive());
     theme_titlebar_button_b.setEmbossPressed(theme_titlebar_emboss_pressed);
     theme_titlebar_button_b.setColorOver(spec.titlebarColorActive());
@@ -270,7 +272,14 @@ public final class SyThemeBee
         theme_frame_b.build(),
         SyThemeBee::arrangeWindowComponents));
 
-    theme.setButtonTheme(SyThemeBee.createThemeButton(
+    theme.setButtonRepeatingTheme(SyThemeBee.createThemeButtonRepeating(
+      spec,
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker));
+
+    theme.setButtonCheckboxTheme(SyThemeBee.createThemeButtonCheckbox(
       spec,
       background,
       background_lighter,
@@ -429,15 +438,15 @@ public final class SyThemeBee
     return b.build();
   }
 
-  private static SyThemeButtonType createThemeButton(
+  private static SyThemeButtonRepeatingType createThemeButtonRepeating(
     final SyThemeBeeSpecificationType spec,
     final VectorI3F background,
     final VectorI3F background_lighter,
     final VectorI3F background_lighter_lighter,
     final VectorI3F background_darker)
   {
-    final SyThemeButton.Builder theme_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_button_b =
+      SyThemeButtonRepeating.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
       true, true, true, true,
@@ -473,6 +482,63 @@ public final class SyThemeBee
       background_lighter,
       1
     ));
+
+    return theme_button_b.build();
+  }
+
+  private static SyThemeButtonCheckboxType createThemeButtonCheckbox(
+    final SyThemeBeeSpecificationType spec,
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker)
+  {
+    final SyThemeButtonCheckbox.Builder theme_button_b =
+      SyThemeButtonCheckbox.builder();
+
+    theme_button_b.setOutline(SyThemeOutline.of(
+      true, true, true, true,
+      spec.foregroundColorActive(),
+      background_darker,
+      true));
+
+    theme_button_b.setColorActive(background);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1
+    ));
+
+    theme_button_b.setColorInactive(background);
+
+    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      background_lighter_lighter,
+      background,
+      background_lighter_lighter,
+      background,
+      1
+    ));
+
+    theme_button_b.setColorPressed(background);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      1
+    ));
+
+    theme_button_b.setCheckedIcon(
+      SyImageSpecification.of(
+        "/com/io7m/jsycamore/core/themes/provided/bee-close.png",
+        16,
+        16,
+        SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+        SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
 
     return theme_button_b.build();
   }

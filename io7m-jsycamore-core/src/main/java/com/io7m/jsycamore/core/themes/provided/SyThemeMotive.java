@@ -29,8 +29,10 @@ import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeButton;
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeating;
+import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
@@ -240,7 +242,15 @@ public final class SyThemeMotive
       background_lighter,
       background_darker));
 
-    theme.setButtonTheme(SyThemeMotive.createThemeButton(
+    theme.setButtonRepeatingTheme(SyThemeMotive.createThemeButtonRepeating(
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker,
+      2,
+      true));
+
+    theme.setButtonCheckboxTheme(SyThemeMotive.createThemeButtonCheckbox(
       background,
       background_lighter,
       background_lighter_lighter,
@@ -365,7 +375,7 @@ public final class SyThemeMotive
     return b.build();
   }
 
-  private static SyThemeButtonType createThemeButton(
+  private static SyThemeButtonRepeatingType createThemeButtonRepeating(
     final VectorI3F background,
     final VectorI3F background_lighter,
     final VectorI3F background_lighter_lighter,
@@ -373,8 +383,8 @@ public final class SyThemeMotive
     final int emboss,
     final boolean outline)
   {
-    final SyThemeButton.Builder theme_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_button_b =
+      SyThemeButtonRepeating.builder();
 
     if (outline) {
       theme_button_b.setOutline(Optional.of(SyThemeOutline.of(
@@ -416,7 +426,67 @@ public final class SyThemeMotive
     return theme_button_b.build();
   }
 
-  private static SyThemeButtonType createThemeTitlebarButton(
+  private static SyThemeButtonCheckboxType createThemeButtonCheckbox(
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker,
+    final int emboss,
+    final boolean outline)
+  {
+    final SyThemeButtonCheckbox.Builder theme_button_b =
+      SyThemeButtonCheckbox.builder();
+
+    if (outline) {
+      theme_button_b.setOutline(Optional.of(SyThemeOutline.of(
+        true, true, true, true,
+        background_darker,
+        background_darker,
+        true)));
+    }
+
+    theme_button_b.setColorActive(background);
+    theme_button_b.setEmbossActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      emboss
+    ));
+
+    theme_button_b.setColorInactive(background);
+
+    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setEmbossOver(SyThemeEmboss.of(
+      background_lighter_lighter,
+      background,
+      background_lighter_lighter,
+      background,
+      emboss
+    ));
+
+    theme_button_b.setColorPressed(background);
+    theme_button_b.setEmbossPressed(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      emboss
+    ));
+
+    theme_button_b.setCheckedIcon(
+      SyImageSpecification.of(
+        "/com/io7m/jsycamore/core/themes/provided/motive-check.png",
+        16,
+        16,
+        SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+        SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
+
+    return theme_button_b.build();
+  }
+
+  private static SyThemeButtonRepeatingType createThemeTitlebarButton(
     final VectorI3F color_active,
     final VectorI3F color_active_lighter,
     final VectorI3F color_active_darker,
@@ -426,8 +496,8 @@ public final class SyThemeMotive
     final int emboss,
     final boolean outline)
   {
-    final SyThemeButton.Builder theme_button_b =
-      SyThemeButton.builder();
+    final SyThemeButtonRepeating.Builder theme_button_b =
+      SyThemeButtonRepeating.builder();
 
     theme_button_b.setColorActive(color_active);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(

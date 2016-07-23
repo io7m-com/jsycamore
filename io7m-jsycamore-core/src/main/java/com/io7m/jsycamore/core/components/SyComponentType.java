@@ -34,8 +34,10 @@ import java.util.function.BiFunction;
 public interface SyComponentType extends SyComponentParentEventsType,
   SyComponentMouseEventsType,
   SyComponentReadableType,
+  SyComponentThemeEventsType,
   SyMouseListenerType<SyComponentType>,
-  SyResizeListenerType
+  SyResizeListenerType,
+  SyThemeListenerType<SyComponentType>
 {
   /**
    * Set the parent resize behavior with regards to width.

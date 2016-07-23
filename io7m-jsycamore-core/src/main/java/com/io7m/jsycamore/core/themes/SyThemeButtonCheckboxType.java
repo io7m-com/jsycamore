@@ -14,25 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.tests.core.components;
+package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import org.immutables.value.Value;
 
-public final class SyLabelTest extends SyLabelContract
+import java.util.Optional;
+
+/**
+ * A button theme specification.
+ */
+
+@SyImmutableStyleType
+@Value.Immutable
+public interface SyThemeButtonCheckboxType extends SyThemeButtonType
 {
-  @Override
-  protected SyGUIType gui()
-  {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
-  }
+  /**
+   * @return The image icon used to show that a checkbox is checked
+   */
 
-  @Override
-  protected SyLabelType create()
-  {
-    return SyLabel.create();
-  }
+  Optional<SyImageSpecificationType> checkedIcon();
 }

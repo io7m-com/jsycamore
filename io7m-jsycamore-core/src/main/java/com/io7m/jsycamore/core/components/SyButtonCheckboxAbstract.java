@@ -17,9 +17,14 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyAlignmentHorizontal;
+import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SyMouseButton;
+import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
@@ -37,23 +42,27 @@ import java.util.function.BooleanSupplier;
  */
 
 @NotThreadSafe
-public abstract class SyButtonAbstract extends SyComponentAbstract implements
-  SyButtonType
+public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract implements
+  SyButtonCheckboxType
 {
   private static final Logger LOG;
 
   static {
-    LOG = LoggerFactory.getLogger(SyButtonAbstract.class);
+    LOG = LoggerFactory.getLogger(SyButtonCheckboxAbstract.class);
   }
 
   private final List<SyButtonListenerType> listeners;
+  private Optional<SyImageType> check_icon;
   private boolean pressed;
   private boolean over;
+  private boolean checked;
 
-  protected SyButtonAbstract(final BooleanSupplier in_detach_check)
+  protected SyButtonCheckboxAbstract(
+    final BooleanSupplier in_detach_check)
   {
     super(in_detach_check);
     this.listeners = new ArrayList<>(4);
+    this.check_icon = Optional.empty();
   }
 
   protected final boolean isPressed()
@@ -104,23 +113,25 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     NullCheck.notNull(button);
     NullCheck.notNull(actual);
 
-    SyButtonAbstract.LOG.trace(
-      "mouseHeld: {} {} {} {}",
-      mouse_position_first,
-      mouse_position_now,
-      button,
-      actual);
+    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
+      SyButtonCheckboxAbstract.LOG.trace(
+        "mouseHeld: {} {} {} {}",
+        mouse_position_first,
+        mouse_position_now,
+        button,
+        actual);
+    }
 
     switch (button) {
       case MOUSE_BUTTON_LEFT: {
-        final Optional<SyWindowType> window_opt = this.window();
-        return window_opt
+        this.window()
           .flatMap(window -> window.componentForViewportPosition(
             mouse_position_now))
           .flatMap(component -> {
             this.over = Objects.equals(component, this);
             return Optional.empty();
-          }).isPresent();
+          });
+        return true;
       }
       case MOUSE_BUTTON_MIDDLE:
       case MOUSE_BUTTON_RIGHT: {
@@ -141,8 +152,10 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     NullCheck.notNull(button);
     NullCheck.notNull(actual);
 
-    SyButtonAbstract.LOG.trace(
-      "mousePressed: {} {} {}", mouse_position, button, actual);
+    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
+      SyButtonCheckboxAbstract.LOG.trace(
+        "mousePressed: {} {} {}", mouse_position, button, actual);
+    }
 
     this.over = true;
     switch (button) {
@@ -161,6 +174,19 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
   }
 
   @Override
+  public final boolean isChecked()
+  {
+    return this.checked;
+  }
+
+  @Override
+  public final void setChecked(final boolean c)
+  {
+    this.checked = c;
+    this.updateIcon();
+  }
+
+  @Override
   public final boolean mouseReleased(
     final PVectorReadable2IType<SySpaceViewportType> mouse_position,
     final SyMouseButton button,
@@ -170,13 +196,16 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     NullCheck.notNull(button);
     NullCheck.notNull(actual);
 
-    SyButtonAbstract.LOG.trace(
-      "mouseReleased: {} {} {} {}", mouse_position, button, actual);
+    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
+      SyButtonCheckboxAbstract.LOG.trace(
+        "mouseReleased: {} {} {} {}", mouse_position, button, actual);
+    }
 
     switch (button) {
       case MOUSE_BUTTON_LEFT: {
         if (this.pressed && this.over) {
           try {
+            this.setChecked(!this.checked);
             this.clicked();
           } finally {
 
@@ -217,22 +246,53 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     try {
       this.buttonOnClick();
     } catch (final Throwable e) {
-      SyErrors.ignoreNonErrors(SyButtonAbstract.LOG, e);
+      SyErrors.ignoreNonErrors(SyButtonCheckboxAbstract.LOG, e);
     }
 
     for (final SyButtonListenerType x : this.listeners) {
       try {
         x.buttonClicked(this);
       } catch (final Throwable e) {
-        SyErrors.ignoreNonErrors(SyButtonAbstract.LOG, e);
+        SyErrors.ignoreNonErrors(SyButtonCheckboxAbstract.LOG, e);
       }
+    }
+  }
+
+  @Override
+  public final void themeHasChanged()
+  {
+    this.updateIcon();
+  }
+
+  private void updateIcon()
+  {
+    if (this.check_icon.isPresent()) {
+      final SyImageType icon = this.check_icon.get();
+      this.node().childRemove(icon.node());
+      this.check_icon = Optional.empty();
+    }
+
+    if (this.checked) {
+      this.theme()
+        .flatMap(SyThemeButtonCheckboxType::checkedIcon)
+        .flatMap(image_spec -> {
+
+          final SyBoxType<SySpaceParentRelativeType> box = this.box();
+          final SyImageType icon = SyImage.create(image_spec);
+          icon.setImageAlignmentHorizontal(SyAlignmentHorizontal.ALIGN_CENTER);
+          icon.setImageAlignmentVertical(SyAlignmentVertical.ALIGN_CENTER);
+          icon.setBox(SyBoxes.create(0, 0, box.width(), box.height()));
+          this.node().childAdd(icon.node());
+          this.check_icon = Optional.of(icon);
+          return Optional.empty();
+        });
     }
   }
 
   @Override
   public final boolean mouseNoLongerOver()
   {
-    SyButtonAbstract.LOG.trace("mouseNoLongerOver");
+    SyButtonCheckboxAbstract.LOG.trace("mouseNoLongerOver");
     this.over = false;
     this.pressed = false;
     return true;
@@ -246,7 +306,13 @@ public abstract class SyButtonAbstract extends SyComponentAbstract implements
     NullCheck.notNull(mouse_position);
     NullCheck.notNull(actual);
 
-    SyButtonAbstract.LOG.trace("mouseOver: {} {}", mouse_position, actual);
+    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
+      SyButtonCheckboxAbstract.LOG.trace(
+        "mouseOver: {} {}",
+        mouse_position,
+        actual);
+    }
+
     this.over = true;
     this.pressed = false;
     return true;

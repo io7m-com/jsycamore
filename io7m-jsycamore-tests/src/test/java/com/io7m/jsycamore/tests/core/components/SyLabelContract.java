@@ -36,9 +36,8 @@ public abstract class SyLabelContract extends SyComponentContract
   public void testWindowlessTheme()
   {
     final SyLabelType c = this.create();
-
-    this.expected.expect(IllegalStateException.class);
-    c.theme();
+    Assert.assertFalse(c.window().isPresent());
+    Assert.assertFalse(c.theme().isPresent());
   }
 
   @Test

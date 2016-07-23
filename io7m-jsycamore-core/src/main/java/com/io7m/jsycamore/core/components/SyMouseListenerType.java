@@ -31,8 +31,8 @@ import com.io7m.jtensors.parameterized.PVectorReadable2IType;
 public interface SyMouseListenerType<T>
 {
   /**
-   * Notify the component that the mouse button {@code button} is currently
-   * being held.
+   * React to the fact that the mouse button {@code button} is currently being
+   * held.
    *
    * @param mouse_position_first The position of the mouse cursor when the
    *                             button was first pressed
@@ -54,7 +54,7 @@ public interface SyMouseListenerType<T>
   }
 
   /**
-   * Notify the component that the mouse button {@code button} has just been
+   * React to the fact that the mouse button {@code button} has just been
    * pressed.
    *
    * @param mouse_position The position of the mouse cursor now
@@ -73,7 +73,7 @@ public interface SyMouseListenerType<T>
   }
 
   /**
-   * Notify the component that the mouse button {@code button} has just been
+   * React to the fact that the mouse button {@code button} has just been
    * released.
    *
    * @param mouse_position The position of the mouse cursor now
@@ -92,8 +92,7 @@ public interface SyMouseListenerType<T>
   }
 
   /**
-   * Notify the component that the mouse cursor is no longer over this
-   * component.
+   * React to the fact that the mouse cursor is no longer over this component.
    *
    * @return {@code true} if this component has consumed the message.
    */
@@ -104,7 +103,7 @@ public interface SyMouseListenerType<T>
   }
 
   /**
-   * Notify the component that the mouse cursor has just moved over this
+   * React to the fact that the mouse cursor has just moved over this
    * component.
    *
    * @param mouse_position The position of the mouse cursor now

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.tests.core.components;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
+import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -48,9 +49,8 @@ public abstract class SyPanelContract extends SyComponentContract
   public void testWindowlessTheme()
   {
     final SyPanelType c = this.create();
-
-    this.expected.expect(IllegalStateException.class);
-    c.theme();
+    Assert.assertFalse(c.window().isPresent());
+    Assert.assertFalse(c.theme().isPresent());
   }
 
   @Test
