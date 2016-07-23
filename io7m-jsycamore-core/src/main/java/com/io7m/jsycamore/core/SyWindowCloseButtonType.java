@@ -19,10 +19,10 @@ package com.io7m.jsycamore.core;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 
 /**
- * The type of close boxes for windows.
+ * The type of close buttons for windows.
  */
 
-public interface SyWindowCloseBoxType extends SyButtonReadableType
+public interface SyWindowCloseButtonType extends SyButtonReadableType
 {
 
 }

@@ -231,15 +231,6 @@ public final class SyAWTComponentRenderer implements
     }
 
     graphics.drawImage(actual, x, y, null);
-
-    final Optional<SyThemeOutlineType> outline_opt = theme.outline();
-    if (outline_opt.isPresent()) {
-      SyAWTDrawing.drawOutline(
-        graphics,
-        outline_opt.get(),
-        SyBoxes.moveToOrigin(box),
-        image.isActive());
-    }
   }
 
   private void renderLabel(

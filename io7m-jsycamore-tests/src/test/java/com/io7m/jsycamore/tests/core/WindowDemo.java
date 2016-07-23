@@ -37,7 +37,6 @@ import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyPanel;
-import com.io7m.jsycamore.core.components.SyPanelAbstract;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
@@ -47,8 +46,6 @@ import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
@@ -57,6 +54,8 @@ import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.junreachable.UnreachableCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -65,6 +64,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -77,7 +78,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,6 +92,12 @@ public final class WindowDemo
 
   private static final class Canvas extends JPanel
   {
+    private static final Logger LOG;
+
+    static {
+      LOG = LoggerFactory.getLogger(Canvas.class);
+    }
+
     private final SyAWTTextMeasurement measurement;
     private final SyGUIType gui;
     private final SyWindowType window0;
@@ -104,6 +110,8 @@ public final class WindowDemo
 
     Canvas()
     {
+      this.setFocusable(true);
+
       this.random = new Random(23L);
 
       this.themes = new ArrayList<>();
@@ -113,6 +121,8 @@ public final class WindowDemo
       this.themes.add(SyThemeStride.builder().build());
 
       final SyImageCacheResolverType resolver = specification -> {
+        Canvas.LOG.debug("loading: {}", specification.name());
+
         final InputStream stream = WindowDemo.class.getResourceAsStream(
           specification.name());
         if (stream == null) {
@@ -191,13 +201,32 @@ public final class WindowDemo
         }
       };
 
+      final KeyAdapter key_adapter = new KeyAdapter()
+      {
+        @Override
+        public void keyPressed(final KeyEvent e)
+        {
+          System.out.println(e);
+        }
+
+        @Override
+        public void keyReleased(final KeyEvent e)
+        {
+          System.out.println(e);
+        }
+      };
+
       this.addMouseMotionListener(mouse_adapter);
       this.addMouseListener(mouse_adapter);
+      this.addKeyListener(key_adapter);
 
-      r_executor.scheduleAtFixedRate(() -> {
-        SwingUtilities.invokeLater(() -> {
-          Collections.shuffle(this.themes, this.random);
-          this.gui.setTheme(this.themes.get(0));
+      r_executor.scheduleAtFixedRate(
+        () -> SwingUtilities.invokeLater(() -> {
+
+          Canvas.LOG.debug(
+            "cache size: {}/{}",
+            Long.valueOf(this.image_cache.size()),
+            Long.valueOf(this.image_cache.maximumSize()));
 
           if (!this.window0.isOpen()) {
             this.gui.windowOpen(this.window0);
@@ -205,10 +234,15 @@ public final class WindowDemo
           if (!this.window1.isOpen()) {
             this.gui.windowOpen(this.window1);
           }
-
           this.repaint();
-        });
-      }, 3L, 3L, TimeUnit.SECONDS);
+        }), 3L, 3L, TimeUnit.SECONDS);
+
+      r_executor.scheduleAtFixedRate(
+        () -> SwingUtilities.invokeLater(() -> {
+          Collections.shuffle(this.themes, this.random);
+          this.gui.setTheme(this.themes.get(0));
+          this.repaint();
+        }), 3L, 3L, TimeUnit.SECONDS);
     }
 
     private SyWindowType createWindow(
@@ -231,7 +265,11 @@ public final class WindowDemo
         panel.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
 
         final SyBoxType<SySpaceParentRelativeType> content_box = content.box();
-        panel.setBox(SyBoxes.create(0, 0, content_box.width(), content_box.height()));
+        panel.setBox(SyBoxes.create(
+          0,
+          0,
+          content_box.width(),
+          content_box.height()));
         content.node().childAdd(panel.node());
 
         {

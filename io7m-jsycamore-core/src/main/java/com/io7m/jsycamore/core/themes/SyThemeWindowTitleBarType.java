@@ -19,9 +19,11 @@ package com.io7m.jsycamore.core.themes;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import org.immutables.value.Value;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * The style applied to a window title bar.
@@ -31,6 +33,18 @@ import java.util.Comparator;
 @Value.Immutable
 public interface SyThemeWindowTitleBarType
 {
+  /**
+   * @return The image that will be added to the close button
+   */
+
+  Optional<SyImageSpecificationType> buttonCloseIcon();
+
+  /**
+   * @return The image that will be added to the maximize button
+   */
+
+  Optional<SyImageSpecificationType> buttonMaximizeIcon();
+
   /**
    * @return The width of buttons in the title bar
    */

@@ -14,18 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.themes;
+package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
+import com.io7m.jsycamore.core.components.SyButtonReadableType;
 
 /**
- * An image theme specification.
+ * The type of maximize buttons for windows.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-public interface SyThemeImageType
+public interface SyWindowMaximizeButtonType extends SyButtonReadableType
 {
 
 }

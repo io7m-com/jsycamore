@@ -21,6 +21,7 @@ import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.Policy;
+import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.github.benmanes.caffeine.cache.Weigher;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.awt.SyAWTImage;
@@ -29,6 +30,8 @@ import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
 import com.io7m.jsycamore.core.images.SyImageReferenceType;
 import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -47,6 +50,12 @@ import java.util.concurrent.TimeUnit;
 
 public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<BufferedImage>
 {
+  private static final Logger LOG;
+
+  static {
+    LOG = LoggerFactory.getLogger(SyBufferedImageCacheCaffeine.class);
+  }
+
   private final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache;
   private final BufferedImage image_default;
   private final BufferedImage image_error;
@@ -100,12 +109,17 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
         SyBufferedImageCacheCaffeine.load(
           in_resolver, in_loader, image_spec, executor);
 
+    final RemovalListener<SyImageSpecificationType, BufferedImage> removal_listener =
+      (key, value, cause) -> SyBufferedImageCacheCaffeine.LOG.trace(
+        "removal: {} {} {}", key, value, cause);
+
     final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache =
       Caffeine.newBuilder()
         .maximumWeight(in_maximum_size)
-        .expireAfterAccess(10L, TimeUnit.SECONDS)
+        .expireAfterAccess(60L, TimeUnit.SECONDS)
         .weigher(weigher)
         .executor(in_executor)
+        .removalListener(removal_listener)
         .buildAsync(loader);
 
     return new SyBufferedImageCacheCaffeine(

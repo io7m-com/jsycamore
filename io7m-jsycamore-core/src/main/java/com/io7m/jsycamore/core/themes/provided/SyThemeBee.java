@@ -25,13 +25,15 @@ import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jsycamore.core.images.SyImageFormat;
+import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.themes.SyColors;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButton;
 import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
-import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
@@ -51,9 +53,8 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import com.io7m.jtensors.VectorI3F;
+import com.io7m.jtensors.VectorI4F;
 import com.io7m.junreachable.UnreachableCodeException;
-
-import java.util.Optional;
 
 /**
  * A 1990s style multimedia theme.
@@ -186,8 +187,24 @@ public final class SyThemeBee
     theme_titlebar_b.setIconPresent(false);
     theme_titlebar_b.setIconHeight(0);
     theme_titlebar_b.setIconWidth(0);
-    theme_titlebar_b.setIconTheme(SyThemeImage.of(Optional.empty()));
+    theme_titlebar_b.setIconTheme(SyThemeImage.builder().build());
     theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
+    theme_titlebar_b.setButtonCloseIcon(
+      SyImageSpecification.of(
+        "/com/io7m/jsycamore/core/themes/provided/bee-close.png",
+        13,
+        13,
+        SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+        SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
+    theme_titlebar_b.setButtonMaximizeIcon(
+      SyImageSpecification.of(
+        "/com/io7m/jsycamore/core/themes/provided/bee-maximize.png",
+        13,
+        13,
+        SyImageFormat.IMAGE_FORMAT_RGBA_8888,
+        new VectorI4F(1.0f, 1.0f, 1.0f, 1.0f),
+        SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
 
     /*
      * Titlebar text.
@@ -264,7 +281,7 @@ public final class SyThemeBee
     theme.setLabelTheme(SyThemeBee.createThemeLabel(
       spec.foregroundColorActive(),
       spec.foregroundColorDisabled()));
-    theme.setImageTheme(SyThemeBee.createThemeImage(background_darker));
+    theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
   }
 
@@ -390,14 +407,6 @@ public final class SyThemeBee
       box_frame_inner,
       box_titlebar,
       box_frame_inner);
-  }
-
-  private static SyThemeImageType createThemeImage(
-    final VectorI3F color)
-  {
-    final SyThemeImage.Builder b = SyThemeImage.builder();
-    b.setOutline(SyThemeOutline.of(true, true, true, true, color, color, true));
-    return b.build();
   }
 
   private static SyThemePanelType createThemePanel(

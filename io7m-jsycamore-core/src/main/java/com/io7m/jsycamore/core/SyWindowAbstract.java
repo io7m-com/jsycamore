@@ -28,6 +28,7 @@ import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonAbstract;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageAbstract;
 import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabelAbstract;
@@ -61,6 +62,7 @@ import org.slf4j.LoggerFactory;
 import org.valid4j.Assertive;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 /**
  * An abstract default implementation of the {@link SyWindowType} type.
@@ -234,6 +236,12 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.root.frame.box_inner.from(boxes.frameExclusionBox());
     this.root.content_pane.setBox(boxes.contentBox());
     this.root.setBox(root_box);
+
+    this.root.titlebar.maximize_button.setIcon(
+      window_theme.titleBar().buttonMaximizeIcon());
+    this.root.titlebar.close_button.setIcon(
+      window_theme.titleBar().buttonCloseIcon());
+
     this.transform_context.reset(window_box.width(), window_box.height());
   }
 
@@ -560,10 +568,10 @@ public abstract class SyWindowAbstract implements SyWindowType
 
           Assertive.ensure(
             window_start_box.width() == window_new_box.width(),
-            "Dragging a titleBar must not resize width");
+            "Dragging a title bar must not resize width");
           Assertive.ensure(
             window_start_box.height() == window_new_box.height(),
-            "Dragging a titleBar must not resize height");
+            "Dragging a title bar must not resize height");
 
           SyWindowAbstract.this.setBox(window_new_box);
           return true;
@@ -667,8 +675,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBarCloseButton extends SyButtonAbstract implements
-    SyWindowCloseBoxType
+  private final class TitleBarCloseButton extends IconButton implements
+    SyWindowCloseButtonType
   {
     TitleBarCloseButton()
     {
@@ -698,8 +706,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBarMaximizeButton extends SyButtonAbstract implements
-    SyWindowCloseBoxType
+  private final class TitleBarMaximizeButton extends IconButton implements
+    SyWindowMaximizeButtonType
   {
     TitleBarMaximizeButton()
     {
@@ -828,4 +836,39 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
+  private abstract static class IconButton extends SyButtonAbstract
+  {
+    private Optional<SyImageType> image;
+
+    IconButton(final BooleanSupplier in_detach_check)
+    {
+      super(in_detach_check);
+      this.image = Optional.empty();
+    }
+
+    final void setIcon(
+      final Optional<SyImageSpecificationType> in_icon)
+    {
+      NullCheck.notNull(in_icon, "Icon");
+
+      if (this.image.isPresent()) {
+        final SyImageType i = this.image.get();
+        this.node().childRemove(i.node());
+      }
+
+      if (in_icon.isPresent()) {
+        final SyImageSpecificationType icon = in_icon.get();
+        final SyImageType i = SyImage.create(icon);
+        i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
+        this.node().childAdd(i.node());
+        this.image = Optional.of(i);
+      }
+
+      Assertive.ensure(
+        this.node().children().size() <= 1,
+        "Icon button must not leak components");
+    }
+  }
 }

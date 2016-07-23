@@ -20,11 +20,14 @@ import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
+import com.io7m.jsycamore.core.SyWindowCloseButtonType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
+import com.io7m.jsycamore.core.SyWindowMaximizeButtonType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentType;
+import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
@@ -49,6 +52,21 @@ import java.util.Optional;
 public abstract class SyWindowContract
 {
   @Rule public ExpectedException expected = ExpectedException.none();
+
+  private static boolean isCloseOrMaximize(
+    final JOTreeNodeType<SyComponentType> node)
+  {
+    if (!node.isRoot()) {
+      if (node.value() instanceof SyImageType) {
+        final JOTreeNodeType<SyComponentType> parent = node.parent().get();
+        if (parent.value() instanceof SyWindowCloseButtonType
+          || parent.value() instanceof SyWindowMaximizeButtonType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   protected abstract SyWindowType create(
     int width,
@@ -197,6 +215,16 @@ public abstract class SyWindowContract
       final Iterator<JOTreeNodeType<SyComponentType>> iter = all.iterator();
       while (iter.hasNext()) {
         final JOTreeNodeType<SyComponentType> node = iter.next();
+
+        /**
+         * The images on close and maximize buttons are a special case and
+         * are allowed to be removed.
+         */
+
+        if (SyWindowContract.isCloseOrMaximize(node)) {
+          continue;
+        }
+
         Assert.assertFalse(node.isDetachAllowed());
         if (node.isRoot()) {
           iter.remove();
@@ -207,6 +235,11 @@ public abstract class SyWindowContract
     long caught = 0L;
     for (final JOTreeNodeType<SyComponentType> node : all) {
       try {
+        if (SyWindowContract.isCloseOrMaximize(node)) {
+          ++caught;
+          continue;
+        }
+
         System.out.println("Trying detach of " + node.value());
         node.detach();
       } catch (final JOTreeExceptionDetachDenied e) {
