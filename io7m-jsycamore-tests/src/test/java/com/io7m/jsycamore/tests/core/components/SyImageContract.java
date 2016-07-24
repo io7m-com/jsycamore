@@ -70,6 +70,9 @@ public abstract class SyImageContract extends SyComponentContract
       (x, b_image) -> {
         called.set(true);
         return Unit.unit();
+      },
+      (x, meter) -> {
+        throw new UnreachableCodeException();
       });
 
     Assert.assertTrue(called.get());
@@ -95,7 +98,9 @@ public abstract class SyImageContract extends SyComponentContract
       (x, b_image) -> {
         called.set(true);
         return Unit.unit();
-
+      },
+      (x, meter) -> {
+        throw new UnreachableCodeException();
       });
 
     Assert.assertTrue(called.get());

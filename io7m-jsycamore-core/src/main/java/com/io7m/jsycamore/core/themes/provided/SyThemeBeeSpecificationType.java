@@ -47,7 +47,7 @@ public interface SyThemeBeeSpecificationType
   @Value.Default
   default VectorI3F titlebarColorInactive()
   {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
+    return new VectorI3F(0.85f, 0.85f, 0.85f);
   }
 
   /**
@@ -80,7 +80,7 @@ public interface SyThemeBeeSpecificationType
   @Value.Default
   default VectorI3F frameColor()
   {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
+    return new VectorI3F(0.85f, 0.85f, 0.85f);
   }
 
   /**
@@ -135,11 +135,12 @@ public interface SyThemeBeeSpecificationType
   @Value.Default
   default VectorI3F backgroundColor()
   {
-    return new VectorI3F(0.8f, 0.8f, 0.8f);
+    return new VectorI3F(0.85f, 0.85f, 0.85f);
   }
 
   /**
-   * @return The general foreground color used for text on components, etc
+   * @return The general foreground color used for text on active components,
+   * etc
    */
 
   @Value.Parameter
@@ -150,13 +151,13 @@ public interface SyThemeBeeSpecificationType
   }
 
   /**
-   * @return The general foreground color used for text on disabled components,
+   * @return The general foreground color used for text on inactive components,
    * etc
    */
 
   @Value.Parameter
   @Value.Default
-  default VectorI3F foregroundColorDisabled()
+  default VectorI3F foregroundColorInactive()
   {
     return new VectorI3F(0.4f, 0.4f, 0.4f);
   }

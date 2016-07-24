@@ -37,6 +37,8 @@ import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeMeter;
+import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
@@ -234,7 +236,6 @@ public final class SyThemeFenestra
       1,
       true));
 
-
     theme.setButtonCheckboxTheme(SyThemeFenestra.createThemeButtonCheckbox(
       spec,
       background,
@@ -244,6 +245,8 @@ public final class SyThemeFenestra
       1,
       true));
 
+    theme.setMeterTheme(SyThemeFenestra.createThemeMeter(spec));
+
     theme.setPanelTheme(
       SyThemeFenestra.createThemePanel(background, background_darker));
     theme.setLabelTheme(
@@ -252,6 +255,50 @@ public final class SyThemeFenestra
         spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
+  }
+
+  private static SyThemeMeterType createThemeMeter(
+    final SyThemeFenestraSpecificationType spec)
+  {
+    final SyThemeMeter.Builder b = SyThemeMeter.builder();
+
+    b.setColorContainerActive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setEmbossContainerActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      1
+    ));
+
+    b.setColorContainerInactive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setEmbossContainerInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      1
+    ));
+
+    b.setColorFillActive(spec.titlebarColorActive());
+    b.setEmbossFillActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.titlebarColorActive(), 1.5f),
+      VectorI3F.scale(spec.titlebarColorActive(), 0.5f),
+      VectorI3F.scale(spec.titlebarColorActive(), 1.5f),
+      VectorI3F.scale(spec.titlebarColorActive(), 0.5f),
+      1
+    ));
+
+    b.setColorFillInactive(spec.titlebarColorInactive());
+    b.setEmbossFillInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.titlebarColorInactive(), 1.5f),
+      VectorI3F.scale(spec.titlebarColorInactive(), 0.5f),
+      VectorI3F.scale(spec.titlebarColorInactive(), 1.5f),
+      VectorI3F.scale(spec.titlebarColorInactive(), 0.5f),
+      1
+    ));
+
+    return b.build();
   }
 
   private static SyThemeButtonCheckboxType createThemeButtonCheckbox(

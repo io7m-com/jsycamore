@@ -17,63 +17,79 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
+import java.util.Optional;
+
 /**
- * The type of themes.
+ * A meter theme specification.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
-public interface SyThemeType
+public interface SyThemeMeterType
 {
   /**
-   * @return The theme used for windows
+   * @return The base color used for the containers of active meters
    */
 
   @Value.Parameter
-  SyThemeWindowType windowTheme();
+  VectorI3F colorContainerActive();
 
   /**
-   * @return The theme used for repeating buttons
+   * @return The base color used for containers of inactive meters
    */
 
   @Value.Parameter
-  SyThemeButtonRepeatingType buttonRepeatingTheme();
+  VectorI3F colorContainerInactive();
 
   /**
-   * @return The theme used for checkbox buttons
+   * @return The embossing used for containers of active meters
    */
 
   @Value.Parameter
-  SyThemeButtonCheckboxType buttonCheckboxTheme();
+  Optional<SyThemeEmbossType> embossContainerActive();
 
   /**
-   * @return The theme used for meters
+   * @return The embossing used for containers of inactive meters
    */
 
   @Value.Parameter
-  SyThemeMeterType meterTheme();
+  Optional<SyThemeEmbossType> embossContainerInactive();
 
   /**
-   * @return The theme used for panels
+   * @return The base color used for the fills of active meters
    */
 
   @Value.Parameter
-  SyThemePanelType panelTheme();
+  VectorI3F colorFillActive();
 
   /**
-   * @return The theme used for labels
+   * @return The base color used for fills of inactive meters
    */
 
   @Value.Parameter
-  SyThemeLabelType labelTheme();
+  VectorI3F colorFillInactive();
 
   /**
-   * @return The theme used for images
+   * @return The embossing used for fills of active meters
    */
 
   @Value.Parameter
-  SyThemeImageType imageTheme();
+  Optional<SyThemeEmbossType> embossFillActive();
+
+  /**
+   * @return The embossing used for fills of inactive meters
+   */
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> embossFillInactive();
+
+  /**
+   * @return The outline used for panels
+   */
+
+  @Value.Parameter
+  Optional<SyThemeOutlineType> outline();
 }

@@ -37,6 +37,8 @@ import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeMeter;
+import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
 import com.io7m.jsycamore.core.themes.SyThemePanel;
@@ -256,6 +258,8 @@ public final class SyThemeStride
       1,
       true));
 
+    theme.setMeterTheme(SyThemeStride.createThemeMeter(spec));
+
     theme.setPanelTheme(
       SyThemeStride.createThemePanel(background, background_darker));
     theme.setLabelTheme(
@@ -264,6 +268,50 @@ public final class SyThemeStride
         spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
+  }
+
+  private static SyThemeMeterType createThemeMeter(
+    final SyThemeStrideSpecificationType spec)
+  {
+    final SyThemeMeter.Builder b = SyThemeMeter.builder();
+
+    b.setColorContainerActive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setEmbossContainerActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      1
+    ));
+
+    b.setColorContainerInactive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setEmbossContainerInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.frameColor(), 0.8f),
+      VectorI3F.scale(spec.frameColor(), 1.8f),
+      1
+    ));
+
+    b.setColorFillActive(new VectorI3F(0.15f, 0.46f, 0.79f));
+    b.setEmbossFillActive(SyThemeEmboss.of(
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+      1
+    ));
+
+    b.setColorFillInactive(new VectorI3F(0.15f, 0.46f, 0.79f));
+    b.setEmbossFillInactive(SyThemeEmboss.of(
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
+      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+      1
+    ));
+
+    return b.build();
   }
 
   private static int elementOrder(

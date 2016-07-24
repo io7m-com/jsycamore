@@ -24,6 +24,7 @@ import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
+import com.io7m.jsycamore.core.SyOrientation;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
@@ -38,6 +39,8 @@ import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.core.components.SyMeter;
+import com.io7m.jsycamore.core.components.SyMeterType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
@@ -321,6 +324,40 @@ public final class WindowDemo
             }
             ++y_index;
           }
+        }
+
+        {
+          final SyMeterType meter = SyMeter.create();
+          meter.setBox(SyBoxes.create(224 + 8, 8, 16, 128));
+          meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
+          meter.setActive(SyActive.ACTIVE);
+          meter.setValue(0.75);
+          panel.node().childAdd(meter.node());
+        }
+
+        {
+          final SyMeterType meter = SyMeter.create();
+          meter.setBox(SyBoxes.create(224 + 8 + 16 + 8, 8, 16, 128));
+          meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
+          meter.setActive(SyActive.INACTIVE);
+          meter.setValue(0.4);
+          panel.node().childAdd(meter.node());
+        }
+
+        {
+          final SyMeterType meter = SyMeter.create();
+          meter.setBox(SyBoxes.create(8, 80 + 16, 128, 16));
+          meter.setActive(SyActive.ACTIVE);
+          meter.setValue(0.75);
+          panel.node().childAdd(meter.node());
+        }
+
+        {
+          final SyMeterType meter = SyMeter.create();
+          meter.setBox(SyBoxes.create(8, 80 + 16 + 8 + 16, 128, 16));
+          meter.setActive(SyActive.INACTIVE);
+          meter.setValue(0.4);
+          panel.node().childAdd(meter.node());
         }
       }
 

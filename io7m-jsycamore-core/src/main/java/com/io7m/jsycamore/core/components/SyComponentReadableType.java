@@ -18,11 +18,16 @@ package com.io7m.jsycamore.core.components;
 
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
+import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
+import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jtensors.VectorWritable2IType;
+import com.io7m.jtensors.parameterized.PVectorI2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jtensors.parameterized.PVectorWritable2IType;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -87,6 +92,23 @@ public interface SyComponentReadableType
   SyBoxType<SySpaceParentRelativeType> box();
 
   /**
+   * @return The window-relative position of the component
+   */
+
+  PVectorI2I<SySpaceWindowRelativeType> positionWindowRelative();
+
+  /**
+   * Transform a window-relative position to component-relative form.
+   *
+   * @param w_position A window-relative position
+   * @param c_position The output vector
+   */
+
+  void transformWindowRelative(
+    PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
+    PVectorWritable2IType<SySpaceComponentRelativeType> c_position);
+
+  /**
    * @return The window to which this component belongs
    */
 
@@ -100,6 +122,7 @@ public interface SyComponentReadableType
    * @param on_panel  A function evaluated if this component is a panel
    * @param on_label  A function evaluated if this component is a label
    * @param on_image  A function evaluated if this component is an image
+   * @param on_meter  A function evaluated if this component is a meter
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
@@ -112,7 +135,8 @@ public interface SyComponentReadableType
     BiFunction<A, SyButtonReadableType, B> on_button,
     BiFunction<A, SyPanelReadableType, B> on_panel,
     BiFunction<A, SyLabelReadableType, B> on_label,
-    BiFunction<A, SyImageReadableType, B> on_image);
+    BiFunction<A, SyImageReadableType, B> on_image,
+    BiFunction<A, SyMeterReadableType, B> on_meter);
 
   /**
    * Determine the topmost component at the given window-relative position.

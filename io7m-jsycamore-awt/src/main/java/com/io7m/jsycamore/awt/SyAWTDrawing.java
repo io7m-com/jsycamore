@@ -69,7 +69,7 @@ public final class SyAWTDrawing
   public static void drawOutline(
     final Graphics2D graphics,
     final SyThemeOutlineType outline,
-    final SyBoxType<SySpaceParentRelativeType> box,
+    final SyBoxType<?> box,
     final boolean active)
   {
     NullCheck.notNull(graphics, "graphics");

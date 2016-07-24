@@ -17,25 +17,31 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyOrientation;
 
 import java.util.function.BiFunction;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of meters.
  */
 
-public interface SyPanelType extends SyComponentType, SyPanelReadableType
+public interface SyMeterType extends SyComponentType, SyMeterReadableType
 {
   /**
-   * Set the panel as <i>transparent</i>.
+   * Set the meter's orientation.
    *
-   * @param e {@code true} iff this panel is <i>transparent</i>
-   *
-   * @see SyPanelReadableType#isPanelTransparent()
+   * @param o The orientation
    */
 
-  void setPanelTransparent(boolean e);
+  void setOrientation(SyOrientation o);
+
+  /**
+   * Set the meter value.
+   *
+   * @param x A value in the range `[0.0, 1.0]`
+   */
+
+  void setValue(double x);
 
   @Override
   default <A, B> B matchComponent(
@@ -46,6 +52,6 @@ public interface SyPanelType extends SyComponentType, SyPanelReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_panel).apply(context, this);
+    return NullCheck.notNull(on_meter).apply(context, this);
   }
 }

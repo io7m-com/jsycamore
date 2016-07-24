@@ -101,6 +101,7 @@ public interface SyComponentType extends SyComponentParentEventsType,
    * @param on_panel  A function evaluated if this component is a panel
    * @param on_label  A function evaluated if this component is a label
    * @param on_image  A function evaluated if this component is an image
+   * @param on_meter  A function evaluated if this component is a meter
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
@@ -113,7 +114,8 @@ public interface SyComponentType extends SyComponentParentEventsType,
     BiFunction<A, SyButtonType, B> on_button,
     BiFunction<A, SyPanelType, B> on_panel,
     BiFunction<A, SyLabelType, B> on_label,
-    BiFunction<A, SyImageType, B> on_image);
+    BiFunction<A, SyImageType, B> on_image,
+    BiFunction<A, SyMeterType, B> on_meter);
 
   /**
    * Set this component as active/inactive.

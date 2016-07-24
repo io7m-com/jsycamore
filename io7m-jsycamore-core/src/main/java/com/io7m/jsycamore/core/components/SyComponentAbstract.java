@@ -22,6 +22,7 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
+import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
@@ -31,12 +32,16 @@ import com.io7m.jsycamore.core.boxes.SyBoxMutable;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jtensors.parameterized.PVectorI2I;
+import com.io7m.jtensors.parameterized.PVectorM2I;
 import com.io7m.jtensors.parameterized.PVectorReadable2IType;
+import com.io7m.jtensors.parameterized.PVectorWritable2IType;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -252,6 +257,56 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final SyBoxType<SySpaceParentRelativeType> box()
   {
     return this.box;
+  }
+
+  @Override
+  public final void transformWindowRelative(
+    final PVectorReadable2IType<SySpaceWindowRelativeType> w_position,
+    final PVectorWritable2IType<SySpaceComponentRelativeType> c_position)
+  {
+    NullCheck.notNull(w_position, "Viewport position");
+    NullCheck.notNull(c_position, "Component-relative position");
+
+    final PVectorI2I<SySpaceWindowRelativeType> pos_component =
+      this.positionWindowRelative();
+
+    c_position.set2I(
+      Math.subtractExact(w_position.getXI(), pos_component.getXI()),
+      Math.subtractExact(w_position.getYI(), pos_component.getYI()));
+  }
+
+  @Override
+  public final PVectorI2I<SySpaceWindowRelativeType> positionWindowRelative()
+  {
+    final ArrayDeque<SyComponentReadableType> ancestors =
+      new ArrayDeque<>();
+
+    JOTreeNodeType<SyComponentType> n = this.node;
+    while (true) {
+      final Optional<JOTreeNodeType<SyComponentType>> parent_opt = n.parent();
+      if (parent_opt.isPresent()) {
+        final JOTreeNodeType<SyComponentType> parent = parent_opt.get();
+        ancestors.push(parent.value());
+        n = parent;
+      } else {
+        break;
+      }
+    }
+
+    final PVectorM2I<SySpaceWindowRelativeType> position =
+      new PVectorM2I<>(0, 0);
+
+    while (!ancestors.isEmpty()) {
+      final SyComponentReadableType ancestor = ancestors.pop();
+      position.set2I(
+        Math.addExact(position.getXI(), ancestor.box().minimumX()),
+        Math.addExact(position.getYI(), ancestor.box().minimumY()));
+    }
+
+    position.set2I(
+      Math.addExact(position.getXI(), this.box().minimumX()),
+      Math.addExact(position.getYI(), this.box().minimumY()));
+    return new PVectorI2I<>(position);
   }
 
   @Override

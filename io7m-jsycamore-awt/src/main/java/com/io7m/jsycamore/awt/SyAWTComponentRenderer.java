@@ -19,14 +19,17 @@ package com.io7m.jsycamore.awt;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.core.boxes.SyBox;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyImageReadableType;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
+import com.io7m.jsycamore.core.components.SyMeterReadableType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.images.SyImageCacheType;
@@ -36,6 +39,7 @@ import com.io7m.jsycamore.core.themes.SyThemeButtonType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
 import com.io7m.jtensors.VectorReadable3FType;
@@ -49,6 +53,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * An AWT-based component renderer.
@@ -182,6 +187,9 @@ public final class SyAWTComponentRenderer implements
       }, (r, image) -> {
         this.renderImage(graphics, image);
         return Unit.unit();
+      }, (r, meter) -> {
+        this.renderMeter(graphics, meter);
+        return Unit.unit();
       });
 
       final JOTreeNodeReadableType<SyComponentReadableType> node =
@@ -203,6 +211,69 @@ public final class SyAWTComponentRenderer implements
     }
   }
 
+  private void renderMeter(
+    final Graphics2D graphics,
+    final SyMeterReadableType meter)
+  {
+    final Optional<SyThemeMeterType> theme_opt = meter.theme();
+    if (!theme_opt.isPresent()) {
+      throw SyAWTComponentRenderer.notAttached(meter);
+    }
+
+    final SyThemeMeterType theme = theme_opt.get();
+    final Optional<SyThemeOutlineType> outline = theme.outline();
+    final SyBoxType<SySpaceParentRelativeType> box = meter.box();
+    final SyBoxType<SySpaceComponentRelativeType> box_origin =
+      SyBoxes.cast(SyBoxes.moveToOrigin(box));
+
+    if (box.width() > 0) {
+      this.renderThemedBox(
+        graphics,
+        outline,
+        () -> meter.isActive() ? theme.colorContainerActive() : theme.colorContainerInactive(),
+        () -> meter.isActive() ? theme.embossContainerActive() : theme.embossContainerInactive(),
+        box_origin);
+    }
+
+    switch (meter.orientation()) {
+      case ORIENTATION_HORIZONTAL: {
+        final int width = (int) (meter.value() * (double) box.width());
+        final SyBoxType<SySpaceComponentRelativeType> box_fill =
+          SyBoxes.create(0, 0, width, box.height());
+
+        if (width > 0 && box.height() > 0) {
+          this.renderThemedBox(
+            graphics,
+            outline,
+            () -> meter.isActive() ? theme.colorFillActive() : theme.colorFillInactive(),
+            () -> meter.isActive() ? theme.embossFillActive() : theme.embossFillInactive(),
+            box_fill);
+        }
+        break;
+      }
+      case ORIENTATION_VERTICAL: {
+        final int height = (int) (meter.value() * (double) box.height());
+        final SyBoxType<SySpaceComponentRelativeType> box_fill =
+          SyBoxes.create(0, box.height() - height, box.width(), height);
+
+        if (height > 0 && box.width() > 0) {
+          this.renderThemedBox(
+            graphics,
+            outline,
+            () -> meter.isActive() ? theme.colorFillActive() : theme.colorFillInactive(),
+            () -> meter.isActive() ? theme.embossFillActive() : theme.embossFillInactive(),
+            box_fill);
+        }
+        break;
+      }
+    }
+
+    if (outline.isPresent()) {
+      SyAWTDrawing.drawOutline(
+        graphics, outline.get(), box_origin, meter.isActive());
+    }
+  }
+
   private void renderImage(
     final Graphics2D graphics,
     final SyImageReadableType image)
@@ -212,7 +283,6 @@ public final class SyAWTComponentRenderer implements
       throw SyAWTComponentRenderer.notAttached(image);
     }
 
-    final SyThemeImageType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = image.box();
 
     final SyImageReferenceType<BufferedImage> ref =
@@ -302,7 +372,31 @@ public final class SyAWTComponentRenderer implements
 
     final SyThemePanelType theme = theme_opt.get();
     final SyBoxType<SySpaceParentRelativeType> box = panel.box();
+    final SyBoxType<SySpaceComponentRelativeType> box_origin =
+      SyBoxes.cast(SyBoxes.moveToOrigin(box));
+    final Optional<SyThemeOutlineType> outline = theme.outline();
 
+    this.renderThemedBox(
+      graphics,
+      outline,
+      () -> panel.isActive() ? theme.colorActive() : theme.colorInactive(),
+      () -> panel.isActive() ? theme.embossActive() : theme.embossInactive(),
+      box_origin
+    );
+
+    if (outline.isPresent()) {
+      SyAWTDrawing.drawOutline(
+        graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isActive());
+    }
+  }
+
+  private void renderThemedBox(
+    final Graphics2D graphics,
+    final Optional<SyThemeOutlineType> outline,
+    final Supplier<VectorReadable3FType> color,
+    final Supplier<Optional<SyThemeEmbossType>> emboss,
+    final SyBoxType<SySpaceComponentRelativeType> box)
+  {
     final int width = box.width();
     final int height = box.height();
     final int fill_width;
@@ -310,27 +404,16 @@ public final class SyAWTComponentRenderer implements
     final int fill_x;
     final int fill_y;
 
-    final Optional<SyThemeOutlineType> outline = theme.outline();
     if (outline.isPresent()) {
-      fill_x = 1;
-      fill_y = 1;
+      fill_x = box.minimumX() + 1;
+      fill_y = box.minimumY() + 1;
       fill_width = width - 2;
       fill_height = height - 2;
     } else {
-      fill_x = 0;
-      fill_y = 0;
+      fill_x = box.minimumX();
+      fill_y = box.minimumY();
       fill_width = width;
       fill_height = height;
-    }
-
-    final Optional<SyThemeEmbossType> emboss;
-    final VectorReadable3FType color;
-    if (panel.isActive()) {
-      emboss = theme.embossActive();
-      color = theme.colorActive();
-    } else {
-      emboss = theme.embossInactive();
-      color = theme.colorInactive();
     }
 
     this.renderOptionallyEmbossedFill(
@@ -339,13 +422,8 @@ public final class SyAWTComponentRenderer implements
       fill_height,
       fill_x,
       fill_y,
-      emboss,
-      color);
-
-    if (outline.isPresent()) {
-      SyAWTDrawing.drawOutline(
-        graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isActive());
-    }
+      emboss.get(),
+      color.get());
   }
 
   private void renderButton(

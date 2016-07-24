@@ -17,35 +17,45 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.SyOrientation;
+import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of readable meters.
  */
 
-public interface SyPanelType extends SyComponentType, SyPanelReadableType
+public interface SyMeterReadableType extends SyComponentReadableType
 {
   /**
-   * Set the panel as <i>transparent</i>.
-   *
-   * @param e {@code true} iff this panel is <i>transparent</i>
-   *
-   * @see SyPanelReadableType#isPanelTransparent()
+   * @return The meter's orientation
    */
 
-  void setPanelTransparent(boolean e);
+  SyOrientation orientation();
+
+  /**
+   * @return The theme for the meter
+   */
+
+  Optional<SyThemeMeterType> theme();
+
+  /**
+   * @return The current meter value, in the range `[0.0, 1.0]`
+   */
+
+  double value();
 
   @Override
-  default <A, B> B matchComponent(
+  default <A, B> B matchComponentReadable(
     final A context,
-    final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel,
-    final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image,
-    final BiFunction<A, SyMeterType, B> on_meter)
+    final BiFunction<A, SyButtonReadableType, B> on_button,
+    final BiFunction<A, SyPanelReadableType, B> on_panel,
+    final BiFunction<A, SyLabelReadableType, B> on_label,
+    final BiFunction<A, SyImageReadableType, B> on_image,
+    final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_panel).apply(context, this);
+    return NullCheck.notNull(on_meter).apply(context, this);
   }
 }

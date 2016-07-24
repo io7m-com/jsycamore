@@ -37,6 +37,8 @@ import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
+import com.io7m.jsycamore.core.themes.SyThemeMeter;
+import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemeOutlines;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
@@ -92,6 +94,8 @@ public final class SyThemeMotive
       VectorI3F.scale(background_lighter, spec.colorLightFactor());
     final VectorI3F background_darker =
       VectorI3F.scale(background, spec.colorDarkFactor());
+    final VectorI3F background_darker_darker =
+      VectorI3F.scale(background_darker, spec.colorDarkFactor());
 
     final VectorI3F color_active_base = spec.colorActive();
     final VectorI3F color_active_lighter =
@@ -258,12 +262,70 @@ public final class SyThemeMotive
       2,
       true));
 
+    theme.setMeterTheme(SyThemeMotive.createThemeMeter(
+      spec,
+      background,
+      background_lighter,
+      background_lighter_lighter,
+      background_darker,
+      background_darker_darker
+    ));
+
     theme.setLabelTheme(SyThemeMotive.createThemeLabel(
       spec.foregroundColorActive(),
       spec.foregroundColorInactive()));
 
     theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
+  }
+
+  private static SyThemeMeterType createThemeMeter(
+    final SyThemeMotiveSpecificationType spec,
+    final VectorI3F background,
+    final VectorI3F background_lighter,
+    final VectorI3F background_lighter_lighter,
+    final VectorI3F background_darker,
+    final VectorI3F background_darker_darker)
+  {
+    final SyThemeMeter.Builder b = SyThemeMeter.builder();
+
+    b.setColorContainerActive(background_darker_darker);
+    b.setEmbossContainerActive(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      1
+    ));
+
+    b.setColorContainerInactive(background_darker_darker);
+    b.setEmbossContainerInactive(SyThemeEmboss.of(
+      background_darker,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      1
+    ));
+
+    b.setColorFillActive(spec.foregroundColorActive());
+    b.setEmbossFillActive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1
+    ));
+
+    b.setColorFillInactive(spec.foregroundColorInactive());
+    b.setEmbossFillInactive(SyThemeEmboss.of(
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
+      1
+    ));
+
+    return b.build();
   }
 
   /**

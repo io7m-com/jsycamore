@@ -63,7 +63,8 @@ public interface SyImageType extends SyComponentType, SyImageReadableType
     final BiFunction<A, SyButtonType, B> on_button,
     final BiFunction<A, SyPanelType, B> on_panel,
     final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image)
+    final BiFunction<A, SyImageType, B> on_image,
+    final BiFunction<A, SyMeterType, B> on_meter)
   {
     return NullCheck.notNull(on_image).apply(context, this);
   }

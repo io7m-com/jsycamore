@@ -73,6 +73,9 @@ public abstract class SyPanelContract extends SyComponentContract
       },
       (x, image) -> {
         throw new UnreachableCodeException();
+      },
+      (x, meter) -> {
+        throw new UnreachableCodeException();
       });
 
     Assert.assertTrue(called.get());
@@ -97,6 +100,9 @@ public abstract class SyPanelContract extends SyComponentContract
         throw new UnreachableCodeException();
       },
       (x, image) -> {
+        throw new UnreachableCodeException();
+      },
+      (x, meter) -> {
         throw new UnreachableCodeException();
       });
 

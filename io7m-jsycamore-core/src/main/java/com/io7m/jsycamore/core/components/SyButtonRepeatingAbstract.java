@@ -151,7 +151,6 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     switch (button) {
       case MOUSE_BUTTON_LEFT: {
         this.pressed = true;
-        this.over = true;
         return true;
       }
       case MOUSE_BUTTON_MIDDLE:
