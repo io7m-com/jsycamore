@@ -22,40 +22,68 @@ import org.immutables.value.Value;
 import java.util.Optional;
 
 /**
- * A panel theme specification.
+ * Theme values for oriented meters.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemePanelType
+public interface SyThemeMeterOrientedType
 {
   /**
-   * @return The base fill used for active panels
+   * @return The base fill used for the containers of active meters
    */
 
   @Value.Parameter
-  SyThemeFillType fillActive();
+  SyThemeFillType fillContainerActive();
 
   /**
-   * @return The base fill used for inactive panels
+   * @return The base fill used for containers of inactive meters
    */
 
   @Value.Parameter
-  SyThemeFillType fillInactive();
+  SyThemeFillType fillContainerInactive();
 
   /**
-   * @return The embossing used for active panels
+   * @return The embossing used for containers of active meters
    */
 
   @Value.Parameter
-  Optional<SyThemeEmbossType> embossActive();
+  Optional<SyThemeEmbossType> embossContainerActive();
 
   /**
-   * @return The embossing used for inactive panels
+   * @return The embossing used for containers of inactive meters
    */
 
   @Value.Parameter
-  Optional<SyThemeEmbossType> embossInactive();
+  Optional<SyThemeEmbossType> embossContainerInactive();
+
+  /**
+   * @return The base fill used for the indicators of active meters
+   */
+
+  @Value.Parameter
+  SyThemeFillType fillIndicatorActive();
+
+  /**
+   * @return The base fill used for the indicators of inactive meters
+   */
+
+  @Value.Parameter
+  SyThemeFillType fillIndicatorInactive();
+
+  /**
+   * @return The embossing used for the indicators of active meters
+   */
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> embossIndicatorActive();
+
+  /**
+   * @return The embossing used for the indicators of inactive meters
+   */
+
+  @Value.Parameter
+  Optional<SyThemeEmbossType> embossIndicatorInactive();
 
   /**
    * @return The outline used for panels

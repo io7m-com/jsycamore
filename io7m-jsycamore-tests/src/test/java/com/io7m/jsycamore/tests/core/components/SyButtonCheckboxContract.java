@@ -27,6 +27,7 @@ import com.io7m.jsycamore.core.components.SyButtonState;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.themes.SyTheme;
 import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
+import com.io7m.jsycamore.core.themes.SyThemeColor;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.parameterized.PVectorI2I;
@@ -160,13 +161,13 @@ public abstract class SyButtonCheckboxContract extends SyComponentContract
     final SyTheme theme_without_icons =
       theme_with_icons.withButtonCheckboxTheme(
         SyThemeButtonCheckbox.of(
-          VectorI3F.ZERO,
+          SyThemeColor.of(VectorI3F.ZERO),
           Optional.empty(),
-          VectorI3F.ZERO,
+          SyThemeColor.of(VectorI3F.ZERO),
           Optional.empty(),
-          VectorI3F.ZERO,
+          SyThemeColor.of(VectorI3F.ZERO),
           Optional.empty(),
-          VectorI3F.ZERO,
+          SyThemeColor.of(VectorI3F.ZERO),
           Optional.empty(),
           Optional.empty()
         ));

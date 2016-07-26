@@ -34,11 +34,15 @@ import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
 import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 import com.io7m.jsycamore.core.themes.SyThemeButtonRepeating;
 import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
+import com.io7m.jsycamore.core.themes.SyThemeColor;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
+import com.io7m.jsycamore.core.themes.SyThemeGradientLinear;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeMeter;
+import com.io7m.jsycamore.core.themes.SyThemeMeterOriented;
+import com.io7m.jsycamore.core.themes.SyThemeMeterOrientedType;
 import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
@@ -56,6 +60,7 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
+import com.io7m.jtensors.VectorI2F;
 import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorI4F;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -86,30 +91,31 @@ public final class SyThemeBee
 
     final SyTheme.Builder theme = SyTheme.builder();
 
-    final VectorI3F background = spec.backgroundColor();
+    final float degrees_light = 10.0f;
+    final float degrees_dark = -10.0f;
+    final float factor_light = 1.2f;
+    final float factor_dark = 0.8f;
+
+    final VectorI3F background =
+      spec.backgroundColor();
     final VectorI3F background_lighter =
-      VectorI3F.scale(background, spec.colorLightFactor());
+      VectorI3F.scale(background, factor_light);
     final VectorI3F background_lighter_lighter =
-      VectorI3F.scale(background_lighter, spec.colorLightFactor());
+      VectorI3F.scale(background_lighter, factor_light);
     final VectorI3F background_darker =
-      VectorI3F.scale(background, spec.colorDarkFactor());
+      VectorI3F.scale(background, factor_dark);
 
     final VectorI3F title_color_active_lighter =
-      SyColors.rotate(spec.titlebarColorActive(), spec.colorLightDegrees());
+      SyColors.rotate(spec.titlebarColorActive(), degrees_light);
     final VectorI3F title_color_active_darker =
-      SyColors.rotate(spec.titlebarColorActive(), spec.colorDarkDegrees());
-
-    final VectorI3F frame_color_lighter =
-      VectorI3F.scale(spec.frameColor(), spec.colorLightFactor());
-    final VectorI3F frame_color_darker =
-      VectorI3F.scale(spec.frameColor(), spec.colorDarkFactor());
+      SyColors.rotate(spec.titlebarColorActive(), degrees_dark);
 
     final VectorI3F title_color_inactive_base =
       spec.titlebarColorInactive();
     final VectorI3F color_inactive_lighter =
-      SyColors.rotate(title_color_inactive_base, spec.colorLightDegrees());
+      SyColors.rotate(title_color_inactive_base, degrees_light);
     final VectorI3F color_inactive_darker =
-      SyColors.rotate(title_color_inactive_base, spec.colorDarkDegrees());
+      SyColors.rotate(title_color_inactive_base, degrees_dark);
 
     final VectorI3F text_color_active =
       spec.titlebarTextColorActive();
@@ -152,13 +158,17 @@ public final class SyThemeBee
 
     final SyThemeButtonRepeating.Builder theme_titlebar_button_b =
       SyThemeButtonRepeating.builder();
-    theme_titlebar_button_b.setColorPressed(spec.titlebarColorActive());
+    theme_titlebar_button_b.setFillPressed(
+      SyThemeColor.of(spec.titlebarColorActive()));
     theme_titlebar_button_b.setEmbossPressed(theme_titlebar_emboss_pressed);
-    theme_titlebar_button_b.setColorOver(spec.titlebarColorActive());
+    theme_titlebar_button_b.setFillOver(
+      SyThemeColor.of(spec.titlebarColorActive()));
     theme_titlebar_button_b.setEmbossOver(theme_titlebar_emboss_active);
-    theme_titlebar_button_b.setColorActive(spec.titlebarColorActive());
+    theme_titlebar_button_b.setFillActive(
+      SyThemeColor.of(spec.titlebarColorActive()));
     theme_titlebar_button_b.setEmbossActive(theme_titlebar_emboss_active);
-    theme_titlebar_button_b.setColorInactive(spec.titlebarColorInactive());
+    theme_titlebar_button_b.setFillInactive(
+      SyThemeColor.of(spec.titlebarColorInactive()));
     theme_titlebar_button_b.setEmbossInactive(theme_titlebar_emboss_inactive);
 
     /*
@@ -167,14 +177,16 @@ public final class SyThemeBee
 
     final SyThemePanel.Builder theme_titlebar_panel_b =
       SyThemePanel.builder();
-    theme_titlebar_panel_b.setColorActive(spec.titlebarColorActive());
-    theme_titlebar_panel_b.setColorInactive(title_color_inactive_base);
+    theme_titlebar_panel_b.setFillActive(
+      SyThemeColor.of(spec.titlebarColorActive()));
+    theme_titlebar_panel_b.setFillInactive(
+      SyThemeColor.of(title_color_inactive_base));
     theme_titlebar_panel_b.setEmbossActive(theme_titlebar_emboss_active);
     theme_titlebar_panel_b.setEmbossInactive(theme_titlebar_emboss_inactive);
     theme_titlebar_panel_b.setOutline(SyThemeOutline.of(
       true, true, true, false,
       new VectorI3F(0.0f, 0.0f, 0.0f),
-      new VectorI3F(0.3f, 0.3f, 0.3f),
+      VectorI3F.scale(spec.backgroundColor(), 0.5f),
       true));
 
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
@@ -225,18 +237,18 @@ public final class SyThemeBee
     final SyThemeEmboss.Builder theme_frame_emboss_active_b =
       SyThemeEmboss.builder();
     theme_frame_emboss_active_b.setSize(1);
-    theme_frame_emboss_active_b.setColorTop(frame_color_lighter);
-    theme_frame_emboss_active_b.setColorLeft(frame_color_lighter);
-    theme_frame_emboss_active_b.setColorRight(frame_color_darker);
-    theme_frame_emboss_active_b.setColorBottom(frame_color_darker);
+    theme_frame_emboss_active_b.setColorTop(background_lighter);
+    theme_frame_emboss_active_b.setColorLeft(background_lighter);
+    theme_frame_emboss_active_b.setColorRight(background_darker);
+    theme_frame_emboss_active_b.setColorBottom(background_darker);
 
     final SyThemeEmboss.Builder theme_frame_emboss_inactive_b =
       SyThemeEmboss.builder();
     theme_frame_emboss_inactive_b.setSize(1);
-    theme_frame_emboss_inactive_b.setColorTop(frame_color_lighter);
-    theme_frame_emboss_inactive_b.setColorLeft(frame_color_lighter);
-    theme_frame_emboss_inactive_b.setColorRight(frame_color_darker);
-    theme_frame_emboss_inactive_b.setColorBottom(frame_color_darker);
+    theme_frame_emboss_inactive_b.setColorTop(background_lighter);
+    theme_frame_emboss_inactive_b.setColorLeft(background_lighter);
+    theme_frame_emboss_inactive_b.setColorRight(background_darker);
+    theme_frame_emboss_inactive_b.setColorBottom(background_darker);
 
     final SyThemeWindowFrame.Builder theme_frame_b =
       SyThemeWindowFrame.builder();
@@ -244,12 +256,15 @@ public final class SyThemeBee
     theme_frame_b.setTopHeight(3);
     theme_frame_b.setLeftWidth(3);
     theme_frame_b.setRightWidth(3);
-    theme_frame_b.setColorActive(spec.frameColor());
-    theme_frame_b.setColorInactive(spec.frameColor());
+    theme_frame_b.setColorActive(spec.backgroundColor());
+    theme_frame_b.setColorInactive(spec.backgroundColor());
     theme_frame_b.setOutline(SyThemeOutline.of(
-      true, true, true, true,
+      true,
+      true,
+      true,
+      true,
       new VectorI3F(0.0f, 0.0f, 0.0f),
-      new VectorI3F(0.3f, 0.3f, 0.3f),
+      VectorI3F.scale(spec.backgroundColor(), 0.5f),
       true));
 
     theme_frame_b.setTopLeftStyle(
@@ -265,8 +280,10 @@ public final class SyThemeBee
     theme_frame_b.setEmbossInactive(theme_frame_emboss_inactive_b.build());
 
     final SyThemeOutline.Builder theme_window_outline = SyThemeOutline.builder();
-    theme_window_outline.setColorActive(new VectorI3F(0.0f, 0.0f, 0.0f));
-    theme_window_outline.setColorInactive(new VectorI3F(0.3f, 0.3f, 0.3f));
+    theme_window_outline.setColorActive(
+      new VectorI3F(0.0f, 0.0f, 0.0f));
+    theme_window_outline.setColorInactive(
+      VectorI3F.scale(spec.backgroundColor(), 0.5f));
 
     theme.setWindowTheme(
       SyThemeWindow.of(
@@ -301,41 +318,137 @@ public final class SyThemeBee
   private static SyThemeMeterType createThemeMeter(
     final SyThemeBeeSpecificationType spec)
   {
-    final SyThemeMeter.Builder b = SyThemeMeter.builder();
+    final SyThemeMeterOrientedType h =
+      SyThemeBee.createThemeMeterHorizontal(spec);
+    final SyThemeMeterOrientedType v =
+      SyThemeBee.createThemeMeterVertical(spec);
+    return SyThemeMeter.of(h, v);
+  }
 
-    b.setColorContainerActive(new VectorI3F(1.0f, 1.0f, 1.0f));
+  private static SyThemeMeterOrientedType createThemeMeterHorizontal(
+    final SyThemeBeeSpecificationType spec)
+  {
+    final SyThemeMeterOriented.Builder b =
+      SyThemeMeterOriented.builder();
+
+    b.setFillContainerActive(
+      SyThemeColor.of(new VectorI3F(1.0f, 1.0f, 1.0f)));
     b.setEmbossContainerActive(SyThemeEmboss.of(
-      VectorI3F.scale(spec.frameColor(), 0.8f),
-      VectorI3F.scale(spec.frameColor(), 1.8f),
-      VectorI3F.scale(spec.frameColor(), 0.8f),
-      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
       1
     ));
 
-    b.setColorContainerInactive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setFillContainerInactive(
+      SyThemeColor.of(new VectorI3F(1.0f, 1.0f, 1.0f)));
     b.setEmbossContainerInactive(SyThemeEmboss.of(
-      VectorI3F.scale(spec.frameColor(), 0.8f),
-      VectorI3F.scale(spec.frameColor(), 1.8f),
-      VectorI3F.scale(spec.frameColor(), 0.8f),
-      VectorI3F.scale(spec.frameColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
       1
     ));
 
-    b.setColorFillActive(new VectorI3F(0.15f, 0.46f, 0.79f));
-    b.setEmbossFillActive(SyThemeEmboss.of(
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+    final SyThemeGradientLinear gradient;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 1.1f));
+      gb.addDistributions(0.0f);
+      gb.addColors(spec.colorPrimaryActive());
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 0.9f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 0.8f));
+      gb.addDistributions(1.0f);
+
+      gradient = gb.build();
+    }
+
+    b.setFillIndicatorActive(gradient);
+    b.setEmbossIndicatorActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
       1
     ));
 
-    b.setColorFillInactive(new VectorI3F(0.15f, 0.46f, 0.79f));
-    b.setEmbossFillInactive(SyThemeEmboss.of(
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 1.5f),
-      VectorI3F.scale(new VectorI3F(0.15f, 0.46f, 0.79f), 0.5f),
+    b.setFillIndicatorInactive(gradient);
+    b.setEmbossIndicatorInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      1
+    ));
+
+    return b.build();
+  }
+
+  private static SyThemeMeterOrientedType createThemeMeterVertical(
+    final SyThemeBeeSpecificationType spec)
+  {
+    final SyThemeMeterOriented.Builder b =
+      SyThemeMeterOriented.builder();
+
+    b.setFillContainerActive(
+      SyThemeColor.of(new VectorI3F(1.0f, 1.0f, 1.0f)));
+    b.setEmbossContainerActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      1
+    ));
+
+    b.setFillContainerInactive(
+      SyThemeColor.of(new VectorI3F(1.0f, 1.0f, 1.0f)));
+    b.setEmbossContainerInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      VectorI3F.scale(spec.backgroundColor(), 0.8f),
+      VectorI3F.scale(spec.backgroundColor(), 1.8f),
+      1
+    ));
+
+    final SyThemeGradientLinear gradient;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(1.0f, 0.0f));
+
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 1.1f));
+      gb.addDistributions(0.0f);
+      gb.addColors(spec.colorPrimaryActive());
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 0.9f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(spec.colorPrimaryActive(), 0.8f));
+      gb.addDistributions(1.0f);
+
+      gradient = gb.build();
+    }
+
+    b.setFillIndicatorActive(gradient);
+    b.setEmbossIndicatorActive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      1
+    ));
+
+    b.setFillIndicatorInactive(gradient);
+    b.setEmbossIndicatorInactive(SyThemeEmboss.of(
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.8f),
+      VectorI3F.scale(spec.colorPrimaryActive(), 0.5f),
       1
     ));
 
@@ -470,8 +583,8 @@ public final class SyThemeBee
     final VectorI3F background)
   {
     final SyThemePanel.Builder b = SyThemePanel.builder();
-    b.setColorActive(background);
-    b.setColorInactive(background);
+    b.setFillActive(SyThemeColor.of(background));
+    b.setFillInactive(SyThemeColor.of(background));
     return b.build();
   }
 
@@ -497,12 +610,33 @@ public final class SyThemeBee
       SyThemeButtonRepeating.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
-      true, true, true, true,
+      true,
+      true,
+      true,
+      true,
       spec.foregroundColorActive(),
       background_darker,
       true));
 
-    theme_button_b.setColorActive(background);
+    final SyThemeGradientLinear gradient_active;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 1.02f));
+      gb.addDistributions(0.0f);
+      gb.addColors(background);
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(background, 0.98f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 0.9f));
+      gb.addDistributions(1.0f);
+
+      gradient_active = gb.build();
+    }
+
+    theme_button_b.setFillActive(gradient_active);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
@@ -511,18 +645,54 @@ public final class SyThemeBee
       1
     ));
 
-    theme_button_b.setColorInactive(background);
+    theme_button_b.setFillInactive(SyThemeColor.of(background));
 
-    theme_button_b.setColorOver(background_lighter);
+    final SyThemeGradientLinear gradient_over;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 1.03f));
+      gb.addDistributions(0.0f);
+      gb.addColors(background);
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(background, 0.99f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 0.91f));
+      gb.addDistributions(1.0f);
+
+      gradient_over = gb.build();
+    }
+
+    theme_button_b.setFillOver(gradient_over);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
-      background_lighter_lighter,
-      background,
-      background_lighter_lighter,
-      background,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
       1
     ));
 
-    theme_button_b.setColorPressed(background);
+    final SyThemeGradientLinear gradient_pressed;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 0.9f));
+      gb.addDistributions(0.0f);
+      gb.addColors(VectorI3F.scale(background, 0.98f));
+      gb.addDistributions(0.4999f);
+      gb.addColors(background);
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 1.02f));
+      gb.addDistributions(1.0f);
+
+      gradient_pressed = gb.build();
+    }
+
+    theme_button_b.setFillPressed(gradient_pressed);
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
       background_darker,
       background_lighter,
@@ -545,12 +715,33 @@ public final class SyThemeBee
       SyThemeButtonCheckbox.builder();
 
     theme_button_b.setOutline(SyThemeOutline.of(
-      true, true, true, true,
+      true,
+      true,
+      true,
+      true,
       spec.foregroundColorActive(),
       background_darker,
       true));
 
-    theme_button_b.setColorActive(background);
+    final SyThemeGradientLinear gradient_active;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 1.02f));
+      gb.addDistributions(0.0f);
+      gb.addColors(background);
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(background, 0.98f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 0.9f));
+      gb.addDistributions(1.0f);
+
+      gradient_active = gb.build();
+    }
+
+    theme_button_b.setFillActive(gradient_active);
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
@@ -559,18 +750,54 @@ public final class SyThemeBee
       1
     ));
 
-    theme_button_b.setColorInactive(background);
+    theme_button_b.setFillInactive(SyThemeColor.of(background));
 
-    theme_button_b.setColorOver(background_lighter);
+    final SyThemeGradientLinear gradient_over;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 1.03f));
+      gb.addDistributions(0.0f);
+      gb.addColors(background);
+      gb.addDistributions(0.4999f);
+      gb.addColors(VectorI3F.scale(background, 0.99f));
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 0.91f));
+      gb.addDistributions(1.0f);
+
+      gradient_over = gb.build();
+    }
+
+    theme_button_b.setFillOver(gradient_over);
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
-      background_lighter_lighter,
-      background,
-      background_lighter_lighter,
-      background,
+      background_lighter,
+      background_darker,
+      background_lighter,
+      background_darker,
       1
     ));
 
-    theme_button_b.setColorPressed(background);
+    final SyThemeGradientLinear gradient_pressed;
+    {
+      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+      gb.setPoint0(new VectorI2F(0.0f, 0.0f));
+      gb.setPoint1(new VectorI2F(0.0f, 1.0f));
+
+      gb.addColors(VectorI3F.scale(background, 0.9f));
+      gb.addDistributions(0.0f);
+      gb.addColors(VectorI3F.scale(background, 0.98f));
+      gb.addDistributions(0.4999f);
+      gb.addColors(background);
+      gb.addDistributions(0.5f);
+      gb.addColors(VectorI3F.scale(background, 1.02f));
+      gb.addDistributions(1.0f);
+
+      gradient_pressed = gb.build();
+    }
+
+    theme_button_b.setFillPressed(gradient_pressed);
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
       background_darker,
       background_lighter,

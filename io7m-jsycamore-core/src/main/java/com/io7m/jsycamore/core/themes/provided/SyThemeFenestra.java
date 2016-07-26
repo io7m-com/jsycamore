@@ -33,11 +33,13 @@ import com.io7m.jsycamore.core.themes.SyThemeButtonCheckbox;
 import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 import com.io7m.jsycamore.core.themes.SyThemeButtonRepeating;
 import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
+import com.io7m.jsycamore.core.themes.SyThemeColor;
 import com.io7m.jsycamore.core.themes.SyThemeEmboss;
 import com.io7m.jsycamore.core.themes.SyThemeImage;
 import com.io7m.jsycamore.core.themes.SyThemeLabel;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
 import com.io7m.jsycamore.core.themes.SyThemeMeter;
+import com.io7m.jsycamore.core.themes.SyThemeMeterOriented;
 import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutline;
 import com.io7m.jsycamore.core.themes.SyThemePadding;
@@ -132,8 +134,10 @@ public final class SyThemeFenestra
 
     final SyThemePanel.Builder theme_titlebar_panel_b =
       SyThemePanel.builder();
-    theme_titlebar_panel_b.setColorActive(spec.titlebarColorActive());
-    theme_titlebar_panel_b.setColorInactive(title_color_inactive_base);
+    theme_titlebar_panel_b.setFillActive(
+      SyThemeColor.of(spec.titlebarColorActive()));
+    theme_titlebar_panel_b.setFillInactive(
+      SyThemeColor.of(title_color_inactive_base));
 
     final SyThemeWindowTitleBar.Builder theme_titlebar_b =
       SyThemeWindowTitleBar.builder();
@@ -260,9 +264,9 @@ public final class SyThemeFenestra
   private static SyThemeMeterType createThemeMeter(
     final SyThemeFenestraSpecificationType spec)
   {
-    final SyThemeMeter.Builder b = SyThemeMeter.builder();
+    final SyThemeMeterOriented.Builder b = SyThemeMeterOriented.builder();
 
-    b.setColorContainerActive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setFillContainerActive(SyThemeColor.of(new VectorI3F(1.0f, 1.0f, 1.0f)));
     b.setEmbossContainerActive(SyThemeEmboss.of(
       VectorI3F.scale(spec.frameColor(), 0.8f),
       VectorI3F.scale(spec.frameColor(), 1.8f),
@@ -271,7 +275,10 @@ public final class SyThemeFenestra
       1
     ));
 
-    b.setColorContainerInactive(new VectorI3F(1.0f, 1.0f, 1.0f));
+    b.setFillContainerInactive(SyThemeColor.of(new VectorI3F(
+      1.0f,
+      1.0f,
+      1.0f)));
     b.setEmbossContainerInactive(SyThemeEmboss.of(
       VectorI3F.scale(spec.frameColor(), 0.8f),
       VectorI3F.scale(spec.frameColor(), 1.8f),
@@ -280,8 +287,8 @@ public final class SyThemeFenestra
       1
     ));
 
-    b.setColorFillActive(spec.titlebarColorActive());
-    b.setEmbossFillActive(SyThemeEmboss.of(
+    b.setFillIndicatorActive(SyThemeColor.of(spec.titlebarColorActive()));
+    b.setEmbossIndicatorActive(SyThemeEmboss.of(
       VectorI3F.scale(spec.titlebarColorActive(), 1.5f),
       VectorI3F.scale(spec.titlebarColorActive(), 0.5f),
       VectorI3F.scale(spec.titlebarColorActive(), 1.5f),
@@ -289,8 +296,8 @@ public final class SyThemeFenestra
       1
     ));
 
-    b.setColorFillInactive(spec.titlebarColorInactive());
-    b.setEmbossFillInactive(SyThemeEmboss.of(
+    b.setFillIndicatorInactive(SyThemeColor.of(spec.titlebarColorInactive()));
+    b.setEmbossIndicatorInactive(SyThemeEmboss.of(
       VectorI3F.scale(spec.titlebarColorInactive(), 1.5f),
       VectorI3F.scale(spec.titlebarColorInactive(), 0.5f),
       VectorI3F.scale(spec.titlebarColorInactive(), 1.5f),
@@ -298,7 +305,7 @@ public final class SyThemeFenestra
       1
     ));
 
-    return b.build();
+    return SyThemeMeter.of(b.build(), b.build());
   }
 
   private static SyThemeButtonCheckboxType createThemeButtonCheckbox(
@@ -323,7 +330,7 @@ public final class SyThemeFenestra
 
     final VectorI3F base = new VectorI3F(1.0f, 1.0f, 1.0f);
 
-    theme_button_b.setColorActive(base);
+    theme_button_b.setFillActive(SyThemeColor.of(base));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_darker,
       background_lighter,
@@ -332,9 +339,9 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorInactive(background);
+    theme_button_b.setFillInactive(SyThemeColor.of(background));
 
-    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setFillOver(SyThemeColor.of(background_lighter));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
       background_darker,
       background_lighter,
@@ -343,7 +350,7 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorPressed(base);
+    theme_button_b.setFillPressed(SyThemeColor.of(base));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
       background_darker,
       background_lighter,
@@ -507,8 +514,8 @@ public final class SyThemeFenestra
   {
     final SyThemePanel.Builder theme_panel_b =
       SyThemePanel.builder();
-    theme_panel_b.setColorActive(background);
-    theme_panel_b.setColorInactive(background);
+    theme_panel_b.setFillActive(SyThemeColor.of(background));
+    theme_panel_b.setFillInactive(SyThemeColor.of(background));
     return theme_panel_b.build();
   }
 
@@ -532,7 +539,7 @@ public final class SyThemeFenestra
         true));
     }
 
-    theme_button_b.setColorActive(background);
+    theme_button_b.setFillActive(SyThemeColor.of(background));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
@@ -541,9 +548,9 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorInactive(background);
+    theme_button_b.setFillInactive(SyThemeColor.of(background));
 
-    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setFillOver(SyThemeColor.of(background_lighter));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
       background_lighter_lighter,
       background,
@@ -552,7 +559,7 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorPressed(background);
+    theme_button_b.setFillPressed(SyThemeColor.of(background));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
       background_darker,
       background_lighter,
@@ -584,7 +591,7 @@ public final class SyThemeFenestra
         true));
     }
 
-    theme_button_b.setColorActive(background);
+    theme_button_b.setFillActive(SyThemeColor.of(background));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
@@ -593,7 +600,7 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorInactive(background);
+    theme_button_b.setFillInactive(SyThemeColor.of(background));
     theme_button_b.setEmbossInactive(SyThemeEmboss.of(
       background_lighter,
       background_darker,
@@ -602,7 +609,7 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorOver(background_lighter);
+    theme_button_b.setFillOver(SyThemeColor.of(background_lighter));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
       background_lighter_lighter,
       background,
@@ -611,7 +618,7 @@ public final class SyThemeFenestra
       emboss
     ));
 
-    theme_button_b.setColorPressed(background);
+    theme_button_b.setFillPressed(SyThemeColor.of(background));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
       background_darker,
       background_lighter,

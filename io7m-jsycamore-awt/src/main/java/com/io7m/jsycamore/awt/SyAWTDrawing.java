@@ -17,14 +17,21 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.themes.SyThemeColorType;
+import com.io7m.jsycamore.core.themes.SyThemeFillType;
+import com.io7m.jsycamore.core.themes.SyThemeGradientLinearType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jtensors.VectorI2F;
+import com.io7m.jtensors.VectorI3F;
 import com.io7m.jtensors.VectorReadable3FType;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.Paint;
+import java.util.List;
 
 /**
  * Functions for drawing in AWT contexts.
@@ -114,5 +121,63 @@ public final class SyAWTDrawing
         graphics.drawLine(x_max - 1, y_max - 1, x_max - 1, y_max - 1);
       }
     }
+  }
+
+  /**
+   * Produce an AWT paint for the given fill type.
+   *
+   * @param in_box The box that will be filled
+   * @param fill   The fill type
+   *
+   * @return An AWT paint
+   */
+
+  public static Paint toPaint(
+    final SyBoxType<?> in_box,
+    final SyThemeFillType fill)
+  {
+    NullCheck.notNull(in_box, "Box");
+    return NullCheck.notNull(fill, "Fill").matchFill(
+      in_box,
+      SyAWTDrawing::toPaintGradient,
+      SyAWTDrawing::toPaintColor);
+  }
+
+  private static Paint toPaintColor(
+    final SyBoxType<?> in_box,
+    final SyThemeColorType color)
+  {
+    return SyAWTDrawing.toColor(color.color());
+  }
+
+  private static Paint toPaintGradient(
+    final SyBoxType<?> in_box,
+    final SyThemeGradientLinearType gradient)
+  {
+    final int size = gradient.colors().size();
+    final float[] fractions = new float[size];
+    final Color[] colors = new Color[size];
+
+    final List<Float> g_distributions = gradient.distributions();
+    final List<VectorI3F> g_colors = gradient.colors();
+    for (int index = 0; index < size; ++index) {
+      fractions[index] = g_distributions.get(index).floatValue();
+      colors[index] = SyAWTDrawing.toColor(g_colors.get(index));
+    }
+
+    final float x = (float) in_box.minimumX();
+    final float y = (float) in_box.minimumY();
+    final float w = (float) in_box.width();
+    final float h = (float) in_box.height();
+
+    final VectorI2F p0 = gradient.point0();
+    final VectorI2F p1 = gradient.point1();
+
+    final float x0 = x + (p0.getXF() * w);
+    final float y0 = y + (p0.getYF() * h);
+    final float x1 = x + (p1.getXF() * w);
+    final float y1 = y + (p1.getYF() * h);
+
+    return new LinearGradientPaint(x0, y0, x1, y1, fractions, colors);
   }
 }

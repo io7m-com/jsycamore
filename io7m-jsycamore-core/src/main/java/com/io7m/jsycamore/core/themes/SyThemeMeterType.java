@@ -17,10 +17,7 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
-
-import java.util.Optional;
 
 /**
  * A meter theme specification.
@@ -31,65 +28,16 @@ import java.util.Optional;
 public interface SyThemeMeterType
 {
   /**
-   * @return The base color used for the containers of active meters
+   * @return The theme values for horizontal meters
    */
 
-  @Value.Parameter
-  VectorI3F colorContainerActive();
+  @Value.Parameter(order = 0)
+  SyThemeMeterOrientedType horizontal();
 
   /**
-   * @return The base color used for containers of inactive meters
+   * @return The theme values for vertical meters
    */
 
-  @Value.Parameter
-  VectorI3F colorContainerInactive();
-
-  /**
-   * @return The embossing used for containers of active meters
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossContainerActive();
-
-  /**
-   * @return The embossing used for containers of inactive meters
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossContainerInactive();
-
-  /**
-   * @return The base color used for the fills of active meters
-   */
-
-  @Value.Parameter
-  VectorI3F colorFillActive();
-
-  /**
-   * @return The base color used for fills of inactive meters
-   */
-
-  @Value.Parameter
-  VectorI3F colorFillInactive();
-
-  /**
-   * @return The embossing used for fills of active meters
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossFillActive();
-
-  /**
-   * @return The embossing used for fills of inactive meters
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossFillInactive();
-
-  /**
-   * @return The outline used for panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  @Value.Parameter(order = 1)
+  SyThemeMeterOrientedType vertical();
 }

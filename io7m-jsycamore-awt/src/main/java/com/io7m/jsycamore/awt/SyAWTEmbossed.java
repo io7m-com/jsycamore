@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.valid4j.Assertive;
 
 import java.awt.Graphics2D;
@@ -47,10 +48,7 @@ public final class SyAWTEmbossed
    * <p>Render an embossed rectangle.</p>
    *
    * @param graphics    A graphics context
-   * @param x           The leftmost edge
-   * @param y           The topmost edge
-   * @param width       The width of the rectangle (must be positive)
-   * @param height      The height of the rectangle (must be positive)
+   * @param box         The box
    * @param emboss_size The size of the embossed region
    * @param left        The paint used for the left emboss regions
    * @param right       The paint used for the right emboss regions
@@ -61,10 +59,7 @@ public final class SyAWTEmbossed
 
   public void rectangle(
     final Graphics2D graphics,
-    final int x,
-    final int y,
-    final int width,
-    final int height,
+    final SyBoxType<?> box,
     final int emboss_size,
     final Paint left,
     final Paint right,
@@ -73,14 +68,13 @@ public final class SyAWTEmbossed
     final Optional<Paint> fill)
   {
     NullCheck.notNull(graphics);
+    NullCheck.notNull(box, "Box");
     NullCheck.notNull(left);
     NullCheck.notNull(right);
     NullCheck.notNull(top);
     NullCheck.notNull(bottom);
     NullCheck.notNull(fill);
 
-    Assertive.require(width > 0, "Rendered rectangle width must be positive");
-    Assertive.require(height > 0, "Rendered rectangle height must be positive");
     Assertive.require(emboss_size > 0, "Emboss area size must be positive");
 
     final AffineTransform old_transform = graphics.getTransform();
@@ -88,7 +82,11 @@ public final class SyAWTEmbossed
     final Paint old_paint = graphics.getPaint();
 
     try {
-      graphics.clipRect(x, y, width, height);
+      final int x = box.minimumX();
+      final int y = box.minimumY();
+      final int w = box.width();
+      final int h = box.height();
+      graphics.clipRect(x, y, w, h);
       graphics.translate(x, y);
 
       /**
@@ -98,8 +96,8 @@ public final class SyAWTEmbossed
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(emboss_size, emboss_size);
-      this.poly.addPoint(emboss_size, height - emboss_size);
-      this.poly.addPoint(0, height);
+      this.poly.addPoint(emboss_size, h - emboss_size);
+      this.poly.addPoint(0, h);
       graphics.setPaint(left);
       graphics.fill(this.poly);
 
@@ -110,8 +108,8 @@ public final class SyAWTEmbossed
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(emboss_size, emboss_size);
-      this.poly.addPoint(width - emboss_size, emboss_size);
-      this.poly.addPoint(width, 0);
+      this.poly.addPoint(w - emboss_size, emboss_size);
+      this.poly.addPoint(w, 0);
       graphics.setPaint(top);
       graphics.fill(this.poly);
 
@@ -120,10 +118,10 @@ public final class SyAWTEmbossed
        */
 
       this.poly.reset();
-      this.poly.addPoint(0, height);
-      this.poly.addPoint(emboss_size, height - emboss_size);
-      this.poly.addPoint(width - emboss_size, height - emboss_size);
-      this.poly.addPoint(width, height);
+      this.poly.addPoint(0, h);
+      this.poly.addPoint(emboss_size, h - emboss_size);
+      this.poly.addPoint(w - emboss_size, h - emboss_size);
+      this.poly.addPoint(w, h);
       graphics.setPaint(bottom);
       graphics.fill(this.poly);
 
@@ -132,10 +130,10 @@ public final class SyAWTEmbossed
        */
 
       this.poly.reset();
-      this.poly.addPoint(width, 0);
-      this.poly.addPoint(width, height);
-      this.poly.addPoint(width - emboss_size, height - emboss_size);
-      this.poly.addPoint(width - emboss_size, emboss_size);
+      this.poly.addPoint(w, 0);
+      this.poly.addPoint(w, h);
+      this.poly.addPoint(w - emboss_size, h - emboss_size);
+      this.poly.addPoint(w - emboss_size, emboss_size);
       graphics.setPaint(right);
       graphics.fill(this.poly);
 
@@ -149,8 +147,8 @@ public final class SyAWTEmbossed
         graphics.fillRect(
           emboss_size,
           emboss_size,
-          width - (emboss_size + emboss_size),
-          height - (emboss_size + emboss_size));
+          w - (emboss_size + emboss_size),
+          h - (emboss_size + emboss_size));
       }
 
     } finally {

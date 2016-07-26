@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
 import java.util.Optional;
@@ -28,11 +27,11 @@ import java.util.Optional;
 public interface SyThemeButtonType
 {
   /**
-   * @return The base color used for active buttons
+   * @return The base fill used for active buttons
    */
 
   @Value.Parameter
-  VectorI3F colorActive();
+  SyThemeFillType fillActive();
 
   /**
    * @return The embossing used for active buttons
@@ -42,12 +41,12 @@ public interface SyThemeButtonType
   Optional<SyThemeEmbossType> embossActive();
 
   /**
-   * @return The base color used for active buttons that are currently under the
+   * @return The base fill used for active buttons that are currently under the
    * mouse cursor
    */
 
   @Value.Parameter
-  VectorI3F colorOver();
+  SyThemeFillType fillOver();
 
   /**
    * @return The embossing used for active buttons that are currently under the
@@ -58,11 +57,11 @@ public interface SyThemeButtonType
   Optional<SyThemeEmbossType> embossOver();
 
   /**
-   * @return The base color used for pressed buttons
+   * @return The base fill used for pressed buttons
    */
 
   @Value.Parameter
-  VectorI3F colorPressed();
+  SyThemeFillType fillPressed();
 
   /**
    * @return The embossing used for pressed buttons
@@ -72,11 +71,11 @@ public interface SyThemeButtonType
   Optional<SyThemeEmbossType> embossPressed();
 
   /**
-   * @return The base color used for disabled buttons
+   * @return The base fill used for disabled buttons
    */
 
   @Value.Parameter
-  VectorI3F colorInactive();
+  SyThemeFillType fillInactive();
 
   /**
    * @return The embossing used for inactive buttons

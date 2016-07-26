@@ -16,51 +16,34 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jtensors.VectorI3F;
 import org.immutables.value.Value;
 
-import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
- * A panel theme specification.
+ * The type of colors.
  */
 
 @SyImmutableStyleType
 @Value.Immutable
-public interface SyThemePanelType
+public interface SyThemeColorType extends SyThemeFillType
 {
   /**
-   * @return The base fill used for active panels
+   * @return The color
    */
 
   @Value.Parameter
-  SyThemeFillType fillActive();
+  VectorI3F color();
 
-  /**
-   * @return The base fill used for inactive panels
-   */
-
-  @Value.Parameter
-  SyThemeFillType fillInactive();
-
-  /**
-   * @return The embossing used for active panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossActive();
-
-  /**
-   * @return The embossing used for inactive panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossInactive();
-
-  /**
-   * @return The outline used for panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  @Override
+  default <A, B> B matchFill(
+    final A context,
+    final BiFunction<A, SyThemeGradientLinearType, B> on_gradient_linear,
+    final BiFunction<A, SyThemeColorType, B> on_color)
+  {
+    return NullCheck.notNull(on_color, "Color function").apply(context, this);
+  }
 }

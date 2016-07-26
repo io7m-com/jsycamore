@@ -16,51 +16,30 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import org.immutables.value.Value;
-
-import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
- * A panel theme specification.
+ * The type of fills for objects.
  */
 
-@SyImmutableStyleType
-@Value.Immutable
-public interface SyThemePanelType
+public interface SyThemeFillType
 {
   /**
-   * @return The base fill used for active panels
+   * Match on the type of fill.
+   *
+   * @param context            A context value passed through to the given
+   *                           functions
+   * @param on_gradient_linear Evaluated if this fill is a linear gradient
+   * @param on_color           Evaluated if this fill is a flat color
+   * @param <A>                The type of opaque context values
+   * @param <B>                The type of returned values
+   *
+   * @return The value returned by whichever one of the given functions is
+   * evaluated
    */
 
-  @Value.Parameter
-  SyThemeFillType fillActive();
-
-  /**
-   * @return The base fill used for inactive panels
-   */
-
-  @Value.Parameter
-  SyThemeFillType fillInactive();
-
-  /**
-   * @return The embossing used for active panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossActive();
-
-  /**
-   * @return The embossing used for inactive panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeEmbossType> embossInactive();
-
-  /**
-   * @return The outline used for panels
-   */
-
-  @Value.Parameter
-  Optional<SyThemeOutlineType> outline();
+  <A, B> B matchFill(
+    A context,
+    BiFunction<A, SyThemeGradientLinearType, B> on_gradient_linear,
+    BiFunction<A, SyThemeColorType, B> on_color);
 }

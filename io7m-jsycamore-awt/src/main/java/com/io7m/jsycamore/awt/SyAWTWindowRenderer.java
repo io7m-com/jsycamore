@@ -23,6 +23,7 @@ import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
@@ -346,18 +347,10 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (left_width > 0) {
+      final SyBoxType<?> box =
+        SyBoxes.create(0, left_y, left_width, left_height);
       this.embossed.rectangle(
-        graphics,
-        0,
-        left_y,
-        left_width,
-        left_height,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill);
+        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
     /**
@@ -365,18 +358,11 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (right_width > 0) {
+      final SyBoxType<?> box =
+        SyBoxes.create(
+          frame_width - right_width, right_y, right_width, right_height);
       this.embossed.rectangle(
-        graphics,
-        frame_width - right_width,
-        right_y,
-        right_width,
-        right_height,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill);
+        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
     /**
@@ -384,18 +370,10 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (top_height > 0) {
+      final SyBoxType<?> box =
+        SyBoxes.create(top_x, 0, top_width, top_height);
       this.embossed.rectangle(
-        graphics,
-        top_x,
-        0,
-        top_width,
-        top_height,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill);
+        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
     /**
@@ -403,18 +381,10 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (bottom_height > 0) {
+      final SyBoxType<?> box =
+        SyBoxes.create(bottom_x, bottom_y, bottom_width, bottom_height);
       this.embossed.rectangle(
-        graphics,
-        bottom_x,
-        bottom_y,
-        bottom_width,
-        bottom_height,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill);
+        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
     /**

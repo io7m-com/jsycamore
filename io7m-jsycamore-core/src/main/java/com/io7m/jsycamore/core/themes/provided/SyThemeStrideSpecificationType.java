@@ -117,26 +117,13 @@ public interface SyThemeStrideSpecificationType
   }
 
   /**
-   * @return The factor by which to scale the active color to produce the light
-   * shade for embossing
+   * @return The primary color for tinting active components such as meters
    */
 
   @Value.Parameter
   @Value.Default
-  default float colorLightFactor()
+  default VectorI3F colorPrimaryActive()
   {
-    return 3.0f;
-  }
-
-  /**
-   * @return The factor by which to scale the active color to produce the dark
-   * shade for embossing
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default float colorDarkFactor()
-  {
-    return 0.8f;
+    return new VectorI3F(0.48f, 0.48f, 0.86f);
   }
 }

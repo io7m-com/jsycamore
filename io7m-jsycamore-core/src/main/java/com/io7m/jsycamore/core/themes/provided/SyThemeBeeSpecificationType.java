@@ -73,61 +73,6 @@ public interface SyThemeBeeSpecificationType
   }
 
   /**
-   * @return The base color for window frames
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default VectorI3F frameColor()
-  {
-    return new VectorI3F(0.85f, 0.85f, 0.85f);
-  }
-
-  /**
-   * @return The degrees by which to rotate the active color to produce a light
-   * shade for embossing
-   */
-
-  default float colorLightDegrees()
-  {
-    return 10.0f;
-  }
-
-  /**
-   * @return The degrees by which to rotate the active color to produce a dark
-   * shade for embossing
-   */
-
-  default float colorDarkDegrees()
-  {
-    return -10.0f;
-  }
-
-  /**
-   * @return The factor by which to scale the active color to produce the light
-   * shade for embossing
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default float colorLightFactor()
-  {
-    return 1.5f;
-  }
-
-  /**
-   * @return The factor by which to scale the active color to produce the dark
-   * shade for embossing
-   */
-
-  @Value.Parameter
-  @Value.Default
-  default float colorDarkFactor()
-  {
-    return 0.5f;
-  }
-
-  /**
    * @return The general background color used for buttons, panels, etc
    */
 
@@ -160,5 +105,16 @@ public interface SyThemeBeeSpecificationType
   default VectorI3F foregroundColorInactive()
   {
     return new VectorI3F(0.4f, 0.4f, 0.4f);
+  }
+
+  /**
+   * @return The primary color for tinting active components such as meters
+   */
+
+  @Value.Parameter
+  @Value.Default
+  default VectorI3F colorPrimaryActive()
+  {
+    return new VectorI3F(0.37f, 0.67f, 1.0f);
   }
 }

@@ -28,12 +28,16 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
 import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
+import com.io7m.jsycamore.core.components.SyButtonCheckbox;
+import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
 import com.io7m.jsycamore.core.components.SyButtonRepeating;
 import com.io7m.jsycamore.core.components.SyButtonType;
 import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabel;
 import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.core.components.SyMeter;
+import com.io7m.jsycamore.core.components.SyMeterType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
@@ -170,6 +174,9 @@ public final class WindowDump
           new BufferedImage(320, 240, BufferedImage.TYPE_4BYTE_ABGR);
 
         window_renderer.render(active_image, w_active);
+        Thread.sleep(1000L);
+        window_renderer.render(active_image, w_active);
+
         output.drawImage(active_image, 16, y, null);
       }
 
@@ -178,6 +185,9 @@ public final class WindowDump
           new BufferedImage(320, 240, BufferedImage.TYPE_4BYTE_ABGR);
 
         window_renderer.render(inactive_image, w_inactive);
+        Thread.sleep(1000L);
+        window_renderer.render(inactive_image, w_inactive);
+
         output.drawImage(inactive_image, 16 + 320 + 16, y, null);
       }
 
@@ -208,9 +218,11 @@ public final class WindowDump
         content.box().height()));
       content.node().childAdd(panel.node());
 
+      int y_base = 8;
+
       {
         final SyButtonType button = SyButtonRepeating.create();
-        button.setBox(SyBoxes.create(8, 8, 64, 32));
+        button.setBox(SyBoxes.create(8, y_base, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(button.node());
@@ -225,7 +237,7 @@ public final class WindowDump
 
       {
         final SyButtonType button = SyButtonRepeating.create();
-        button.setBox(SyBoxes.create(8 + 64 + 8, 8, 64, 32));
+        button.setBox(SyBoxes.create(8 + 64 + 8, y_base, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setActive(SyActive.INACTIVE);
@@ -239,6 +251,8 @@ public final class WindowDump
         button.node().childAdd(label.node());
       }
 
+      y_base += 32 + 8;
+
       {
         final SyImageSpecification spec = SyImageSpecification.of(
           "/com/io7m/jsycamore/tests/awt/wheat.png",
@@ -249,7 +263,7 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8, 8 + 32 + 8, 64, 64));
+        image.setBox(SyBoxes.create(8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
@@ -265,7 +279,7 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8 + 64 + 8, 8 + 32 + 8, 64, 64));
+        image.setBox(SyBoxes.create(8 + 64 + 8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
@@ -281,10 +295,76 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8 + 64 + 8 + 64 + 8, 8 + 32 + 8, 64, 64));
+        image.setBox(SyBoxes.create(8 + 64 + 8 + 64 + 8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
+      }
+
+      y_base += 64 + 8;
+
+      {
+        final SyButtonCheckboxType button = SyButtonCheckbox.create();
+        button.setBox(SyBoxes.create(8, y_base, 16, 16));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setActive(SyActive.ACTIVE);
+        button.setChecked(false);
+        panel.node().childAdd(button.node());
+      }
+
+      {
+        final SyButtonCheckboxType button = SyButtonCheckbox.create();
+        button.setBox(SyBoxes.create(8 + 16 + 4, y_base, 16, 16));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setActive(SyActive.ACTIVE);
+        button.setChecked(true);
+        panel.node().childAdd(button.node());
+      }
+
+      {
+        final SyButtonCheckboxType button = SyButtonCheckbox.create();
+        button.setBox(SyBoxes.create(8 + 16 + 4 + 16 + 4, y_base, 16, 16));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setActive(SyActive.INACTIVE);
+        button.setChecked(false);
+        panel.node().childAdd(button.node());
+      }
+
+      {
+        final SyButtonCheckboxType button = SyButtonCheckbox.create();
+        button.setBox(SyBoxes.create(8 + 16 + 4 + 16 + 4 + 16 + 4, y_base, 16, 16));
+        button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        button.setActive(SyActive.INACTIVE);
+        button.setChecked(true);
+        panel.node().childAdd(button.node());
+      }
+
+      y_base += 16 + 8;
+
+      {
+        final SyMeterType meter = SyMeter.create();
+        meter.setBox(SyBoxes.create(8, y_base, 128, 16));
+        meter.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        meter.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        meter.setActive(SyActive.ACTIVE);
+        meter.setValue(0.75);
+        panel.node().childAdd(meter.node());
+      }
+
+      y_base += 16 + 8;
+
+      {
+        final SyMeterType meter = SyMeter.create();
+        meter.setBox(SyBoxes.create(8, y_base, 128, 16));
+        meter.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        meter.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
+        meter.setActive(SyActive.INACTIVE);
+        meter.setValue(0.25);
+        panel.node().childAdd(meter.node());
       }
     }
 
