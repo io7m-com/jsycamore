@@ -27,8 +27,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <siteReposDirectory>/com/io7m/jsycamore</siteReposDirectory>
-    <siteDocumentationDirectory>/com/io7m/jsycamore/io7m-jsycamore-documentation</siteDocumentationDirectory>
+    <siteReposDirectory>com/io7m/jsycamore</siteReposDirectory>
+    <siteDocumentationDirectory>com/io7m/jsycamore/io7m-jsycamore-documentation</siteDocumentationDirectory>
   </properties>
 
   <licenses>
