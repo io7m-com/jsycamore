@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <c:changelog xmlns:c="http://schemas.io7m.com/changelog/2.0.0">
-  <c:project>io7m-jsycamore</c:project>
+  <c:project>com.io7m.jsycamore</c:project>
 
   <c:release c:ticket-system="com.github.io7m.jsycamore">
     <c:date>2016-06-19</c:date>
