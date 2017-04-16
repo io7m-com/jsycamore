@@ -32,7 +32,6 @@
     <module>com.io7m.jsycamore.checkstyle</module>
     <module>com.io7m.jsycamore.documentation</module>
     <module>com.io7m.jsycamore.tests</module>
-    <module>com.io7m.jsycamore.themedesigner</module>
     <module>com.io7m.jsycamore.themes.bee</module>
     <module>com.io7m.jsycamore.themes.fenestra</module>
     <module>com.io7m.jsycamore.themes.motive</module>
