@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jaffirm.core.Postconditions;
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jfunctional.Pair;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
@@ -24,7 +26,6 @@ import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.junreachable.UnimplementedCodeException;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.valid4j.Assertive;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -192,9 +193,11 @@ public final class SyThemeTitleBars
       Math.min(remaining, text_full_width);
 
     final int full_width = non_text_width + text_limited_width;
-    Assertive.ensure(
+    Postconditions.checkPostconditionV(
       full_width <= maximum_width,
-      "Maximum width calculation is correct");
+      "Maximum width calculation is correct (%d <= %d)",
+      Integer.valueOf(full_width),
+      Integer.valueOf(maximum_width));
     return full_width;
   }
 
@@ -247,7 +250,9 @@ public final class SyThemeTitleBars
       for (final SyThemeTitleBarElement element : left) {
         switch (element) {
           case ELEMENT_CLOSE_BUTTON: {
-            Assertive.require(is_closeable, "Window must be closeable");
+            Preconditions.checkPrecondition(
+              is_closeable,
+              "Window must be closeable");
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final PAreaI<SySpaceParentRelativeType> aligned =
@@ -262,7 +267,9 @@ public final class SyThemeTitleBars
           }
 
           case ELEMENT_MAXIMIZE_BUTTON: {
-            Assertive.require(is_maximizable, "Window must be maximizable");
+            Preconditions.checkPrecondition(
+              is_maximizable,
+              "Window must be maximizable");
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final PAreaI<SySpaceParentRelativeType> aligned =
@@ -281,7 +288,9 @@ public final class SyThemeTitleBars
           }
 
           case ELEMENT_ICON: {
-            Assertive.require(title_theme.iconPresent(), "Icon must be shown");
+            Preconditions.checkPrecondition(
+              title_theme.iconPresent(),
+              "Icon must be shown");
 
             arrangement.setIconBox(
               SyThemeTitleBars.alignedIcon(
@@ -302,7 +311,9 @@ public final class SyThemeTitleBars
         final SyThemeTitleBarElement element = right.get(index);
         switch (element) {
           case ELEMENT_CLOSE_BUTTON: {
-            Assertive.require(is_closeable, "Window must be closeable");
+            Preconditions.checkPrecondition(
+              is_closeable,
+              "Window must be closeable");
 
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
@@ -317,7 +328,9 @@ public final class SyThemeTitleBars
           }
 
           case ELEMENT_MAXIMIZE_BUTTON: {
-            Assertive.require(is_maximizable, "Window must be maximizable");
+            Preconditions.checkPrecondition(
+              is_maximizable,
+              "Window must be maximizable");
 
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
@@ -336,7 +349,9 @@ public final class SyThemeTitleBars
           }
 
           case ELEMENT_ICON: {
-            Assertive.require(title_theme.iconPresent(), "Icon must be shown");
+            Preconditions.checkPrecondition(
+              title_theme.iconPresent(),
+              "Icon must be shown");
 
             arrangement.setIconBox(
               SyThemeTitleBars.alignedIcon(
@@ -360,8 +375,11 @@ public final class SyThemeTitleBars
       text_min_x,
       Math.subtractExact(text_max_x, text_pad_right));
 
-    Assertive.require(
-      text_min_x <= text_max_x, "Text minimum X <= Text maximum X");
+    Preconditions.checkPreconditionV(
+      text_min_x <= text_max_x,
+      "Text minimum X (%d) <= Text maximum X (%d)",
+      Integer.valueOf(text_min_x),
+      Integer.valueOf(text_max_x));
 
     arrangement.setTitle(PAreaI.of(
       text_min_x,
@@ -452,7 +470,9 @@ public final class SyThemeTitleBars
         }
 
         case ELEMENT_TITLE: {
-          Assertive.require(Objects.equals(elements_out, elements_left));
+          Preconditions.checkPrecondition(
+            Objects.equals(elements_out, elements_left),
+            "Elements out must equal elements left");
           elements_out = elements_right;
           break;
         }

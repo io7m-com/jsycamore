@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.awt;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
@@ -43,7 +44,6 @@ import com.io7m.jsycamore.core.themes.SyThemeMeterOrientedType;
 import com.io7m.jsycamore.core.themes.SyThemeMeterType;
 import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
 import com.io7m.jsycamore.core.themes.SyThemePanelType;
-import org.valid4j.Assertive;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -104,7 +104,7 @@ public final class SyAWTComponentRenderer implements
   private static IllegalStateException notAttached(
     final SyComponentReadableType c)
   {
-    Assertive.require(
+    Preconditions.checkPrecondition(
       !c.windowReadable().isPresent(),
       "Component is not attached to a window");
 

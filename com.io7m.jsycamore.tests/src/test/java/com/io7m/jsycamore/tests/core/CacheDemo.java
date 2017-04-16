@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
 import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
@@ -26,7 +27,6 @@ import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.valid4j.Assertive;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -82,8 +82,12 @@ public final class CacheDemo
       SyBufferedImageCacheCaffeine.create(
         resolver, loader, exec, in_default, in_error, 200_000L);
 
-    Assertive.require(cache.maximumSize() == 200_000L);
-    Assertive.require(cache.size() == 0L);
+    Preconditions.checkPreconditionL(
+      cache.maximumSize(),
+      cache.maximumSize() == 200_000L, i -> "");
+    Preconditions.checkPreconditionL(
+      cache.size(),
+      cache.size() == 0L, i -> "");
 
     final Random r = new Random(0L);
 

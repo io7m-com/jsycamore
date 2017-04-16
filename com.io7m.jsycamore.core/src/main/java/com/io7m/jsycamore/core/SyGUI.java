@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -24,7 +25,6 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.valid4j.Assertive;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -228,19 +228,19 @@ public final class SyGUI implements SyGUIType
   private void windowCheckInvariants()
   {
     for (final SyWindowType w : this.windows_open) {
-      Assertive.require(
+      Preconditions.checkPrecondition(
         this.windows_open_order.contains(w),
         "Window order list must contain all open windows");
-      Assertive.require(
+      Preconditions.checkPrecondition(
         !this.windows_closed.contains(w),
         "Window closed set must not contain an open window");
     }
 
     for (final SyWindowType w : this.windows_open_order) {
-      Assertive.require(
+      Preconditions.checkPrecondition(
         this.windows_open.contains(w),
         "Window open set must contain all ordered windows");
-      Assertive.require(
+      Preconditions.checkPrecondition(
         !this.windows_closed.contains(w),
         "Window closed set must not contain an open window");
     }
@@ -250,15 +250,15 @@ public final class SyGUI implements SyGUIType
   {
     SyGUI.LOG.debug("windowFocusActual: {}", window);
 
-    Assertive.require(
+    Preconditions.checkPrecondition(
       this.windows_open.contains(window),
       "The window must be open to receive focus");
-    Assertive.require(
+    Preconditions.checkPrecondition(
       !this.windows_closed.contains(window),
       "The window must not be both open and closed");
 
     final int index = this.windows_open_order.indexOf(window);
-    Assertive.require(
+    Preconditions.checkPrecondition(
       index >= 0, "The window must be present in the ordered window list");
 
     if (!this.windows_open_order.isEmpty()) {
@@ -455,7 +455,7 @@ public final class SyGUI implements SyGUIType
 
     final SyComponentType component = component_opt.get();
     final Optional<SyWindowType> window_opt = component.window();
-    Assertive.require(
+    Preconditions.checkPrecondition(
       window_opt.isPresent(),
       "Component must be attached to window to receive events");
     final SyWindowType window = window_opt.get();

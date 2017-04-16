@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.core;
 
+import com.io7m.jaffirm.core.Postconditions;
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jranges.RangeCheck;
@@ -55,7 +57,6 @@ import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.valid4j.Assertive;
 
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
@@ -212,16 +213,16 @@ public abstract class SyWindowAbstract implements SyWindowType
         this,
         root_box);
 
-    Assertive.require(
+    Preconditions.checkPrecondition(
       PAreasI.contains(root_box, boxes.contentBox()),
       "Root box must contain content box");
-    Assertive.require(
+    Preconditions.checkPrecondition(
       PAreasI.contains(root_box, boxes.frameBox()),
       "Root box must contain frame box");
-    Assertive.require(
+    Preconditions.checkPrecondition(
       PAreasI.contains(boxes.frameBox(), boxes.frameExclusionBox()),
       "Frame box must contain frame exclusion box");
-    Assertive.require(
+    Preconditions.checkPrecondition(
       PAreasI.contains(root_box, boxes.titlebarBox()),
       "Root box must contain titleBar box");
 
@@ -404,7 +405,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         this.image = Optional.of(i);
       }
 
-      Assertive.ensure(
+      Postconditions.checkPostcondition(
         this.node().children().size() <= 1,
         "Icon button must not leak components");
     }
@@ -482,7 +483,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         this.image = Optional.of(i);
       }
 
-      Assertive.ensure(
+      Postconditions.checkPostcondition(
         this.node().children().size() <= 1,
         "Titlebar icon must not leak components");
     }
@@ -598,10 +599,10 @@ public abstract class SyWindowAbstract implements SyWindowType
             PAreasI.moveAbsolute(
               window_start_box, current.x(), current.y());
 
-          Assertive.ensure(
+          Postconditions.checkPostcondition(
             window_start_box.width() == window_new_box.width(),
             "Dragging a title bar must not resize width");
-          Assertive.ensure(
+          Postconditions.checkPostcondition(
             window_start_box.height() == window_new_box.height(),
             "Dragging a title bar must not resize height");
 

@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.awt;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import org.valid4j.Assertive;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -75,7 +75,10 @@ public final class SyAWTEmbossed
     NullCheck.notNull(bottom, "Bottom paint");
     NullCheck.notNull(fill, "Fill paint");
 
-    Assertive.require(emboss_size > 0, "Emboss area size must be positive");
+    Preconditions.checkPreconditionI(
+      emboss_size,
+      emboss_size > 0,
+      i -> "Emboss area size must be positive");
 
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();
@@ -203,14 +206,22 @@ public final class SyAWTEmbossed
     NullCheck.notNull(bottom, "Bottom paint");
     NullCheck.notNull(fill, "Fill paint");
 
-    Assertive.require(
+    Preconditions.checkPreconditionI(
+      thickness_of_horizontal,
       thickness_of_horizontal > 0,
-      "Thickness of horizontal sections must be positive");
-    Assertive.require(
+      i -> "Thickness of horizontal sections must be positive");
+    Preconditions.checkPreconditionI(
+      thickness_of_vertical,
       thickness_of_vertical > 0,
-      "Thickness of vertical sections must be positive");
-    Assertive.require(length > 0, "Length must be positive");
-    Assertive.require(emboss_size > 0, "Embossed area size must be positive");
+      i -> "Thickness of vertical sections must be positive");
+    Preconditions.checkPreconditionI(
+      length,
+      length > 0,
+      i -> "Length must be positive");
+    Preconditions.checkPreconditionI(
+      emboss_size,
+      emboss_size > 0,
+      i -> "Embossed area size must be positive");
 
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();

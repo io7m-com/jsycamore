@@ -16,12 +16,12 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
-import org.valid4j.Assertive;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -60,10 +60,10 @@ public interface SyThemeGradientLinearType extends SyThemeFillType
     final Integer c_size_b = Integer.valueOf(c_size);
     final Integer d_size_b = Integer.valueOf(d_size);
 
-    Assertive.require(
-      c_size > 0, "Number of colors (%d) must be >= 0", c_size_b);
+    Preconditions.checkPreconditionV(
+      c_size > 0, "Number of colors (%d) must be > 0", c_size_b);
 
-    Assertive.require(
+    Preconditions.checkPreconditionV(
       d_size == c_size,
       "Number of colors (%d) must match the number of distribution values (%d)",
       c_size_b,
@@ -72,7 +72,7 @@ public interface SyThemeGradientLinearType extends SyThemeFillType
     double dist = 0.0;
     for (int index = 0; index < d_size; ++index) {
       final double current = dists.get(index).doubleValue();
-      Assertive.require(
+      Preconditions.checkPreconditionV(
         current >= dist,
         "Distribution values must be given in increasing order (%f >= %f)",
         Double.valueOf(current),

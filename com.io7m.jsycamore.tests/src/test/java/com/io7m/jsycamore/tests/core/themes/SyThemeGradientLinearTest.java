@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core.themes;
 
+import com.io7m.jaffirm.core.PreconditionViolationException;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.themes.SyThemeGradientLinear;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
@@ -25,7 +26,6 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.valid4j.errors.RequireViolation;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,7 +41,7 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(RequireViolation.class);
+    this.expected.expect(PreconditionViolationException.class);
     b.build();
   }
 
@@ -52,7 +52,7 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(RequireViolation.class);
+    this.expected.expect(PreconditionViolationException.class);
     b.build();
   }
 
@@ -67,7 +67,7 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(RequireViolation.class);
+    this.expected.expect(PreconditionViolationException.class);
     b.build();
   }
 

@@ -16,10 +16,10 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
-import org.valid4j.Assertive;
 
 import java.util.Optional;
 
@@ -44,12 +44,14 @@ public interface SyThemeWindowFrameType
           break;
         }
         case FRAME_CORNER_L_PIECE: {
-          Assertive.require(
+          Preconditions.checkPreconditionI(
+            this.topHeight(),
             this.topHeight() > 0,
-            "An embossed top-left L corner requires a non-zero top frame");
-          Assertive.require(
+            i -> "An embossed top-left L corner requires a non-zero top frame");
+          Preconditions.checkPreconditionI(
+            this.leftWidth(),
             this.leftWidth() > 0,
-            "An embossed top-left L corner requires a non-zero left frame");
+            i -> "An embossed top-left L corner requires a non-zero left frame");
           break;
         }
         case FRAME_CORNER_BOX: {
@@ -62,12 +64,14 @@ public interface SyThemeWindowFrameType
           break;
         }
         case FRAME_CORNER_L_PIECE: {
-          Assertive.require(
+          Preconditions.checkPreconditionI(
+            this.topHeight(),
             this.topHeight() > 0,
-            "An embossed top-right L corner requires a non-zero top frame");
-          Assertive.require(
+            i -> "An embossed top-left L corner requires a non-zero top frame");
+          Preconditions.checkPreconditionI(
+            this.rightWidth(),
             this.rightWidth() > 0,
-            "An embossed top-right L corner requires a non-zero right frame");
+            i -> "An embossed top-right L corner requires a non-zero right frame");
           break;
         }
         case FRAME_CORNER_BOX: {
@@ -80,12 +84,14 @@ public interface SyThemeWindowFrameType
           break;
         }
         case FRAME_CORNER_L_PIECE: {
-          Assertive.require(
+          Preconditions.checkPreconditionI(
+            this.bottomHeight(),
             this.bottomHeight() > 0,
-            "An embossed bottom-left L corner requires a non-zero bottom frame");
-          Assertive.require(
+            i -> "An embossed bottom-left L corner requires a non-zero bottom frame");
+          Preconditions.checkPreconditionI(
+            this.leftWidth(),
             this.leftWidth() > 0,
-            "An embossed bottom-left L corner requires a non-zero left frame");
+            i -> "An embossed top-left L corner requires a non-zero left frame");
           break;
         }
         case FRAME_CORNER_BOX: {
@@ -98,12 +104,14 @@ public interface SyThemeWindowFrameType
           break;
         }
         case FRAME_CORNER_L_PIECE: {
-          Assertive.require(
+          Preconditions.checkPreconditionI(
+            this.bottomHeight(),
             this.bottomHeight() > 0,
-            "An embossed bottom-right L corner requires a non-zero bottom frame");
-          Assertive.require(
+            i -> "An embossed bottom-left L corner requires a non-zero bottom frame");
+          Preconditions.checkPreconditionI(
+            this.rightWidth(),
             this.rightWidth() > 0,
-            "An embossed bottom-right L corner requires a non-zero right frame");
+            i -> "An embossed top-right L corner requires a non-zero right frame");
           break;
         }
         case FRAME_CORNER_BOX: {

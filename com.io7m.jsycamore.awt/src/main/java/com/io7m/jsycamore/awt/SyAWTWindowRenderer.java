@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.awt;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
@@ -33,7 +34,6 @@ import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.core.themes.SyThemeWindowType;
 import net.jcip.annotations.NotThreadSafe;
-import org.valid4j.Assertive;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -261,8 +261,14 @@ public final class SyAWTWindowRenderer implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(left_width > 0, "L piece left_width must be > 0");
-        Assertive.require(top_height > 0, "L piece top_height must be > 0");
+        Preconditions.checkPreconditionI(
+          left_width,
+          left_width > 0,
+          i -> "L piece left_width must be > 0");
+        Preconditions.checkPreconditionI(
+          top_height,
+          top_height > 0,
+          i -> "L piece top_height must be > 0");
 
         top_left_caps = true;
         top_left_len += cap_length;
@@ -283,8 +289,14 @@ public final class SyAWTWindowRenderer implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(right_width > 0, "L piece right_width must be > 0");
-        Assertive.require(top_height > 0, "L piece top_height must be > 0");
+        Preconditions.checkPreconditionI(
+          right_width,
+          right_width > 0,
+          i -> "L piece right_width must be > 0");
+        Preconditions.checkPreconditionI(
+          top_height,
+          top_height > 0,
+          i -> "L piece top_height must be > 0");
 
         top_right_caps = true;
         top_right_len += cap_length;
@@ -304,10 +316,14 @@ public final class SyAWTWindowRenderer implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(
-          left_width > 0, "L piece left_width must be > 0");
-        Assertive.require(
-          bottom_height > 0, "L piece bottom_height must be > 0");
+        Preconditions.checkPreconditionI(
+          left_width,
+          left_width > 0,
+          i -> "L piece left_width must be > 0");
+        Preconditions.checkPreconditionI(
+          bottom_height,
+          bottom_height > 0,
+          i -> "L piece bottom_height must be > 0");
 
         bottom_left_caps = true;
         bottom_left_len += cap_length;
@@ -327,10 +343,14 @@ public final class SyAWTWindowRenderer implements
         break;
       }
       case FRAME_CORNER_L_PIECE: {
-        Assertive.require(
-          right_width > 0, "L piece right_width must be > 0");
-        Assertive.require(
-          bottom_height > 0, "L piece bottom_height must be > 0");
+        Preconditions.checkPreconditionI(
+          right_width,
+          right_width > 0,
+          i -> "L piece right_width must be > 0");
+        Preconditions.checkPreconditionI(
+          bottom_height,
+          bottom_height > 0,
+          i -> "L piece bottom_height must be > 0");
 
         bottom_right_caps = true;
         bottom_right_len += cap_length;

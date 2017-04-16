@@ -16,13 +16,13 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceType;
 import net.jcip.annotations.NotThreadSafe;
-import org.valid4j.Assertive;
 
 import java.util.ArrayDeque;
 
@@ -87,8 +87,10 @@ public final class SyWindowViewportAccumulator implements
     final int width,
     final int height)
   {
-    Assertive.require(width >= 0, "Width must be >= 0");
-    Assertive.require(height >= 0, "Height must be >= 0");
+    Preconditions.checkPreconditionI(
+      width, width >= 0, i -> "Width must be >= 0");
+    Preconditions.checkPreconditionI(
+      height, height >= 0, i -> "Height must be >= 0");
 
     this.saved.clear();
     this.base_width = width;
@@ -130,12 +132,18 @@ public final class SyWindowViewportAccumulator implements
     final int my1 =
       SyWindowViewportAccumulator.clamp(new_y1, my0, original_y1);
 
-    Assertive.require(mx0 >= original_x0, "mx0 must be >= original_x0");
-    Assertive.require(my0 >= original_y0, "my0 must be >= original_y0");
-    Assertive.require(mx1 <= original_x1, "mx1 must be >= original_x1");
-    Assertive.require(my1 <= original_y1, "my1 must be >= original_y1");
-    Assertive.require(mx0 <= mx1, "mx0 must be <= mx1");
-    Assertive.require(my0 <= my1, "my0 must be <= my1");
+    Preconditions.checkPreconditionI(
+      mx0, mx0 >= original_x0, i -> "mx0 must be >= original_x0");
+    Preconditions.checkPreconditionI(
+      my0, my0 >= original_y0, i -> "my0 must be >= original_y0");
+    Preconditions.checkPreconditionI(
+      mx1, mx1 <= original_x1, i -> "mx1 must be >= original_x1");
+    Preconditions.checkPreconditionI(
+      my1, my1 <= original_y1, i -> "my1 must be >= original_y1");
+    Preconditions.checkPreconditionI(
+      mx0, mx0 <= mx1, i -> "mx0 must be <= mx1");
+    Preconditions.checkPreconditionI(
+      my0, my0 <= my1, i -> "my0 must be <= my1");
 
     this.current = PAreaI.of(mx0, mx1, my0, my1);
   }
