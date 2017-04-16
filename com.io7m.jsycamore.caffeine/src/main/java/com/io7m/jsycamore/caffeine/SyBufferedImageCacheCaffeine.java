@@ -25,11 +25,11 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.github.benmanes.caffeine.cache.Weigher;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.awt.SyAWTImage;
-import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
-import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
-import com.io7m.jsycamore.core.images.SyImageCacheType;
-import com.io7m.jsycamore.core.images.SyImageReferenceType;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
+import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
+import com.io7m.jsycamore.images.api.SyImageCacheType;
+import com.io7m.jsycamore.images.api.SyImageReferenceType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,13 +56,13 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     LOG = LoggerFactory.getLogger(SyBufferedImageCacheCaffeine.class);
   }
 
-  private final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache;
+  private final AsyncLoadingCache<SyImageSpecification, BufferedImage> cache;
   private final BufferedImage image_default;
   private final BufferedImage image_error;
   private final long size_max;
 
   private SyBufferedImageCacheCaffeine(
-    final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> in_cache,
+    final AsyncLoadingCache<SyImageSpecification, BufferedImage> in_cache,
     final BufferedImage in_default,
     final BufferedImage in_error,
     final long in_size_max)
@@ -104,19 +104,19 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     NullCheck.notNull(in_image_default, "Default image");
     NullCheck.notNull(in_image_error, "Error image");
 
-    final Weigher<SyImageSpecificationType, BufferedImage> weigher =
+    final Weigher<SyImageSpecification, BufferedImage> weigher =
       (key, value) -> value.getData().getDataBuffer().getSize();
 
-    final AsyncCacheLoader<? super SyImageSpecificationType, BufferedImage> loader =
-      (AsyncCacheLoader<SyImageSpecificationType, BufferedImage>) (image_spec, executor) ->
+    final AsyncCacheLoader<? super SyImageSpecification, BufferedImage> loader =
+      (AsyncCacheLoader<SyImageSpecification, BufferedImage>) (image_spec, executor) ->
         SyBufferedImageCacheCaffeine.load(
           in_resolver, in_loader, image_spec, executor);
 
-    final RemovalListener<SyImageSpecificationType, BufferedImage> removal_listener =
+    final RemovalListener<SyImageSpecification, BufferedImage> removal_listener =
       (key, value, cause) -> SyBufferedImageCacheCaffeine.LOG.trace(
         "removal: {} {} {}", key, value, cause);
 
-    final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache =
+    final AsyncLoadingCache<SyImageSpecification, BufferedImage> cache =
       Caffeine.newBuilder()
         .maximumWeight(in_maximum_size)
         .expireAfterAccess(60L, TimeUnit.SECONDS)
@@ -132,7 +132,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
   private static CompletableFuture<BufferedImage> load(
     final SyImageCacheResolverType in_resolver,
     final SyImageCacheLoaderType<BufferedImage> in_loader,
-    final SyImageSpecificationType in_image_spec,
+    final SyImageSpecification in_image_spec,
     final Executor in_executor)
   {
     return CompletableFuture.supplyAsync(() -> {
@@ -146,7 +146,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
   }
 
   @Override
-  public SyImageReferenceType<BufferedImage> get(final SyImageSpecificationType i)
+  public SyImageReferenceType<BufferedImage> get(final SyImageSpecification i)
   {
     return new ImageReference(
       this.cache,
@@ -165,9 +165,9 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
   @Override
   public long size()
   {
-    final Policy<SyImageSpecificationType, BufferedImage> policy =
+    final Policy<SyImageSpecification, BufferedImage> policy =
       this.cache.synchronous().policy();
-    final Optional<Policy.Eviction<SyImageSpecificationType, BufferedImage>> evict =
+    final Optional<Policy.Eviction<SyImageSpecification, BufferedImage>> evict =
       policy.eviction();
     return evict.map(Policy.Eviction::weightedSize)
       .orElse(OptionalLong.of(0L)).getAsLong();
@@ -189,15 +189,15 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
   private static final class ImageReference
     implements SyImageReferenceType<BufferedImage>
   {
-    private final SyImageSpecificationType spec;
+    private final SyImageSpecification spec;
     private final CompletableFuture<BufferedImage> future;
     private final BufferedImage image_default;
     private final BufferedImage image_error;
-    private final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> cache;
+    private final AsyncLoadingCache<SyImageSpecification, BufferedImage> cache;
 
     ImageReference(
-      final AsyncLoadingCache<SyImageSpecificationType, BufferedImage> in_cache,
-      final SyImageSpecificationType in_spec,
+      final AsyncLoadingCache<SyImageSpecification, BufferedImage> in_cache,
+      final SyImageSpecification in_spec,
       final BufferedImage in_default,
       final BufferedImage in_error,
       final CompletableFuture<BufferedImage> in_future)
@@ -221,7 +221,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     }
 
     @Override
-    public SyImageSpecificationType description()
+    public SyImageSpecification description()
     {
       return this.spec;
     }
@@ -236,7 +236,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
           Thread.currentThread().interrupt();
           return this.image_error;
         } catch (final ExecutionException e) {
-          final LoadingCache<SyImageSpecificationType, BufferedImage> scache =
+          final LoadingCache<SyImageSpecification, BufferedImage> scache =
             this.cache.synchronous();
           scache.put(this.spec, this.image_error);
           return this.image_error;

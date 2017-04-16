@@ -19,7 +19,7 @@ package com.io7m.jsycamore.core;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 
 import java.util.Optional;
 
@@ -49,7 +49,7 @@ public interface SyWindowTitleBarType extends SyPanelReadableType
    * @param icon The icon
    */
 
-  void setIcon(Optional<SyImageSpecificationType> icon);
+  void setIcon(Optional<SyImageSpecification> icon);
 
   /**
    * @return The icon panel

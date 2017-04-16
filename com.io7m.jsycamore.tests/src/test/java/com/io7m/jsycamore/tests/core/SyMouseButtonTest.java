@@ -26,7 +26,8 @@ public final class SyMouseButtonTest
 {
   @Rule public ExpectedException expected = ExpectedException.none();
 
-  @Test public void testOf()
+  @Test
+  public void testOf()
   {
     Assert.assertEquals(
       SyMouseButton.MOUSE_BUTTON_LEFT, SyMouseButton.ofIndex(0));
@@ -42,13 +43,15 @@ public final class SyMouseButtonTest
     }
   }
 
-  @Test public void testOfInvalid1()
+  @Test
+  public void testOfInvalid1()
   {
     this.expected.expect(IllegalArgumentException.class);
     SyMouseButton.ofIndex(-1);
   }
 
-  @Test public void testOfInvalid3()
+  @Test
+  public void testOfInvalid3()
   {
     this.expected.expect(IllegalArgumentException.class);
     SyMouseButton.ofIndex(3);

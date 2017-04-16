@@ -45,13 +45,13 @@ import java.util.Optional;
 
 public abstract class SyGUIContract
 {
+  @Rule public ExpectedException expected = ExpectedException.none();
+
   protected abstract SyGUIType create(String name);
 
   protected abstract SyGUIType createWithTheme(
     String name,
     SyThemeType theme);
-
-  @Rule public ExpectedException expected = ExpectedException.none();
 
   @Test
   public final void testCreate()

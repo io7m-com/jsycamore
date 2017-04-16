@@ -19,8 +19,6 @@ package com.io7m.jsycamore.tests.core.components;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.jsycamore.core.components.SyMeter;
 import com.io7m.jsycamore.core.components.SyMeterType;
 

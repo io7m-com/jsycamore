@@ -39,7 +39,7 @@ import com.io7m.jsycamore.core.components.SyPanelType;
 import com.io7m.jsycamore.core.components.SyVisibility;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jsycamore.core.themes.SyThemeButtonRepeatingType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeLabelType;
@@ -386,7 +386,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     final void setIcon(
-      final Optional<SyImageSpecificationType> in_icon)
+      final Optional<SyImageSpecification> in_icon)
     {
       NullCheck.notNull(in_icon, "Icon");
 
@@ -396,7 +396,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       if (in_icon.isPresent()) {
-        final SyImageSpecificationType icon = in_icon.get();
+        final SyImageSpecification icon = in_icon.get();
         final SyImageType i = SyImage.create(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
@@ -464,7 +464,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       return Optional.of(SyWindowAbstract.this.theme().panelTheme());
     }
 
-    void setIcon(final Optional<SyImageSpecificationType> in_icon)
+    void setIcon(final Optional<SyImageSpecification> in_icon)
     {
       NullCheck.notNull(in_icon, "Icon");
 
@@ -474,7 +474,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       if (in_icon.isPresent()) {
-        final SyImageSpecificationType icon = in_icon.get();
+        final SyImageSpecification icon = in_icon.get();
         final TitleBarIconImage i = new TitleBarIconImage(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
@@ -492,7 +492,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       SyImageType
     {
       TitleBarIconImage(
-        final SyImageSpecificationType in_image)
+        final SyImageSpecification in_image)
       {
         super(in_image, () -> true);
       }
@@ -678,7 +678,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
 
     @Override
-    public void setIcon(final Optional<SyImageSpecificationType> in_icon)
+    public void setIcon(final Optional<SyImageSpecification> in_icon)
     {
       this.icon.setIcon(in_icon);
     }

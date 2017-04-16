@@ -14,41 +14,43 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.images;
+package com.io7m.jsycamore.images.api;
+
+import java.io.Closeable;
 
 /**
- * An image format specification.
+ * The type of image caches.
+ *
+ * @param <T> The type of loaded images
  */
 
-public enum SyImageFormat
+public interface SyImageCacheType<T> extends Closeable
 {
   /**
-   * 8-bit greyscale.
+   * Load an image and return a reference to it.
+   *
+   * @param i The image
+   *
+   * @return An image reference
    */
 
-  IMAGE_FORMAT_GREY_8,
+  SyImageReferenceType<T> get(SyImageSpecification i);
 
   /**
-   * 24-bit, 8-bit per pixel RGB.
+   * @return The maximum size of the cache in bytes
    */
 
-  IMAGE_FORMAT_RGB_888,
+  long maximumSize();
 
   /**
-   * 32-bit, 8-bit per pixel RGBA.
+   * @return The current size of the cache in bytes
    */
 
-  IMAGE_FORMAT_RGBA_8888,
+  long size();
 
   /**
-   * 16-bit, 5-bit red, 6-bit green, 5-bit blue RGB.
+   * @return The number of images in the cache, currently
    */
 
-  IMAGE_FORMAT_RGB_565,
-
-  /**
-   * 16-bit, 4-bit red, 4-bit green, 4-bit blue, 4-bit alpha RGBA.
-   */
-
-  IMAGE_FORMAT_RGBA_4444
+  long count();
 }

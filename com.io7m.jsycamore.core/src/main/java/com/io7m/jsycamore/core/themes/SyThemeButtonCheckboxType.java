@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import org.immutables.value.Value;
 
 import java.util.Optional;
@@ -34,5 +34,5 @@ public interface SyThemeButtonCheckboxType extends SyThemeButtonType
    * @return The image icon used to show that a checkbox is checked
    */
 
-  Optional<SyImageSpecificationType> checkedIcon();
+  Optional<SyImageSpecification> checkedIcon();
 }

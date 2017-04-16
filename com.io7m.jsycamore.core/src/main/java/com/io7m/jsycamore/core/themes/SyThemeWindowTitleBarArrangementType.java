@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import org.immutables.value.Value;
 

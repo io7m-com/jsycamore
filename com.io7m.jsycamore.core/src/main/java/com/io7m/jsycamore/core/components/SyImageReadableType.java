@@ -19,8 +19,8 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -42,7 +42,7 @@ public interface SyImageReadableType extends SyComponentReadableType
    * @return The image
    */
 
-  SyImageSpecificationType image();
+  SyImageSpecification image();
 
   /**
    * Retrieve the horizontal alignment of the image. Images will be aligned

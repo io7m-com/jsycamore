@@ -21,11 +21,13 @@
   <url>http://github.com/io7m/jsycamore</url>
 
   <modules>
+    <module>com.io7m.jsycamore.annotations</module>
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.caffeine</module>
     <module>com.io7m.jsycamore.checkstyle</module>
     <module>com.io7m.jsycamore.core</module>
     <module>com.io7m.jsycamore.documentation</module>
+    <module>com.io7m.jsycamore.images.api</module>
     <module>com.io7m.jsycamore.tests</module>
     <module>com.io7m.jsycamore.themedesigner</module>
   </modules>

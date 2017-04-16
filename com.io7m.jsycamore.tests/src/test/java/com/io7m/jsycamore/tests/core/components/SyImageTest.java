@@ -21,9 +21,9 @@ import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.components.SyImage;
 import com.io7m.jsycamore.core.components.SyImageType;
-import com.io7m.jsycamore.core.images.SyImageFormat;
-import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
-import com.io7m.jsycamore.core.images.SyImageSpecification;
+import com.io7m.jsycamore.images.api.SyImageFormat;
+import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 
 public final class SyImageTest extends SyImageContract

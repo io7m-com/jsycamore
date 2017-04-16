@@ -17,9 +17,9 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
 import com.io7m.jsycamore.core.themes.SyThemeImageType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 public final class SyImage extends SyImageAbstract
 {
-  private SyImage(final SyImageSpecificationType in_spec)
+  private SyImage(final SyImageSpecification in_spec)
   {
     super(in_spec, () -> true);
     this.setBox(PAreasI.create(0, 0, in_spec.width(), in_spec.height()));
@@ -41,7 +41,7 @@ public final class SyImage extends SyImageAbstract
    * @return A new image
    */
 
-  public static SyImageType create(final SyImageSpecificationType in_spec)
+  public static SyImageType create(final SyImageSpecification in_spec)
   {
     return new SyImage(in_spec);
   }

@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.images;
+package com.io7m.jsycamore.images.api;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import org.immutables.value.Value;
 

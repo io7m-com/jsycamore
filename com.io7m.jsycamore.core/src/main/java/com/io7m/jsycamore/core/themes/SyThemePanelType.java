@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.core.themes;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import org.immutables.value.Value;
 
 import java.util.Optional;

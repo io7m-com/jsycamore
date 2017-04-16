@@ -43,12 +43,6 @@ import com.io7m.jsycamore.core.components.SyMeter;
 import com.io7m.jsycamore.core.components.SyMeterType;
 import com.io7m.jsycamore.core.components.SyPanel;
 import com.io7m.jsycamore.core.components.SyPanelType;
-import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
-import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
-import com.io7m.jsycamore.core.images.SyImageCacheType;
-import com.io7m.jsycamore.core.images.SyImageFormat;
-import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
-import com.io7m.jsycamore.core.images.SyImageSpecification;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
@@ -56,6 +50,12 @@ import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
 import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
 import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
 import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
+import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
+import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
+import com.io7m.jsycamore.images.api.SyImageCacheType;
+import com.io7m.jsycamore.images.api.SyImageFormat;
+import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -93,6 +93,18 @@ public final class WindowDemo
   private WindowDemo()
   {
     throw new UnreachableCodeException();
+  }
+
+  public static void main(final String[] args)
+  {
+    SwingUtilities.invokeLater(() -> {
+      final JFrame frame = new JFrame("WindowDemo");
+      frame.setPreferredSize(new Dimension(800, 600));
+      frame.getContentPane().add(new Canvas());
+      frame.pack();
+      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      frame.setVisible(true);
+    });
   }
 
   private static final class Canvas extends JPanel
@@ -388,17 +400,5 @@ public final class WindowDemo
       this.w_renderer.render(image, w);
       g.drawImage(image, box.minimumX(), box.minimumY(), null);
     }
-  }
-
-  public static void main(final String[] args)
-  {
-    SwingUtilities.invokeLater(() -> {
-      final JFrame frame = new JFrame("WindowDemo");
-      frame.setPreferredSize(new Dimension(800, 600));
-      frame.getContentPane().add(new Canvas());
-      frame.pack();
-      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      frame.setVisible(true);
-    });
   }
 }

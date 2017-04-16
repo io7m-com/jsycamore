@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import org.immutables.value.Value;
 

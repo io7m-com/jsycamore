@@ -18,13 +18,13 @@ package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.core.images.SyImageCacheLoaderType;
-import com.io7m.jsycamore.core.images.SyImageCacheResolverType;
-import com.io7m.jsycamore.core.images.SyImageCacheType;
-import com.io7m.jsycamore.core.images.SyImageFormat;
-import com.io7m.jsycamore.core.images.SyImageReferenceType;
-import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
-import com.io7m.jsycamore.core.images.SyImageSpecification;
+import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
+import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
+import com.io7m.jsycamore.images.api.SyImageCacheType;
+import com.io7m.jsycamore.images.api.SyImageFormat;
+import com.io7m.jsycamore.images.api.SyImageReferenceType;
+import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

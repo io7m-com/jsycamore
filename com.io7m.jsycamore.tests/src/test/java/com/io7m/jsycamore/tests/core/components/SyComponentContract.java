@@ -34,11 +34,11 @@ import java.util.Optional;
 
 public abstract class SyComponentContract
 {
+  @Rule public ExpectedException expected = ExpectedException.none();
+
   protected abstract SyGUIType gui();
 
   protected abstract SyComponentType create();
-
-  @Rule public ExpectedException expected = ExpectedException.none();
 
   @Test
   public void testComponentActive()

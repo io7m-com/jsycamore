@@ -28,6 +28,14 @@ import org.junit.Test;
 
 public final class SyColorsTest
 {
+  private static AlmostEqualDouble.ContextRelative createContextRelative()
+  {
+    final AlmostEqualDouble.ContextRelative c =
+      new AlmostEqualDouble.ContextRelative();
+    c.setMaxAbsoluteDifference(0.01);
+    return c;
+  }
+
   @Test
   public void testIdentityRGBtoHSV()
   {
@@ -57,14 +65,6 @@ public final class SyColorsTest
             AlmostEqualDouble.almostEqual(c, rgb.z(), rgb_out.z()));
         }
       });
-  }
-
-  private static AlmostEqualDouble.ContextRelative createContextRelative()
-  {
-    final AlmostEqualDouble.ContextRelative c =
-      new AlmostEqualDouble.ContextRelative();
-    c.setMaxAbsoluteDifference(0.01);
-    return c;
   }
 
   @Test

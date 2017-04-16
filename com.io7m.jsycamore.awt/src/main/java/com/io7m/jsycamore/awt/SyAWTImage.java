@@ -17,8 +17,8 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.images.SyImageFormat;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.images.api.SyImageFormat;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
 
@@ -73,7 +73,7 @@ public final class SyAWTImage
    */
 
   public static BufferedImage filter(
-    final SyImageSpecificationType spec,
+    final SyImageSpecification spec,
     final BufferedImage image)
   {
     NullCheck.notNull(spec, "Image specification");
@@ -86,7 +86,7 @@ public final class SyAWTImage
   }
 
   private static BufferedImage applyFilter(
-    final SyImageSpecificationType spec,
+    final SyImageSpecification spec,
     final BufferedImage image)
   {
     final Vector4D filter = spec.filter();
@@ -143,7 +143,7 @@ public final class SyAWTImage
   }
 
   private static BufferedImage applyRescale(
-    final SyImageSpecificationType spec,
+    final SyImageSpecification spec,
     final BufferedImage image)
   {
     final BufferedImage output =
@@ -181,7 +181,7 @@ public final class SyAWTImage
   }
 
   private static BufferedImage createCompatible(
-    final SyImageSpecificationType spec)
+    final SyImageSpecification spec)
   {
     switch (spec.format()) {
       case IMAGE_FORMAT_GREY_8: {
@@ -219,7 +219,7 @@ public final class SyAWTImage
   }
 
   private static boolean matchesExpected(
-    final SyImageSpecificationType spec,
+    final SyImageSpecification spec,
     final BufferedImage image)
   {
     final boolean size_ok =

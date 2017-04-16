@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.images;
+package com.io7m.jsycamore.images.api;
 
 /**
  * The method by which images will be scaled, if necessary.

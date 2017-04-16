@@ -19,7 +19,7 @@ package com.io7m.jsycamore.core.components;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.images.SyImageSpecificationType;
+import com.io7m.jsycamore.images.api.SyImageSpecification;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +40,12 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
     LOG = LoggerFactory.getLogger(SyImageAbstract.class);
   }
 
-  private SyImageSpecificationType image;
+  private SyImageSpecification image;
   private SyAlignmentHorizontal align_h;
   private SyAlignmentVertical align_v;
 
   protected SyImageAbstract(
-    final SyImageSpecificationType in_image,
+    final SyImageSpecification in_image,
     final BooleanSupplier in_detach_check)
   {
     super(in_detach_check);
@@ -81,13 +81,13 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
   }
 
   @Override
-  public final void setImage(final SyImageSpecificationType in_image)
+  public final void setImage(final SyImageSpecification in_image)
   {
     this.image = NullCheck.notNull(in_image, "Image specification");
   }
 
   @Override
-  public final SyImageSpecificationType image()
+  public final SyImageSpecification image()
   {
     return this.image;
   }

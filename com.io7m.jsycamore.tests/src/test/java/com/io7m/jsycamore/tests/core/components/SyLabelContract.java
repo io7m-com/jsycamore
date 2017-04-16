@@ -19,7 +19,6 @@ package com.io7m.jsycamore.tests.core.components;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyLabelType;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;

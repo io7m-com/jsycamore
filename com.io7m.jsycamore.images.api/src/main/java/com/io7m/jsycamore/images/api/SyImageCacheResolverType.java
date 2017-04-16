@@ -14,34 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core;
+package com.io7m.jsycamore.images.api;
 
-import org.immutables.value.Value;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * The {@code immutables} style used by the package.
- *
- * @see <a href="http://immutables.org">immutables</a>
+ * The type of image resolvers.
  */
 
-@Target({ElementType.PACKAGE, ElementType.TYPE})
-@Retention(RetentionPolicy.CLASS)
-@Value.Style(
-  get = {"is*", "get*"},
-  init = "set*",
-  typeAbstract = {"Abstract*", "*Type"},
-  typeImmutable = "*",
-  typeModifiable = "*Mutable",
-  builder = "builder",
-  build = "build",
-  visibility = Value.Style.ImplementationVisibility.PUBLIC,
-  defaults = @Value.Immutable(copy = true))
-public @interface SyImmutableStyleType
+@FunctionalInterface
+public interface SyImageCacheResolverType
 {
+  /**
+   * Open the image referred to by {@code i} and return a stream for it.
+   *
+   * @param specification The image specification
+   *
+   * @return An input stream
+   *
+   * @throws IOException Iff {@code i} cannot be opened.
+   */
 
+  InputStream resolve(
+    SyImageSpecificationType specification)
+    throws IOException;
 }

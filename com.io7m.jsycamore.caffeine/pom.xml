@@ -26,12 +26,12 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.jsycamore.core</artifactId>
+      <artifactId>com.io7m.jsycamore.awt</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.jsycamore.awt</artifactId>
+      <artifactId>com.io7m.jsycamore.images.api</artifactId>
       <version>${project.version}</version>
     </dependency>
 

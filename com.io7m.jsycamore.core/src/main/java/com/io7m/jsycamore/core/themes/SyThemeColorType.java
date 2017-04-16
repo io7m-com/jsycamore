@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.SyImmutableStyleType;
+import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 

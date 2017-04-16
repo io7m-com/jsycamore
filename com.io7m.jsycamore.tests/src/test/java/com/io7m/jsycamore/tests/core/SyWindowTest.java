@@ -19,7 +19,6 @@ package com.io7m.jsycamore.tests.core;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
 import com.io7m.jsycamore.core.SyGUI;
 import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyWindowAbstract;
 import com.io7m.jsycamore.core.SyWindowType;
 
 public final class SyWindowTest extends SyWindowContract

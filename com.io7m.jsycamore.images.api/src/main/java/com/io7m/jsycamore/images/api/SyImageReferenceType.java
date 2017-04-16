@@ -14,43 +14,41 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.core.images;
+package com.io7m.jsycamore.images.api;
 
-import java.io.Closeable;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * The type of image caches.
+ * <p>The type of image references.</p>
  *
- * @param <T> The type of loaded images
+ * <p>An image reference represents an image that may or may not currently be in
+ * the process of being loaded.</p>
+ *
+ * @param <T> The type of images
  */
 
-public interface SyImageCacheType<T> extends Closeable
+public interface SyImageReferenceType<T>
 {
   /**
-   * Load an image and return a reference to it.
+   * @return The future representing the image loading operation
+   */
+
+  CompletableFuture<T> future();
+
+  /**
+   * @return The specification used to construct the image reference
+   */
+
+  SyImageSpecificationType description();
+
+  /**
+   * Retrieve the current image. If the image is not yet loaded, then a default
+   * image will be used. If the image has failed to load, then an image
+   * representing an error will be used. Otherwise, the image itself will be
+   * returned.
    *
-   * @param i The image
-   *
-   * @return An image reference
+   * @return An image
    */
 
-  SyImageReferenceType<T> get(SyImageSpecificationType i);
-
-  /**
-   * @return The maximum size of the cache in bytes
-   */
-
-  long maximumSize();
-
-  /**
-   * @return The current size of the cache in bytes
-   */
-
-  long size();
-
-  /**
-   * @return The number of images in the cache, currently
-   */
-
-  long count();
+  T value();
 }
