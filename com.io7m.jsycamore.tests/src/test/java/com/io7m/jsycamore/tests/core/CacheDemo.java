@@ -17,14 +17,14 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.jsycamore.api.images.SyImageCacheLoaderType;
+import com.io7m.jsycamore.api.images.SyImageCacheResolverType;
+import com.io7m.jsycamore.api.images.SyImageCacheType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageReferenceType;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
-import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
-import com.io7m.jsycamore.images.api.SyImageCacheType;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageReferenceType;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -68,7 +69,7 @@ public final class CacheDemo
       }
 
       LOG.debug(
-        "size: {}: {}", i.name(),
+        "size: {}: {}", i.uri(),
         Integer.valueOf(image.getData().getDataBuffer().getSize()));
       return image;
     };
@@ -100,7 +101,7 @@ public final class CacheDemo
       spec_b.setFormat(SyImageFormat.IMAGE_FORMAT_RGB_565);
       spec_b.setHeight(512);
       spec_b.setWidth(512);
-      spec_b.setName(name);
+      spec_b.setUri(URI.create("/tmp/window_new.png"));
       spec_b.setScaleInterpolation(
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST);
 

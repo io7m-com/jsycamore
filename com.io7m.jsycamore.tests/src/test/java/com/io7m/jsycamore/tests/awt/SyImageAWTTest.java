@@ -16,10 +16,10 @@
 
 package com.io7m.jsycamore.tests.awt;
 
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.awt.SyAWTImage;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 public final class SyImageAWTTest
 {
@@ -49,7 +50,7 @@ public final class SyImageAWTTest
     Assert.assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "anything",
+      URI.create("anything"),
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGBA_8888,
@@ -71,7 +72,7 @@ public final class SyImageAWTTest
 
     for (final SyImageScaleInterpolation v : SyImageScaleInterpolation.values()) {
       final SyImageSpecification spec = SyImageSpecification.of(
-        "anything",
+        URI.create("anything"),
         32,
         32,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
@@ -99,7 +100,7 @@ public final class SyImageAWTTest
     Assert.assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "anything",
+      URI.create("anything"),
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGB_565,
@@ -129,7 +130,7 @@ public final class SyImageAWTTest
     Assert.assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "anything",
+      URI.create("anything"),
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGB_888,
@@ -159,7 +160,7 @@ public final class SyImageAWTTest
     Assert.assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "anything",
+      URI.create("anything"),
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_GREY_8,
@@ -189,7 +190,7 @@ public final class SyImageAWTTest
     Assert.assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "anything",
+      URI.create("anything"),
       64,
       64,
       SyImageFormat.IMAGE_FORMAT_RGBA_4444,

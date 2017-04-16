@@ -18,10 +18,10 @@ package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.core.themes.SyThemeColorType;
-import com.io7m.jsycamore.core.themes.SyThemeFillType;
-import com.io7m.jsycamore.core.themes.SyThemeGradientLinearType;
-import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
+import com.io7m.jsycamore.api.themes.SyThemeColorType;
+import com.io7m.jsycamore.api.themes.SyThemeFillType;
+import com.io7m.jsycamore.api.themes.SyThemeGradientLinearType;
+import com.io7m.jsycamore.api.themes.SyThemeOutline;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -74,7 +74,7 @@ public final class SyAWTDrawing
 
   public static void drawOutline(
     final Graphics2D graphics,
-    final SyThemeOutlineType outline,
+    final SyThemeOutline outline,
     final PAreaI<?> box,
     final boolean active)
   {

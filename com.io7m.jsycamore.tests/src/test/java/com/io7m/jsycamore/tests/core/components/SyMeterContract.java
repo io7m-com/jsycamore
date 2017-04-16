@@ -18,11 +18,11 @@ package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.SyOrientation;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.components.SyMeterType;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.SyMouseButton;
+import com.io7m.jsycamore.api.components.SyMeterType;
+import com.io7m.jsycamore.api.themes.SyOrientation;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.java.quickcheck.QuickCheck;

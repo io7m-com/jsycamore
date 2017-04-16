@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.tests.core;
 
-import com.io7m.jsycamore.core.SyMouseButton;
+import com.io7m.jsycamore.api.SyMouseButton;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

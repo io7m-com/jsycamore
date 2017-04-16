@@ -17,8 +17,8 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
 

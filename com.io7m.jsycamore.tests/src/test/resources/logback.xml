@@ -11,7 +11,7 @@
   </appender>
 
   <logger
-    name="com.io7m.jsycamore.core.SyGUI.search"
+    name="com.io7m.jsycamore.api.SyGUI.search"
     level="DEBUG"/>
 
   <root level="TRACE">

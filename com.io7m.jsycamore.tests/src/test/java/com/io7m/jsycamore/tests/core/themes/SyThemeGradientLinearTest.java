@@ -18,7 +18,7 @@ package com.io7m.jsycamore.tests.core.themes;
 
 import com.io7m.jaffirm.core.PreconditionViolationException;
 import com.io7m.jfunctional.Unit;
-import com.io7m.jsycamore.core.themes.SyThemeGradientLinear;
+import com.io7m.jsycamore.api.themes.SyThemeGradientLinear;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;

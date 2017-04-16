@@ -25,11 +25,11 @@ import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.github.benmanes.caffeine.cache.Weigher;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.awt.SyAWTImage;
-import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
-import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
-import com.io7m.jsycamore.images.api.SyImageCacheType;
-import com.io7m.jsycamore.images.api.SyImageReferenceType;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.api.images.SyImageCacheLoaderType;
+import com.io7m.jsycamore.api.images.SyImageCacheResolverType;
+import com.io7m.jsycamore.api.images.SyImageCacheType;
+import com.io7m.jsycamore.api.images.SyImageReferenceType;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jsycamore.core.SyAlignmentHorizontal;
-import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.api.text.SyTextMeasurementType;
+import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
+import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 
 import java.awt.Graphics2D;
 

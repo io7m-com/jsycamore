@@ -16,18 +16,22 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.components.SyPanel;
+import com.io7m.jsycamore.api.components.SyPanelType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyPanel;
-import com.io7m.jsycamore.core.components.SyPanelType;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 
 public final class SyPanelTest extends SyPanelContract
 {
   @Override
   protected SyGUIType gui()
   {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+    return SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      "GUI",
+      SyThemeMotive.builder().build());
   }
 
   @Override

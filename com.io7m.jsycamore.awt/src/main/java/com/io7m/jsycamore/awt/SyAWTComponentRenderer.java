@@ -22,28 +22,32 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.SyTextMeasurementType;
-import com.io7m.jsycamore.core.components.SyButtonReadableType;
-import com.io7m.jsycamore.core.components.SyComponentReadableType;
-import com.io7m.jsycamore.core.components.SyImageReadableType;
-import com.io7m.jsycamore.core.components.SyLabelReadableType;
-import com.io7m.jsycamore.core.components.SyMeterReadableType;
-import com.io7m.jsycamore.core.components.SyPanelReadableType;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
-import com.io7m.jsycamore.images.api.SyImageCacheType;
-import com.io7m.jsycamore.images.api.SyImageReferenceType;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
-import com.io7m.jsycamore.core.themes.SyThemeButtonType;
-import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
-import com.io7m.jsycamore.core.themes.SyThemeFillType;
-import com.io7m.jsycamore.core.themes.SyThemeImageType;
-import com.io7m.jsycamore.core.themes.SyThemeLabelType;
-import com.io7m.jsycamore.core.themes.SyThemeMeterOrientedType;
-import com.io7m.jsycamore.core.themes.SyThemeMeterType;
-import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
-import com.io7m.jsycamore.core.themes.SyThemePanelType;
+import com.io7m.jsycamore.api.components.SyButtonReadableType;
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.components.SyImageReadableType;
+import com.io7m.jsycamore.api.components.SyLabelReadableType;
+import com.io7m.jsycamore.api.components.SyMeterReadableType;
+import com.io7m.jsycamore.api.components.SyPanelReadableType;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.images.SyImageCacheType;
+import com.io7m.jsycamore.api.images.SyImageReferenceType;
+import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
+import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.text.SyTextMeasurementType;
+import com.io7m.jsycamore.api.themes.SyThemeButtonType;
+import com.io7m.jsycamore.api.themes.SyThemeEmboss;
+import com.io7m.jsycamore.api.themes.SyThemeFillType;
+import com.io7m.jsycamore.api.themes.SyThemeImage;
+import com.io7m.jsycamore.api.themes.SyThemeLabel;
+import com.io7m.jsycamore.api.themes.SyThemeLabelType;
+import com.io7m.jsycamore.api.themes.SyThemeMeter;
+import com.io7m.jsycamore.api.themes.SyThemeMeterOriented;
+import com.io7m.jsycamore.api.themes.SyThemeMeterOrientedType;
+import com.io7m.jsycamore.api.themes.SyThemeMeterType;
+import com.io7m.jsycamore.api.themes.SyThemeOutline;
+import com.io7m.jsycamore.api.themes.SyThemePanel;
+import com.io7m.jsycamore.api.themes.SyThemePanelType;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -218,7 +222,7 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyMeterReadableType meter)
   {
-    final Optional<SyThemeMeterType> theme_opt = meter.theme();
+    final Optional<SyThemeMeter> theme_opt = meter.theme();
     if (!theme_opt.isPresent()) {
       throw SyAWTComponentRenderer.notAttached(meter);
     }
@@ -234,7 +238,7 @@ public final class SyAWTComponentRenderer implements
         final PAreaI<SySpaceComponentRelativeType> box_indicator =
           PAreasI.create(0, 0, width, box.height());
         final SyThemeMeterOrientedType t = theme.horizontal();
-        final Optional<SyThemeOutlineType> outline = t.outline();
+        final Optional<SyThemeOutline> outline = t.outline();
 
         this.renderThemedBox(
           graphics,
@@ -261,8 +265,8 @@ public final class SyAWTComponentRenderer implements
         final PAreaI<SySpaceComponentRelativeType> box_indicator =
           PAreasI.create(0, box.height() - height, box.width(), height);
 
-        final SyThemeMeterOrientedType t = theme.vertical();
-        final Optional<SyThemeOutlineType> outline = t.outline();
+        final SyThemeMeterOriented t = theme.vertical();
+        final Optional<SyThemeOutline> outline = t.outline();
 
         this.renderThemedBox(
           graphics,
@@ -291,7 +295,7 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyImageReadableType image)
   {
-    final Optional<SyThemeImageType> theme_opt = image.theme();
+    final Optional<SyThemeImage> theme_opt = image.theme();
     if (!theme_opt.isPresent()) {
       throw SyAWTComponentRenderer.notAttached(image);
     }
@@ -342,7 +346,7 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyLabelReadableType label)
   {
-    final Optional<SyThemeLabelType> theme_opt = label.theme();
+    final Optional<SyThemeLabel> theme_opt = label.theme();
     if (!theme_opt.isPresent()) {
       throw SyAWTComponentRenderer.notAttached(label);
     }
@@ -374,7 +378,7 @@ public final class SyAWTComponentRenderer implements
     final Graphics2D graphics,
     final SyPanelReadableType panel)
   {
-    final Optional<SyThemePanelType> theme_opt = panel.theme();
+    final Optional<SyThemePanel> theme_opt = panel.theme();
     if (!theme_opt.isPresent()) {
       throw SyAWTComponentRenderer.notAttached(panel);
     }
@@ -387,7 +391,7 @@ public final class SyAWTComponentRenderer implements
     final PAreaI<SySpaceParentRelativeType> box = panel.box();
     final PAreaI<SySpaceComponentRelativeType> box_origin =
       PAreasI.cast(PAreasI.moveToOrigin(box));
-    final Optional<SyThemeOutlineType> outline = theme.outline();
+    final Optional<SyThemeOutline> outline = theme.outline();
 
     this.renderThemedBox(
       graphics,
@@ -405,9 +409,9 @@ public final class SyAWTComponentRenderer implements
 
   private void renderThemedBox(
     final Graphics2D graphics,
-    final Optional<SyThemeOutlineType> outline,
+    final Optional<SyThemeOutline> outline,
     final Supplier<SyThemeFillType> fill,
-    final Supplier<Optional<SyThemeEmbossType>> emboss,
+    final Supplier<Optional<SyThemeEmboss>> emboss,
     final PAreaI<SySpaceComponentRelativeType> box)
   {
     final PAreaI<SySpaceComponentRelativeType> box_fill;
@@ -439,7 +443,7 @@ public final class SyAWTComponentRenderer implements
     final int height = box.height();
 
     final PAreaI<SySpaceParentRelativeType> box_fill;
-    final Optional<SyThemeOutlineType> outline = theme.outline();
+    final Optional<SyThemeOutline> outline = theme.outline();
     if (outline.isPresent()) {
       box_fill = PAreasI.hollowOutEvenly(box_origin, 1);
     } else {
@@ -490,13 +494,13 @@ public final class SyAWTComponentRenderer implements
   private void renderOptionallyEmbossedFill(
     final Graphics2D graphics,
     final PAreaI<?> box,
-    final Optional<SyThemeEmbossType> emboss_opt,
+    final Optional<SyThemeEmboss> emboss_opt,
     final SyThemeFillType fill)
   {
     final Paint fill_paint = SyAWTDrawing.toPaint(box, fill);
 
     if (emboss_opt.isPresent()) {
-      final SyThemeEmbossType emboss = emboss_opt.get();
+      final SyThemeEmboss emboss = emboss_opt.get();
       this.embossed.rectangle(
         graphics,
         box,

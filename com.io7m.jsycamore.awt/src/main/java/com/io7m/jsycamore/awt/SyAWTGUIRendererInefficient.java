@@ -18,11 +18,11 @@ package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.renderer.SyGUIRendererType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.renderer.SyGUIRendererType;
+import com.io7m.jsycamore.api.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;

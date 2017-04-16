@@ -17,13 +17,13 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyParentResizeBehavior;
-import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.components.SyVisibility;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.SyParentResizeBehavior;
+import com.io7m.jsycamore.api.components.SyActive;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyVisibility;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulator;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import org.junit.Assert;
 import org.junit.Rule;

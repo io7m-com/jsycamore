@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
-import com.io7m.jsycamore.core.components.SyPanelType;
+import com.io7m.jsycamore.api.components.SyPanelType;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
 import org.junit.Test;

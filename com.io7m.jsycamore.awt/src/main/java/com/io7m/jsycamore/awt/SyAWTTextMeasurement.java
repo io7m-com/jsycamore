@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.SyTextMeasurementType;
+import com.io7m.jsycamore.api.text.SyTextMeasurementType;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.awt.Font;

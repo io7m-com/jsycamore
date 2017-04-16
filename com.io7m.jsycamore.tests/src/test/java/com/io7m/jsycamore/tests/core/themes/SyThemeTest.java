@@ -16,16 +16,16 @@
 
 package com.io7m.jsycamore.tests.core.themes;
 
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeTitleBarElement;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBeeSpecification;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestraSpecification;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotiveSpecification;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStrideSpecification;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.themes.SyThemeTitleBarElement;
+import com.io7m.jsycamore.themes.bee.SyThemeBee;
+import com.io7m.jsycamore.themes.bee.SyThemeBeeSpecification;
+import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
+import com.io7m.jsycamore.themes.fenestra.SyThemeFenestraSpecification;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
+import com.io7m.jsycamore.themes.motive.SyThemeMotiveSpecification;
+import com.io7m.jsycamore.themes.stride.SyThemeStride;
+import com.io7m.jsycamore.themes.stride.SyThemeStrideSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 

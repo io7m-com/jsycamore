@@ -19,31 +19,30 @@ package com.io7m.jsycamore.tests.core;
 import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowCloseButtonType;
-import com.io7m.jsycamore.core.SyWindowContentPaneType;
-import com.io7m.jsycamore.core.SyWindowMaximizeButtonType;
-import com.io7m.jsycamore.core.SyWindowTitleBarType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.components.SyImageType;
-import com.io7m.jsycamore.core.components.SyPanelReadableType;
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
-import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyImageType;
+import com.io7m.jsycamore.api.components.SyPanelReadableType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.windows.SyWindowCloseButtonType;
+import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
+import com.io7m.jsycamore.api.windows.SyWindowMaximizeButtonType;
+import com.io7m.jsycamore.api.windows.SyWindowTitleBarType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.themes.bee.SyThemeBee;
+import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
@@ -141,8 +140,8 @@ public abstract class SyWindowContract
   @Test
   public final void testTheme()
   {
-    final SyThemeType theme_default = SyThemeDefault.get();
-    final SyThemeType theme_other = SyThemeBee.builder().build();
+    final SyTheme theme_default = SyThemeMotive.builder().build();
+    final SyTheme theme_other = SyThemeBee.builder().build();
     final SyWindowType w = this.create(640, 480, "Main 0");
 
     Assert.assertEquals(theme_default, w.theme());
@@ -270,6 +269,7 @@ public abstract class SyWindowContract
 
   @Test
   public final void testThemeIconCorrect()
+    throws Exception
   {
     final SyTheme theme_start = SyThemeMotive.builder().build();
     final SyTheme theme_next = SyThemeFenestra.builder().build();
@@ -278,7 +278,7 @@ public abstract class SyWindowContract
     Assert.assertTrue(theme_next.windowTheme().titleBar().iconPresent());
 
     final SyImageSpecification icon_spec = SyImageSpecification.of(
-      "/com/io7m/jsycamore/tests/awt/paper.png",
+      SyWindowContract.class.getResource("/com/io7m/jsycamore/tests/awt/paper.png").toURI(),
       16,
       16,
       SyImageFormat.IMAGE_FORMAT_RGBA_8888,

@@ -17,43 +17,44 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.SyParentResizeBehavior;
+import com.io7m.jsycamore.api.components.SyActive;
+import com.io7m.jsycamore.api.components.SyButtonCheckbox;
+import com.io7m.jsycamore.api.components.SyButtonCheckboxType;
+import com.io7m.jsycamore.api.components.SyButtonRepeating;
+import com.io7m.jsycamore.api.components.SyButtonType;
+import com.io7m.jsycamore.api.components.SyImage;
+import com.io7m.jsycamore.api.components.SyImageType;
+import com.io7m.jsycamore.api.components.SyLabel;
+import com.io7m.jsycamore.api.components.SyLabelType;
+import com.io7m.jsycamore.api.components.SyMeter;
+import com.io7m.jsycamore.api.components.SyMeterType;
+import com.io7m.jsycamore.api.components.SyPanel;
+import com.io7m.jsycamore.api.components.SyPanelType;
+import com.io7m.jsycamore.api.images.SyImageCacheLoaderType;
+import com.io7m.jsycamore.api.images.SyImageCacheResolverType;
+import com.io7m.jsycamore.api.images.SyImageCacheType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageReferenceType;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
+import com.io7m.jsycamore.api.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.themes.SyThemeProviderType;
+import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.SyAWTComponentRenderer;
 import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
 import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyParentResizeBehavior;
-import com.io7m.jsycamore.core.SyWindowContentPaneType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyButtonCheckbox;
-import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
-import com.io7m.jsycamore.core.components.SyButtonRepeating;
-import com.io7m.jsycamore.core.components.SyButtonType;
-import com.io7m.jsycamore.core.components.SyImage;
-import com.io7m.jsycamore.core.components.SyImageType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
-import com.io7m.jsycamore.core.components.SyMeter;
-import com.io7m.jsycamore.core.components.SyMeterType;
-import com.io7m.jsycamore.core.components.SyPanel;
-import com.io7m.jsycamore.core.components.SyPanelType;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
-import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
-import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
-import com.io7m.jsycamore.images.api.SyImageCacheType;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageReferenceType;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.themes.bee.SyThemeBee;
+import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
+import com.io7m.jsycamore.themes.stride.SyThemeStride;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 
 import javax.imageio.ImageIO;
@@ -63,9 +64,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -81,11 +87,15 @@ public final class WindowDump
     throws Exception
   {
     final List<SyTheme> themes = new ArrayList<>();
-    themes.add(SyThemeFenestra.builder().build());
-    themes.add(SyThemeMotive.builder().build());
-    themes.add(SyThemeBee.builder().build());
-    themes.add(SyThemeStride.builder().build());
-    // Collections.shuffle(themes, new Random());
+    {
+      final ServiceLoader<SyThemeProviderType> loader =
+        ServiceLoader.load(SyThemeProviderType.class);
+      final Iterator<SyThemeProviderType> iter = loader.iterator();
+      while (iter.hasNext()) {
+        final SyThemeProviderType provider = iter.next();
+        themes.add(provider.theme());
+      }
+    }
 
     final ExecutorService io_executor = Executors.newFixedThreadPool(4);
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> component_renderer;
@@ -95,10 +105,10 @@ public final class WindowDump
 
     {
       final SyImageCacheResolverType resolver = i -> {
-        final InputStream stream =
-          WindowDump.class.getResourceAsStream(i.name());
+        final URL url = i.uri().toURL();
+        final InputStream stream = url.openStream();
         if (stream == null) {
-          throw new FileNotFoundException(i.name());
+          throw new FileNotFoundException(url.toString());
         }
         return stream;
       };
@@ -106,13 +116,13 @@ public final class WindowDump
       final SyImageCacheLoaderType<BufferedImage> loader = (i, is) -> {
         final BufferedImage loaded = ImageIO.read(is);
         if (loaded == null) {
-          throw new IOException("Could not parse output_image " + i.name());
+          throw new IOException("Could not parse output_image " + i.uri());
         }
         return loaded;
       };
 
       final SyImageSpecification image_spec = SyImageSpecification.of(
-        "/com/io7m/jsycamore/tests/awt/circle-x-8x.png",
+        WindowDump.class.getResource("/com/io7m/jsycamore/tests/awt/circle-x-8x.png").toURI(),
         64,
         64,
         SyImageFormat.IMAGE_FORMAT_GREY_8,
@@ -147,7 +157,7 @@ public final class WindowDump
         BufferedImage.TYPE_4BYTE_ABGR);
 
     final SyImageSpecification icon_spec = SyImageSpecification.of(
-      "/com/io7m/jsycamore/tests/awt/paper.png",
+      WindowDump.class.getResource("/com/io7m/jsycamore/tests/awt/paper.png").toURI(),
       16,
       16,
       SyImageFormat.IMAGE_FORMAT_RGBA_8888,
@@ -204,6 +214,7 @@ public final class WindowDump
   private static SyWindowType createWindow(
     final SyGUIType gui,
     final SyTheme theme)
+    throws URISyntaxException
   {
     final SyWindowType w = gui.windowCreate(320, 240, "Main");
     w.setTheme(Optional.of(theme));
@@ -255,7 +266,7 @@ public final class WindowDump
 
       {
         final SyImageSpecification spec = SyImageSpecification.of(
-          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          WindowDump.class.getResource("/com/io7m/jsycamore/tests/awt/wheat.png").toURI(),
           64,
           64,
           SyImageFormat.IMAGE_FORMAT_RGB_888,
@@ -271,7 +282,7 @@ public final class WindowDump
 
       {
         final SyImageSpecification spec = SyImageSpecification.of(
-          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          WindowDump.class.getResource("/com/io7m/jsycamore/tests/awt/wheat.png").toURI(),
           64,
           64,
           SyImageFormat.IMAGE_FORMAT_RGB_888,
@@ -287,7 +298,7 @@ public final class WindowDump
 
       {
         final SyImageSpecification spec = SyImageSpecification.of(
-          "/com/io7m/jsycamore/tests/awt/wheat.png",
+          WindowDump.class.getResource("/com/io7m/jsycamore/tests/awt/wheat.png").toURI(),
           64,
           64,
           SyImageFormat.IMAGE_FORMAT_RGB_888,

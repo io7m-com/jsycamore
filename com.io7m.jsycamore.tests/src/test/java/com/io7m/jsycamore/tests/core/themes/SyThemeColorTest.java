@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests.core.themes;
 
 import com.io7m.jfunctional.Unit;
-import com.io7m.jsycamore.core.themes.SyThemeColor;
+import com.io7m.jsycamore.api.themes.SyThemeColor;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;

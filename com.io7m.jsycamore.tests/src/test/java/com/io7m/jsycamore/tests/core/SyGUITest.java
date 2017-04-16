@@ -16,23 +16,27 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 
 public final class SyGUITest extends SyGUIContract
 {
   @Override
   protected SyGUIType create(final String name)
   {
-    return SyGUI.create(SyAWTTextMeasurement.create(), name);
+    return SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      name,
+      SyThemeMotive.builder().build());
   }
 
   @Override
   protected SyGUIType createWithTheme(
     final String name,
-    final SyThemeType theme)
+    final SyTheme theme)
   {
     return SyGUI.createWithTheme(SyAWTTextMeasurement.create(), name, theme);
   }

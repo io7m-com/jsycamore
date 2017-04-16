@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jsycamore.annotations.SyImmutableStyleType;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 import org.immutables.value.Value;
 
 import java.awt.image.BufferedImage;

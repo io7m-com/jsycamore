@@ -19,21 +19,20 @@ package com.io7m.jsycamore.tests.core;
 import com.io7m.jranges.RangeCheckException;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowContentPaneType;
-import com.io7m.jsycamore.core.SyWindowFrameType;
-import com.io7m.jsycamore.core.SyWindowTitleBarType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.components.SyComponentType;
-import com.io7m.jsycamore.core.components.SyLabelReadableType;
-import com.io7m.jsycamore.core.themes.SyTheme;
-import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jsycamore.core.themes.provided.SyThemeDefault;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.SyMouseButton;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyLabelReadableType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
+import com.io7m.jsycamore.api.windows.SyWindowFrameType;
+import com.io7m.jsycamore.api.windows.SyWindowTitleBarType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
+import com.io7m.jsycamore.themes.stride.SyThemeStride;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -51,14 +50,14 @@ public abstract class SyGUIContract
 
   protected abstract SyGUIType createWithTheme(
     String name,
-    SyThemeType theme);
+    SyTheme theme);
 
   @Test
   public final void testCreate()
   {
     final SyGUIType g = this.create("main");
     Assert.assertEquals("main", g.name());
-    Assert.assertEquals(SyThemeDefault.get(), g.theme());
+    Assert.assertEquals(SyThemeMotive.builder().build(), g.theme());
     Assert.assertTrue(g.windowsOpenOrdered().isEmpty());
   }
 
@@ -153,7 +152,7 @@ public abstract class SyGUIContract
   public final void testWindowThemeChange()
   {
     final SyTheme theme = SyThemeFenestra.builder().build();
-    final SyThemeType theme_default = SyThemeDefault.get();
+    final SyThemeType theme_default = SyThemeMotive.builder().build();
 
     final SyGUIType g = this.create("main");
     final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
@@ -171,7 +170,7 @@ public abstract class SyGUIContract
   public final void testWindowThemeChangeOpenClosed()
   {
     final SyTheme theme = SyThemeFenestra.builder().build();
-    final SyThemeType theme_default = SyThemeDefault.get();
+    final SyThemeType theme_default = SyThemeMotive.builder().build();
 
     final SyGUIType g = this.create("main");
     final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");

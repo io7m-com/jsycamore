@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jsycamore.core.components.SyErrors;
+import com.io7m.jsycamore.api.components.SyErrors;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

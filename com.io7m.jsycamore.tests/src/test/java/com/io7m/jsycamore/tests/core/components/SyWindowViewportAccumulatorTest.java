@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulator;
-import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulator;
+import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 
 public final class SyWindowViewportAccumulatorTest extends
   SyWindowViewportAccumulatorContract

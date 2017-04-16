@@ -16,10 +16,11 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyWindowType;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 
 public final class SyWindowTest extends SyWindowContract
 {
@@ -29,7 +30,10 @@ public final class SyWindowTest extends SyWindowContract
     final int height,
     final String title)
   {
-    final SyGUIType g = SyGUI.create(SyAWTTextMeasurement.create(), "main");
+    final SyGUIType g = SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      "main",
+      SyThemeMotive.builder().build());
     return g.windowCreate(width, height, title);
   }
 }

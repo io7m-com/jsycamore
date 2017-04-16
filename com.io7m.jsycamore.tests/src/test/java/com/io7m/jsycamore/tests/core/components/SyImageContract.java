@@ -17,17 +17,18 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
-import com.io7m.jsycamore.core.SyAlignmentHorizontal;
-import com.io7m.jsycamore.core.SyAlignmentVertical;
-import com.io7m.jsycamore.core.components.SyImageType;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.api.components.SyImageType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
+import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class SyImageContract extends SyComponentContract
@@ -115,7 +116,7 @@ public abstract class SyImageContract extends SyComponentContract
     }
 
     final SyImageSpecification spec = SyImageSpecification.of(
-      "x",
+      URI.create("x"),
       32,
       32,
       SyImageFormat.IMAGE_FORMAT_RGB_565,

@@ -22,14 +22,21 @@
 
   <modules>
     <module>com.io7m.jsycamore.annotations</module>
+    <module>com.io7m.jsycamore.api.images</module>
+    <module>com.io7m.jsycamore.api.renderer</module>
+    <module>com.io7m.jsycamore.api.spaces</module>
+    <module>com.io7m.jsycamore.api.text</module>
+    <module>com.io7m.jsycamore.api</module>
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.caffeine</module>
     <module>com.io7m.jsycamore.checkstyle</module>
-    <module>com.io7m.jsycamore.core</module>
     <module>com.io7m.jsycamore.documentation</module>
-    <module>com.io7m.jsycamore.images.api</module>
     <module>com.io7m.jsycamore.tests</module>
     <module>com.io7m.jsycamore.themedesigner</module>
+    <module>com.io7m.jsycamore.themes.bee</module>
+    <module>com.io7m.jsycamore.themes.fenestra</module>
+    <module>com.io7m.jsycamore.themes.motive</module>
+    <module>com.io7m.jsycamore.themes.stride</module>
   </modules>
 
   <properties>
@@ -175,6 +182,16 @@
         <groupId>com.github.ben-manes.caffeine</groupId>
         <artifactId>caffeine</artifactId>
         <version>2.4.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation</artifactId>
+        <version>6.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.component.annotations</artifactId>
+        <version>1.3.0</version>
       </dependency>
 
       <dependency>

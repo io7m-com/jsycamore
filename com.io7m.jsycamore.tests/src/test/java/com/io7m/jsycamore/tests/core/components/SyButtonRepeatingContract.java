@@ -18,10 +18,10 @@ package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.components.SyButtonListenerType;
-import com.io7m.jsycamore.core.components.SyButtonState;
-import com.io7m.jsycamore.core.components.SyButtonType;
+import com.io7m.jsycamore.api.SyMouseButton;
+import com.io7m.jsycamore.api.components.SyButtonListenerType;
+import com.io7m.jsycamore.api.components.SyButtonState;
+import com.io7m.jsycamore.api.components.SyButtonType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.Assert;

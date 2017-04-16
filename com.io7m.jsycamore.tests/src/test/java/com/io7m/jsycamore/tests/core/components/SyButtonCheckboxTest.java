@@ -16,18 +16,22 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.components.SyButtonCheckbox;
+import com.io7m.jsycamore.api.components.SyButtonCheckboxType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyButtonCheckbox;
-import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 
 public final class SyButtonCheckboxTest extends SyButtonCheckboxContract
 {
   @Override
   protected SyGUIType gui()
   {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+    return SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      "GUI",
+      SyThemeMotive.builder().build());
   }
 
   @Override

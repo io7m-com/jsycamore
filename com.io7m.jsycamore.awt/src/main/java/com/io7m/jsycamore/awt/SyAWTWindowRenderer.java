@@ -20,19 +20,19 @@ import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowFrameType;
-import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
-import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
-import com.io7m.jsycamore.core.themes.SyThemeOutlineType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jsycamore.core.themes.SyThemeWindowFrameType;
-import com.io7m.jsycamore.core.themes.SyThemeWindowTitleBarType;
-import com.io7m.jsycamore.core.themes.SyThemeWindowType;
+import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
+import com.io7m.jsycamore.api.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.themes.SyThemeEmboss;
+import com.io7m.jsycamore.api.themes.SyThemeOutline;
+import com.io7m.jsycamore.api.themes.SyThemeWindow;
+import com.io7m.jsycamore.api.themes.SyThemeWindowFrame;
+import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBar;
+import com.io7m.jsycamore.api.windows.SyWindowFrameType;
+import com.io7m.jsycamore.api.windows.SyWindowReadableType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.awt.Graphics2D;
@@ -127,13 +127,13 @@ public final class SyAWTWindowRenderer implements
     final Graphics2D graphics,
     final SyWindowReadableType window)
   {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowFrameType frame_theme = window_theme.frame();
+    final SyTheme theme = window.theme();
+    final SyThemeWindow window_theme = theme.windowTheme();
+    final SyThemeWindowFrame frame_theme = window_theme.frame();
 
-    final Optional<SyThemeEmbossType> emboss_opt = frame_theme.embossInactive();
+    final Optional<SyThemeEmboss> emboss_opt = frame_theme.embossInactive();
     if (emboss_opt.isPresent()) {
-      final SyThemeEmbossType emboss = emboss_opt.get();
+      final SyThemeEmboss emboss = emboss_opt.get();
       this.renderFrameEmbossedActual(
         graphics,
         window_theme.titleBar(),
@@ -162,13 +162,13 @@ public final class SyAWTWindowRenderer implements
     final Graphics2D graphics,
     final SyWindowReadableType window)
   {
-    final SyThemeType theme = window.theme();
-    final SyThemeWindowType window_theme = theme.windowTheme();
-    final SyThemeWindowFrameType frame_theme = window_theme.frame();
-    final Optional<SyThemeEmbossType> emboss_opt = frame_theme.embossActive();
+    final SyTheme theme = window.theme();
+    final SyThemeWindow window_theme = theme.windowTheme();
+    final SyThemeWindowFrame frame_theme = window_theme.frame();
+    final Optional<SyThemeEmboss> emboss_opt = frame_theme.embossActive();
 
     if (emboss_opt.isPresent()) {
-      final SyThemeEmbossType emboss = emboss_opt.get();
+      final SyThemeEmboss emboss = emboss_opt.get();
       this.renderFrameEmbossedActual(
         graphics,
         window_theme.titleBar(),
@@ -195,11 +195,11 @@ public final class SyAWTWindowRenderer implements
 
   private void renderFrameEmbossedActual(
     final Graphics2D graphics,
-    final SyThemeWindowTitleBarType titlebar_theme,
-    final SyThemeWindowFrameType frame_theme,
+    final SyThemeWindowTitleBar titlebar_theme,
+    final SyThemeWindowFrame frame_theme,
     final SyWindowReadableType window,
-    final Optional<SyThemeOutlineType> outline_opt,
-    final SyThemeEmbossType emboss,
+    final Optional<SyThemeOutline> outline_opt,
+    final SyThemeEmboss emboss,
     final Paint e_top,
     final Paint e_left,
     final Paint e_right,
@@ -495,9 +495,9 @@ public final class SyAWTWindowRenderer implements
 
   private void renderFrameUnembossedActual(
     final Graphics2D graphics,
-    final SyThemeWindowFrameType frame_theme,
+    final SyThemeWindowFrame frame_theme,
     final SyWindowReadableType window,
-    final Optional<SyThemeOutlineType> outline_opt,
+    final Optional<SyThemeOutline> outline_opt,
     final Paint fill,
     final boolean active)
   {

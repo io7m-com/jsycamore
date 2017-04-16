@@ -16,29 +16,35 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.components.SyImage;
+import com.io7m.jsycamore.api.components.SyImageType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyImage;
-import com.io7m.jsycamore.core.components.SyImageType;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
+
+import java.net.URI;
 
 public final class SyImageTest extends SyImageContract
 {
   @Override
   protected SyGUIType gui()
   {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+    return SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      "GUI",
+      SyThemeMotive.builder().build());
   }
 
   @Override
   protected SyImageType create()
   {
     final SyImageSpecification spec = SyImageSpecification.of(
-      "default",
+      URI.create("default"),
       32,
       32,
       SyImageFormat.IMAGE_FORMAT_RGB_565,

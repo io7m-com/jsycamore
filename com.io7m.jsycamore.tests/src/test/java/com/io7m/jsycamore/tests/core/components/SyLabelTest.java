@@ -16,18 +16,22 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.components.SyLabel;
+import com.io7m.jsycamore.api.components.SyLabelType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
+import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 
 public final class SyLabelTest extends SyLabelContract
 {
   @Override
   protected SyGUIType gui()
   {
-    return SyGUI.create(SyAWTTextMeasurement.create(), "GUI");
+    return SyGUI.createWithTheme(
+      SyAWTTextMeasurement.create(),
+      "GUI",
+      SyThemeMotive.builder().build());
   }
 
   @Override

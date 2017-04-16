@@ -18,44 +18,41 @@ package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
+import com.io7m.jsycamore.api.SyGUI;
+import com.io7m.jsycamore.api.SyGUIType;
+import com.io7m.jsycamore.api.SyMouseButton;
+import com.io7m.jsycamore.api.SyParentResizeBehavior;
+import com.io7m.jsycamore.api.components.SyActive;
+import com.io7m.jsycamore.api.components.SyButtonCheckbox;
+import com.io7m.jsycamore.api.components.SyButtonCheckboxType;
+import com.io7m.jsycamore.api.components.SyButtonRepeating;
+import com.io7m.jsycamore.api.components.SyButtonType;
+import com.io7m.jsycamore.api.components.SyLabel;
+import com.io7m.jsycamore.api.components.SyLabelType;
+import com.io7m.jsycamore.api.components.SyMeter;
+import com.io7m.jsycamore.api.components.SyMeterType;
+import com.io7m.jsycamore.api.components.SyPanel;
+import com.io7m.jsycamore.api.components.SyPanelType;
+import com.io7m.jsycamore.api.images.SyImageCacheLoaderType;
+import com.io7m.jsycamore.api.images.SyImageCacheResolverType;
+import com.io7m.jsycamore.api.images.SyImageCacheType;
+import com.io7m.jsycamore.api.images.SyImageFormat;
+import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
+import com.io7m.jsycamore.api.renderer.SyWindowRendererType;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyOrientation;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.themes.SyThemeProviderType;
+import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.SyAWTComponentRenderer;
 import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
 import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.core.SyGUI;
-import com.io7m.jsycamore.core.SyGUIType;
-import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.SyOrientation;
-import com.io7m.jsycamore.core.SyParentResizeBehavior;
-import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.SyWindowContentPaneType;
-import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.components.SyActive;
-import com.io7m.jsycamore.core.components.SyButtonCheckbox;
-import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
-import com.io7m.jsycamore.core.components.SyButtonRepeating;
-import com.io7m.jsycamore.core.components.SyButtonType;
-import com.io7m.jsycamore.core.components.SyLabel;
-import com.io7m.jsycamore.core.components.SyLabelType;
-import com.io7m.jsycamore.core.components.SyMeter;
-import com.io7m.jsycamore.core.components.SyMeterType;
-import com.io7m.jsycamore.core.components.SyPanel;
-import com.io7m.jsycamore.core.components.SyPanelType;
-import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
-import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
-import com.io7m.jsycamore.core.themes.SyThemeType;
-import com.io7m.jsycamore.core.themes.provided.SyThemeBee;
-import com.io7m.jsycamore.core.themes.provided.SyThemeFenestra;
-import com.io7m.jsycamore.core.themes.provided.SyThemeMotive;
-import com.io7m.jsycamore.core.themes.provided.SyThemeStride;
-import com.io7m.jsycamore.images.api.SyImageCacheLoaderType;
-import com.io7m.jsycamore.images.api.SyImageCacheResolverType;
-import com.io7m.jsycamore.images.api.SyImageCacheType;
-import com.io7m.jsycamore.images.api.SyImageFormat;
-import com.io7m.jsycamore.images.api.SyImageScaleInterpolation;
-import com.io7m.jsycamore.images.api.SyImageSpecification;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -77,12 +74,17 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
+import java.util.ServiceLoader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -98,12 +100,16 @@ public final class WindowDemo
   public static void main(final String[] args)
   {
     SwingUtilities.invokeLater(() -> {
-      final JFrame frame = new JFrame("WindowDemo");
-      frame.setPreferredSize(new Dimension(800, 600));
-      frame.getContentPane().add(new Canvas());
-      frame.pack();
-      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      frame.setVisible(true);
+      try {
+        final JFrame frame = new JFrame("WindowDemo");
+        frame.setPreferredSize(new Dimension(800, 600));
+        frame.getContentPane().add(new Canvas());
+        frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+      } catch (final Exception e) {
+        throw new RuntimeException(e);
+      }
     });
   }
 
@@ -122,28 +128,36 @@ public final class WindowDemo
     private final SyImageCacheType<BufferedImage> image_cache;
     private final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> c_renderer;
     private final SyWindowRendererType<BufferedImage, BufferedImage> w_renderer;
-    private final List<SyThemeType> themes;
+    private final List<SyTheme> themes;
     private final Random random;
 
     Canvas()
+      throws Exception
     {
       this.setFocusable(true);
 
       this.random = new Random(23L);
 
       this.themes = new ArrayList<>();
-      this.themes.add(SyThemeMotive.builder().build());
-      this.themes.add(SyThemeFenestra.builder().build());
-      this.themes.add(SyThemeBee.builder().build());
-      this.themes.add(SyThemeStride.builder().build());
+      {
+        final ServiceLoader<SyThemeProviderType> loader =
+          ServiceLoader.load(SyThemeProviderType.class);
+        final Iterator<SyThemeProviderType> iter = loader.iterator();
+        while (iter.hasNext()) {
+          final SyThemeProviderType provider = iter.next();
+          LOG.debug("loaded theme: {}", provider.name());
+          this.themes.add(provider.theme());
+        }
+      }
 
       final SyImageCacheResolverType resolver = specification -> {
-        Canvas.LOG.debug("loading: {}", specification.name());
+        final URI uri = specification.uri();
+        Canvas.LOG.debug("loading: {}", uri);
 
-        final InputStream stream = WindowDemo.class.getResourceAsStream(
-          specification.name());
+        final URL url = uri.toURL();
+        final InputStream stream = url.openStream();
         if (stream == null) {
-          throw new FileNotFoundException(specification.name());
+          throw new FileNotFoundException(url.toString());
         }
         return stream;
       };
@@ -152,7 +166,7 @@ public final class WindowDemo
         final BufferedImage loaded = ImageIO.read(stream);
         if (loaded == null) {
           throw new IOException(
-            "Could not parse output_image " + specification.name());
+            "Could not parse output_image " + specification.uri());
         }
         return loaded;
       };
@@ -264,10 +278,11 @@ public final class WindowDemo
 
     private SyWindowType createWindow(
       final String title)
+      throws URISyntaxException
     {
       final SyWindowType window = this.gui.windowCreate(320, 240, title);
       window.titleBar().setIcon(Optional.of(SyImageSpecification.of(
-        "/com/io7m/jsycamore/tests/awt/paper.png",
+        WindowDemo.class.getResource("/com/io7m/jsycamore/tests/awt/paper.png").toURI(),
         16,
         16,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,

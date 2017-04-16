@@ -53,7 +53,7 @@ public final class SyUnreachableTest
     throws Exception
   {
     SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.themes.provided.SyThemeBee");
+      "com.io7m.jsycamore.themes.bee.SyThemeBee");
   }
 
   @Test(expected = UnreachableCodeException.class)
@@ -61,7 +61,7 @@ public final class SyUnreachableTest
     throws Exception
   {
     SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.themes.provided.SyThemeMotive");
+      "com.io7m.jsycamore.themes.motive.SyThemeMotive");
   }
 
   @Test(expected = UnreachableCodeException.class)
@@ -69,15 +69,7 @@ public final class SyUnreachableTest
     throws Exception
   {
     SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.themes.provided.SyThemeStride");
-  }
-
-  @Test(expected = UnreachableCodeException.class)
-  public void testThemeDefault()
-    throws Exception
-  {
-    SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.themes.provided.SyThemeDefault");
+      "com.io7m.jsycamore.themes.stride.SyThemeStride");
   }
 
   @Test(expected = UnreachableCodeException.class)
@@ -85,6 +77,6 @@ public final class SyUnreachableTest
     throws Exception
   {
     SyUnreachableTest.execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.core.components.SyErrors");
+      "com.io7m.jsycamore.api.components.SyErrors");
   }
 }

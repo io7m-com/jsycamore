@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests.core.themes;
 
 import com.io7m.jequality.AlmostEqualDouble;
-import com.io7m.jsycamore.core.themes.SyColors;
+import com.io7m.jsycamore.api.themes.SyColors;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.jtensors.generators.Vector3DGenerator;
 import net.java.quickcheck.QuickCheck;
