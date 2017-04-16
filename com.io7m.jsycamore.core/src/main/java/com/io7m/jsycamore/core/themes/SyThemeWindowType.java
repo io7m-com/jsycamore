@@ -25,7 +25,6 @@ import org.immutables.value.Value;
 
 @SyImmutableStyleType
 @Value.Immutable
-@Value.Modifiable
 public interface SyThemeWindowType
 {
   /**
