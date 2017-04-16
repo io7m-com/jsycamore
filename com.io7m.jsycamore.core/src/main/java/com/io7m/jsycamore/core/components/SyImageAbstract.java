@@ -49,7 +49,7 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
     final BooleanSupplier in_detach_check)
   {
     super(in_detach_check);
-    this.image = NullCheck.notNull(in_image);
+    this.image = NullCheck.notNull(in_image, "Image");
     this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
     this.align_v = SyAlignmentVertical.ALIGN_CENTER;
   }
@@ -70,20 +70,20 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
   public final void setImageAlignmentVertical(
     final SyAlignmentVertical v)
   {
-    this.align_v = NullCheck.notNull(v);
+    this.align_v = NullCheck.notNull(v, "Alignment");
   }
 
   @Override
   public final void setImageAlignmentHorizontal(
     final SyAlignmentHorizontal h)
   {
-    this.align_h = NullCheck.notNull(h);
+    this.align_h = NullCheck.notNull(h, "Alignment");
   }
 
   @Override
   public final void setImage(final SyImageSpecificationType in_image)
   {
-    this.image = NullCheck.notNull(in_image);
+    this.image = NullCheck.notNull(in_image, "Image specification");
   }
 
   @Override

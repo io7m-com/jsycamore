@@ -41,7 +41,8 @@ public final class SyAWTGUIRendererInefficient
   private SyAWTGUIRendererInefficient(
     final SyWindowRendererType<BufferedImage, BufferedImage> in_window_renderer)
   {
-    this.window_renderer = NullCheck.notNull(in_window_renderer);
+    this.window_renderer =
+      NullCheck.notNull(in_window_renderer, "Window renderer");
   }
 
   /**
@@ -63,8 +64,8 @@ public final class SyAWTGUIRendererInefficient
     final BufferedImage input,
     final SyGUIType ui)
   {
-    NullCheck.notNull(input);
-    NullCheck.notNull(ui);
+    NullCheck.notNull(input, "Input image");
+    NullCheck.notNull(ui, "GUI");
 
     final Graphics2D graphics = input.createGraphics();
 

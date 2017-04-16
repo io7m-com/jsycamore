@@ -104,7 +104,7 @@ final class SyTDColorSelector extends JPanel
 
   void addListener(final Runnable on_update)
   {
-    this.listeners.add(NullCheck.notNull(on_update));
+    this.listeners.add(NullCheck.notNull(on_update, "Listener"));
   }
 
   private final class ColorIcon implements Icon

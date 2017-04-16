@@ -71,6 +71,6 @@ public interface SyImageReadableType extends SyComponentReadableType
     final BiFunction<A, SyImageReadableType, B> on_image,
     final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_image).apply(context, this);
+    return NullCheck.notNull(on_image, "Receiver").apply(context, this);
   }
 }

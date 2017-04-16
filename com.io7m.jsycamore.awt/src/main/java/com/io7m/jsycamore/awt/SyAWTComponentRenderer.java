@@ -72,9 +72,12 @@ public final class SyAWTComponentRenderer implements
     final SyAWTFontCacheType in_font_cache,
     final SyTextMeasurementType in_measurement)
   {
-    this.image_cache = NullCheck.notNull(in_image_cache);
-    this.font_cache = NullCheck.notNull(in_font_cache);
-    this.measurement = NullCheck.notNull(in_measurement);
+    this.image_cache =
+      NullCheck.notNull(in_image_cache, "Image cache");
+    this.font_cache =
+      NullCheck.notNull(in_font_cache, "Font cache");
+    this.measurement =
+      NullCheck.notNull(in_measurement, "Text measurement");
     this.embossed = new SyAWTEmbossed();
   }
 
@@ -119,8 +122,8 @@ public final class SyAWTComponentRenderer implements
     final SyAWTComponentRendererContextType context,
     final SyComponentReadableType object)
   {
-    NullCheck.notNull(context);
-    NullCheck.notNull(object);
+    NullCheck.notNull(context, "Renderer context");
+    NullCheck.notNull(object, "Component");
 
     final BufferedImage image = context.image();
     final Graphics2D graphics = image.createGraphics();

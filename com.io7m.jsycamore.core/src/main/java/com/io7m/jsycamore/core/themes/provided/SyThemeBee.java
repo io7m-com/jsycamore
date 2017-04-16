@@ -88,7 +88,7 @@ public final class SyThemeBee
   public static SyTheme.Builder builderFrom(
     final SyThemeBeeSpecificationType spec)
   {
-    NullCheck.notNull(spec);
+    NullCheck.notNull(spec, "Specification");
 
     final SyTheme.Builder theme = SyTheme.builder();
 
@@ -538,9 +538,9 @@ public final class SyThemeBee
     final SyWindowReadableType window,
     final SyBoxType<SySpaceParentRelativeType> window_box)
   {
-    NullCheck.notNull(measurement);
-    NullCheck.notNull(window);
-    NullCheck.notNull(window_box);
+    NullCheck.notNull(measurement, "Text measurement");
+    NullCheck.notNull(window, "Window");
+    NullCheck.notNull(window_box, "Box");
 
     final SyThemeType theme = window.theme();
     final SyThemeWindowType theme_window = theme.windowTheme();

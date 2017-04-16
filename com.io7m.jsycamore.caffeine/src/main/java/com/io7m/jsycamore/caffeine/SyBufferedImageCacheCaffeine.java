@@ -67,9 +67,12 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     final BufferedImage in_error,
     final long in_size_max)
   {
-    this.cache = NullCheck.notNull(in_cache);
-    this.image_default = NullCheck.notNull(in_default);
-    this.image_error = NullCheck.notNull(in_error);
+    this.cache =
+      NullCheck.notNull(in_cache, "Cache");
+    this.image_default =
+      NullCheck.notNull(in_default, "Default image");
+    this.image_error =
+      NullCheck.notNull(in_error, "Error image");
     this.size_max = in_size_max;
   }
 
@@ -95,11 +98,11 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     final BufferedImage in_image_error,
     final long in_maximum_size)
   {
-    NullCheck.notNull(in_loader);
-    NullCheck.notNull(in_resolver);
-    NullCheck.notNull(in_executor);
-    NullCheck.notNull(in_image_default);
-    NullCheck.notNull(in_image_error);
+    NullCheck.notNull(in_loader, "Loader");
+    NullCheck.notNull(in_resolver, "Resolver");
+    NullCheck.notNull(in_executor, "Executor");
+    NullCheck.notNull(in_image_default, "Default image");
+    NullCheck.notNull(in_image_error, "Error image");
 
     final Weigher<SyImageSpecificationType, BufferedImage> weigher =
       (key, value) -> value.getData().getDataBuffer().getSize();
@@ -199,11 +202,16 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
       final BufferedImage in_error,
       final CompletableFuture<BufferedImage> in_future)
     {
-      this.cache = NullCheck.notNull(in_cache);
-      this.spec = NullCheck.notNull(in_spec);
-      this.image_default = NullCheck.notNull(in_default);
-      this.image_error = NullCheck.notNull(in_error);
-      this.future = NullCheck.notNull(in_future);
+      this.cache =
+        NullCheck.notNull(in_cache, "Cache");
+      this.spec =
+        NullCheck.notNull(in_spec, "Image specification");
+      this.image_default =
+        NullCheck.notNull(in_default, "Default image");
+      this.image_error =
+        NullCheck.notNull(in_error, "Error image");
+      this.future =
+        NullCheck.notNull(in_future, "Image future");
     }
 
     @Override

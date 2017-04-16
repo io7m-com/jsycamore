@@ -46,6 +46,6 @@ public interface SyPanelType extends SyComponentType, SyPanelReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_panel).apply(context, this);
+    return NullCheck.notNull(on_panel, "Receiver").apply(context, this);
   }
 }

@@ -75,14 +75,14 @@ public final class SyAWTTextMeasurement implements SyTextMeasurementType,
   @Override
   public Font decodeFont(final String font)
   {
-    NullCheck.notNull(font);
+    NullCheck.notNull(font, "Font name");
     return this.font_cache.computeIfAbsent(font, Font::decode);
   }
 
   @Override
   public int measureTextDescent(final String font)
   {
-    NullCheck.notNull(font);
+    NullCheck.notNull(font, "Font name");
     final FontMetrics metrics =
       this.graphics.getFontMetrics(this.decodeFont(font));
     return metrics.getDescent();

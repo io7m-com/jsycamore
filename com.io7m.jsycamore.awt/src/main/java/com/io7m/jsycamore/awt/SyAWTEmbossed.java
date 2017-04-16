@@ -67,13 +67,13 @@ public final class SyAWTEmbossed
     final Paint bottom,
     final Optional<Paint> fill)
   {
-    NullCheck.notNull(graphics);
+    NullCheck.notNull(graphics, "Graphics");
     NullCheck.notNull(box, "Box");
-    NullCheck.notNull(left);
-    NullCheck.notNull(right);
-    NullCheck.notNull(top);
-    NullCheck.notNull(bottom);
-    NullCheck.notNull(fill);
+    NullCheck.notNull(left, "Left paint");
+    NullCheck.notNull(right, "Right paint");
+    NullCheck.notNull(top, "Top paint");
+    NullCheck.notNull(bottom, "Bottom paint");
+    NullCheck.notNull(fill, "Fill paint");
 
     Assertive.require(emboss_size > 0, "Emboss area size must be positive");
 
@@ -195,13 +195,13 @@ public final class SyAWTEmbossed
     final Optional<Paint> fill,
     final boolean caps)
   {
-    NullCheck.notNull(graphics);
-    NullCheck.notNull(shape);
-    NullCheck.notNull(left);
-    NullCheck.notNull(right);
-    NullCheck.notNull(top);
-    NullCheck.notNull(bottom);
-    NullCheck.notNull(fill);
+    NullCheck.notNull(graphics, "Graphics context");
+    NullCheck.notNull(shape, "Shape");
+    NullCheck.notNull(left, "Left paint");
+    NullCheck.notNull(right, "Right paint");
+    NullCheck.notNull(top, "Top paint");
+    NullCheck.notNull(bottom, "Bottom paint");
+    NullCheck.notNull(fill, "Fill paint");
 
     Assertive.require(
       thickness_of_horizontal > 0,

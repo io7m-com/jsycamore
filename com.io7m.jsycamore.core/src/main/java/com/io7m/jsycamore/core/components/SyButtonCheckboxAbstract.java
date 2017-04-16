@@ -78,13 +78,13 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
   @Override
   public final void buttonAddListener(final SyButtonListenerType r)
   {
-    this.listeners.add(NullCheck.notNull(r));
+    this.listeners.add(NullCheck.notNull(r, "Button listener"));
   }
 
   @Override
   public final void buttonRemoveListener(final SyButtonListenerType r)
   {
-    this.listeners.remove(NullCheck.notNull(r));
+    this.listeners.remove(NullCheck.notNull(r, "Button listener"));
   }
 
   @Override
@@ -108,10 +108,10 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position_first);
-    NullCheck.notNull(mouse_position_now);
-    NullCheck.notNull(button);
-    NullCheck.notNull(actual);
+    NullCheck.notNull(mouse_position_first, "Mouse first position");
+    NullCheck.notNull(mouse_position_now, "Mouse current position");
+    NullCheck.notNull(button, "Mouse button");
+    NullCheck.notNull(actual, "Component");
 
     if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
       SyButtonCheckboxAbstract.LOG.trace(
@@ -148,9 +148,9 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position);
-    NullCheck.notNull(button);
-    NullCheck.notNull(actual);
+    NullCheck.notNull(mouse_position, "Mouse position");
+    NullCheck.notNull(button, "Mouse button");
+    NullCheck.notNull(actual, "Component");
 
     if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
       SyButtonCheckboxAbstract.LOG.trace(
@@ -191,9 +191,9 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position);
-    NullCheck.notNull(button);
-    NullCheck.notNull(actual);
+    NullCheck.notNull(mouse_position, "Mouse position");
+    NullCheck.notNull(button, "Mouse button");
+    NullCheck.notNull(actual, "Component");
 
     if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
       SyButtonCheckboxAbstract.LOG.trace(
@@ -302,8 +302,8 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     final PVector2I<SySpaceViewportType> mouse_position,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position);
-    NullCheck.notNull(actual);
+    NullCheck.notNull(mouse_position, "Mouse position");
+    NullCheck.notNull(actual, "Component");
 
     if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
       SyButtonCheckboxAbstract.LOG.trace(

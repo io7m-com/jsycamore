@@ -43,8 +43,8 @@ public final class SyErrors
     final Logger log,
     final Throwable e)
   {
-    NullCheck.notNull(log);
-    NullCheck.notNull(e);
+    NullCheck.notNull(log, "Logger");
+    NullCheck.notNull(e, "Exception");
 
     if (e instanceof Error) {
       throw (Error) e;

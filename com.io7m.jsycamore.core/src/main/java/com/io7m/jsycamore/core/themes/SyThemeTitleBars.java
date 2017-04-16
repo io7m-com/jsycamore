@@ -154,10 +154,10 @@ public final class SyThemeTitleBars
     final boolean is_closeable,
     final boolean is_maximizable)
   {
-    NullCheck.notNull(measurement);
-    NullCheck.notNull(maximum);
-    NullCheck.notNull(title_theme);
-    NullCheck.notNull(title_text);
+    NullCheck.notNull(measurement, "Text measurement");
+    NullCheck.notNull(maximum, "Maximum");
+    NullCheck.notNull(title_theme, "Title theme");
+    NullCheck.notNull(title_text, "Title text");
 
     /*
      * Work out how much space is required for anything that isn't the titleBar

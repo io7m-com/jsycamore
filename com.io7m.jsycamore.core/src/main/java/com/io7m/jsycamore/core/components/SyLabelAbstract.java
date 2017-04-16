@@ -68,20 +68,20 @@ public abstract class SyLabelAbstract extends SyComponentAbstract implements
   public final void setTextAlignmentVertical(
     final SyAlignmentVertical v)
   {
-    this.align_v = NullCheck.notNull(v);
+    this.align_v = NullCheck.notNull(v, "Alignment");
   }
 
   @Override
   public final void setTextAlignmentHorizontal(
     final SyAlignmentHorizontal h)
   {
-    this.align_h = NullCheck.notNull(h);
+    this.align_h = NullCheck.notNull(h, "Alignment");
   }
 
   @Override
   public final void setText(final String in_text)
   {
-    this.text = NullCheck.notNull(in_text);
+    this.text = NullCheck.notNull(in_text, "Text");
   }
 
   @Override

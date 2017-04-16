@@ -52,6 +52,6 @@ public interface SyMeterType extends SyComponentType, SyMeterReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_meter).apply(context, this);
+    return NullCheck.notNull(on_meter, "Receiver").apply(context, this);
   }
 }

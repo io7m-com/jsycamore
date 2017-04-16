@@ -42,7 +42,7 @@ final class SyTDFontSelector extends JPanel implements SyTDControlsType
 
   SyTDFontSelector(final String in_title)
   {
-    this.title = NullCheck.notNull(in_title);
+    this.title = NullCheck.notNull(in_title, "Title");
     this.listeners = new ArrayList<>(1);
     this.field = new JTextField();
     this.field.setEditable(false);
@@ -87,7 +87,7 @@ final class SyTDFontSelector extends JPanel implements SyTDControlsType
 
   void addListener(final Runnable on_update)
   {
-    this.listeners.add(NullCheck.notNull(on_update));
+    this.listeners.add(NullCheck.notNull(on_update, "Listener"));
   }
 
   @Override

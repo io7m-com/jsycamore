@@ -102,7 +102,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       Ranges.NATURAL_INTEGER,
       "Valid window heights");
 
-    this.gui = NullCheck.notNull(in_gui);
+    this.gui = NullCheck.notNull(in_gui, "GUI");
     this.box = SyBoxMutable.create(0, 0, 0, 0);
     this.box.from(SyBoxes.create(0, 0, width, height));
 
@@ -118,7 +118,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void setBox(final SyBoxType<SySpaceViewportType> in_box)
   {
-    this.recalculateBounds(NullCheck.notNull(in_box), false);
+    this.recalculateBounds(NullCheck.notNull(in_box, "Box"), false);
   }
 
   @Override
@@ -152,7 +152,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void setTheme(final Optional<SyThemeType> in_theme)
   {
-    this.theme_override = NullCheck.notNull(in_theme);
+    this.theme_override = NullCheck.notNull(in_theme, "Theme");
     this.recalculateBoundsRefresh(true);
   }
 
@@ -530,7 +530,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         return false;
       });
 
-      NullCheck.notNull(in_text);
+      NullCheck.notNull(in_text, "Text");
 
       this.text = new TitleBarText();
       this.text.setText(in_text);
@@ -675,7 +675,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     @Override
     public void setText(final String in_text)
     {
-      this.text.setText(NullCheck.notNull(in_text));
+      this.text.setText(NullCheck.notNull(in_text, "Text"));
       SyWindowAbstract.this.recalculateBoundsRefresh(false);
     }
 

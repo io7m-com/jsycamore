@@ -51,6 +51,6 @@ public interface SyButtonReadableType extends SyComponentReadableType
     final BiFunction<A, SyImageReadableType, B> on_image,
     final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_button).apply(context, this);
+    return NullCheck.notNull(on_button, "Button").apply(context, this);
   }
 }

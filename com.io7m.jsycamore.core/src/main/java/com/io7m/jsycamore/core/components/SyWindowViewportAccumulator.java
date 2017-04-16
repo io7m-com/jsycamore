@@ -103,7 +103,7 @@ public final class SyWindowViewportAccumulator implements
   public void accumulate(
     final SyBoxType<SySpaceParentRelativeType> box)
   {
-    NullCheck.notNull(box);
+    NullCheck.notNull(box, "Box");
 
     this.saved.push(SyBox.copyOf(this.current));
 

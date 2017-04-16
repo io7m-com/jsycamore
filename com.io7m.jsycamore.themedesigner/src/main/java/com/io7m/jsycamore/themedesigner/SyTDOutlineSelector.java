@@ -42,7 +42,7 @@ final class SyTDOutlineSelector extends JPanel implements SyTDControlsType
 
   SyTDOutlineSelector(final String in_title)
   {
-    NullCheck.notNull(in_title);
+    NullCheck.notNull(in_title, "Title");
     this.listeners = new ArrayList<>(1);
     this.active = new JCheckBox(in_title);
     this.color_active = new SyTDColorSelector(Vector3D.of(0.0, 0.0, 0.0));
@@ -69,7 +69,7 @@ final class SyTDOutlineSelector extends JPanel implements SyTDControlsType
 
   void addListener(final Runnable receiver)
   {
-    this.listeners.add(NullCheck.notNull(receiver));
+    this.listeners.add(NullCheck.notNull(receiver, "Listener"));
   }
 
   private void updateTheme()

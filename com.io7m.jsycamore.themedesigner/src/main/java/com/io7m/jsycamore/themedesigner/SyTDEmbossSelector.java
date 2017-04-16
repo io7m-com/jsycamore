@@ -46,7 +46,7 @@ final class SyTDEmbossSelector extends JPanel implements SyTDControlsType
 
   SyTDEmbossSelector(final String in_title)
   {
-    this.title = NullCheck.notNull(in_title);
+    this.title = NullCheck.notNull(in_title, "Title");
     this.listeners = new ArrayList<>(1);
     this.active = new JCheckBox(in_title);
     this.color_top = new SyTDColorSelector(Vector3D.of(0.8, 0.8, 0.8));
@@ -82,7 +82,7 @@ final class SyTDEmbossSelector extends JPanel implements SyTDControlsType
 
   void addListener(final Runnable receiver)
   {
-    this.listeners.add(NullCheck.notNull(receiver));
+    this.listeners.add(NullCheck.notNull(receiver, "Receiver"));
   }
 
   private void updateTheme()

@@ -51,8 +51,8 @@ public final class SyThemeOutlines
     final SyBoxType<S> box,
     final SyThemeOutlineType outline)
   {
-    NullCheck.notNull(box);
-    NullCheck.notNull(outline);
+    NullCheck.notNull(box, "Box");
+    NullCheck.notNull(outline, "Outline");
 
     return SyBoxes.hollowOut(
       box,
@@ -77,8 +77,8 @@ public final class SyThemeOutlines
     final SyBoxType<S> box,
     final Optional<SyThemeOutlineType> outline_opt)
   {
-    NullCheck.notNull(box);
-    NullCheck.notNull(outline_opt);
+    NullCheck.notNull(box, "Box");
+    NullCheck.notNull(outline_opt, "Outline");
 
     if (outline_opt.isPresent()) {
       return SyThemeOutlines.scaleForOutline(box, outline_opt.get());

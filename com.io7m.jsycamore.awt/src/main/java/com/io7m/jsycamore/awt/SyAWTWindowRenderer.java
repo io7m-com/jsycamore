@@ -57,7 +57,8 @@ public final class SyAWTWindowRenderer implements
   private SyAWTWindowRenderer(
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> in_component_renderer)
   {
-    this.component_renderer = NullCheck.notNull(in_component_renderer);
+    this.component_renderer =
+      NullCheck.notNull(in_component_renderer, "Component renderer");
     this.embossed = new SyAWTEmbossed();
   }
 
@@ -78,8 +79,8 @@ public final class SyAWTWindowRenderer implements
     final BufferedImage input,
     final SyWindowType window)
   {
-    NullCheck.notNull(input);
-    NullCheck.notNull(window);
+    NullCheck.notNull(input, "Input image");
+    NullCheck.notNull(window, "Window");
 
     final SyAWTComponentRendererContext context =
       SyAWTComponentRendererContext.of(window.viewportAccumulator(), input);

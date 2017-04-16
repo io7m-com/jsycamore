@@ -451,9 +451,9 @@ public final class SyThemeFenestra
     final SyWindowReadableType window,
     final SyBoxType<SySpaceParentRelativeType> window_box)
   {
-    NullCheck.notNull(measurement);
-    NullCheck.notNull(window);
-    NullCheck.notNull(window_box);
+    NullCheck.notNull(measurement, "Text measurement");
+    NullCheck.notNull(window, "Window");
+    NullCheck.notNull(window_box, "Box");
 
     final SyThemeType theme = window.theme();
     final SyThemeWindowType theme_window = theme.windowTheme();
