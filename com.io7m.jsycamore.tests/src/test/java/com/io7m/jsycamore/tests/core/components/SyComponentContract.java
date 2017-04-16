@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyVisibility;
@@ -140,7 +140,7 @@ public abstract class SyComponentContract
   public void testComponentForWindowRelative()
   {
     final SyComponentType c0 = this.create();
-    c0.setBox(SyBoxes.create(0, 0, 64, 64));
+    c0.setBox(PAreasI.create(0, 0, 64, 64));
 
     final SyWindowViewportAccumulatorType c = SyWindowViewportAccumulator.create();
     c.reset(64, 64);
@@ -162,7 +162,7 @@ public abstract class SyComponentContract
   public void testComponentForWindowRelativeInvisible()
   {
     final SyComponentType c0 = this.create();
-    c0.setBox(SyBoxes.create(0, 0, 64, 64));
+    c0.setBox(PAreasI.create(0, 0, 64, 64));
     c0.setVisibility(SyVisibility.VISIBILITY_INVISIBLE);
 
     final SyWindowViewportAccumulatorType c = SyWindowViewportAccumulator.create();
@@ -212,13 +212,13 @@ public abstract class SyComponentContract
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c1.resizeBehaviorWidth());
 
-    c0.setBox(SyBoxes.create(0, 0, 32, 32));
+    c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(32L, (long) c0.box().width());
     Assert.assertEquals(32L, (long) c0.box().height());
 
-    c1.setBox(SyBoxes.create(0, 0, 16, 16));
+    c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
     Assert.assertEquals(16L, (long) c1.box().width());
@@ -226,7 +226,7 @@ public abstract class SyComponentContract
 
     c0.node().childAdd(c1.node());
 
-    c0.setBox(SyBoxes.create(0, 0, 64, 64));
+    c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(64L, (long) c0.box().width());
@@ -261,13 +261,13 @@ public abstract class SyComponentContract
       SyParentResizeBehavior.BEHAVIOR_RESIZE,
       c1.resizeBehaviorWidth());
 
-    c0.setBox(SyBoxes.create(0, 0, 32, 32));
+    c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(32L, (long) c0.box().width());
     Assert.assertEquals(32L, (long) c0.box().height());
 
-    c1.setBox(SyBoxes.create(0, 0, 16, 16));
+    c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
     Assert.assertEquals(16L, (long) c1.box().width());
@@ -275,7 +275,7 @@ public abstract class SyComponentContract
 
     c0.node().childAdd(c1.node());
 
-    c0.setBox(SyBoxes.create(0, 0, 64, 64));
+    c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(64L, (long) c0.box().width());
@@ -310,13 +310,13 @@ public abstract class SyComponentContract
       SyParentResizeBehavior.BEHAVIOR_MOVE,
       c1.resizeBehaviorWidth());
 
-    c0.setBox(SyBoxes.create(0, 0, 32, 32));
+    c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(32L, (long) c0.box().width());
     Assert.assertEquals(32L, (long) c0.box().height());
 
-    c1.setBox(SyBoxes.create(0, 0, 16, 16));
+    c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
     Assert.assertEquals(16L, (long) c1.box().width());
@@ -324,7 +324,7 @@ public abstract class SyComponentContract
 
     c0.node().childAdd(c1.node());
 
-    c0.setBox(SyBoxes.create(0, 0, 64, 64));
+    c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
     Assert.assertEquals(64L, (long) c0.box().width());

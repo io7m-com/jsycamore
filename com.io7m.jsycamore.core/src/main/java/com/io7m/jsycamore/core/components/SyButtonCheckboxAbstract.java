@@ -17,13 +17,13 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.themes.SyThemeButtonCheckboxType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -276,11 +276,11 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
         .flatMap(SyThemeButtonCheckboxType::checkedIcon)
         .flatMap(image_spec -> {
 
-          final SyBoxType<SySpaceParentRelativeType> box = this.box();
+          final PAreaI<SySpaceParentRelativeType> box = this.box();
           final SyImageType icon = SyImage.create(image_spec);
           icon.setImageAlignmentHorizontal(SyAlignmentHorizontal.ALIGN_CENTER);
           icon.setImageAlignmentVertical(SyAlignmentVertical.ALIGN_CENTER);
-          icon.setBox(SyBoxes.create(0, 0, box.width(), box.height()));
+          icon.setBox(PAreasI.create(0, 0, box.width(), box.height()));
           this.node().childAdd(icon.node());
           this.check_icon = Optional.of(icon);
           return Optional.empty();

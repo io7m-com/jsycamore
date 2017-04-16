@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public abstract class SyWindowViewportAccumulatorContract
       final int w = rand.nextInt(bound);
       final int h = rand.nextInt(bound);
 
-      c.accumulate(SyBoxes.create(x, y, w, h));
+      c.accumulate(PAreasI.create(x, y, w, h));
 
       final int new_x0 = c.minimumX();
       final int new_y0 = c.minimumY();
@@ -132,7 +132,7 @@ public abstract class SyWindowViewportAccumulatorContract
     }
 
     {
-      c.accumulate(SyBoxes.create(10, 15, 20, 30));
+      c.accumulate(PAreasI.create(10, 15, 20, 30));
       final long width = (long) (c.maximumX() - c.minimumX());
       final long height = (long) (c.maximumY() - c.minimumY());
       Assert.assertEquals(10L, (long) c.minimumX());
@@ -145,7 +145,7 @@ public abstract class SyWindowViewportAccumulatorContract
     }
 
     {
-      c.accumulate(SyBoxes.create(0, 0, 10, 20));
+      c.accumulate(PAreasI.create(0, 0, 10, 20));
       final long width = (long) (c.maximumX() - c.minimumX());
       final long height = (long) (c.maximumY() - c.minimumY());
       Assert.assertEquals(10L, (long) c.minimumX());

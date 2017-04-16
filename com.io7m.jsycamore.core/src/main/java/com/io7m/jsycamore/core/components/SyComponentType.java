@@ -17,11 +17,11 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jorchard.core.JOTreeNodeType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
@@ -65,7 +65,7 @@ public interface SyComponentType extends SyComponentParentEventsType,
    * @param box The box representing the new position and bounds
    */
 
-  void setBox(SyBoxType<SySpaceParentRelativeType> box);
+  void setBox(PAreaI<SySpaceParentRelativeType> box);
 
   /**
    * @return The window to which the most distant ancestor of this component is

@@ -17,13 +17,13 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.renderer.SyComponentRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 import com.io7m.jsycamore.core.themes.SyThemeEmbossType;
@@ -92,7 +92,7 @@ public final class SyAWTWindowRenderer implements
       graphics.setRenderingHint(
         RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-      final SyBoxType<SySpaceViewportType> window_box = window.box();
+      final PAreaI<SySpaceViewportType> window_box = window.box();
       graphics.setClip(0, 0, window_box.width(), window_box.height());
       this.renderFrame(graphics, window);
       this.component_renderer.render(context, window.contentPane());
@@ -213,7 +213,7 @@ public final class SyAWTWindowRenderer implements
     final int bottom_height = frame_theme.bottomHeight();
 
     final SyWindowFrameType frame = window.frame();
-    final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
+    final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
 
     final int frame_x;
     final int frame_y;
@@ -348,8 +348,8 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (left_width > 0) {
-      final SyBoxType<?> box =
-        SyBoxes.create(0, left_y, left_width, left_height);
+      final PAreaI<?> box =
+        PAreasI.create(0, left_y, left_width, left_height);
       this.embossed.rectangle(
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
@@ -359,8 +359,8 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (right_width > 0) {
-      final SyBoxType<?> box =
-        SyBoxes.create(
+      final PAreaI<?> box =
+        PAreasI.create(
           frame_width - right_width, right_y, right_width, right_height);
       this.embossed.rectangle(
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
@@ -371,8 +371,8 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (top_height > 0) {
-      final SyBoxType<?> box =
-        SyBoxes.create(top_x, 0, top_width, top_height);
+      final PAreaI<?> box =
+        PAreasI.create(top_x, 0, top_width, top_height);
       this.embossed.rectangle(
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
@@ -382,8 +382,8 @@ public final class SyAWTWindowRenderer implements
      */
 
     if (bottom_height > 0) {
-      final SyBoxType<?> box =
-        SyBoxes.create(bottom_x, bottom_y, bottom_width, bottom_height);
+      final PAreaI<?> box =
+        PAreasI.create(bottom_x, bottom_y, bottom_width, bottom_height);
       this.embossed.rectangle(
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
@@ -487,7 +487,7 @@ public final class SyAWTWindowRenderer implements
     final int bottom_height = frame_theme.bottomHeight();
 
     final SyWindowFrameType frame = window.frame();
-    final SyBoxType<SySpaceParentRelativeType> frame_box = frame.box();
+    final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
 
     if (outline_opt.isPresent()) {
       SyAWTDrawing.drawOutline(

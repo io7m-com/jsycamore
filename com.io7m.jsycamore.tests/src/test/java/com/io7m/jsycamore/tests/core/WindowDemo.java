@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.awt.SyAWTComponentRenderer;
 import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
@@ -30,8 +32,6 @@ import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonCheckbox;
 import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
@@ -163,9 +163,9 @@ public final class WindowDemo
         SyGUI.createWithTheme(this.measurement, "Main", this.themes.get(0));
 
       this.window0 = this.createWindow("Window 0");
-      this.window0.setBox(SyBoxes.create(16, 16, 320, 240));
+      this.window0.setBox(PAreasI.create(16, 16, 320, 240));
       this.window1 = this.createWindow("Window 1");
-      this.window1.setBox(SyBoxes.create(16, 16 + 240 + 16, 320, 240));
+      this.window1.setBox(PAreasI.create(16, 16 + 240 + 16, 320, 240));
 
       this.c_renderer = SyAWTComponentRenderer.create(
         this.image_cache, this.measurement, this.measurement);
@@ -269,8 +269,8 @@ public final class WindowDemo
         panel.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
 
-        final SyBoxType<SySpaceParentRelativeType> content_box = content.box();
-        panel.setBox(SyBoxes.create(
+        final PAreaI<SySpaceParentRelativeType> content_box = content.box();
+        panel.setBox(PAreasI.create(
           0,
           0,
           content_box.width(),
@@ -279,24 +279,24 @@ public final class WindowDemo
 
         {
           final SyButtonType button = SyButtonRepeating.create();
-          button.setBox(SyBoxes.create(8, 8, 64, 32));
+          button.setBox(PAreasI.create(8, 8, 64, 32));
           panel.node().childAdd(button.node());
 
           final SyLabelType label = SyLabel.create();
           label.setText("Hello");
-          label.setBox(SyBoxes.create(0, 0, 64, 32));
+          label.setBox(PAreasI.create(0, 0, 64, 32));
           button.node().childAdd(label.node());
         }
 
         {
           final SyButtonType button = SyButtonRepeating.create();
-          button.setBox(SyBoxes.create(8 + 64 + 8, 8, 64, 32));
+          button.setBox(PAreasI.create(8 + 64 + 8, 8, 64, 32));
           button.setActive(SyActive.INACTIVE);
           panel.node().childAdd(button.node());
 
           final SyLabelType label = SyLabel.create();
           label.setText("Hello");
-          label.setBox(SyBoxes.create(0, 0, 64, 32));
+          label.setBox(PAreasI.create(0, 0, 64, 32));
           button.node().childAdd(label.node());
         }
 
@@ -310,7 +310,7 @@ public final class WindowDemo
             int x_index = 0;
             for (int x = x_start; x < x_end; x += 16 + 2) {
               final SyButtonCheckboxType button = SyButtonCheckbox.create();
-              button.setBox(SyBoxes.create(x, y, 16, 16));
+              button.setBox(PAreasI.create(x, y, 16, 16));
               panel.node().childAdd(button.node());
 
               if (x_index % 2 == 0 && y_index % 2 == 0) {
@@ -328,7 +328,7 @@ public final class WindowDemo
 
         {
           final SyMeterType meter = SyMeter.create();
-          meter.setBox(SyBoxes.create(224 + 8, 8, 16, 128));
+          meter.setBox(PAreasI.create(224 + 8, 8, 16, 128));
           meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
           meter.setActive(SyActive.ACTIVE);
           meter.setValue(0.75);
@@ -337,7 +337,7 @@ public final class WindowDemo
 
         {
           final SyMeterType meter = SyMeter.create();
-          meter.setBox(SyBoxes.create(224 + 8 + 16 + 8, 8, 16, 128));
+          meter.setBox(PAreasI.create(224 + 8 + 16 + 8, 8, 16, 128));
           meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
           meter.setActive(SyActive.INACTIVE);
           meter.setValue(0.4);
@@ -346,7 +346,7 @@ public final class WindowDemo
 
         {
           final SyMeterType meter = SyMeter.create();
-          meter.setBox(SyBoxes.create(8, 80 + 16, 128, 16));
+          meter.setBox(PAreasI.create(8, 80 + 16, 128, 16));
           meter.setActive(SyActive.ACTIVE);
           meter.setValue(0.75);
           panel.node().childAdd(meter.node());
@@ -354,7 +354,7 @@ public final class WindowDemo
 
         {
           final SyMeterType meter = SyMeter.create();
-          meter.setBox(SyBoxes.create(8, 80 + 16 + 8 + 16, 128, 16));
+          meter.setBox(PAreasI.create(8, 80 + 16 + 8 + 16, 128, 16));
           meter.setActive(SyActive.INACTIVE);
           meter.setValue(0.4);
           panel.node().childAdd(meter.node());
@@ -382,7 +382,7 @@ public final class WindowDemo
       final Graphics g,
       final SyWindowType w)
     {
-      final SyBoxType<SySpaceViewportType> box = w.box();
+      final PAreaI<SySpaceViewportType> box = w.box();
       final BufferedImage image = new BufferedImage(
         box.width(), box.height(), BufferedImage.TYPE_4BYTE_ABGR);
       this.w_renderer.render(image, w);

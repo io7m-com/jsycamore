@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.immutables.value.Value;
 
 /**
@@ -34,26 +34,26 @@ public interface SyThemeWindowArrangementType
    */
 
   @Value.Parameter(order = 0)
-  SyBoxType<SySpaceParentRelativeType> frameBox();
+  PAreaI<SySpaceParentRelativeType> frameBox();
 
   /**
    * @return The box that will indicate the excluded area inside the frame
    */
 
   @Value.Parameter(order = 1)
-  SyBoxType<SySpaceParentRelativeType> frameExclusionBox();
+  PAreaI<SySpaceParentRelativeType> frameExclusionBox();
 
   /**
    * @return The box that will be used for the titleBar
    */
 
   @Value.Parameter(order = 2)
-  SyBoxType<SySpaceParentRelativeType> titlebarBox();
+  PAreaI<SySpaceParentRelativeType> titlebarBox();
 
   /**
    * @return The box that will be used for the content area
    */
 
   @Value.Parameter(order = 3)
-  SyBoxType<SySpaceParentRelativeType> contentBox();
+  PAreaI<SySpaceParentRelativeType> contentBox();
 }

@@ -17,14 +17,13 @@
 package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.boxes.SyBox;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
@@ -342,7 +341,7 @@ public final class SyThemeMotive
   public static SyThemeWindowArrangementType arrangeWindowComponents(
     final SyTextMeasurementType measurement,
     final SyWindowReadableType window,
-    final SyBoxType<SySpaceParentRelativeType> window_box)
+    final PAreaI<SySpaceParentRelativeType> window_box)
   {
     NullCheck.notNull(measurement, "Text measurement");
     NullCheck.notNull(window, "Window");
@@ -358,17 +357,17 @@ public final class SyThemeMotive
 
     final SyThemeWindowFrameType frame_theme = theme_window.frame();
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame = window_box;
+    final PAreaI<SySpaceParentRelativeType> box_frame = window_box;
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame_inner_initial =
-      SyBoxes.hollowOut(
+    final PAreaI<SySpaceParentRelativeType> box_frame_inner_initial =
+      PAreasI.hollowOut(
         box_frame,
         frame_theme.leftWidth(),
         frame_theme.rightWidth(),
         frame_theme.topHeight(),
         frame_theme.bottomHeight());
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
+    final PAreaI<SySpaceParentRelativeType> box_frame_inner =
       SyThemeOutlines.scaleForOutlineOptional(
         box_frame_inner_initial,
         frame_theme.outline());
@@ -380,8 +379,8 @@ public final class SyThemeMotive
 
     final SyThemeWindowTitleBarType titlebar_theme = theme_window.titleBar();
 
-    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
-      SyBoxes.create(
+    final PAreaI<SySpaceParentRelativeType> box_titlebar =
+      PAreasI.create(
         box_frame_inner.minimumX(),
         box_frame_inner.minimumY(),
         box_frame_inner.width(),
@@ -391,7 +390,7 @@ public final class SyThemeMotive
      * The content area is whatever space is left over.
      */
 
-    final SyBox<SySpaceParentRelativeType> box_content = SyBox.of(
+    final PAreaI<SySpaceParentRelativeType> box_content = PAreaI.of(
       box_frame_inner.minimumX(),
       box_frame_inner.maximumX(),
       box_titlebar.maximumY(),

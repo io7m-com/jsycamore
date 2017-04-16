@@ -17,6 +17,8 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jranges.RangeCheckException;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SySpaceViewportType;
@@ -24,8 +26,6 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowFrameType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyLabelReadableType;
 import com.io7m.jsycamore.core.themes.SyTheme;
@@ -114,7 +114,7 @@ public abstract class SyGUIContract
     Assert.assertTrue(g.windowIsFocused(w));
     Assert.assertTrue(w.isFocused());
 
-    final SyBoxType<SySpaceViewportType> window_box = w.box();
+    final PAreaI<SySpaceViewportType> window_box = w.box();
 
     Assert.assertEquals(0L, (long) window_box.minimumX());
     Assert.assertEquals(0L, (long) window_box.minimumY());
@@ -249,7 +249,7 @@ public abstract class SyGUIContract
 
     final SyWindowType w0 = g.windowCreate(320, 240, "Window 0");
     final SyWindowType w1 = g.windowCreate(320, 240, "Window 1");
-    w1.setBox(SyBoxes.create(320, 0, 320, 240));
+    w1.setBox(PAreasI.create(320, 0, 320, 240));
 
     Assert.assertFalse(w0.isFocused());
     Assert.assertTrue(w1.isFocused());
@@ -386,7 +386,7 @@ public abstract class SyGUIContract
     final SyTheme t = SyThemeMotive.builder().build();
     final SyGUIType g = this.createWithTheme("main", t);
     final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
-    w0.setBox(SyBoxes.moveAbsolute(w0.box(), 32, 32));
+    w0.setBox(PAreasI.moveAbsolute(w0.box(), 32, 32));
 
     {
       final Optional<SyComponentType> c =
@@ -441,7 +441,7 @@ public abstract class SyGUIContract
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
-    final SyBoxType<SySpaceViewportType> box = w0.box();
+    final PAreaI<SySpaceViewportType> box = w0.box();
     Assert.assertEquals(15L, (long) box.minimumX());
     Assert.assertEquals(10L, (long) box.minimumY());
     Assert.assertEquals(640L, (long) box.width());
@@ -509,7 +509,7 @@ public abstract class SyGUIContract
 
     g.onMouseMoved(PVector2I.of(800, 600));
 
-    final SyBoxType<SySpaceViewportType> box = w0.box();
+    final PAreaI<SySpaceViewportType> box = w0.box();
     Assert.assertEquals(0L, (long) box.minimumX());
     Assert.assertEquals(0L, (long) box.minimumY());
     Assert.assertEquals(640L, (long) box.width());

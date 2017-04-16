@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -45,7 +45,7 @@ public interface SyWindowReadableType extends SyGUIElementType
    * @return The readable box representing the window's position and bounds
    */
 
-  SyBoxType<SySpaceViewportType> box();
+  PAreaI<SySpaceViewportType> box();
 
   /**
    * @return Read-only access to the content pane

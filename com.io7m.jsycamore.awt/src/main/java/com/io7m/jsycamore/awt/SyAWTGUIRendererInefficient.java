@@ -17,10 +17,10 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.renderer.SyGUIRendererType;
 import com.io7m.jsycamore.core.renderer.SyWindowRendererType;
 
@@ -73,7 +73,7 @@ public final class SyAWTGUIRendererInefficient
     final int window_count = windows.size();
     for (int index = window_count - 1; index >= 0; --index) {
       final SyWindowType window = windows.get(index);
-      final SyBoxType<SySpaceViewportType> box = window.box();
+      final PAreaI<SySpaceViewportType> box = window.box();
       final BufferedImage bi =
         new BufferedImage(box.width(), box.height(), input.getType());
 

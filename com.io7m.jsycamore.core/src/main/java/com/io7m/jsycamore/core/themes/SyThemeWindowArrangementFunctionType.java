@@ -16,10 +16,10 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 
 /**
  * A function for arranging the components of a window.
@@ -41,5 +41,5 @@ public interface SyThemeWindowArrangementFunctionType
   SyThemeWindowArrangementType apply(
     SyTextMeasurementType measurement,
     SyWindowReadableType window,
-    SyBoxType<SySpaceParentRelativeType> box_root);
+    PAreaI<SySpaceParentRelativeType> box_root);
 }

@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.themes.SyThemeColorType;
 import com.io7m.jsycamore.core.themes.SyThemeFillType;
 import com.io7m.jsycamore.core.themes.SyThemeGradientLinearType;
@@ -75,7 +75,7 @@ public final class SyAWTDrawing
   public static void drawOutline(
     final Graphics2D graphics,
     final SyThemeOutlineType outline,
-    final SyBoxType<?> box,
+    final PAreaI<?> box,
     final boolean active)
   {
     NullCheck.notNull(graphics, "graphics");
@@ -132,7 +132,7 @@ public final class SyAWTDrawing
    */
 
   public static Paint toPaint(
-    final SyBoxType<?> in_box,
+    final PAreaI<?> in_box,
     final SyThemeFillType fill)
   {
     NullCheck.notNull(in_box, "Box");
@@ -143,14 +143,14 @@ public final class SyAWTDrawing
   }
 
   private static Paint toPaintColor(
-    final SyBoxType<?> in_box,
+    final PAreaI<?> in_box,
     final SyThemeColorType color)
   {
     return SyAWTDrawing.toColor(color.color());
   }
 
   private static Paint toPaintGradient(
-    final SyBoxType<?> in_box,
+    final PAreaI<?> in_box,
     final SyThemeGradientLinearType gradient)
   {
     final int size = gradient.colors().size();

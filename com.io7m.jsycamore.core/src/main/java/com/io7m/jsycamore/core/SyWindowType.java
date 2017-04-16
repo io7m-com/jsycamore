@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.core;
 
-import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.components.SyWindowViewportAccumulatorType;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 
@@ -59,7 +59,7 @@ public interface SyWindowType extends SyWindowEventsType,
    * @param box The box representing the new position and bounds
    */
 
-  void setBox(SyBoxType<SySpaceViewportType> box);
+  void setBox(PAreaI<SySpaceViewportType> box);
 
   /**
    * Set the theme for the window. If an empty value is specified, the window

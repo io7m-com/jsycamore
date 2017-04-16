@@ -133,6 +133,11 @@
         <artifactId>com.io7m.jequality.core</artifactId>
         <version>[1.0.0, 2.0.0)</version>
       </dependency>
+      <dependency>
+        <groupId>com.io7m.jregions</groupId>
+        <artifactId>com.io7m.jregions.core</artifactId>
+        <version>0.0.6</version>
+      </dependency>
 
       <dependency>
         <groupId>org.valid4j</groupId>

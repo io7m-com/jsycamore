@@ -20,6 +20,8 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
@@ -28,9 +30,6 @@ import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxMutable;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.themes.SyThemeType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -61,7 +60,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   private final JOTreeNodeType<SyComponentType> node;
-  private final SyBoxMutable<SySpaceParentRelativeType> box;
+  private PAreaI<SySpaceParentRelativeType> box;
   private Optional<SyWindowType> window;
   private SyParentResizeBehavior resize_width;
   private SyParentResizeBehavior resize_height;
@@ -79,7 +78,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     this.visibility = SyVisibility.VISIBILITY_VISIBLE;
     this.active = SyActive.ACTIVE;
     this.window = Optional.empty();
-    this.box = SyBoxMutable.create(0, 0, 0, 0);
+    this.box = PAreaI.of(0, 0, 0, 0);
     this.node = JOTreeNode.createWithDetachCheck(this, in_detach_check);
   }
 
@@ -251,7 +250,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   // CHECKSTYLE:ON
 
   @Override
-  public final SyBoxType<SySpaceParentRelativeType> box()
+  public final PAreaI<SySpaceParentRelativeType> box()
   {
     return this.box;
   }
@@ -510,14 +509,14 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final void setBox(final SyBoxType<SySpaceParentRelativeType> new_box)
+  public final void setBox(final PAreaI<SySpaceParentRelativeType> new_box)
   {
     NullCheck.notNull(new_box, "Box");
 
     final int previous_w = this.box.width();
     final int previous_h = this.box.height();
 
-    this.box.from(new_box);
+    this.box = new_box;
 
     final int delta_x =
       Math.subtractExact(this.box.width(), previous_w);
@@ -570,19 +569,16 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int delta_x,
     final int delta_y)
   {
-    final SyBoxMutable<SySpaceParentRelativeType> new_box = SyBoxMutable.create();
-    new_box.from(this.box);
-
     switch (this.resize_width) {
       case BEHAVIOR_FIXED: {
         break;
       }
       case BEHAVIOR_RESIZE: {
-        new_box.from(SyBoxes.scaleFromBottomRight(new_box, delta_x, 0));
+        this.setBox(PAreasI.scaleFromMaxYMaxX(this.box, delta_x, 0));
         break;
       }
       case BEHAVIOR_MOVE: {
-        new_box.from(SyBoxes.moveRelative(new_box, delta_x, 0));
+        this.setBox(PAreasI.moveRelative(this.box, delta_x, 0));
         break;
       }
     }
@@ -592,16 +588,14 @@ public abstract class SyComponentAbstract implements SyComponentType
         break;
       }
       case BEHAVIOR_RESIZE: {
-        new_box.from(SyBoxes.scaleFromBottomRight(new_box, 0, delta_y));
+        this.setBox(PAreasI.scaleFromMaxYMaxX(this.box, 0, delta_y));
         break;
       }
       case BEHAVIOR_MOVE: {
-        new_box.from(SyBoxes.moveRelative(new_box, 0, delta_y));
+        this.setBox(PAreasI.moveRelative(this.box, 0, delta_y));
         break;
       }
     }
-
-    this.setBox(new_box);
   }
 
   @Override
@@ -624,7 +618,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     sb.append(" 0x");
     sb.append(Integer.toHexString(this.hashCode()));
     sb.append(" ");
-    SyBoxes.showToBuilder(this.box(), sb);
+    PAreasI.showToBuilder(this.box(), sb);
     sb.append("]");
     return sb.toString();
   }

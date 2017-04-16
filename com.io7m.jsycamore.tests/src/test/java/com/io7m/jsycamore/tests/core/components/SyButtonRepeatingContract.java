@@ -17,8 +17,8 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyMouseButton;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButtonListenerType;
 import com.io7m.jsycamore.core.components.SyButtonState;
 import com.io7m.jsycamore.core.components.SyButtonType;
@@ -104,7 +104,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   public final void testOver()
   {
     final SyButtonType button = this.create();
-    button.setBox(SyBoxes.create(0, 0, 32, 32));
+    button.setBox(PAreasI.create(0, 0, 32, 32));
 
     Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
@@ -127,7 +127,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   {
     final AtomicInteger pressed = new AtomicInteger(0);
     final SyButtonType button = this.create();
-    button.setBox(SyBoxes.create(0, 0, 32, 32));
+    button.setBox(PAreasI.create(0, 0, 32, 32));
 
     Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
@@ -188,7 +188,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   {
     final AtomicInteger pressed = new AtomicInteger(0);
     final SyButtonType button = this.create();
-    button.setBox(SyBoxes.create(0, 0, 32, 32));
+    button.setBox(PAreasI.create(0, 0, 32, 32));
 
     Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
@@ -248,7 +248,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   public final void testNoOver()
   {
     final SyButtonType button = this.create();
-    button.setBox(SyBoxes.create(0, 0, 32, 32));
+    button.setBox(PAreasI.create(0, 0, 32, 32));
 
     Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
@@ -264,7 +264,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   {
     final AtomicInteger pressed = new AtomicInteger(0);
     final SyButtonType button = this.create();
-    button.setBox(SyBoxes.create(0, 0, 32, 32));
+    button.setBox(PAreasI.create(0, 0, 32, 32));
 
     Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 

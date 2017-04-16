@@ -51,6 +51,10 @@
       <artifactId>com.io7m.jfunctional.core</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.io7m.jregions</groupId>
+      <artifactId>com.io7m.jregions.core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.io7m.jcip</groupId>
       <artifactId>jcip-annotations</artifactId>
     </dependency>

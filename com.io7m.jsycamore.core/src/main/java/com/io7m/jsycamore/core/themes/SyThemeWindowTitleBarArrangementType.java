@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.core.themes;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyImmutableStyleType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import org.immutables.value.Value;
 
 /**
@@ -34,26 +34,26 @@ public interface SyThemeWindowTitleBarArrangementType
    */
 
   @Value.Parameter(order = 0)
-  SyBoxType<SySpaceParentRelativeType> closeButtonBox();
+  PAreaI<SySpaceParentRelativeType> closeButtonBox();
 
   /**
    * @return The box that will be used for the maximize button
    */
 
   @Value.Parameter(order = 1)
-  SyBoxType<SySpaceParentRelativeType> maximizeButtonBox();
+  PAreaI<SySpaceParentRelativeType> maximizeButtonBox();
 
   /**
    * @return The box that will be used for the icon
    */
 
   @Value.Parameter(order = 2)
-  SyBoxType<SySpaceParentRelativeType> iconBox();
+  PAreaI<SySpaceParentRelativeType> iconBox();
 
   /**
    * @return The box that will be used for the title
    */
 
   @Value.Parameter(order = 3)
-  SyBoxType<SySpaceParentRelativeType> title();
+  PAreaI<SySpaceParentRelativeType> title();
 }

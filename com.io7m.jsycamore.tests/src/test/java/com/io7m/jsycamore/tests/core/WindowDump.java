@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests.core;
 
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.awt.SyAWTComponentRenderer;
 import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
@@ -26,7 +27,6 @@ import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonCheckbox;
 import com.io7m.jsycamore.core.components.SyButtonCheckboxType;
@@ -211,7 +211,7 @@ public final class WindowDump
     final SyWindowContentPaneType content = w.contentPane();
     {
       final SyPanelType panel = SyPanel.create();
-      panel.setBox(SyBoxes.create(
+      panel.setBox(PAreasI.create(
         0,
         0,
         content.box().width(),
@@ -222,13 +222,13 @@ public final class WindowDump
 
       {
         final SyButtonType button = SyButtonRepeating.create();
-        button.setBox(SyBoxes.create(8, y_base, 64, 32));
+        button.setBox(PAreasI.create(8, y_base, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(button.node());
 
         final SyLabelType label = SyLabel.create();
-        label.setBox(SyBoxes.create(0, 0, 64, 32));
+        label.setBox(PAreasI.create(0, 0, 64, 32));
         label.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         label.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         label.setText("Hello");
@@ -237,14 +237,14 @@ public final class WindowDump
 
       {
         final SyButtonType button = SyButtonRepeating.create();
-        button.setBox(SyBoxes.create(8 + 64 + 8, y_base, 64, 32));
+        button.setBox(PAreasI.create(8 + 64 + 8, y_base, 64, 32));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setActive(SyActive.INACTIVE);
         panel.node().childAdd(button.node());
 
         final SyLabelType label = SyLabel.create();
-        label.setBox(SyBoxes.create(0, 0, 64, 32));
+        label.setBox(PAreasI.create(0, 0, 64, 32));
         label.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         label.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         label.setText("Hello");
@@ -263,7 +263,7 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8, y_base, 64, 64));
+        image.setBox(PAreasI.create(8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
@@ -279,7 +279,7 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8 + 64 + 8, y_base, 64, 64));
+        image.setBox(PAreasI.create(8 + 64 + 8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
@@ -295,7 +295,7 @@ public final class WindowDump
           SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
         final SyImageType image = SyImage.create(spec);
-        image.setBox(SyBoxes.create(8 + 64 + 8 + 64 + 8, y_base, 64, 64));
+        image.setBox(PAreasI.create(8 + 64 + 8 + 64 + 8, y_base, 64, 64));
         image.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         image.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         panel.node().childAdd(image.node());
@@ -305,7 +305,7 @@ public final class WindowDump
 
       {
         final SyButtonCheckboxType button = SyButtonCheckbox.create();
-        button.setBox(SyBoxes.create(8, y_base, 16, 16));
+        button.setBox(PAreasI.create(8, y_base, 16, 16));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setActive(SyActive.ACTIVE);
@@ -315,7 +315,7 @@ public final class WindowDump
 
       {
         final SyButtonCheckboxType button = SyButtonCheckbox.create();
-        button.setBox(SyBoxes.create(8 + 16 + 4, y_base, 16, 16));
+        button.setBox(PAreasI.create(8 + 16 + 4, y_base, 16, 16));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setActive(SyActive.ACTIVE);
@@ -325,7 +325,7 @@ public final class WindowDump
 
       {
         final SyButtonCheckboxType button = SyButtonCheckbox.create();
-        button.setBox(SyBoxes.create(8 + 16 + 4 + 16 + 4, y_base, 16, 16));
+        button.setBox(PAreasI.create(8 + 16 + 4 + 16 + 4, y_base, 16, 16));
         button.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         button.setActive(SyActive.INACTIVE);
@@ -335,7 +335,7 @@ public final class WindowDump
 
       {
         final SyButtonCheckboxType button = SyButtonCheckbox.create();
-        button.setBox(SyBoxes.create(
+        button.setBox(PAreasI.create(
           8 + 16 + 4 + 16 + 4 + 16 + 4,
           y_base,
           16,
@@ -351,7 +351,7 @@ public final class WindowDump
 
       {
         final SyMeterType meter = SyMeter.create();
-        meter.setBox(SyBoxes.create(8, y_base, 128, 16));
+        meter.setBox(PAreasI.create(8, y_base, 128, 16));
         meter.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         meter.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         meter.setActive(SyActive.ACTIVE);
@@ -363,7 +363,7 @@ public final class WindowDump
 
       {
         final SyMeterType meter = SyMeter.create();
-        meter.setBox(SyBoxes.create(8, y_base, 128, 16));
+        meter.setBox(PAreasI.create(8, y_base, 128, 16));
         meter.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         meter.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         meter.setActive(SyActive.INACTIVE);

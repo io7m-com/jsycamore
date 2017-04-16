@@ -17,12 +17,10 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceType;
-import com.io7m.jsycamore.core.boxes.SyBox;
-import com.io7m.jsycamore.core.boxes.SyBoxMutable;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import net.jcip.annotations.NotThreadSafe;
 import org.valid4j.Assertive;
 
@@ -37,15 +35,15 @@ import java.util.ArrayDeque;
 public final class SyWindowViewportAccumulator implements
   SyWindowViewportAccumulatorType
 {
-  private final ArrayDeque<SyBox<SySpaceType>> saved;
-  private final SyBoxMutable<SySpaceType> current;
+  private final ArrayDeque<PAreaI<SySpaceType>> saved;
+  private PAreaI<SySpaceType> current;
   private int base_width;
   private int base_height;
 
   private SyWindowViewportAccumulator()
   {
     this.saved = new ArrayDeque<>(16);
-    this.current = SyBoxMutable.create(0, 0, 0, 0);
+    this.current = PAreasI.create(0, 0, 0, 0);
   }
 
   /**
@@ -95,17 +93,16 @@ public final class SyWindowViewportAccumulator implements
     this.saved.clear();
     this.base_width = width;
     this.base_height = height;
-
-    this.current.from(SyBoxes.create(0, 0, width, height));
+    this.current = PAreasI.create(0, 0, width, height);
   }
 
   @Override
   public void accumulate(
-    final SyBoxType<SySpaceParentRelativeType> box)
+    final PAreaI<SySpaceParentRelativeType> box)
   {
     NullCheck.notNull(box, "Box");
 
-    this.saved.push(SyBox.copyOf(this.current));
+    this.saved.push(this.current);
 
     final int original_x0 = this.current.minimumX();
     final int original_y0 = this.current.minimumY();
@@ -140,10 +137,7 @@ public final class SyWindowViewportAccumulator implements
     Assertive.require(mx0 <= mx1, "mx0 must be <= mx1");
     Assertive.require(my0 <= my1, "my0 must be <= my1");
 
-    this.current.setMinimumX(mx0);
-    this.current.setMaximumX(mx1);
-    this.current.setMinimumY(my0);
-    this.current.setMaximumY(my1);
+    this.current = PAreaI.of(mx0, mx1, my0, my1);
   }
 
   @Override
@@ -174,11 +168,9 @@ public final class SyWindowViewportAccumulator implements
   public void restore()
   {
     if (!this.saved.isEmpty()) {
-      final SyBox<SySpaceType> previous = this.saved.pop();
-      this.current.from(previous);
+      this.current = this.saved.pop();
     } else {
-      this.current.from(
-        SyBoxes.create(0, 0, this.base_width, this.base_height));
+      this.current = PAreasI.create(0, 0, this.base_width, this.base_height);
     }
   }
 }

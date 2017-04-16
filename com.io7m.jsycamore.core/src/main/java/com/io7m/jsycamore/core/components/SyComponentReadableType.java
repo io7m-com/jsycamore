@@ -17,12 +17,12 @@
 package com.io7m.jsycamore.core.components;
 
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyParentResizeBehavior;
 import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
@@ -85,7 +85,7 @@ public interface SyComponentReadableType
    * @return The readable box representing the component's position and bounds
    */
 
-  SyBoxType<SySpaceParentRelativeType> box();
+  PAreaI<SySpaceParentRelativeType> box();
 
   /**
    * @return The window-relative position of the component

@@ -18,11 +18,10 @@ package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jfunctional.Pair;
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
-import com.io7m.jsycamore.core.boxes.SyBox;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.junreachable.UnimplementedCodeException;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.valid4j.Assertive;
@@ -148,7 +147,7 @@ public final class SyThemeTitleBars
 
   public static int minimumWidthRequired(
     final SyTextMeasurementType measurement,
-    final SyBoxType<SySpaceParentRelativeType> maximum,
+    final PAreaI<SySpaceParentRelativeType> maximum,
     final SyThemeWindowTitleBarType title_theme,
     final String title_text,
     final boolean is_closeable,
@@ -211,13 +210,13 @@ public final class SyThemeTitleBars
    */
 
   public static SyThemeWindowTitleBarArrangementType arrange(
-    final SyBoxType<SySpaceParentRelativeType> maximum_space,
+    final PAreaI<SySpaceParentRelativeType> maximum_space,
     final SyThemeWindowTitleBarType title_theme,
     final boolean is_closeable,
     final boolean is_maximizable)
   {
-    final SyBoxType<SySpaceParentRelativeType> maximum_origin =
-      SyBoxes.moveToOrigin(maximum_space);
+    final PAreaI<SySpaceParentRelativeType> maximum_origin =
+      PAreasI.moveToOrigin(maximum_space);
 
     final List<SyThemeTitleBarElement> elements =
       SyThemeTitleBars.elementsOrder(title_theme);
@@ -235,10 +234,10 @@ public final class SyThemeTitleBars
 
     final SyThemeWindowTitleBarArrangement.Builder arrangement =
       SyThemeWindowTitleBarArrangement.builder();
-    arrangement.setCloseButtonBox(SyBoxes.create(0, 0, 0, 0));
-    arrangement.setMaximizeButtonBox(SyBoxes.create(0, 0, 0, 0));
-    arrangement.setTitle(SyBoxes.create(0, 0, 0, 0));
-    arrangement.setIconBox(SyBoxes.create(0, 0, 0, 0));
+    arrangement.setCloseButtonBox(PAreasI.create(0, 0, 0, 0));
+    arrangement.setMaximizeButtonBox(PAreasI.create(0, 0, 0, 0));
+    arrangement.setTitle(PAreasI.create(0, 0, 0, 0));
+    arrangement.setIconBox(PAreasI.create(0, 0, 0, 0));
 
     int text_min_x = 0;
 
@@ -251,7 +250,7 @@ public final class SyThemeTitleBars
             Assertive.require(is_closeable, "Window must be closeable");
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
-            final SyBoxType<SySpaceParentRelativeType> aligned =
+            final PAreaI<SySpaceParentRelativeType> aligned =
               SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
@@ -266,7 +265,7 @@ public final class SyThemeTitleBars
             Assertive.require(is_maximizable, "Window must be maximizable");
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
-            final SyBoxType<SySpaceParentRelativeType> aligned =
+            final PAreaI<SySpaceParentRelativeType> aligned =
               SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
@@ -307,7 +306,7 @@ public final class SyThemeTitleBars
 
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
-            final SyBoxType<SySpaceParentRelativeType> aligned =
+            final PAreaI<SySpaceParentRelativeType> aligned =
               SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
@@ -322,7 +321,7 @@ public final class SyThemeTitleBars
 
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
-            final SyBoxType<SySpaceParentRelativeType> aligned =
+            final PAreaI<SySpaceParentRelativeType> aligned =
               SyThemeTitleBars.alignedButton(
                 maximum_origin,
                 title_theme,
@@ -364,7 +363,7 @@ public final class SyThemeTitleBars
     Assertive.require(
       text_min_x <= text_max_x, "Text minimum X <= Text maximum X");
 
-    arrangement.setTitle(SyBox.of(
+    arrangement.setTitle(PAreaI.of(
       text_min_x,
       text_max_x,
       0,
@@ -372,49 +371,49 @@ public final class SyThemeTitleBars
     return arrangement.build();
   }
 
-  private static SyBoxType<SySpaceParentRelativeType> alignedIcon(
-    final SyBoxType<SySpaceParentRelativeType> container,
+  private static PAreaI<SySpaceParentRelativeType> alignedIcon(
+    final PAreaI<SySpaceParentRelativeType> container,
     final SyThemeWindowTitleBarType title_theme,
     final int x)
   {
-    final SyBoxType<SySpaceParentRelativeType> box_unaligned =
-      SyBoxes.create(x, 0, title_theme.iconWidth(), title_theme.iconHeight());
+    final PAreaI<SySpaceParentRelativeType> box_unaligned =
+      PAreasI.create(x, 0, title_theme.iconWidth(), title_theme.iconHeight());
 
     switch (title_theme.buttonAlignment()) {
       case ALIGN_TOP: {
-        return SyBoxes.alignVerticallyTop(container, box_unaligned);
+        return PAreasI.alignVerticallyMinY(container, box_unaligned);
       }
       case ALIGN_BOTTOM: {
-        return SyBoxes.alignVerticallyBottom(container, box_unaligned);
+        return PAreasI.alignVerticallyMaxY(container, box_unaligned);
       }
       case ALIGN_CENTER: {
-        return SyBoxes.alignVerticallyCenter(container, box_unaligned);
+        return PAreasI.alignVerticallyCenter(container, box_unaligned);
       }
     }
 
     throw new UnreachableCodeException();
   }
 
-  private static SyBoxType<SySpaceParentRelativeType> alignedButton(
-    final SyBoxType<SySpaceParentRelativeType> container,
+  private static PAreaI<SySpaceParentRelativeType> alignedButton(
+    final PAreaI<SySpaceParentRelativeType> container,
     final SyThemeWindowTitleBarType title_theme,
     final int x)
   {
-    final SyBoxType<SySpaceParentRelativeType> box_unaligned = SyBoxes.create(
+    final PAreaI<SySpaceParentRelativeType> box_unaligned = PAreasI.create(
       x, 0, title_theme.buttonWidth(), title_theme.buttonHeight());
 
     final SyThemePaddingType padding = title_theme.buttonPadding();
     switch (title_theme.buttonAlignment()) {
       case ALIGN_TOP: {
-        return SyBoxes.alignVerticallyTopOffset(
+        return PAreasI.alignVerticallyMinYOffset(
           container, box_unaligned, padding.paddingTop());
       }
       case ALIGN_BOTTOM: {
-        return SyBoxes.alignVerticallyBottomOffset(
+        return PAreasI.alignVerticallyMaxYOffset(
           container, box_unaligned, padding.paddingBottom());
       }
       case ALIGN_CENTER: {
-        return SyBoxes.alignVerticallyCenter(container, box_unaligned);
+        return PAreasI.alignVerticallyCenter(container, box_unaligned);
       }
     }
 

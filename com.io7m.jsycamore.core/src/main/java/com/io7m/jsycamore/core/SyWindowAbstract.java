@@ -20,10 +20,8 @@ import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jranges.Ranges;
-import com.io7m.jsycamore.core.boxes.SyBox;
-import com.io7m.jsycamore.core.boxes.SyBoxMutable;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.components.SyActive;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyButtonRepeatingAbstract;
@@ -80,7 +78,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   private final SyGUIType gui;
   private final WindowRoot root;
   private final SyWindowViewportAccumulatorType transform_context;
-  private final SyBoxMutable<SySpaceViewportType> box;
+  private PAreaI<SySpaceViewportType> box;
   private Optional<SyThemeType> theme_override;
   private boolean closeable;
   private boolean maximizable;
@@ -103,8 +101,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       "Valid window heights");
 
     this.gui = NullCheck.notNull(in_gui, "GUI");
-    this.box = SyBoxMutable.create(0, 0, 0, 0);
-    this.box.from(SyBoxes.create(0, 0, width, height));
+    this.box = PAreasI.create(0, 0, width, height);
 
     this.root = new WindowRoot(in_text);
     this.transform_context = SyWindowViewportAccumulator.create();
@@ -116,13 +113,13 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   @Override
-  public final void setBox(final SyBoxType<SySpaceViewportType> in_box)
+  public final void setBox(final PAreaI<SySpaceViewportType> in_box)
   {
     this.recalculateBounds(NullCheck.notNull(in_box, "Box"), false);
   }
 
   @Override
-  public final SyBoxType<SySpaceViewportType> box()
+  public final PAreaI<SySpaceViewportType> box()
   {
     return this.box;
   }
@@ -159,7 +156,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   private void recalculateBoundsRefresh(
     final boolean theme_changed)
   {
-    this.recalculateBounds(SyBox.copyOf(this.box), theme_changed);
+    this.recalculateBounds(this.box, theme_changed);
   }
 
   @Override
@@ -177,7 +174,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     sb.append(" \"");
     sb.append(this.root.titlebar.text());
     sb.append("\" ");
-    SyBoxes.showToBuilder(this.box(), sb);
+    PAreasI.showToBuilder(this.box(), sb);
     sb.append("]");
     return sb.toString();
   }
@@ -192,21 +189,21 @@ public abstract class SyWindowAbstract implements SyWindowType
   }
 
   private void recalculateBounds(
-    final SyBoxType<? extends SySpaceType> new_box,
+    final PAreaI<? extends SySpaceType> new_box,
     final boolean theme_changed)
   {
     final SyThemeType theme = this.theme();
     final SyThemeWindowType window_theme = theme.windowTheme();
 
-    final SyBoxType<SySpaceViewportType> window_box =
-      SyBoxes.create(
+    final PAreaI<SySpaceViewportType> window_box =
+      PAreasI.create(
         new_box.minimumX(),
         new_box.minimumY(),
         new_box.width(),
         new_box.height());
 
-    final SyBoxType<SySpaceParentRelativeType> root_box =
-      SyBoxes.create(0, 0, new_box.width(), new_box.height());
+    final PAreaI<SySpaceParentRelativeType> root_box =
+      PAreasI.create(0, 0, new_box.width(), new_box.height());
     final SyThemeWindowArrangementFunctionType arranger =
       window_theme.arranger();
     final SyThemeWindowArrangementType boxes =
@@ -216,24 +213,24 @@ public abstract class SyWindowAbstract implements SyWindowType
         root_box);
 
     Assertive.require(
-      SyBoxes.contains(root_box, boxes.contentBox()),
+      PAreasI.contains(root_box, boxes.contentBox()),
       "Root box must contain content box");
     Assertive.require(
-      SyBoxes.contains(root_box, boxes.frameBox()),
+      PAreasI.contains(root_box, boxes.frameBox()),
       "Root box must contain frame box");
     Assertive.require(
-      SyBoxes.contains(boxes.frameBox(), boxes.frameExclusionBox()),
+      PAreasI.contains(boxes.frameBox(), boxes.frameExclusionBox()),
       "Frame box must contain frame exclusion box");
     Assertive.require(
-      SyBoxes.contains(root_box, boxes.titlebarBox()),
+      PAreasI.contains(root_box, boxes.titlebarBox()),
       "Root box must contain titleBar box");
 
-    this.box.from(window_box);
+    this.box = window_box;
     this.root.titlebar.text.setTextAlignmentHorizontal(
       theme.windowTheme().titleBar().textAlignment());
     this.root.titlebar.setBox(boxes.titlebarBox());
     this.root.frame.setBox(boxes.frameBox());
-    this.root.frame.box_inner.from(boxes.frameExclusionBox());
+    this.root.frame.box_inner = (boxes.frameExclusionBox());
     this.root.content_pane.setBox(boxes.contentBox());
     this.root.setBox(root_box);
 
@@ -272,7 +269,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   {
     final int target_x = Math.addExact(w_position.x(), this.box.minimumX());
     final int target_y = Math.addExact(w_position.y(), this.box.minimumY());
-    return SyBoxes.containsPoint(this.box, target_x, target_y);
+    return PAreasI.containsPoint(this.box, target_x, target_y);
   }
 
   @Override
@@ -402,7 +399,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         final SyImageType i = SyImage.create(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
+        i.setBox(PAreasI.create(0, 0, this.box().width(), this.box().height()));
         this.node().childAdd(i.node());
         this.image = Optional.of(i);
       }
@@ -480,7 +477,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         final TitleBarIconImage i = new TitleBarIconImage(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(SyBoxes.create(0, 0, this.box().width(), this.box().height()));
+        i.setBox(PAreasI.create(0, 0, this.box().width(), this.box().height()));
         this.node().childAdd(i.node());
         this.image = Optional.of(i);
       }
@@ -575,7 +572,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       sb.append(" \"");
       sb.append(this.text.text());
       sb.append("\" ");
-      SyBoxes.showToBuilder(super.box(), sb);
+      PAreasI.showToBuilder(super.box(), sb);
       sb.append("]");
       return sb.toString();
     }
@@ -589,7 +586,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       switch (button) {
         case MOUSE_BUTTON_LEFT: {
-          final SyBoxType<SySpaceViewportType> window_start_box =
+          final PAreaI<SySpaceViewportType> window_start_box =
             SyWindowAbstract.this.box();
 
           final PVector2I<SySpaceViewportType> diff =
@@ -597,8 +594,8 @@ public abstract class SyWindowAbstract implements SyWindowType
           final PVector2I<SySpaceViewportType> current =
             PVectors2I.add(this.window_drag_start, diff);
 
-          final SyBoxType<SySpaceViewportType> window_new_box =
-            SyBoxes.moveAbsolute(
+          final PAreaI<SySpaceViewportType> window_new_box =
+            PAreasI.moveAbsolute(
               window_start_box, current.x(), current.y());
 
           Assertive.ensure(
@@ -798,7 +795,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   private final class Frame extends SyPanelAbstract implements
     SyWindowFrameType
   {
-    private final SyBoxMutable<SySpaceParentRelativeType> box_inner;
+    private PAreaI<SySpaceParentRelativeType> box_inner;
 
     Frame()
     {
@@ -807,7 +804,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         return false;
       });
 
-      this.box_inner = SyBoxMutable.create();
+      this.box_inner = PAreasI.create(0, 0, 0, 0);
     }
 
     @Override
@@ -819,7 +816,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       final int target_x,
       final int target_y)
     {
-      return SyBoxes.containsPoint(this.box_inner, target_x, target_y);
+      return PAreasI.containsPoint(this.box_inner, target_x, target_y);
     }
 
     @Override

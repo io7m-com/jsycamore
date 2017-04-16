@@ -17,14 +17,13 @@
 package com.io7m.jsycamore.core.themes.provided;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyAlignmentHorizontal;
 import com.io7m.jsycamore.core.SyAlignmentVertical;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
 import com.io7m.jsycamore.core.SyWindowReadableType;
-import com.io7m.jsycamore.core.boxes.SyBox;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.images.SyImageFormat;
 import com.io7m.jsycamore.core.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.core.images.SyImageSpecification;
@@ -449,7 +448,7 @@ public final class SyThemeFenestra
   public static SyThemeWindowArrangementType arrangeWindowComponents(
     final SyTextMeasurementType measurement,
     final SyWindowReadableType window,
-    final SyBoxType<SySpaceParentRelativeType> window_box)
+    final PAreaI<SySpaceParentRelativeType> window_box)
   {
     NullCheck.notNull(measurement, "Text measurement");
     NullCheck.notNull(window, "Window");
@@ -471,18 +470,18 @@ public final class SyThemeFenestra
         .orElse(Integer.valueOf(0)).intValue();
 
     final int pad_top = ((frame_top - titlebar_theme.height()) / 2) - emboss_size;
-    final SyBoxType<SySpaceParentRelativeType> box_titlebar =
-      SyBoxes.create(
+    final PAreaI<SySpaceParentRelativeType> box_titlebar =
+      PAreasI.create(
         (frame_left / 2) + emboss_size,
         pad_top,
         window_box.maximumX() - (frame_right + 2),
         titlebar_theme.height());
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame =
-      SyBoxes.create(0, 0, window_box.width(), window_box.height());
+    final PAreaI<SySpaceParentRelativeType> box_frame =
+      PAreasI.create(0, 0, window_box.width(), window_box.height());
 
-    final SyBoxType<SySpaceParentRelativeType> box_frame_inner =
-      SyBox.of(
+    final PAreaI<SySpaceParentRelativeType> box_frame_inner =
+      PAreaI.of(
         box_titlebar.minimumX(),
         box_titlebar.maximumX(),
         box_titlebar.maximumY() + pad_top,

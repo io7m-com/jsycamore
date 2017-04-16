@@ -17,9 +17,9 @@
 package com.io7m.jsycamore.core.themes;
 
 import com.io7m.jnull.NullCheck;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.Optional;
@@ -47,14 +47,14 @@ public final class SyThemeOutlines
    * @return A scaled box
    */
 
-  public static <S extends SySpaceType> SyBoxType<S> scaleForOutline(
-    final SyBoxType<S> box,
+  public static <S extends SySpaceType> PAreaI<S> scaleForOutline(
+    final PAreaI<S> box,
     final SyThemeOutlineType outline)
   {
     NullCheck.notNull(box, "Box");
     NullCheck.notNull(outline, "Outline");
 
-    return SyBoxes.hollowOut(
+    return PAreasI.hollowOut(
       box,
       outline.left() ? 1 : 0,
       outline.right() ? 1 : 0,
@@ -63,7 +63,7 @@ public final class SyThemeOutlines
   }
 
   /**
-   * Call {@link #scaleForOutline(SyBoxType, SyThemeOutlineType)} if the outline
+   * Call {@link #scaleForOutline(PAreaI, SyThemeOutlineType)} if the outline
    * is present, or return {@code box} otherwise.
    *
    * @param box         The box
@@ -73,16 +73,14 @@ public final class SyThemeOutlines
    * @return A scaled box
    */
 
-  public static <S extends SySpaceType> SyBoxType<S> scaleForOutlineOptional(
-    final SyBoxType<S> box,
+  public static <S extends SySpaceType> PAreaI<S> scaleForOutlineOptional(
+    final PAreaI<S> box,
     final Optional<SyThemeOutlineType> outline_opt)
   {
     NullCheck.notNull(box, "Box");
     NullCheck.notNull(outline_opt, "Outline");
 
-    if (outline_opt.isPresent()) {
-      return SyThemeOutlines.scaleForOutline(box, outline_opt.get());
-    }
-    return box;
+    return outline_opt.map(
+      outline -> SyThemeOutlines.scaleForOutline(box, outline)).orElse(box);
   }
 }

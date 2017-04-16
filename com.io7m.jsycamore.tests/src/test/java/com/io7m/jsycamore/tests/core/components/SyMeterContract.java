@@ -17,11 +17,11 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jfunctional.Unit;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SyMouseButton;
 import com.io7m.jsycamore.core.SyOrientation;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyMeterType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -119,7 +119,7 @@ public abstract class SyMeterContract extends SyComponentContract
     final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
 
     final SyMeterType meter = this.create();
-    meter.setBox(SyBoxes.create(0, 0, 64, 32));
+    meter.setBox(PAreasI.create(0, 0, 64, 32));
     window.contentPane().node().childAdd(meter.node());
 
     {
@@ -166,7 +166,7 @@ public abstract class SyMeterContract extends SyComponentContract
     final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
 
     final SyMeterType meter = this.create();
-    meter.setBox(SyBoxes.create(0, 0, 64, 32));
+    meter.setBox(PAreasI.create(0, 0, 64, 32));
     window.contentPane().node().childAdd(meter.node());
 
     {
@@ -217,7 +217,7 @@ public abstract class SyMeterContract extends SyComponentContract
     final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
 
     final SyMeterType meter = this.create();
-    meter.setBox(SyBoxes.create(0, 0, 32, 64));
+    meter.setBox(PAreasI.create(0, 0, 32, 64));
     meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
     window.contentPane().node().childAdd(meter.node());
 
@@ -274,7 +274,7 @@ public abstract class SyMeterContract extends SyComponentContract
     final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
 
     final SyMeterType meter = this.create();
-    meter.setBox(SyBoxes.create(0, 0, 32, 64));
+    meter.setBox(PAreasI.create(0, 0, 32, 64));
     meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
     window.contentPane().node().childAdd(meter.node());
 

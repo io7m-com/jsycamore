@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import org.valid4j.Assertive;
 
 import java.awt.Graphics2D;
@@ -59,7 +59,7 @@ public final class SyAWTEmbossed
 
   public void rectangle(
     final Graphics2D graphics,
-    final SyBoxType<?> box,
+    final PAreaI<?> box,
     final int emboss_size,
     final Paint left,
     final Paint right,

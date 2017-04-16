@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.core.components;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 
 /**
  * <p>The type of accumulators that calculate <i>viewports</i> for sets of
@@ -60,7 +60,7 @@ public interface SyWindowViewportAccumulatorType
    */
 
   void accumulate(
-    SyBoxType<SySpaceParentRelativeType> box);
+    PAreaI<SySpaceParentRelativeType> box);
 
   /**
    * @return The leftmost edge of the effective viewport
@@ -88,7 +88,7 @@ public interface SyWindowViewportAccumulatorType
 
   /**
    * <p>Restore the viewport that was calculated before the most recent call to
-   * {@link #accumulate(SyBoxType)}.</p>
+   * {@link #accumulate(PAreaI)}.</p>
    *
    * <p>If more {@code restore} calls have been made than {@code accumulate}
    * calls, the viewport position is reset to {@code (0, 0)} and the size is

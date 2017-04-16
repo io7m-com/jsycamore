@@ -19,11 +19,11 @@ package com.io7m.jsycamore.awt;
 import com.io7m.jfunctional.Unit;
 import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.core.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.core.SySpaceParentRelativeType;
 import com.io7m.jsycamore.core.SyTextMeasurementType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
-import com.io7m.jsycamore.core.boxes.SyBoxes;
 import com.io7m.jsycamore.core.components.SyButtonReadableType;
 import com.io7m.jsycamore.core.components.SyComponentReadableType;
 import com.io7m.jsycamore.core.components.SyImageReadableType;
@@ -224,15 +224,15 @@ public final class SyAWTComponentRenderer implements
     }
 
     final SyThemeMeterType theme = theme_opt.get();
-    final SyBoxType<SySpaceParentRelativeType> box = meter.box();
-    final SyBoxType<SySpaceComponentRelativeType> box_origin =
-      SyBoxes.cast(SyBoxes.moveToOrigin(box));
+    final PAreaI<SySpaceParentRelativeType> box = meter.box();
+    final PAreaI<SySpaceComponentRelativeType> box_origin =
+      PAreasI.cast(PAreasI.moveToOrigin(box));
 
     switch (meter.orientation()) {
       case ORIENTATION_HORIZONTAL: {
         final int width = (int) (meter.value() * (double) box.width());
-        final SyBoxType<SySpaceComponentRelativeType> box_indicator =
-          SyBoxes.create(0, 0, width, box.height());
+        final PAreaI<SySpaceComponentRelativeType> box_indicator =
+          PAreasI.create(0, 0, width, box.height());
         final SyThemeMeterOrientedType t = theme.horizontal();
         final Optional<SyThemeOutlineType> outline = t.outline();
 
@@ -258,8 +258,8 @@ public final class SyAWTComponentRenderer implements
       }
       case ORIENTATION_VERTICAL: {
         final int height = (int) (meter.value() * (double) box.height());
-        final SyBoxType<SySpaceComponentRelativeType> box_indicator =
-          SyBoxes.create(0, box.height() - height, box.width(), height);
+        final PAreaI<SySpaceComponentRelativeType> box_indicator =
+          PAreasI.create(0, box.height() - height, box.width(), height);
 
         final SyThemeMeterOrientedType t = theme.vertical();
         final Optional<SyThemeOutlineType> outline = t.outline();
@@ -296,7 +296,7 @@ public final class SyAWTComponentRenderer implements
       throw SyAWTComponentRenderer.notAttached(image);
     }
 
-    final SyBoxType<SySpaceParentRelativeType> box = image.box();
+    final PAreaI<SySpaceParentRelativeType> box = image.box();
 
     final SyImageReferenceType<BufferedImage> ref =
       this.image_cache.get(image.image());
@@ -348,7 +348,7 @@ public final class SyAWTComponentRenderer implements
     }
 
     final SyThemeLabelType theme = theme_opt.get();
-    final SyBoxType<SySpaceParentRelativeType> box = label.box();
+    final PAreaI<SySpaceParentRelativeType> box = label.box();
 
     if (label.isActive()) {
       graphics.setPaint(SyAWTDrawing.toColor(theme.textColorActive()));
@@ -384,9 +384,9 @@ public final class SyAWTComponentRenderer implements
     }
 
     final SyThemePanelType theme = theme_opt.get();
-    final SyBoxType<SySpaceParentRelativeType> box = panel.box();
-    final SyBoxType<SySpaceComponentRelativeType> box_origin =
-      SyBoxes.cast(SyBoxes.moveToOrigin(box));
+    final PAreaI<SySpaceParentRelativeType> box = panel.box();
+    final PAreaI<SySpaceComponentRelativeType> box_origin =
+      PAreasI.cast(PAreasI.moveToOrigin(box));
     final Optional<SyThemeOutlineType> outline = theme.outline();
 
     this.renderThemedBox(
@@ -399,7 +399,7 @@ public final class SyAWTComponentRenderer implements
 
     if (outline.isPresent()) {
       SyAWTDrawing.drawOutline(
-        graphics, outline.get(), SyBoxes.moveToOrigin(box), panel.isActive());
+        graphics, outline.get(), PAreasI.moveToOrigin(box), panel.isActive());
     }
   }
 
@@ -408,11 +408,11 @@ public final class SyAWTComponentRenderer implements
     final Optional<SyThemeOutlineType> outline,
     final Supplier<SyThemeFillType> fill,
     final Supplier<Optional<SyThemeEmbossType>> emboss,
-    final SyBoxType<SySpaceComponentRelativeType> box)
+    final PAreaI<SySpaceComponentRelativeType> box)
   {
-    final SyBoxType<SySpaceComponentRelativeType> box_fill;
+    final PAreaI<SySpaceComponentRelativeType> box_fill;
     if (outline.isPresent()) {
-      box_fill = SyBoxes.hollowOutEvenly(box, 1);
+      box_fill = PAreasI.hollowOutEvenly(box, 1);
     } else {
       box_fill = box;
     }
@@ -431,17 +431,17 @@ public final class SyAWTComponentRenderer implements
     }
 
     final SyThemeButtonType theme = theme_opt.get();
-    final SyBoxType<SySpaceParentRelativeType> box = button.box();
-    final SyBoxType<SySpaceParentRelativeType> box_origin =
-      SyBoxes.moveToOrigin(box);
+    final PAreaI<SySpaceParentRelativeType> box = button.box();
+    final PAreaI<SySpaceParentRelativeType> box_origin =
+      PAreasI.moveToOrigin(box);
 
     final int width = box.width();
     final int height = box.height();
 
-    final SyBoxType<SySpaceParentRelativeType> box_fill;
+    final PAreaI<SySpaceParentRelativeType> box_fill;
     final Optional<SyThemeOutlineType> outline = theme.outline();
     if (outline.isPresent()) {
-      box_fill = SyBoxes.hollowOutEvenly(box_origin, 1);
+      box_fill = PAreasI.hollowOutEvenly(box_origin, 1);
     } else {
       box_fill = box_origin;
     }
@@ -489,7 +489,7 @@ public final class SyAWTComponentRenderer implements
 
   private void renderOptionallyEmbossedFill(
     final Graphics2D graphics,
-    final SyBoxType<?> box,
+    final PAreaI<?> box,
     final Optional<SyThemeEmbossType> emboss_opt,
     final SyThemeFillType fill)
   {

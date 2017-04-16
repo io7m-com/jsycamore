@@ -18,6 +18,7 @@ package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
 import com.io7m.jorchard.core.JOTreeNodeType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.core.SyGUIType;
 import com.io7m.jsycamore.core.SySpaceViewportType;
 import com.io7m.jsycamore.core.SyWindowCloseButtonType;
@@ -25,7 +26,6 @@ import com.io7m.jsycamore.core.SyWindowContentPaneType;
 import com.io7m.jsycamore.core.SyWindowMaximizeButtonType;
 import com.io7m.jsycamore.core.SyWindowTitleBarType;
 import com.io7m.jsycamore.core.SyWindowType;
-import com.io7m.jsycamore.core.boxes.SyBoxType;
 import com.io7m.jsycamore.core.components.SyComponentType;
 import com.io7m.jsycamore.core.components.SyImageType;
 import com.io7m.jsycamore.core.components.SyPanelReadableType;
@@ -77,7 +77,7 @@ public abstract class SyWindowContract
   public final void testCreate()
   {
     final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyBoxType<SySpaceViewportType> box = w.box();
+    final PAreaI<SySpaceViewportType> box = w.box();
 
     Assert.assertEquals(640L, (long) box.width());
     Assert.assertEquals(480L, (long) box.height());
