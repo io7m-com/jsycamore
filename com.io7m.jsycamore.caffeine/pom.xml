@@ -12,7 +12,7 @@
   </parent>
   <artifactId>com.io7m.jsycamore.caffeine</artifactId>
 
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
   <name>com.io7m.jsycamore.caffeine</name>
   <description>OpenGL GUI library (Caffeine image cache)</description>
   <url>http://io7m.github.io/jsycamore/</url>
@@ -55,6 +55,20 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+
+      <!-- Produce OSGi bundle -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>
+              com.io7m.jsycamore.caffeine
+            </Export-Package>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>
