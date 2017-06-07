@@ -7,4 +7,4 @@ jsycamore
 
 See https://io7m.github.io/jsycamore/ for more information.
 
-![jsycamore](./src/site/resources/jsycamore.jpg?raw=true)
+![jsycamore](./src/site/resources/jsycamore.png?raw=true)
