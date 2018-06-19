@@ -437,9 +437,6 @@ public final class SyAWTComponentRenderer implements
     final PAreaI<SySpaceParentRelativeType> box_origin =
       PAreasI.moveToOrigin(box);
 
-    final int width = box.sizeX();
-    final int height = box.sizeY();
-
     final PAreaI<SySpaceParentRelativeType> box_fill;
     final Optional<SyThemeOutline> outline = theme.outline();
     if (outline.isPresent()) {
@@ -501,13 +498,15 @@ public final class SyAWTComponentRenderer implements
       final SyThemeEmboss emboss = emboss_opt.get();
       this.embossed.rectangle(
         graphics,
-        box,
-        emboss.size(),
-        SyAWTDrawing.toColor(emboss.colorLeft()),
-        SyAWTDrawing.toColor(emboss.colorRight()),
-        SyAWTDrawing.toColor(emboss.colorTop()),
-        SyAWTDrawing.toColor(emboss.colorBottom()),
-        Optional.of(fill_paint));
+        SyAWTEmbossedRectangle.builder()
+          .setBox(box)
+          .setEmbossSize(emboss.size())
+          .setPaintLeft(SyAWTDrawing.toColor(emboss.colorLeft()))
+          .setPaintRight(SyAWTDrawing.toColor(emboss.colorRight()))
+          .setPaintTop(SyAWTDrawing.toColor(emboss.colorTop()))
+          .setPaintBottom(SyAWTDrawing.toColor(emboss.colorBottom()))
+          .setPaintFill(fill_paint)
+          .build());
     } else {
       graphics.setPaint(fill_paint);
       graphics.fillRect(

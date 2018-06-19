@@ -108,8 +108,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
 
     final AsyncCacheLoader<? super SyImageSpecification, BufferedImage> loader =
       (AsyncCacheLoader<SyImageSpecification, BufferedImage>) (image_spec, executor) ->
-        load(
-          in_resolver, in_loader, image_spec, executor);
+        load(in_resolver, in_loader, image_spec, executor);
 
     final RemovalListener<SyImageSpecification, BufferedImage> removal_listener =
       (key, value, cause) -> LOG.trace(
@@ -135,7 +134,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     final Executor in_executor)
   {
     return CompletableFuture.supplyAsync(() -> {
-      try (final InputStream is = in_resolver.resolve(in_image_spec)) {
+      try (InputStream is = in_resolver.resolve(in_image_spec)) {
         final BufferedImage image = in_loader.load(in_image_spec, is);
         return SyAWTImage.filter(in_image_spec, image);
       } catch (final IOException e) {
@@ -180,7 +179,6 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
 
   @Override
   public void close()
-    throws IOException
   {
 
   }

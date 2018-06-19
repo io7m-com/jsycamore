@@ -344,8 +344,7 @@ public final class SyGUI implements SyGUIType
         final MouseState state = entry.getValue();
 
         if (state.state == MouseButtonState.MOUSE_STATE_DOWN) {
-          if (state.component_clicked_last.isPresent()) {
-            final SyComponentType component = state.component_clicked_last.get();
+          state.component_clicked_last.ifPresent(component -> {
             if (LOG_MOUSE.isTraceEnabled()) {
               LOG_MOUSE.trace("onMouseHeld: {}", component);
             }
@@ -354,7 +353,7 @@ public final class SyGUI implements SyGUIType
               position,
               entry.getKey(),
               component);
-          }
+          });
         }
       }
 

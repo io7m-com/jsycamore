@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
@@ -34,6 +33,7 @@ import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import net.jcip.annotations.NotThreadSafe;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.RenderingHints;
@@ -42,6 +42,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.io7m.jsycamore.awt.SyAWTEmbossed.LShape.L_SHAPE_NE;
+import static com.io7m.jsycamore.awt.SyAWTEmbossed.LShape.L_SHAPE_NW;
+import static com.io7m.jsycamore.awt.SyAWTEmbossed.LShape.L_SHAPE_SE;
+import static com.io7m.jsycamore.awt.SyAWTEmbossed.LShape.L_SHAPE_SW;
 
 /**
  * A simple software renderer that renders a window to an image.
@@ -72,6 +77,300 @@ public final class SyAWTWindowRenderer implements
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> in_component_renderer)
   {
     return new SyAWTWindowRenderer(in_component_renderer);
+  }
+
+  /**
+   * Render all of the visible embossed corners.
+   */
+
+  private static void renderFrameEmbossedActualCorners(
+    final Graphics2D graphics,
+    final Paint e_top,
+    final Paint e_left,
+    final Paint e_right,
+    final Paint e_bottom,
+    final Optional<Paint> eo_fill,
+    final SyAWTWindowRendererEmbossedFrameParameters parameters,
+    final SyAWTEmbossed embossed)
+  {
+    if (hasVisibleTopLeftCorner(parameters)) {
+      embossed.drawEmbossedL(
+        graphics,
+        SyAWTEmbossedCornerL.builder()
+          .setShape(L_SHAPE_NW)
+          .setX(0)
+          .setY(0)
+          .setThicknessOfHorizontal(parameters.topHeight())
+          .setThicknessOfVertical(parameters.leftWidth())
+          .setArmLength(parameters.topLeftArmLength())
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintBottom(e_bottom)
+          .setPaintTop(e_top)
+          .setPaintFill(eo_fill)
+          .setCaps(parameters.topLeftCaps())
+          .build());
+    }
+
+    final PAreaI<SySpaceParentRelativeType> frame_box = parameters.frameBoxAdjustedForOutline();
+
+    if (hasVisibleTopRightCorner(parameters)) {
+      embossed.drawEmbossedL(
+        graphics,
+        SyAWTEmbossedCornerL.builder()
+          .setShape(L_SHAPE_NE)
+          .setX(frame_box.sizeX() - parameters.topRightArmLength())
+          .setY(0)
+          .setThicknessOfHorizontal(parameters.topHeight())
+          .setThicknessOfVertical(parameters.rightWidth())
+          .setArmLength(parameters.topRightArmLength())
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintBottom(e_bottom)
+          .setPaintTop(e_top)
+          .setPaintFill(eo_fill)
+          .setCaps(parameters.topRightCaps())
+          .build());
+    }
+
+    if (hasVisibleBottomLeftCorner(parameters)) {
+      embossed.drawEmbossedL(
+        graphics,
+        SyAWTEmbossedCornerL.builder()
+          .setShape(L_SHAPE_SW)
+          .setX(0)
+          .setY(frame_box.sizeY() - parameters.bottomLeftArmLength())
+          .setThicknessOfHorizontal(parameters.bottomHeight())
+          .setThicknessOfVertical(parameters.leftWidth())
+          .setArmLength(parameters.bottomLeftArmLength())
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintBottom(e_bottom)
+          .setPaintTop(e_top)
+          .setPaintFill(eo_fill)
+          .setCaps(parameters.bottomLeftCaps())
+          .build());
+    }
+
+    if (hasVisibleBottomRightCorner(parameters)) {
+      embossed.drawEmbossedL(
+        graphics,
+        SyAWTEmbossedCornerL.builder()
+          .setShape(L_SHAPE_SE)
+          .setX(frame_box.sizeX() - parameters.bottomRightArmLength())
+          .setY(frame_box.sizeY() - parameters.bottomRightArmLength())
+          .setThicknessOfHorizontal(parameters.bottomHeight())
+          .setThicknessOfVertical(parameters.rightWidth())
+          .setArmLength(parameters.bottomRightArmLength())
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintBottom(e_bottom)
+          .setPaintTop(e_top)
+          .setPaintFill(eo_fill)
+          .setCaps(parameters.bottomRightCaps())
+          .build());
+    }
+  }
+
+  private static boolean hasVisibleBottomRightCorner(
+    final SyAWTWindowRendererEmbossedFrameParameters parameters)
+  {
+    return parameters.bottomHeight() > 0 && parameters.rightWidth() > 0;
+  }
+
+  private static boolean hasVisibleBottomLeftCorner(
+    final SyAWTWindowRendererEmbossedFrameParameters parameters)
+  {
+    return parameters.bottomHeight() > 0 && parameters.leftWidth() > 0;
+  }
+
+  private static boolean hasVisibleTopRightCorner(
+    final SyAWTWindowRendererEmbossedFrameParameters parameters)
+  {
+    return parameters.topHeight() > 0 && parameters.rightWidth() > 0;
+  }
+
+  private static boolean hasVisibleTopLeftCorner(
+    final SyAWTWindowRendererEmbossedFrameParameters parameters)
+  {
+    return parameters.topHeight() > 0 && parameters.leftWidth() > 0;
+  }
+
+  /**
+   * Render the top, bottom, left, and right frames that make up an embossed window.
+   */
+
+  private static void renderFrameEmbossedActualFrames(
+    final Graphics2D graphics,
+    final Paint e_top,
+    final Paint e_left,
+    final Paint e_right,
+    final Paint e_bottom,
+    final Optional<Paint> eo_fill,
+    final SyAWTWindowRendererEmbossedFrameParameters parameters,
+    final SyAWTEmbossed embossed)
+  {
+    /*
+     * Left frame.
+     */
+
+    if (parameters.leftWidth() > 0) {
+      embossed.rectangle(
+        graphics,
+        SyAWTEmbossedRectangle.builder()
+          .setBox(PAreasI.create(
+            0,
+            parameters.leftY(),
+            parameters.leftWidth(),
+            parameters.leftHeight()))
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintTop(e_top)
+          .setPaintBottom(e_bottom)
+          .setPaintFill(eo_fill)
+          .build());
+    }
+
+    /*
+     * Right frame.
+     */
+
+    final PAreaI<SySpaceParentRelativeType> frame_box = parameters.frameBoxAdjustedForOutline();
+    if (parameters.rightWidth() > 0) {
+      embossed.rectangle(
+        graphics,
+        SyAWTEmbossedRectangle.builder()
+          .setBox(PAreasI.create(
+            frame_box.sizeX() - parameters.rightWidth(),
+            parameters.rightY(),
+            parameters.rightWidth(),
+            parameters.rightHeight()))
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintTop(e_top)
+          .setPaintBottom(e_bottom)
+          .setPaintFill(eo_fill)
+          .build());
+    }
+
+    /*
+     * Top frame.
+     */
+
+    if (parameters.topHeight() > 0) {
+      embossed.rectangle(
+        graphics,
+        SyAWTEmbossedRectangle.builder()
+          .setBox(PAreasI.create(
+            parameters.topX(),
+            0,
+            parameters.topWidth(),
+            parameters.topHeight()))
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintTop(e_top)
+          .setPaintBottom(e_bottom)
+          .setPaintFill(eo_fill)
+          .build());
+    }
+
+    /*
+     * Bottom frame.
+     */
+
+    if (parameters.bottomHeight() > 0) {
+      embossed.rectangle(
+        graphics,
+        SyAWTEmbossedRectangle.builder()
+          .setBox(PAreasI.create(
+            parameters.bottomX(),
+            parameters.bottomY(),
+            parameters.bottomWidth(),
+            parameters.bottomHeight()))
+          .setEmbossSize(parameters.embossSize())
+          .setPaintLeft(e_left)
+          .setPaintRight(e_right)
+          .setPaintTop(e_top)
+          .setPaintBottom(e_bottom)
+          .setPaintFill(eo_fill)
+          .build());
+    }
+  }
+
+  /**
+   * Render an unembossed frame.
+   */
+
+  private static void renderFrameUnembossedActual(
+    final Graphics2D graphics,
+    final SyThemeWindowFrame frame_theme,
+    final SyWindowReadableType window,
+    final Optional<SyThemeOutline> outline_opt,
+    final Paint fill,
+    final boolean active)
+  {
+    final int left_width = frame_theme.leftWidth();
+    final int right_width = frame_theme.rightWidth();
+    final int top_height = frame_theme.topHeight();
+    final int bottom_height = frame_theme.bottomHeight();
+
+    final SyWindowFrameType frame = window.frame();
+    final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
+
+    outline_opt.ifPresent(
+      theme_outline -> SyAWTDrawing.drawOutline(graphics, theme_outline, frame_box, active));
+
+    final int frame_x = frame_box.minimumX();
+    final int frame_y = frame_box.minimumY();
+    final int frame_width = frame_box.sizeX();
+    final int frame_height = frame_box.sizeY();
+
+    graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
+    graphics.translate(frame_x, frame_y);
+
+    /*
+     * Left frame.
+     */
+
+    if (left_width > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(0, 0, left_width, frame_height);
+    }
+
+    /*
+     * Right frame.
+     */
+
+    if (right_width > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(frame_width - right_width, 0, right_width, frame_height);
+    }
+
+    /*
+     * Top frame.
+     */
+
+    if (top_height > 0) {
+      graphics.setPaint(fill);
+      graphics.fillRect(0, 0, frame_width, top_height);
+    }
+
+    /*
+     * Bottom frame.
+     */
+
+    if (bottom_height > 0) {
+      graphics.setPaint(fill);
+      final int bottom_y = frame_height - bottom_height;
+      graphics.fillRect(0, bottom_y, frame_width, bottom_height);
+    }
   }
 
   @Override
@@ -141,14 +440,10 @@ public final class SyAWTWindowRenderer implements
         window,
         frame_theme.outline(),
         emboss,
-        SyAWTDrawing.toColor(emboss.colorTop()),
-        SyAWTDrawing.toColor(emboss.colorLeft()),
-        SyAWTDrawing.toColor(emboss.colorRight()),
-        SyAWTDrawing.toColor(emboss.colorBottom()),
         Optional.of(SyAWTDrawing.toColor(frame_theme.colorInactive())),
         false);
     } else {
-      SyAWTWindowRenderer.renderFrameUnembossedActual(
+      renderFrameUnembossedActual(
         graphics,
         frame_theme,
         window,
@@ -176,14 +471,10 @@ public final class SyAWTWindowRenderer implements
         window,
         frame_theme.outline(),
         emboss,
-        SyAWTDrawing.toColor(emboss.colorTop()),
-        SyAWTDrawing.toColor(emboss.colorLeft()),
-        SyAWTDrawing.toColor(emboss.colorRight()),
-        SyAWTDrawing.toColor(emboss.colorBottom()),
         Optional.of(SyAWTDrawing.toColor(frame_theme.colorActive())),
         true);
     } else {
-      SyAWTWindowRenderer.renderFrameUnembossedActual(
+      renderFrameUnembossedActual(
         graphics,
         frame_theme,
         window,
@@ -200,363 +491,59 @@ public final class SyAWTWindowRenderer implements
     final SyWindowReadableType window,
     final Optional<SyThemeOutline> outline_opt,
     final SyThemeEmboss emboss,
-    final Paint e_top,
-    final Paint e_left,
-    final Paint e_right,
-    final Paint e_bottom,
     final Optional<Paint> eo_fill,
     final boolean active)
   {
-    final int left_width = frame_theme.leftWidth();
-    final int right_width = frame_theme.rightWidth();
-    final int top_height = frame_theme.topHeight();
-    final int bottom_height = frame_theme.bottomHeight();
+    final PAreaI<SySpaceParentRelativeType> frame_box = window.frame().box();
 
-    final SyWindowFrameType frame = window.frame();
-    final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
-
-    final int frame_x;
-    final int frame_y;
-    final int frame_width;
-    final int frame_height;
-
-    if (outline_opt.isPresent()) {
-      SyAWTDrawing.drawOutline(graphics, outline_opt.get(), frame_box, active);
-      frame_x = frame_box.minimumX() + 1;
-      frame_y = frame_box.minimumY() + 1;
-      frame_width = frame_box.sizeX() - 2;
-      frame_height = frame_box.sizeY() - 2;
-    } else {
-      frame_x = frame_box.minimumX();
-      frame_y = frame_box.minimumY();
-      frame_width = frame_box.sizeX();
-      frame_height = frame_box.sizeY();
-    }
-
-    graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
-    graphics.translate(frame_x, frame_y);
-
-    int top_left_len = Math.max(left_width, top_height);
-    int top_right_len = Math.max(right_width, top_height);
-    int bottom_right_len = Math.max(right_width, bottom_height);
-    int bottom_left_len = Math.max(left_width, bottom_height);
-
-    int top_width = frame_width;
-    int bottom_width = frame_width;
-    int left_height = frame_height;
-    int right_height = frame_height;
-
-    int bottom_x = 0;
-    final int bottom_y = frame_height - bottom_height;
-    int left_y = 0;
-    int right_y = 0;
-    int top_x = 0;
-
-    final int cap_length = top_height + titlebar_theme.height() - top_left_len;
-    final int emboss_size = emboss.size();
-
-    boolean top_left_caps = false;
-    switch (frame_theme.topLeftStyle()) {
-      case FRAME_CORNER_NONE: {
-        break;
-      }
-      case FRAME_CORNER_L_PIECE: {
-        Preconditions.checkPreconditionI(
-          left_width,
-          left_width > 0,
-          i -> "L piece left_width must be > 0");
-        Preconditions.checkPreconditionI(
-          top_height,
-          top_height > 0,
-          i -> "L piece top_height must be > 0");
-
-        top_left_caps = true;
-        top_left_len += cap_length;
-        left_y = top_left_len;
-        left_height -= top_left_len;
-        top_x = top_left_len;
-        top_width -= top_left_len;
-        break;
-      }
-      case FRAME_CORNER_BOX: {
-        break;
-      }
-    }
-
-    boolean top_right_caps = false;
-    switch (frame_theme.topRightStyle()) {
-      case FRAME_CORNER_NONE: {
-        break;
-      }
-      case FRAME_CORNER_L_PIECE: {
-        Preconditions.checkPreconditionI(
-          right_width,
-          right_width > 0,
-          i -> "L piece right_width must be > 0");
-        Preconditions.checkPreconditionI(
-          top_height,
-          top_height > 0,
-          i -> "L piece top_height must be > 0");
-
-        top_right_caps = true;
-        top_right_len += cap_length;
-        right_height -= top_right_len;
-        right_y += top_right_len;
-        top_width -= top_right_len;
-        break;
-      }
-      case FRAME_CORNER_BOX: {
-        break;
-      }
-    }
-
-    boolean bottom_left_caps = false;
-    switch (frame_theme.bottomLeftStyle()) {
-      case FRAME_CORNER_NONE: {
-        break;
-      }
-      case FRAME_CORNER_L_PIECE: {
-        Preconditions.checkPreconditionI(
-          left_width,
-          left_width > 0,
-          i -> "L piece left_width must be > 0");
-        Preconditions.checkPreconditionI(
-          bottom_height,
-          bottom_height > 0,
-          i -> "L piece bottom_height must be > 0");
-
-        bottom_left_caps = true;
-        bottom_left_len += cap_length;
-        left_height -= bottom_left_len;
-        bottom_x += bottom_left_len;
-        bottom_width -= bottom_left_len;
-        break;
-      }
-      case FRAME_CORNER_BOX: {
-        break;
-      }
-    }
-
-    boolean bottom_right_caps = false;
-    switch (frame_theme.bottomRightStyle()) {
-      case FRAME_CORNER_NONE: {
-        break;
-      }
-      case FRAME_CORNER_L_PIECE: {
-        Preconditions.checkPreconditionI(
-          right_width,
-          right_width > 0,
-          i -> "L piece right_width must be > 0");
-        Preconditions.checkPreconditionI(
-          bottom_height,
-          bottom_height > 0,
-          i -> "L piece bottom_height must be > 0");
-
-        bottom_right_caps = true;
-        bottom_right_len += cap_length;
-        right_height -= bottom_right_len;
-        bottom_width -= bottom_right_len;
-        break;
-      }
-      case FRAME_CORNER_BOX: {
-        break;
-      }
-    }
-
-    /*
-     * Left frame.
-     */
-
-    if (left_width > 0) {
-      final PAreaI<?> box =
-        PAreasI.create(0, left_y, left_width, left_height);
-      this.embossed.rectangle(
-        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
-    }
-
-    /*
-     * Right frame.
-     */
-
-    if (right_width > 0) {
-      final PAreaI<?> box =
-        PAreasI.create(
-          frame_width - right_width, right_y, right_width, right_height);
-      this.embossed.rectangle(
-        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
-    }
-
-    /*
-     * Top frame.
-     */
-
-    if (top_height > 0) {
-      final PAreaI<?> box =
-        PAreasI.create(top_x, 0, top_width, top_height);
-      this.embossed.rectangle(
-        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
-    }
-
-    /*
-     * Bottom frame.
-     */
-
-    if (bottom_height > 0) {
-      final PAreaI<?> box =
-        PAreasI.create(bottom_x, bottom_y, bottom_width, bottom_height);
-      this.embossed.rectangle(
-        graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
-    }
-
-    /*
-     * Corners.
-     */
-
-    if (top_height > 0 && left_width > 0) {
-      final int thickness_of_horizontal = top_height;
-      final int thickness_of_vertical = left_width;
-      this.embossed.drawEmbossedL(
-        graphics,
-        SyAWTEmbossed.LShape.L_SHAPE_NW,
-        0,
-        0,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        top_left_len,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill,
-        top_left_caps);
-    }
-
-    if (top_height > 0 && right_width > 0) {
-      final int thickness_of_horizontal = top_height;
-      final int thickness_of_vertical = right_width;
-      this.embossed.drawEmbossedL(
-        graphics,
-        SyAWTEmbossed.LShape.L_SHAPE_NE,
-        frame_width - top_right_len,
-        0,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        top_right_len,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill,
-        top_right_caps);
-    }
-
-    if (bottom_height > 0 && left_width > 0) {
-      final int thickness_of_horizontal = bottom_height;
-      final int thickness_of_vertical = left_width;
-      this.embossed.drawEmbossedL(
-        graphics,
-        SyAWTEmbossed.LShape.L_SHAPE_SW,
-        0,
-        frame_height - bottom_left_len,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        bottom_left_len,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill,
-        bottom_left_caps);
-    }
-
-    if (bottom_height > 0 && right_width > 0) {
-      final int thickness_of_horizontal = bottom_height;
-      final int thickness_of_vertical = right_width;
-      this.embossed.drawEmbossedL(
-        graphics,
-        SyAWTEmbossed.LShape.L_SHAPE_SE,
-        frame_width - bottom_right_len,
-        frame_height - bottom_right_len,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        bottom_right_len,
-        emboss_size,
-        e_left,
-        e_right,
-        e_top,
-        e_bottom,
-        eo_fill,
-        bottom_right_caps);
-    }
-  }
-
-  private static void renderFrameUnembossedActual(
-    final Graphics2D graphics,
-    final SyThemeWindowFrame frame_theme,
-    final SyWindowReadableType window,
-    final Optional<SyThemeOutline> outline_opt,
-    final Paint fill,
-    final boolean active)
-  {
-    final int left_width = frame_theme.leftWidth();
-    final int right_width = frame_theme.rightWidth();
-    final int top_height = frame_theme.topHeight();
-    final int bottom_height = frame_theme.bottomHeight();
-
-    final SyWindowFrameType frame = window.frame();
-    final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
+    final SyAWTWindowRendererEmbossedFrameParameters parameters =
+      SyAWTWindowFrameEmbossing.renderFrameEmbossedActualFrameCalculateParameters(
+        titlebar_theme,
+        frame_theme,
+        emboss,
+        outline_opt,
+        frame_box);
 
     outline_opt.ifPresent(
-      theme_outline -> SyAWTDrawing.drawOutline(graphics, theme_outline, frame_box, active));
+      outline -> SyAWTDrawing.drawOutline(graphics, outline, frame_box, active));
 
-    final int frame_x = frame_box.minimumX();
-    final int frame_y = frame_box.minimumY();
-    final int frame_width = frame_box.sizeX();
-    final int frame_height = frame_box.sizeY();
+    final PAreaI<SySpaceParentRelativeType> frame_box_adjusted =
+      parameters.frameBoxAdjustedForOutline();
 
-    graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
-    graphics.translate(frame_x, frame_y);
+    graphics.clipRect(
+      frame_box_adjusted.minimumX(),
+      frame_box_adjusted.minimumY(),
+      frame_box_adjusted.sizeX(),
+      frame_box_adjusted.sizeY());
 
-    final int bottom_y = frame_height - bottom_height;
+    graphics.translate(
+      frame_box_adjusted.minimumX(),
+      frame_box_adjusted.minimumY());
 
-    /*
-     * Left frame.
-     */
+    final Color e_top = SyAWTDrawing.toColor(emboss.colorTop());
+    final Color e_left = SyAWTDrawing.toColor(emboss.colorLeft());
+    final Color e_right = SyAWTDrawing.toColor(emboss.colorRight());
+    final Color e_bottom = SyAWTDrawing.toColor(emboss.colorBottom());
 
-    if (left_width > 0) {
-      graphics.setPaint(fill);
-      graphics.fillRect(0, 0, left_width, frame_height);
-    }
+    renderFrameEmbossedActualFrames(
+      graphics,
+      e_top,
+      e_left,
+      e_right,
+      e_bottom,
+      eo_fill,
+      parameters,
+      this.embossed);
 
-    /*
-     * Right frame.
-     */
-
-    if (right_width > 0) {
-      graphics.setPaint(fill);
-      graphics.fillRect(
-        frame_width - right_width, 0, right_width, frame_height);
-    }
-
-    /*
-     * Top frame.
-     */
-
-    if (top_height > 0) {
-      graphics.setPaint(fill);
-      graphics.fillRect(0, 0, frame_width, top_height);
-    }
-
-    /*
-     * Bottom frame.
-     */
-
-    if (bottom_height > 0) {
-      graphics.setPaint(fill);
-      graphics.fillRect(0, bottom_y, frame_width, bottom_height);
-    }
+    renderFrameEmbossedActualCorners(
+      graphics,
+      e_top,
+      e_left,
+      e_right,
+      e_bottom,
+      eo_fill,
+      parameters,
+      this.embossed);
   }
+
 }

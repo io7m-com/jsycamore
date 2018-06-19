@@ -39,86 +39,155 @@ public interface SyThemeWindowFrameType
   default void checkPreconditions()
   {
     if (this.embossActive().isPresent()) {
-      switch (this.topLeftStyle()) {
-        case FRAME_CORNER_NONE: {
-          break;
-        }
-        case FRAME_CORNER_L_PIECE: {
-          Preconditions.checkPreconditionI(
-            this.topHeight(),
-            this.topHeight() > 0,
-            i -> "An embossed top-left L corner requires a non-zero top frame");
-          Preconditions.checkPreconditionI(
-            this.leftWidth(),
-            this.leftWidth() > 0,
-            i -> "An embossed top-left L corner requires a non-zero left frame");
-          break;
-        }
-        case FRAME_CORNER_BOX: {
-          break;
-        }
-      }
+      this.checkTopLeft();
+      this.checkTopRight();
+      this.checkBottomLeft();
+      this.checkBottomRight();
+    }
+  }
 
-      switch (this.topRightStyle()) {
-        case FRAME_CORNER_NONE: {
-          break;
-        }
-        case FRAME_CORNER_L_PIECE: {
-          Preconditions.checkPreconditionI(
-            this.topHeight(),
-            this.topHeight() > 0,
-            i -> "An embossed top-left L corner requires a non-zero top frame");
-          Preconditions.checkPreconditionI(
-            this.rightWidth(),
-            this.rightWidth() > 0,
-            i -> "An embossed top-right L corner requires a non-zero right frame");
-          break;
-        }
-        case FRAME_CORNER_BOX: {
-          break;
-        }
-      }
+  /**
+   * Check the bottom right style.
+   */
 
-      switch (this.bottomLeftStyle()) {
-        case FRAME_CORNER_NONE: {
-          break;
-        }
-        case FRAME_CORNER_L_PIECE: {
-          Preconditions.checkPreconditionI(
-            this.bottomHeight(),
-            this.bottomHeight() > 0,
-            i -> "An embossed bottom-left L corner requires a non-zero bottom frame");
-          Preconditions.checkPreconditionI(
-            this.leftWidth(),
-            this.leftWidth() > 0,
-            i -> "An embossed top-left L corner requires a non-zero left frame");
-          break;
-        }
-        case FRAME_CORNER_BOX: {
-          break;
-        }
+  private void checkBottomRight()
+  {
+    switch (this.bottomRightStyle()) {
+      case FRAME_CORNER_NONE: {
+        break;
       }
-
-      switch (this.bottomRightStyle()) {
-        case FRAME_CORNER_NONE: {
-          break;
-        }
-        case FRAME_CORNER_L_PIECE: {
-          Preconditions.checkPreconditionI(
-            this.bottomHeight(),
-            this.bottomHeight() > 0,
-            i -> "An embossed bottom-left L corner requires a non-zero bottom frame");
-          Preconditions.checkPreconditionI(
-            this.rightWidth(),
-            this.rightWidth() > 0,
-            i -> "An embossed top-right L corner requires a non-zero right frame");
-          break;
-        }
-        case FRAME_CORNER_BOX: {
-          break;
-        }
+      case FRAME_CORNER_L_PIECE: {
+        this.checkEmbossedBottomRightL();
+        break;
+      }
+      case FRAME_CORNER_BOX: {
+        break;
       }
     }
+  }
+
+  /**
+   * Check the bottom left style.
+   */
+
+  private void checkBottomLeft()
+  {
+    switch (this.bottomLeftStyle()) {
+      case FRAME_CORNER_NONE: {
+        break;
+      }
+      case FRAME_CORNER_L_PIECE: {
+        this.checkEmbossedBottomLeftL();
+        break;
+      }
+      case FRAME_CORNER_BOX: {
+        break;
+      }
+    }
+  }
+
+  /**
+   * Check the top right style.
+   */
+
+  private void checkTopRight()
+  {
+    switch (this.topRightStyle()) {
+      case FRAME_CORNER_NONE: {
+        break;
+      }
+      case FRAME_CORNER_L_PIECE: {
+        this.checkEmbossedTopRightL();
+        break;
+      }
+      case FRAME_CORNER_BOX: {
+        break;
+      }
+    }
+  }
+
+  /**
+   * Check the top left style.
+   */
+
+  private void checkTopLeft()
+  {
+    switch (this.topLeftStyle()) {
+      case FRAME_CORNER_NONE: {
+        break;
+      }
+      case FRAME_CORNER_L_PIECE: {
+        this.checkEmbossedTopLeftL();
+        break;
+      }
+      case FRAME_CORNER_BOX: {
+        break;
+      }
+    }
+  }
+
+  /**
+   * Check the embossed bottom left L corner.
+   */
+
+  private void checkEmbossedBottomLeftL()
+  {
+    Preconditions.checkPreconditionI(
+      this.bottomHeight(),
+      this.bottomHeight() > 0,
+      i -> "An embossed bottom-left L corner requires a non-zero bottom frame");
+    Preconditions.checkPreconditionI(
+      this.leftWidth(),
+      this.leftWidth() > 0,
+      i -> "An embossed bottom-left L corner requires a non-zero left frame");
+  }
+
+  /**
+   * Check the embossed top right L corner.
+   */
+
+  private void checkEmbossedTopRightL()
+  {
+    Preconditions.checkPreconditionI(
+      this.topHeight(),
+      this.topHeight() > 0,
+      i -> "An embossed top-right L corner requires a non-zero top frame");
+    Preconditions.checkPreconditionI(
+      this.rightWidth(),
+      this.rightWidth() > 0,
+      i -> "An embossed top-right L corner requires a non-zero right frame");
+  }
+
+  /**
+   * Check the embossed bottom right L corner.
+   */
+
+  private void checkEmbossedBottomRightL()
+  {
+    Preconditions.checkPreconditionI(
+      this.bottomHeight(),
+      this.bottomHeight() > 0,
+      i -> "An embossed bottom-right L corner requires a non-zero bottom frame");
+    Preconditions.checkPreconditionI(
+      this.rightWidth(),
+      this.rightWidth() > 0,
+      i -> "An embossed bottom-right L corner requires a non-zero right frame");
+  }
+
+  /**
+   * Check the embossed top left L corner.
+   */
+
+  private void checkEmbossedTopLeftL()
+  {
+    Preconditions.checkPreconditionI(
+      this.topHeight(),
+      this.topHeight() > 0,
+      i -> "An embossed top-left L corner requires a non-zero top frame");
+    Preconditions.checkPreconditionI(
+      this.leftWidth(),
+      this.leftWidth() > 0,
+      i -> "An embossed top-left L corner requires a non-zero left frame");
   }
 
   /**

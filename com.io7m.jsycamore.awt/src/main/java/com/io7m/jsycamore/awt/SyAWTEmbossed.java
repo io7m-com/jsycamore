@@ -47,38 +47,18 @@ public final class SyAWTEmbossed
   /**
    * <p>Render an embossed rectangle.</p>
    *
-   * @param graphics    A graphics context
-   * @param box         The box
-   * @param emboss_size The size of the embossed region
-   * @param left        The paint used for the left emboss regions
-   * @param right       The paint used for the right emboss regions
-   * @param top         The paint used for the top emboss regions
-   * @param bottom      The paint used for the bottom emboss regions
-   * @param fill        The paint used for the fill, if any
+   * @param graphics  A graphics context
+   * @param rectangle The rectangle
    */
 
   public void rectangle(
     final Graphics2D graphics,
-    final PAreaI<?> box,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
+    final SyAWTEmbossedRectangle rectangle)
   {
-    Objects.requireNonNull(graphics, "Graphics");
-    Objects.requireNonNull(box, "Box");
-    Objects.requireNonNull(left, "Left paint");
-    Objects.requireNonNull(right, "Right paint");
-    Objects.requireNonNull(top, "Top paint");
-    Objects.requireNonNull(bottom, "Bottom paint");
-    Objects.requireNonNull(fill, "Fill paint");
+    Objects.requireNonNull(rectangle, "rectangle");
 
-    Preconditions.checkPreconditionI(
-      emboss_size,
-      emboss_size > 0,
-      i -> "Emboss area size must be positive");
+    final PAreaI<?> box = rectangle.box();
+    final int emboss_size = rectangle.embossSize();
 
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();
@@ -93,7 +73,7 @@ public final class SyAWTEmbossed
       graphics.translate(x, y);
 
       /*
-       * Light vertical parallelogram on the left.
+       * Light vertical parallelogram on the paintLeft.
        */
 
       this.poly.reset();
@@ -101,11 +81,11 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, emboss_size);
       this.poly.addPoint(emboss_size, h - emboss_size);
       this.poly.addPoint(0, h);
-      graphics.setPaint(left);
+      graphics.setPaint(rectangle.paintLeft());
       graphics.fill(this.poly);
 
       /*
-       * Light horizontal parallelogram on the top.
+       * Light horizontal parallelogram on the paintTop.
        */
 
       this.poly.reset();
@@ -113,11 +93,11 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, emboss_size);
       this.poly.addPoint(w - emboss_size, emboss_size);
       this.poly.addPoint(w, 0);
-      graphics.setPaint(top);
+      graphics.setPaint(rectangle.paintTop());
       graphics.fill(this.poly);
 
       /*
-       * Dark horizontal parallelogram on the bottom.
+       * Dark horizontal parallelogram on the paintBottom.
        */
 
       this.poly.reset();
@@ -125,11 +105,11 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, h - emboss_size);
       this.poly.addPoint(w - emboss_size, h - emboss_size);
       this.poly.addPoint(w, h);
-      graphics.setPaint(bottom);
+      graphics.setPaint(rectangle.paintBottom());
       graphics.fill(this.poly);
 
       /*
-       * Dark vertical parallelogram on the right.
+       * Dark vertical parallelogram on the paintRight.
        */
 
       this.poly.reset();
@@ -137,15 +117,15 @@ public final class SyAWTEmbossed
       this.poly.addPoint(w, h);
       this.poly.addPoint(w - emboss_size, h - emboss_size);
       this.poly.addPoint(w - emboss_size, emboss_size);
-      graphics.setPaint(right);
+      graphics.setPaint(rectangle.paintRight());
       graphics.fill(this.poly);
 
       /*
        * Fill the center, if necessary.
        */
 
-      if (fill.isPresent()) {
-        final Paint f = fill.get();
+      if (rectangle.paintFill().isPresent()) {
+        final Paint f = rectangle.paintFill().get();
         graphics.setPaint(f);
         graphics.fillRect(
           emboss_size,
@@ -164,130 +144,40 @@ public final class SyAWTEmbossed
   /**
    * <p>Render an embossed L shape.</p>
    *
-   * @param graphics                A graphics context
-   * @param shape                   The shape that will be rendered
-   * @param x                       The leftmost edge
-   * @param y                       The topmost edge
-   * @param thickness_of_horizontal The thickness of horizontal sections
-   * @param thickness_of_vertical   The thickness of vertical sections
-   * @param length                  The length of the arms
-   * @param emboss_size             The size of the embossed region
-   * @param left                    The paint used for the left emboss regions
-   * @param right                   The paint used for the right emboss regions
-   * @param top                     The paint used for the top emboss regions
-   * @param bottom                  The paint used for the bottom emboss regions
-   * @param fill                    The paint used for the fill, if any
-   * @param caps                    {@code true} iff end caps should be rendered
+   * @param graphics A graphics context
+   * @param corner   The corner that will be rendered
    */
 
   public void drawEmbossedL(
     final Graphics2D graphics,
-    final LShape shape,
-    final int x,
-    final int y,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int length,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill,
-    final boolean caps)
+    final SyAWTEmbossedCornerL corner)
   {
     Objects.requireNonNull(graphics, "Graphics context");
-    Objects.requireNonNull(shape, "Shape");
-    Objects.requireNonNull(left, "Left paint");
-    Objects.requireNonNull(right, "Right paint");
-    Objects.requireNonNull(top, "Top paint");
-    Objects.requireNonNull(bottom, "Bottom paint");
-    Objects.requireNonNull(fill, "Fill paint");
-
-    Preconditions.checkPreconditionI(
-      thickness_of_horizontal,
-      thickness_of_horizontal > 0,
-      i -> "Thickness of horizontal sections must be positive");
-    Preconditions.checkPreconditionI(
-      thickness_of_vertical,
-      thickness_of_vertical > 0,
-      i -> "Thickness of vertical sections must be positive");
-    Preconditions.checkPreconditionI(
-      length,
-      length > 0,
-      i -> "Length must be positive");
-    Preconditions.checkPreconditionI(
-      emboss_size,
-      emboss_size > 0,
-      i -> "Embossed area size must be positive");
+    Objects.requireNonNull(corner, "Shape");
 
     final AffineTransform old_transform = graphics.getTransform();
     final Shape old_clip = graphics.getClip();
     final Paint old_paint = graphics.getPaint();
 
     try {
-      graphics.clipRect(x, y, length, length);
-      graphics.translate(x, y);
+      graphics.clipRect(corner.x(), corner.y(), corner.armLength(), corner.armLength());
+      graphics.translate(corner.x(), corner.y());
 
-      switch (shape) {
+      switch (corner.shape()) {
         case L_SHAPE_NW: {
-          this.drawEmbossedL_NW(
-            graphics,
-            thickness_of_horizontal,
-            thickness_of_vertical,
-            length,
-            emboss_size,
-            left,
-            right,
-            top,
-            bottom,
-            fill,
-            caps);
+          this.drawEmbossedL_NW(graphics, corner);
           break;
         }
         case L_SHAPE_NE: {
-          this.drawEmbossedL_NE(
-            graphics,
-            thickness_of_horizontal,
-            thickness_of_vertical,
-            length,
-            emboss_size,
-            left,
-            right,
-            top,
-            bottom,
-            fill,
-            caps);
+          this.drawEmbossedL_NE(graphics, corner);
           break;
         }
         case L_SHAPE_SW: {
-          this.drawEmbossedL_SW(
-            graphics,
-            thickness_of_horizontal,
-            thickness_of_vertical,
-            length,
-            emboss_size,
-            left,
-            right,
-            top,
-            bottom,
-            fill,
-            caps);
+          this.drawEmbossedL_SW(graphics, corner);
           break;
         }
         case L_SHAPE_SE: {
-          this.drawEmbossedL_SE(
-            graphics,
-            thickness_of_horizontal,
-            thickness_of_vertical,
-            length,
-            emboss_size,
-            left,
-            right,
-            top,
-            bottom,
-            fill,
-            caps);
+          this.drawEmbossedL_SE(graphics, corner);
           break;
         }
       }
@@ -389,18 +279,20 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedCornerNW(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_NW,
+      s -> "L-Shape must be L_SHAPE_NW");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+
     final Paint old_paint = graphics.getPaint();
     try {
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(0, thickness_of_horizontal);
@@ -408,7 +300,7 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(emboss_size, emboss_size);
@@ -416,30 +308,26 @@ public final class SyAWTEmbossed
       this.poly.addPoint(thickness_of_vertical + emboss_size, 0);
       graphics.fill(this.poly);
 
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical, thickness_of_horizontal);
-      this.poly.addPoint(
-        thickness_of_vertical,
-        thickness_of_horizontal - emboss_size);
+      this.poly.addPoint(thickness_of_vertical, thickness_of_horizontal - emboss_size);
       this.poly.addPoint(
         thickness_of_vertical - emboss_size,
         thickness_of_horizontal - emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical, thickness_of_horizontal);
       this.poly.addPoint(
         thickness_of_vertical - emboss_size,
         thickness_of_horizontal - emboss_size);
-      this.poly.addPoint(
-        thickness_of_vertical - emboss_size,
-        thickness_of_horizontal);
+      this.poly.addPoint(thickness_of_vertical - emboss_size, thickness_of_horizontal);
       graphics.fill(this.poly);
 
-      if (fill.isPresent()) {
-        graphics.setPaint(fill.get());
+      if (corner.paintFill().isPresent()) {
+        graphics.setPaint(corner.paintFill().get());
         graphics.fillRect(
           emboss_size,
           emboss_size,
@@ -458,18 +346,20 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedCornerNE(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_NE,
+      s -> "L-Shape must be L_SHAPE_NE");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+
     final Paint old_paint = graphics.getPaint();
     try {
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(0, emboss_size);
@@ -477,7 +367,7 @@ public final class SyAWTEmbossed
       this.poly.addPoint(thickness_of_vertical, 0);
       graphics.fill(this.poly);
 
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical, 0);
       this.poly.addPoint(thickness_of_vertical - emboss_size, emboss_size);
@@ -487,22 +377,23 @@ public final class SyAWTEmbossed
       this.poly.addPoint(thickness_of_vertical, thickness_of_horizontal);
       graphics.fill(this.poly);
 
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       this.poly.reset();
       this.poly.addPoint(0, thickness_of_horizontal - emboss_size);
       this.poly.addPoint(0, thickness_of_horizontal);
       this.poly.addPoint(emboss_size, thickness_of_horizontal - emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       this.poly.reset();
       this.poly.addPoint(0, thickness_of_horizontal);
       this.poly.addPoint(emboss_size, thickness_of_horizontal);
       this.poly.addPoint(emboss_size, thickness_of_horizontal - emboss_size);
       graphics.fill(this.poly);
 
-      if (fill.isPresent()) {
-        graphics.setPaint(fill.get());
+      final Optional<Paint> fill_opt = corner.paintFill();
+      fill_opt.ifPresent(fill -> {
+        graphics.setPaint(fill);
         graphics.fillRect(
           0,
           emboss_size,
@@ -513,8 +404,7 @@ public final class SyAWTEmbossed
           thickness_of_horizontal - emboss_size,
           thickness_of_vertical - (2 * emboss_size),
           emboss_size);
-      }
-
+      });
     } finally {
       graphics.setPaint(old_paint);
     }
@@ -522,18 +412,20 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedCornerSW(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_SW,
+      s -> "L-Shape must be L_SHAPE_SW");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+
     final Paint old_paint = graphics.getPaint();
     try {
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(0, thickness_of_horizontal);
@@ -541,7 +433,7 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, 0);
       graphics.fill(this.poly);
 
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       this.poly.reset();
       this.poly.addPoint(0, thickness_of_horizontal);
       this.poly.addPoint(thickness_of_vertical, thickness_of_horizontal);
@@ -551,22 +443,22 @@ public final class SyAWTEmbossed
       this.poly.addPoint(emboss_size, thickness_of_horizontal - emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical - emboss_size, 0);
       this.poly.addPoint(thickness_of_vertical - emboss_size, emboss_size);
       this.poly.addPoint(thickness_of_vertical, 0);
       graphics.fill(this.poly);
 
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical, 0);
       this.poly.addPoint(thickness_of_vertical - emboss_size, emboss_size);
       this.poly.addPoint(thickness_of_vertical, emboss_size);
       graphics.fill(this.poly);
 
-      if (fill.isPresent()) {
-        graphics.setPaint(fill.get());
+      if (corner.paintFill().isPresent()) {
+        graphics.setPaint(corner.paintFill().get());
         graphics.fillRect(
           emboss_size,
           0,
@@ -585,32 +477,34 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedCornerSE(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_SE,
+      s -> "L-Shape must be L_SHAPE_SE");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+
     final Paint old_paint = graphics.getPaint();
     try {
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(0, emboss_size);
       this.poly.addPoint(emboss_size, emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       this.poly.reset();
       this.poly.addPoint(0, 0);
       this.poly.addPoint(emboss_size, emboss_size);
       this.poly.addPoint(emboss_size, 0);
       graphics.fill(this.poly);
 
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       this.poly.reset();
       this.poly.addPoint(0, thickness_of_horizontal - emboss_size);
       this.poly.addPoint(0, thickness_of_horizontal);
@@ -620,7 +514,7 @@ public final class SyAWTEmbossed
         thickness_of_horizontal - emboss_size);
       graphics.fill(this.poly);
 
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       this.poly.reset();
       this.poly.addPoint(thickness_of_vertical - emboss_size, 0);
       this.poly.addPoint(
@@ -630,8 +524,8 @@ public final class SyAWTEmbossed
       this.poly.addPoint(thickness_of_vertical, 0);
       graphics.fill(this.poly);
 
-      if (fill.isPresent()) {
-        graphics.setPaint(fill.get());
+      if (corner.paintFill().isPresent()) {
+        graphics.setPaint(corner.paintFill().get());
         graphics.fillRect(
           emboss_size,
           0,
@@ -651,17 +545,18 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedL_SE(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int length,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill,
-    final boolean caps)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_SE,
+      s -> "L-Shape must be L_SHAPE_SE");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+    final int length = corner.armLength();
+
     final AffineTransform old_transform = graphics.getTransform();
     final Paint old_paint = graphics.getPaint();
 
@@ -672,12 +567,12 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(length - thickness_of_vertical, 0);
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
       graphics.translate(length - emboss_size, 0);
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
@@ -686,12 +581,12 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(0, length - thickness_of_horizontal);
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
       graphics.translate(0, length - emboss_size);
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
@@ -702,20 +597,11 @@ public final class SyAWTEmbossed
       graphics.translate(
         length - thickness_of_vertical,
         length - thickness_of_horizontal);
-      this.drawEmbossedCornerSE(
-        graphics,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        emboss_size,
-        left,
-        right,
-        top,
-        bottom,
-        fill);
+      this.drawEmbossedCornerSE(graphics, corner);
       graphics.setTransform(old_transform);
 
-      if (fill.isPresent()) {
-        final Paint fill_paint = fill.get();
+      if (corner.paintFill().isPresent()) {
+        final Paint fill_paint = corner.paintFill().get();
 
         graphics.translate(length + emboss_size - thickness_of_vertical, 0);
         graphics.setPaint(fill_paint);
@@ -740,21 +626,13 @@ public final class SyAWTEmbossed
        * Caps
        */
 
-      if (caps) {
+      if (corner.caps()) {
         graphics.translate(length - thickness_of_vertical, 0);
-        this.drawEmbossedCapN(
-          graphics,
-          thickness_of_vertical,
-          emboss_size,
-          top);
+        this.drawEmbossedCapN(graphics, thickness_of_vertical, emboss_size, corner.paintTop());
         graphics.setTransform(old_transform);
 
         graphics.translate(0, length - thickness_of_horizontal);
-        this.drawEmbossedCapW(
-          graphics,
-          thickness_of_horizontal,
-          emboss_size,
-          left);
+        this.drawEmbossedCapW(graphics, thickness_of_horizontal, emboss_size, corner.paintLeft());
       }
 
     } finally {
@@ -765,17 +643,18 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedL_SW(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int length,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill,
-    final boolean caps)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_SW,
+      s -> "L-Shape must be L_SHAPE_SW");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+    final int length = corner.armLength();
+
     final AffineTransform old_transform = graphics.getTransform();
     final Paint old_paint = graphics.getPaint();
 
@@ -785,11 +664,11 @@ public final class SyAWTEmbossed
        * Vertical bars
        */
 
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
 
       graphics.translate(thickness_of_vertical - emboss_size, 0);
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
@@ -797,15 +676,13 @@ public final class SyAWTEmbossed
        * Horizontal bars
        */
 
-      graphics.translate(
-        thickness_of_vertical,
-        length - thickness_of_horizontal);
-      graphics.setPaint(top);
+      graphics.translate(thickness_of_vertical, length - thickness_of_horizontal);
+      graphics.setPaint(corner.paintTop());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
       graphics.translate(thickness_of_vertical, length - emboss_size);
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
@@ -814,20 +691,11 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(0, length - thickness_of_horizontal);
-      this.drawEmbossedCornerSW(
-        graphics,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        emboss_size,
-        left,
-        right,
-        top,
-        bottom,
-        fill);
+      this.drawEmbossedCornerSW(graphics, corner);
       graphics.setTransform(old_transform);
 
-      if (fill.isPresent()) {
-        final Paint fill_paint = fill.get();
+      if (corner.paintFill().isPresent()) {
+        final Paint fill_paint = corner.paintFill().get();
 
         graphics.translate(emboss_size, 0);
         graphics.setPaint(fill_paint);
@@ -838,9 +706,7 @@ public final class SyAWTEmbossed
           length - thickness_of_horizontal);
         graphics.setTransform(old_transform);
 
-        graphics.translate(
-          thickness_of_vertical,
-          emboss_size + length - thickness_of_horizontal);
+        graphics.translate(thickness_of_vertical, emboss_size + length - thickness_of_horizontal);
         graphics.setPaint(fill_paint);
         graphics.fillRect(
           0,
@@ -854,20 +720,12 @@ public final class SyAWTEmbossed
        * Caps
        */
 
-      if (caps) {
-        this.drawEmbossedCapN(
-          graphics,
-          thickness_of_vertical,
-          emboss_size,
-          top);
+      if (corner.caps()) {
+        this.drawEmbossedCapN(graphics, thickness_of_vertical, emboss_size, corner.paintTop());
         graphics.translate(
           length - emboss_size,
           length - thickness_of_horizontal);
-        this.drawEmbossedCapE(
-          graphics,
-          thickness_of_horizontal,
-          emboss_size,
-          right);
+        this.drawEmbossedCapE(graphics, thickness_of_horizontal, emboss_size, corner.paintRight());
         graphics.setTransform(old_transform);
       }
 
@@ -879,17 +737,18 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedL_NE(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int length,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill,
-    final boolean caps)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_NE,
+      s -> "L-Shape must be L_SHAPE_NE");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+    final int length = corner.armLength();
+
     final AffineTransform old_transform = graphics.getTransform();
     final Paint old_paint = graphics.getPaint();
 
@@ -899,15 +758,13 @@ public final class SyAWTEmbossed
        * Vertical bars
        */
 
-      graphics.translate(
-        length - thickness_of_vertical,
-        thickness_of_horizontal);
-      graphics.setPaint(left);
+      graphics.translate(length - thickness_of_vertical, thickness_of_horizontal);
+      graphics.setPaint(corner.paintLeft());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
       graphics.translate(length - emboss_size, thickness_of_horizontal);
-      graphics.setPaint(right);
+      graphics.setPaint(corner.paintRight());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
@@ -916,17 +773,17 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(0, 0);
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
       graphics.translate(0, thickness_of_horizontal - emboss_size);
-      graphics.setPaint(bottom);
+      graphics.setPaint(corner.paintBottom());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      if (fill.isPresent()) {
-        final Paint fill_paint = fill.get();
+      if (corner.paintFill().isPresent()) {
+        final Paint fill_paint = corner.paintFill().get();
 
         graphics.translate(0, emboss_size);
         graphics.setPaint(fill_paint);
@@ -954,37 +811,20 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(length - thickness_of_vertical, 0);
-      this.drawEmbossedCornerNE(
-        graphics,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        emboss_size,
-        left,
-        right,
-        top,
-        bottom,
-        fill);
+      this.drawEmbossedCornerNE(graphics, corner);
       graphics.setTransform(old_transform);
 
       /*
        * Caps
        */
 
-      if (caps) {
+      if (corner.caps()) {
         graphics.translate(
           length - thickness_of_vertical,
           length - emboss_size);
-        this.drawEmbossedCapS(
-          graphics,
-          thickness_of_vertical,
-          emboss_size,
-          bottom);
+        this.drawEmbossedCapS(graphics, thickness_of_vertical, emboss_size, corner.paintBottom());
         graphics.setTransform(old_transform);
-        this.drawEmbossedCapW(
-          graphics,
-          thickness_of_horizontal,
-          emboss_size,
-          left);
+        this.drawEmbossedCapW(graphics, thickness_of_horizontal, emboss_size, corner.paintLeft());
       }
 
     } finally {
@@ -995,17 +835,18 @@ public final class SyAWTEmbossed
 
   private void drawEmbossedL_NW(
     final Graphics2D graphics,
-    final int thickness_of_horizontal,
-    final int thickness_of_vertical,
-    final int length,
-    final int emboss_size,
-    final Paint left,
-    final Paint right,
-    final Paint top,
-    final Paint bottom,
-    final Optional<Paint> fill,
-    final boolean caps)
+    final SyAWTEmbossedCornerL corner)
   {
+    Preconditions.checkPrecondition(
+      corner.shape(),
+      corner.shape() == LShape.L_SHAPE_NW,
+      s -> "L-Shape must be L_SHAPE_NW");
+
+    final int thickness_of_horizontal = corner.thicknessOfHorizontal();
+    final int thickness_of_vertical = corner.thicknessOfVertical();
+    final int emboss_size = corner.embossSize();
+    final int length = corner.armLength();
+
     final AffineTransform old_transform = graphics.getTransform();
     final Paint old_paint = graphics.getPaint();
 
@@ -1016,14 +857,12 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(0, thickness_of_horizontal);
-      graphics.setPaint(left);
+      graphics.setPaint(corner.paintLeft());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
-      graphics.translate(
-        thickness_of_vertical - emboss_size,
-        thickness_of_horizontal);
-      graphics.setPaint(right);
+      graphics.translate(thickness_of_vertical - emboss_size, thickness_of_horizontal);
+      graphics.setPaint(corner.paintRight());
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
@@ -1032,19 +871,17 @@ public final class SyAWTEmbossed
        */
 
       graphics.translate(thickness_of_vertical, 0);
-      graphics.setPaint(top);
+      graphics.setPaint(corner.paintTop());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      graphics.translate(
-        thickness_of_vertical,
-        thickness_of_horizontal - emboss_size);
-      graphics.setPaint(bottom);
+      graphics.translate(thickness_of_vertical, thickness_of_horizontal - emboss_size);
+      graphics.setPaint(corner.paintBottom());
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      if (fill.isPresent()) {
-        final Paint fill_paint = fill.get();
+      if (corner.paintFill().isPresent()) {
+        final Paint fill_paint = corner.paintFill().get();
 
         graphics.translate(emboss_size, thickness_of_horizontal);
         graphics.setPaint(fill_paint);
@@ -1069,37 +906,20 @@ public final class SyAWTEmbossed
        * Corner
        */
 
-      this.drawEmbossedCornerNW(
-        graphics,
-        thickness_of_horizontal,
-        thickness_of_vertical,
-        emboss_size,
-        left,
-        right,
-        top,
-        bottom,
-        fill);
+      this.drawEmbossedCornerNW(graphics, corner);
       graphics.setTransform(old_transform);
 
       /*
        * Caps
        */
 
-      if (caps) {
+      if (corner.caps()) {
         graphics.translate(length - emboss_size, 0);
-        this.drawEmbossedCapE(
-          graphics,
-          thickness_of_horizontal,
-          emboss_size,
-          right);
+        this.drawEmbossedCapE(graphics, thickness_of_horizontal, emboss_size, corner.paintRight());
         graphics.setTransform(old_transform);
 
         graphics.translate(0, length - emboss_size);
-        this.drawEmbossedCapS(
-          graphics,
-          thickness_of_vertical,
-          emboss_size,
-          bottom);
+        this.drawEmbossedCapS(graphics, thickness_of_vertical, emboss_size, corner.paintBottom());
       }
 
     } finally {

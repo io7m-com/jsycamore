@@ -214,13 +214,10 @@ public final class SyThemeTitleBars
   {
     final PAreaI<SySpaceParentRelativeType> maximum_origin =
       PAreasI.moveToOrigin(maximum_space);
-
     final List<SyThemeTitleBarElement> elements =
       elementsOrder(title_theme);
-
     final SyThemeTitleBarElements pair =
-      sortElementsLeftRight(
-        title_theme, is_closeable, is_maximizable, elements);
+      sortElementsLeftRight(title_theme, is_closeable, is_maximizable, elements);
 
     final List<SyThemeTitleBarElement> left = pair.leftElements();
     final List<SyThemeTitleBarElement> right = pair.rightElements();
@@ -240,134 +237,42 @@ public final class SyThemeTitleBars
 
     final int button_width = title_theme.buttonWidth();
 
-    {
-      for (final SyThemeTitleBarElement element : left) {
-        switch (element) {
-          case ELEMENT_CLOSE_BUTTON: {
-            Preconditions.checkPrecondition(
-              is_closeable,
-              "Window must be closeable");
-
-            text_min_x = Math.addExact(text_min_x, button_pad_left);
-            final PAreaI<SySpaceParentRelativeType> aligned =
-              alignedButton(
-                maximum_origin,
-                title_theme,
-                text_min_x);
-            arrangement.setCloseButtonBox(aligned);
-            text_min_x = Math.addExact(text_min_x, button_width);
-            text_min_x = Math.addExact(text_min_x, button_pad_right);
-            break;
-          }
-
-          case ELEMENT_MAXIMIZE_BUTTON: {
-            Preconditions.checkPrecondition(
-              is_maximizable,
-              "Window must be maximizable");
-
-            text_min_x = Math.addExact(text_min_x, button_pad_left);
-            final PAreaI<SySpaceParentRelativeType> aligned =
-              alignedButton(
-                maximum_origin,
-                title_theme,
-                text_min_x);
-            arrangement.setMaximizeButtonBox(aligned);
-            text_min_x = Math.addExact(text_min_x, button_width);
-            text_min_x = Math.addExact(text_min_x, button_pad_right);
-            break;
-          }
-
-          case ELEMENT_TITLE: {
-            throw new UnreachableCodeException();
-          }
-
-          case ELEMENT_ICON: {
-            Preconditions.checkPrecondition(
-              title_theme.iconPresent(),
-              "Icon must be shown");
-
-            arrangement.setIconBox(
-              alignedIcon(
-                maximum_origin,
-                title_theme,
-                text_min_x));
-            text_min_x = Math.addExact(text_min_x, title_theme.iconWidth());
-            break;
-          }
-        }
-      }
+    for (final SyThemeTitleBarElement element : left) {
+      text_min_x = arrangeElementLeft(
+        title_theme,
+        is_closeable,
+        is_maximizable,
+        maximum_origin,
+        button_pad_left,
+        button_pad_right,
+        arrangement,
+        text_min_x,
+        button_width,
+        element);
     }
 
     int text_max_x = maximum_origin.maximumX();
 
-    {
-      for (int index = right.size() - 1; index >= 0; --index) {
-        final SyThemeTitleBarElement element = right.get(index);
-        switch (element) {
-          case ELEMENT_CLOSE_BUTTON: {
-            Preconditions.checkPrecondition(
-              is_closeable,
-              "Window must be closeable");
-
-            text_max_x = Math.subtractExact(text_max_x, button_pad_right);
-            text_max_x = Math.subtractExact(text_max_x, button_width);
-            final PAreaI<SySpaceParentRelativeType> aligned =
-              alignedButton(
-                maximum_origin,
-                title_theme,
-                text_max_x);
-            arrangement.setCloseButtonBox(aligned);
-            text_max_x = Math.subtractExact(text_max_x, button_pad_left);
-            break;
-          }
-
-          case ELEMENT_MAXIMIZE_BUTTON: {
-            Preconditions.checkPrecondition(
-              is_maximizable,
-              "Window must be maximizable");
-
-            text_max_x = Math.subtractExact(text_max_x, button_pad_right);
-            text_max_x = Math.subtractExact(text_max_x, button_width);
-            final PAreaI<SySpaceParentRelativeType> aligned =
-              alignedButton(
-                maximum_origin,
-                title_theme,
-                text_max_x);
-            arrangement.setMaximizeButtonBox(aligned);
-            text_max_x = Math.subtractExact(text_max_x, button_pad_left);
-            break;
-          }
-
-          case ELEMENT_TITLE: {
-            throw new UnreachableCodeException();
-          }
-
-          case ELEMENT_ICON: {
-            Preconditions.checkPrecondition(
-              title_theme.iconPresent(),
-              "Icon must be shown");
-
-            arrangement.setIconBox(
-              alignedIcon(
-                maximum_origin,
-                title_theme,
-                text_max_x));
-            text_max_x = Math.subtractExact(
-              text_max_x,
-              title_theme.iconWidth());
-            break;
-          }
-        }
-      }
+    for (int index = right.size() - 1; index >= 0; --index) {
+      final SyThemeTitleBarElement element = right.get(index);
+      text_max_x = arrangeElementRight(
+        title_theme,
+        is_closeable,
+        is_maximizable,
+        maximum_origin,
+        button_pad_left,
+        button_pad_right,
+        arrangement,
+        button_width,
+        text_max_x,
+        element);
     }
 
     final SyThemePaddingType text_pad = title_theme.textPadding();
     final int text_pad_left = text_pad.paddingLeft();
     final int text_pad_right = text_pad.paddingRight();
     text_min_x = Math.max(0, Math.addExact(text_min_x, text_pad_left));
-    text_max_x = Math.max(
-      text_min_x,
-      Math.subtractExact(text_max_x, text_pad_right));
+    text_max_x = Math.max(text_min_x, Math.subtractExact(text_max_x, text_pad_right));
 
     Preconditions.checkPreconditionV(
       text_min_x <= text_max_x,
@@ -381,6 +286,113 @@ public final class SyThemeTitleBars
       0,
       maximum_origin.maximumY()));
     return arrangement.build();
+  }
+
+  private static int arrangeElementRight(
+    final SyThemeWindowTitleBarType title_theme,
+    final boolean is_closeable,
+    final boolean is_maximizable,
+    final PAreaI<SySpaceParentRelativeType> maximum_origin,
+    final int button_pad_left,
+    final int button_pad_right,
+    final SyThemeWindowTitleBarArrangement.Builder arrangement,
+    final int button_width,
+    final int initial_text_max_x,
+    final SyThemeTitleBarElement element)
+  {
+    int text_max_x = initial_text_max_x;
+    switch (element) {
+      case ELEMENT_CLOSE_BUTTON: {
+        Preconditions.checkPrecondition(is_closeable, "Window must be closeable");
+
+        text_max_x = Math.subtractExact(text_max_x, button_pad_right);
+        text_max_x = Math.subtractExact(text_max_x, button_width);
+        final PAreaI<SySpaceParentRelativeType> aligned =
+          alignedButton(maximum_origin, title_theme, text_max_x);
+        arrangement.setCloseButtonBox(aligned);
+        text_max_x = Math.subtractExact(text_max_x, button_pad_left);
+        break;
+      }
+
+      case ELEMENT_MAXIMIZE_BUTTON: {
+        Preconditions.checkPrecondition(is_maximizable, "Window must be maximizable");
+
+        text_max_x = Math.subtractExact(text_max_x, button_pad_right);
+        text_max_x = Math.subtractExact(text_max_x, button_width);
+        final PAreaI<SySpaceParentRelativeType> aligned =
+          alignedButton(maximum_origin, title_theme, text_max_x);
+        arrangement.setMaximizeButtonBox(aligned);
+        text_max_x = Math.subtractExact(text_max_x, button_pad_left);
+        break;
+      }
+
+      case ELEMENT_TITLE: {
+        throw new UnreachableCodeException();
+      }
+
+      case ELEMENT_ICON: {
+        Preconditions.checkPrecondition(title_theme.iconPresent(), "Icon must be shown");
+
+        arrangement.setIconBox(alignedIcon(maximum_origin, title_theme, text_max_x));
+        text_max_x = Math.subtractExact(text_max_x, title_theme.iconWidth());
+        break;
+      }
+    }
+    return text_max_x;
+  }
+
+  private static int arrangeElementLeft(
+    final SyThemeWindowTitleBarType title_theme,
+    final boolean is_closeable,
+    final boolean is_maximizable,
+    final PAreaI<SySpaceParentRelativeType> maximum_origin,
+    final int button_pad_left,
+    final int button_pad_right,
+    final SyThemeWindowTitleBarArrangement.Builder arrangement,
+    final int initial_text_min_x,
+    final int button_width,
+    final SyThemeTitleBarElement element)
+  {
+    int text_min_x = initial_text_min_x;
+    switch (element) {
+      case ELEMENT_CLOSE_BUTTON: {
+        Preconditions.checkPrecondition(is_closeable, "Window must be closeable");
+
+        text_min_x = Math.addExact(text_min_x, button_pad_left);
+        final PAreaI<SySpaceParentRelativeType> aligned =
+          alignedButton(maximum_origin, title_theme, text_min_x);
+        arrangement.setCloseButtonBox(aligned);
+        text_min_x = Math.addExact(text_min_x, button_width);
+        text_min_x = Math.addExact(text_min_x, button_pad_right);
+        break;
+      }
+
+      case ELEMENT_MAXIMIZE_BUTTON: {
+        Preconditions.checkPrecondition(is_maximizable, "Window must be maximizable");
+
+        text_min_x = Math.addExact(text_min_x, button_pad_left);
+        final PAreaI<SySpaceParentRelativeType> aligned =
+          alignedButton(maximum_origin, title_theme, text_min_x);
+        arrangement.setMaximizeButtonBox(aligned);
+        text_min_x = Math.addExact(text_min_x, button_width);
+        text_min_x = Math.addExact(text_min_x, button_pad_right);
+        break;
+      }
+
+      case ELEMENT_TITLE: {
+        throw new UnreachableCodeException();
+      }
+
+      case ELEMENT_ICON: {
+        Preconditions.checkPrecondition(title_theme.iconPresent(), "Icon must be shown");
+
+        arrangement.setIconBox(alignedIcon(maximum_origin, title_theme, text_min_x));
+        text_min_x = Math.addExact(text_min_x, title_theme.iconWidth());
+        break;
+      }
+    }
+
+    return text_min_x;
   }
 
   private static PAreaI<SySpaceParentRelativeType> alignedIcon(

@@ -37,7 +37,6 @@ import com.io7m.jsycamore.api.components.SyLabelAbstract;
 import com.io7m.jsycamore.api.components.SyLabelReadableType;
 import com.io7m.jsycamore.api.components.SyPanelAbstract;
 import com.io7m.jsycamore.api.components.SyPanelReadableType;
-import com.io7m.jsycamore.api.components.SyPanelType;
 import com.io7m.jsycamore.api.components.SyVisibility;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;

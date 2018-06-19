@@ -87,12 +87,56 @@ public final class SyAWTDrawing
     final int x_max = box.maximumX();
     final int y_max = box.maximumY();
 
+    setActiveOrInactiveColor(graphics, outline, active);
+    drawOutlineWithoutCorners(graphics, outline, x_min, y_min, x_max, y_max);
+
+    if (outline.corners()) {
+      drawOutlineCorners(graphics, outline, x_min, y_min, x_max, y_max);
+    }
+  }
+
+  private static void setActiveOrInactiveColor(
+    final Graphics2D graphics,
+    final SyThemeOutline outline,
+    final boolean active)
+  {
     if (active) {
       graphics.setPaint(toColor(outline.colorActive()));
     } else {
       graphics.setPaint(toColor(outline.colorInactive()));
     }
+  }
 
+  private static void drawOutlineCorners(
+    final Graphics2D graphics,
+    final SyThemeOutline outline,
+    final int x_min,
+    final int y_min,
+    final int x_max,
+    final int y_max)
+  {
+    if (outline.left() && outline.top()) {
+      graphics.drawLine(x_min, y_min, x_min, y_min);
+    }
+    if (outline.left() && outline.bottom()) {
+      graphics.drawLine(x_min, y_max - 1, x_min, y_max - 1);
+    }
+    if (outline.right() && outline.top()) {
+      graphics.drawLine(x_max - 1, y_min, x_max - 1, y_min);
+    }
+    if (outline.right() && outline.bottom()) {
+      graphics.drawLine(x_max - 1, y_max - 1, x_max - 1, y_max - 1);
+    }
+  }
+
+  private static void drawOutlineWithoutCorners(
+    final Graphics2D graphics,
+    final SyThemeOutline outline,
+    final int x_min,
+    final int y_min,
+    final int x_max,
+    final int y_max)
+  {
     if (outline.left()) {
       graphics.drawLine(x_min, y_min + 1, x_min, y_max - 2);
     }
@@ -105,28 +149,13 @@ public final class SyAWTDrawing
     if (outline.bottom()) {
       graphics.drawLine(x_min + 1, y_max - 1, x_max - 2, y_max - 1);
     }
-
-    if (outline.corners()) {
-      if (outline.left() && outline.top()) {
-        graphics.drawLine(x_min, y_min, x_min, y_min);
-      }
-      if (outline.left() && outline.bottom()) {
-        graphics.drawLine(x_min, y_max - 1, x_min, y_max - 1);
-      }
-      if (outline.right() && outline.top()) {
-        graphics.drawLine(x_max - 1, y_min, x_max - 1, y_min);
-      }
-      if (outline.right() && outline.bottom()) {
-        graphics.drawLine(x_max - 1, y_max - 1, x_max - 1, y_max - 1);
-      }
-    }
   }
 
   /**
-   * Produce an AWT paint for the given fill type.
+   * Produce an AWT paint for the given paintFill type.
    *
    * @param in_box The box that will be filled
-   * @param fill   The fill type
+   * @param fill   The paintFill type
    *
    * @return An AWT paint
    */
