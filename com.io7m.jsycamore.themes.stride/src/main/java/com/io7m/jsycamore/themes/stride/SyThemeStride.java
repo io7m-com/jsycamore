@@ -485,7 +485,7 @@ public final class SyThemeStride
     final SyThemeWindowTitleBar titlebar_theme = theme_window.titleBar();
 
     final PAreaI<SySpaceParentRelativeType> box_titlebar =
-      PAreasI.create(0, 0, window_box.width(), titlebar_theme.height());
+      PAreasI.create(0, 0, window_box.sizeX(), titlebar_theme.height());
 
     final PAreaI<SySpaceParentRelativeType> box_frame =
       PAreaI.of(

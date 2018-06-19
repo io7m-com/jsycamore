@@ -56,9 +56,9 @@ public final class SyPanel extends SyPanelAbstract
     sb.append("[SyPanel 0x");
     sb.append(Integer.toHexString(this.hashCode()));
     sb.append(" ");
-    sb.append(this.box().width());
+    sb.append(this.box().sizeX());
     sb.append("x");
-    sb.append(this.box().height());
+    sb.append(this.box().sizeY());
     sb.append(" ");
     sb.append(this.box().minimumX());
     sb.append("+");

@@ -75,7 +75,7 @@ public final class SyAWTGUIRendererInefficient
       final SyWindowType window = windows.get(index);
       final PAreaI<SySpaceViewportType> box = window.box();
       final BufferedImage bi =
-        new BufferedImage(box.width(), box.height(), input.getType());
+        new BufferedImage(box.sizeX(), box.sizeY(), input.getType());
 
       this.window_renderer.render(bi, window);
       final AffineTransform transform = graphics.getTransform();

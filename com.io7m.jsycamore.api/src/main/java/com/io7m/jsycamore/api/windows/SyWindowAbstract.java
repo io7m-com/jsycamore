@@ -207,11 +207,11 @@ public abstract class SyWindowAbstract implements SyWindowType
       PAreasI.create(
         new_box.minimumX(),
         new_box.minimumY(),
-        new_box.width(),
-        new_box.height());
+        new_box.sizeX(),
+        new_box.sizeY());
 
     final PAreaI<SySpaceParentRelativeType> root_box =
-      PAreasI.create(0, 0, new_box.width(), new_box.height());
+      PAreasI.create(0, 0, new_box.sizeX(), new_box.sizeY());
     final SyThemeWindowArrangementFunctionType arranger =
       window_theme.arranger();
     final SyThemeWindowArrangementType boxes =
@@ -247,7 +247,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     this.root.titlebar.close_button.setIcon(
       window_theme.titleBar().buttonCloseIcon());
 
-    this.transform_context.reset(window_box.width(), window_box.height());
+    this.transform_context.reset(window_box.sizeX(), window_box.sizeY());
 
     if (theme_changed) {
       this.root.content_pane.onThemeChanged();
@@ -407,7 +407,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         final SyImageType i = SyImage.create(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(PAreasI.create(0, 0, this.box().width(), this.box().height()));
+        i.setBox(PAreasI.create(0, 0, this.box().sizeX(), this.box().sizeY()));
         this.node().childAdd(i.node());
         this.image = Optional.of(i);
       }
@@ -485,7 +485,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         final TitleBarIconImage i = new TitleBarIconImage(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(PAreasI.create(0, 0, this.box().width(), this.box().height()));
+        i.setBox(PAreasI.create(0, 0, this.box().sizeX(), this.box().sizeY()));
         this.node().childAdd(i.node());
         this.image = Optional.of(i);
       }
@@ -607,10 +607,10 @@ public abstract class SyWindowAbstract implements SyWindowType
               window_start_box, current.x(), current.y());
 
           Postconditions.checkPostcondition(
-            window_start_box.width() == window_new_box.width(),
+            window_start_box.sizeX() == window_new_box.sizeX(),
             "Dragging a title bar must not resize width");
           Postconditions.checkPostcondition(
-            window_start_box.height() == window_new_box.height(),
+            window_start_box.sizeY() == window_new_box.sizeY(),
             "Dragging a title bar must not resize height");
 
           SyWindowAbstract.this.setBox(window_new_box);

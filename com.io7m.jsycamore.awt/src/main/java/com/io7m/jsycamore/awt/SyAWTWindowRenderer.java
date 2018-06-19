@@ -93,7 +93,7 @@ public final class SyAWTWindowRenderer implements
         RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
       final PAreaI<SySpaceViewportType> window_box = window.box();
-      graphics.setClip(0, 0, window_box.width(), window_box.height());
+      graphics.setClip(0, 0, window_box.sizeX(), window_box.sizeY());
       this.renderFrame(graphics, window);
       this.component_renderer.render(context, window.contentPane());
       this.component_renderer.render(context, window.titleBar());
@@ -224,13 +224,13 @@ public final class SyAWTWindowRenderer implements
       SyAWTDrawing.drawOutline(graphics, outline_opt.get(), frame_box, active);
       frame_x = frame_box.minimumX() + 1;
       frame_y = frame_box.minimumY() + 1;
-      frame_width = frame_box.width() - 2;
-      frame_height = frame_box.height() - 2;
+      frame_width = frame_box.sizeX() - 2;
+      frame_height = frame_box.sizeY() - 2;
     } else {
       frame_x = frame_box.minimumX();
       frame_y = frame_box.minimumY();
-      frame_width = frame_box.width();
-      frame_height = frame_box.height();
+      frame_width = frame_box.sizeX();
+      frame_height = frame_box.sizeY();
     }
 
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
@@ -516,8 +516,8 @@ public final class SyAWTWindowRenderer implements
 
     final int frame_x = frame_box.minimumX();
     final int frame_y = frame_box.minimumY();
-    final int frame_width = frame_box.width();
-    final int frame_height = frame_box.height();
+    final int frame_width = frame_box.sizeX();
+    final int frame_height = frame_box.sizeY();
 
     graphics.clipRect(frame_x, frame_y, frame_width, frame_height);
     graphics.translate(frame_x, frame_y);

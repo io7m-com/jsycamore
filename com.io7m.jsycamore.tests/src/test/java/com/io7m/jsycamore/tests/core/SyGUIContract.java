@@ -117,8 +117,8 @@ public abstract class SyGUIContract
 
     Assert.assertEquals(0L, (long) window_box.minimumX());
     Assert.assertEquals(0L, (long) window_box.minimumY());
-    Assert.assertEquals(640L, (long) window_box.width());
-    Assert.assertEquals(480L, (long) window_box.height());
+    Assert.assertEquals(640L, (long) window_box.sizeX());
+    Assert.assertEquals(480L, (long) window_box.sizeY());
   }
 
   @Test
@@ -443,8 +443,8 @@ public abstract class SyGUIContract
     final PAreaI<SySpaceViewportType> box = w0.box();
     Assert.assertEquals(15L, (long) box.minimumX());
     Assert.assertEquals(10L, (long) box.minimumY());
-    Assert.assertEquals(640L, (long) box.width());
-    Assert.assertEquals(480L, (long) box.height());
+    Assert.assertEquals(640L, (long) box.sizeX());
+    Assert.assertEquals(480L, (long) box.sizeY());
   }
 
   @Test
@@ -511,7 +511,7 @@ public abstract class SyGUIContract
     final PAreaI<SySpaceViewportType> box = w0.box();
     Assert.assertEquals(0L, (long) box.minimumX());
     Assert.assertEquals(0L, (long) box.minimumY());
-    Assert.assertEquals(640L, (long) box.width());
-    Assert.assertEquals(480L, (long) box.height());
+    Assert.assertEquals(640L, (long) box.sizeX());
+    Assert.assertEquals(480L, (long) box.sizeY());
   }
 }

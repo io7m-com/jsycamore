@@ -512,15 +512,15 @@ public abstract class SyComponentAbstract implements SyComponentType
   {
     Objects.requireNonNull(new_box, "Box");
 
-    final int previous_w = this.box.width();
-    final int previous_h = this.box.height();
+    final int previous_w = this.box.sizeX();
+    final int previous_h = this.box.sizeY();
 
     this.box = new_box;
 
     final int delta_x =
-      Math.subtractExact(this.box.width(), previous_w);
+      Math.subtractExact(this.box.sizeX(), previous_w);
     final int delta_y =
-      Math.subtractExact(this.box.height(), previous_h);
+      Math.subtractExact(this.box.sizeY(), previous_h);
     final boolean resized =
       delta_x != 0 || delta_y != 0;
 

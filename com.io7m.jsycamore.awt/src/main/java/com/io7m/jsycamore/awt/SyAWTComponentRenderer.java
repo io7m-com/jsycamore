@@ -233,9 +233,9 @@ public final class SyAWTComponentRenderer implements
 
     switch (meter.orientation()) {
       case ORIENTATION_HORIZONTAL: {
-        final int width = (int) (meter.value() * (double) box.width());
+        final int width = (int) (meter.value() * (double) box.sizeX());
         final PAreaI<SySpaceComponentRelativeType> box_indicator =
-          PAreasI.create(0, 0, width, box.height());
+          PAreasI.create(0, 0, width, box.sizeY());
         final SyThemeMeterOrientedType t = theme.horizontal();
         final Optional<SyThemeOutline> outline = t.outline();
 
@@ -260,9 +260,9 @@ public final class SyAWTComponentRenderer implements
         break;
       }
       case ORIENTATION_VERTICAL: {
-        final int height = (int) (meter.value() * (double) box.height());
+        final int height = (int) (meter.value() * (double) box.sizeY());
         final PAreaI<SySpaceComponentRelativeType> box_indicator =
-          PAreasI.create(0, box.height() - height, box.width(), height);
+          PAreasI.create(0, box.sizeY() - height, box.sizeX(), height);
 
         final SyThemeMeterOriented t = theme.vertical();
         final Optional<SyThemeOutline> outline = t.outline();
@@ -305,8 +305,8 @@ public final class SyAWTComponentRenderer implements
       this.image_cache.get(image.image());
 
     final BufferedImage actual = ref.value();
-    final int area_width = box.width();
-    final int area_height = box.height();
+    final int area_width = box.sizeX();
+    final int area_height = box.sizeY();
 
     int x = 0;
     switch (image.imageAlignmentHorizontal()) {
@@ -366,8 +366,8 @@ public final class SyAWTComponentRenderer implements
       this.measurement,
       graphics,
       font,
-      box.width(),
-      box.height(),
+      box.sizeX(),
+      box.sizeY(),
       label.textAlignmentHorizontal(),
       label.textAlignmentVertical(),
       label.text());
@@ -438,8 +438,8 @@ public final class SyAWTComponentRenderer implements
     final PAreaI<SySpaceParentRelativeType> box_origin =
       PAreasI.moveToOrigin(box);
 
-    final int width = box.width();
-    final int height = box.height();
+    final int width = box.sizeX();
+    final int height = box.sizeY();
 
     final PAreaI<SySpaceParentRelativeType> box_fill;
     final Optional<SyThemeOutline> outline = theme.outline();
@@ -514,8 +514,8 @@ public final class SyAWTComponentRenderer implements
       graphics.fillRect(
         box.minimumX(),
         box.minimumY(),
-        box.width(),
-        box.height());
+        box.sizeX(),
+        box.sizeY());
     }
   }
 }

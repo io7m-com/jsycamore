@@ -87,8 +87,8 @@ public final class SyAWTEmbossed
     try {
       final int x = box.minimumX();
       final int y = box.minimumY();
-      final int w = box.width();
-      final int h = box.height();
+      final int w = box.sizeX();
+      final int h = box.sizeY();
       graphics.clipRect(x, y, w, h);
       graphics.translate(x, y);
 

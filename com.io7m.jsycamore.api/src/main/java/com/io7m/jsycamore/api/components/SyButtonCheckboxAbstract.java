@@ -279,7 +279,7 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
           final SyImageType icon = SyImage.create(image_spec);
           icon.setImageAlignmentHorizontal(SyAlignmentHorizontal.ALIGN_CENTER);
           icon.setImageAlignmentVertical(SyAlignmentVertical.ALIGN_CENTER);
-          icon.setBox(PAreasI.create(0, 0, box.width(), box.height()));
+          icon.setBox(PAreasI.create(0, 0, box.sizeX(), box.sizeY()));
           this.node().childAdd(icon.node());
           this.check_icon = Optional.of(icon);
           return Optional.empty();

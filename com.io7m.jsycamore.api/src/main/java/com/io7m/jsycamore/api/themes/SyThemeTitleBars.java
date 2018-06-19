@@ -164,7 +164,7 @@ public final class SyThemeTitleBars
       SyThemeTitleBars.nonTextWidthRequired(
         title_theme, elements, is_closeable, is_maximizable);
 
-    final int maximum_width = maximum.width();
+    final int maximum_width = maximum.sizeX();
     final int remaining =
       Math.max(0, Math.subtractExact(maximum_width, non_text_width));
 
@@ -393,13 +393,13 @@ public final class SyThemeTitleBars
 
     switch (title_theme.buttonAlignment()) {
       case ALIGN_TOP: {
-        return PAreasI.alignVerticallyMinY(container, box_unaligned);
+        return PAreasI.alignOnYMinY(container, box_unaligned);
       }
       case ALIGN_BOTTOM: {
-        return PAreasI.alignVerticallyMaxY(container, box_unaligned);
+        return PAreasI.alignOnYMaxY(container, box_unaligned);
       }
       case ALIGN_CENTER: {
-        return PAreasI.alignVerticallyCenter(container, box_unaligned);
+        return PAreasI.alignOnYCenter(container, box_unaligned);
       }
     }
 
@@ -417,15 +417,15 @@ public final class SyThemeTitleBars
     final SyThemePaddingType padding = title_theme.buttonPadding();
     switch (title_theme.buttonAlignment()) {
       case ALIGN_TOP: {
-        return PAreasI.alignVerticallyMinYOffset(
+        return PAreasI.alignOnYMinYOffset(
           container, box_unaligned, padding.paddingTop());
       }
       case ALIGN_BOTTOM: {
-        return PAreasI.alignVerticallyMaxYOffset(
+        return PAreasI.alignOnYMaxYOffset(
           container, box_unaligned, padding.paddingBottom());
       }
       case ALIGN_CENTER: {
-        return PAreasI.alignVerticallyCenter(container, box_unaligned);
+        return PAreasI.alignOnYCenter(container, box_unaligned);
       }
     }
 

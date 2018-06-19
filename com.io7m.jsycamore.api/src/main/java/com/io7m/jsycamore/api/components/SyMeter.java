@@ -50,9 +50,9 @@ public final class SyMeter extends SyMeterAbstract
     sb.append(" ");
     sb.append(this.value());
     sb.append(" ");
-    sb.append(this.box().width());
+    sb.append(this.box().sizeX());
     sb.append("x");
-    sb.append(this.box().height());
+    sb.append(this.box().sizeY());
     sb.append(" ");
     sb.append(this.box().minimumX());
     sb.append("+");

@@ -166,8 +166,8 @@ public final class SyAWTDrawing
 
     final double x = (double) in_box.minimumX();
     final double y = (double) in_box.minimumY();
-    final double w = (double) in_box.width();
-    final double h = (double) in_box.height();
+    final double w = (double) in_box.sizeX();
+    final double h = (double) in_box.sizeY();
 
     final Vector2D p0 = gradient.point0();
     final Vector2D p1 = gradient.point1();

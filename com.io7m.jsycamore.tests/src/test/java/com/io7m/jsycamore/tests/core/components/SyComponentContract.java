@@ -215,27 +215,27 @@ public abstract class SyComponentContract
     c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().width());
-    Assert.assertEquals(32L, (long) c0.box().height());
+    Assert.assertEquals(32L, (long) c0.box().sizeX());
+    Assert.assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().width());
-    Assert.assertEquals(16L, (long) c1.box().height());
+    Assert.assertEquals(16L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().width());
-    Assert.assertEquals(64L, (long) c0.box().height());
+    Assert.assertEquals(64L, (long) c0.box().sizeX());
+    Assert.assertEquals(64L, (long) c0.box().sizeY());
 
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().width());
-    Assert.assertEquals(16L, (long) c1.box().height());
+    Assert.assertEquals(16L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L, (long) c1.box().sizeY());
   }
 
   @Test
@@ -264,27 +264,27 @@ public abstract class SyComponentContract
     c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().width());
-    Assert.assertEquals(32L, (long) c0.box().height());
+    Assert.assertEquals(32L, (long) c0.box().sizeX());
+    Assert.assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().width());
-    Assert.assertEquals(16L, (long) c1.box().height());
+    Assert.assertEquals(16L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().width());
-    Assert.assertEquals(64L, (long) c0.box().height());
+    Assert.assertEquals(64L, (long) c0.box().sizeX());
+    Assert.assertEquals(64L, (long) c0.box().sizeY());
 
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L + 32L, (long) c1.box().width());
-    Assert.assertEquals(16L + 32L, (long) c1.box().height());
+    Assert.assertEquals(16L + 32L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L + 32L, (long) c1.box().sizeY());
   }
 
   @Test
@@ -313,26 +313,26 @@ public abstract class SyComponentContract
     c0.setBox(PAreasI.create(0, 0, 32, 32));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().width());
-    Assert.assertEquals(32L, (long) c0.box().height());
+    Assert.assertEquals(32L, (long) c0.box().sizeX());
+    Assert.assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
     Assert.assertEquals(0L, (long) c1.box().minimumX());
     Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().width());
-    Assert.assertEquals(16L, (long) c1.box().height());
+    Assert.assertEquals(16L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
     Assert.assertEquals(0L, (long) c0.box().minimumX());
     Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().width());
-    Assert.assertEquals(64L, (long) c0.box().height());
+    Assert.assertEquals(64L, (long) c0.box().sizeX());
+    Assert.assertEquals(64L, (long) c0.box().sizeY());
 
     Assert.assertEquals(32L, (long) c1.box().minimumX());
     Assert.assertEquals(32L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().width());
-    Assert.assertEquals(16L, (long) c1.box().height());
+    Assert.assertEquals(16L, (long) c1.box().sizeX());
+    Assert.assertEquals(16L, (long) c1.box().sizeY());
   }
 }

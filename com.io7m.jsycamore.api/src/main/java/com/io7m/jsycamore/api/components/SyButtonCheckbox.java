@@ -52,9 +52,9 @@ public final class SyButtonCheckbox extends SyButtonCheckboxAbstract
     sb.append(" [pressed ").append(this.isPressed()).append("]");
     sb.append(" [over ").append(this.isOver()).append("]");
     sb.append(" ");
-    sb.append(this.box().width());
+    sb.append(this.box().sizeX());
     sb.append("x");
-    sb.append(this.box().height());
+    sb.append(this.box().sizeY());
     sb.append(" ");
     sb.append(this.box().minimumX());
     sb.append("+");

@@ -497,7 +497,7 @@ public final class SyThemeFenestra
         titlebar_theme.height());
 
     final PAreaI<SySpaceParentRelativeType> box_frame =
-      PAreasI.create(0, 0, window_box.width(), window_box.height());
+      PAreasI.create(0, 0, window_box.sizeX(), window_box.sizeY());
 
     final PAreaI<SySpaceParentRelativeType> box_frame_inner =
       PAreaI.of(

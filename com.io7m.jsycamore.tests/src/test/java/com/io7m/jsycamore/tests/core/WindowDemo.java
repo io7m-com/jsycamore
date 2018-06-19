@@ -300,8 +300,8 @@ public final class WindowDemo
         panel.setBox(PAreasI.create(
           0,
           0,
-          content_box.width(),
-          content_box.height()));
+          content_box.sizeX(),
+          content_box.sizeY()));
         content.node().childAdd(panel.node());
 
         {
@@ -411,7 +411,7 @@ public final class WindowDemo
     {
       final PAreaI<SySpaceViewportType> box = w.box();
       final BufferedImage image = new BufferedImage(
-        box.width(), box.height(), BufferedImage.TYPE_4BYTE_ABGR);
+        box.sizeX(), box.sizeY(), BufferedImage.TYPE_4BYTE_ABGR);
       this.w_renderer.render(image, w);
       g.drawImage(image, box.minimumX(), box.minimumY(), null);
     }

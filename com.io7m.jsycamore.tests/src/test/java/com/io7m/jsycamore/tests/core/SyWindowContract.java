@@ -77,8 +77,8 @@ public abstract class SyWindowContract
     final SyWindowType w = this.create(640, 480, "Main 0");
     final PAreaI<SySpaceViewportType> box = w.box();
 
-    Assert.assertEquals(640L, (long) box.width());
-    Assert.assertEquals(480L, (long) box.height());
+    Assert.assertEquals(640L, (long) box.sizeX());
+    Assert.assertEquals(480L, (long) box.sizeY());
     Assert.assertEquals(0L, (long) box.minimumX());
     Assert.assertEquals(0L, (long) box.minimumY());
 
@@ -293,39 +293,39 @@ public abstract class SyWindowContract
     Assert.assertEquals(
       0L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().width());
-    Assert.assertEquals(0L, (long) icon.box().height());
+    Assert.assertEquals(0L, (long) icon.box().sizeX());
+    Assert.assertEquals(0L, (long) icon.box().sizeY());
 
     tb.setIcon(Optional.of(icon_spec));
 
     Assert.assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().width());
-    Assert.assertEquals(0L, (long) icon.box().height());
+    Assert.assertEquals(0L, (long) icon.box().sizeX());
+    Assert.assertEquals(0L, (long) icon.box().sizeY());
 
     w.setTheme(Optional.of(theme_next));
 
     Assert.assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(16L, (long) icon.box().width());
-    Assert.assertEquals(16L, (long) icon.box().height());
+    Assert.assertEquals(16L, (long) icon.box().sizeX());
+    Assert.assertEquals(16L, (long) icon.box().sizeY());
 
     w.setTheme(Optional.of(theme_start));
 
     Assert.assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().width());
-    Assert.assertEquals(0L, (long) icon.box().height());
+    Assert.assertEquals(0L, (long) icon.box().sizeX());
+    Assert.assertEquals(0L, (long) icon.box().sizeY());
 
     tb.setIcon(Optional.empty());
 
     Assert.assertEquals(
       0L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().width());
-    Assert.assertEquals(0L, (long) icon.box().height());
+    Assert.assertEquals(0L, (long) icon.box().sizeX());
+    Assert.assertEquals(0L, (long) icon.box().sizeY());
   }
 }

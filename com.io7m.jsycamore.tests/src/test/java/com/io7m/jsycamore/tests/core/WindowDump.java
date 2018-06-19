@@ -220,8 +220,8 @@ public final class WindowDump
       panel.setBox(PAreasI.create(
         0,
         0,
-        content.box().width(),
-        content.box().height()));
+        content.box().sizeX(),
+        content.box().sizeY()));
       content.node().childAdd(panel.node());
 
       int y_base = 8;

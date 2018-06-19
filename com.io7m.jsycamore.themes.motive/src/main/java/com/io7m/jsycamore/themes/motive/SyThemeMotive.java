@@ -398,7 +398,7 @@ public final class SyThemeMotive
       PAreasI.create(
         box_frame_inner.minimumX(),
         box_frame_inner.minimumY(),
-        box_frame_inner.width(),
+        box_frame_inner.sizeX(),
         titlebar_theme.height());
 
     /**

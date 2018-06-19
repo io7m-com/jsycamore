@@ -153,13 +153,13 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
 
       switch (this.orientation) {
         case ORIENTATION_HORIZONTAL: {
-          final double w = (double) this.box().width();
+          final double w = (double) this.box().sizeX();
           final double x = (double) mouse_pos_component.x();
           this.setValue(x / w);
           break;
         }
         case ORIENTATION_VERTICAL: {
-          final double h = (double) this.box().height();
+          final double h = (double) this.box().sizeY();
           final double y = h - (double) mouse_pos_component.y();
           this.setValue(y / h);
           break;

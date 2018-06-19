@@ -122,8 +122,8 @@ public final class SyWindowViewportAccumulator implements
     final int my0 =
       SyWindowViewportAccumulator.clamp(new_y0, original_y0, original_y1);
 
-    final int size_x = box.width();
-    final int size_y = box.height();
+    final int size_x = box.sizeX();
+    final int size_y = box.sizeY();
     final int new_x1 = Math.addExact(new_x0, size_x);
     final int new_y1 = Math.addExact(new_y0, size_y);
     final int mx1 =
