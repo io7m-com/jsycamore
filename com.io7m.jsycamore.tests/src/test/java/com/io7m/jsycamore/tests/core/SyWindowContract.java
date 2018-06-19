@@ -57,10 +57,8 @@ public abstract class SyWindowContract
     if (!node.isRoot()) {
       if (node.value() instanceof SyImageType) {
         final JOTreeNodeType<SyComponentType> parent = node.parent().get();
-        if (parent.value() instanceof SyWindowCloseButtonType
-          || parent.value() instanceof SyWindowMaximizeButtonType) {
-          return true;
-        }
+        return parent.value() instanceof SyWindowCloseButtonType
+          || parent.value() instanceof SyWindowMaximizeButtonType;
       }
     }
     return false;
@@ -189,7 +187,7 @@ public abstract class SyWindowContract
       }
     }
 
-    Assert.assertTrue(titlebar_node != null);
+    Assert.assertNotNull(titlebar_node);
     this.expected.expect(JOTreeExceptionDetachDenied.class);
     titlebar_node.detach();
   }
@@ -214,12 +212,12 @@ public abstract class SyWindowContract
       while (iter.hasNext()) {
         final JOTreeNodeType<SyComponentType> node = iter.next();
 
-        /**
+        /*
          * The images on close and maximize buttons are a special case and
          * are allowed to be removed.
          */
 
-        if (SyWindowContract.isCloseOrMaximize(node)) {
+        if (isCloseOrMaximize(node)) {
           continue;
         }
 
@@ -233,7 +231,7 @@ public abstract class SyWindowContract
     long caught = 0L;
     for (final JOTreeNodeType<SyComponentType> node : all) {
       try {
-        if (SyWindowContract.isCloseOrMaximize(node)) {
+        if (isCloseOrMaximize(node)) {
           ++caught;
           continue;
         }

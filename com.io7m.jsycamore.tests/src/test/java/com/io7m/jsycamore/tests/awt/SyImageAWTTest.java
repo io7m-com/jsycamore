@@ -44,7 +44,7 @@ public final class SyImageAWTTest
   public void testFilterIdentity()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());
@@ -65,7 +65,7 @@ public final class SyImageAWTTest
   public void testFilterHalfSize()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());
@@ -94,7 +94,7 @@ public final class SyImageAWTTest
   public void testFilterRGB565()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());
@@ -124,7 +124,7 @@ public final class SyImageAWTTest
   public void testFilterRGB888()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());
@@ -154,7 +154,7 @@ public final class SyImageAWTTest
   public void testFilterGrey8()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());
@@ -184,7 +184,7 @@ public final class SyImageAWTTest
   public void testFilterRGBA4444()
     throws IOException
   {
-    final BufferedImage image = SyImageAWTTest.load("circle-x-8x.png");
+    final BufferedImage image = load("circle-x-8x.png");
 
     Assert.assertEquals(64L, (long) image.getWidth());
     Assert.assertEquals(64L, (long) image.getHeight());

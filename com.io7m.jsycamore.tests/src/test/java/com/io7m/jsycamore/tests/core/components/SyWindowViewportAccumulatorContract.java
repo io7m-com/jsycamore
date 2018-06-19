@@ -72,15 +72,15 @@ public abstract class SyWindowViewportAccumulatorContract
       final int new_x1 = c.maximumX();
       final int new_y1 = c.maximumY();
 
-      SyWindowViewportAccumulatorContract.LOG.debug(
+      LOG.debug(
         "index: {}", Integer.valueOf(index));
-      SyWindowViewportAccumulatorContract.LOG.debug(
+      LOG.debug(
         "x0: {} >= {}", Integer.valueOf(new_x0), Integer.valueOf(last_x0));
-      SyWindowViewportAccumulatorContract.LOG.debug(
+      LOG.debug(
         "y0: {} >= {}", Integer.valueOf(new_y0), Integer.valueOf(last_y0));
-      SyWindowViewportAccumulatorContract.LOG.debug(
+      LOG.debug(
         "x1: {} <= {}", Integer.valueOf(new_x1), Integer.valueOf(last_x1));
-      SyWindowViewportAccumulatorContract.LOG.debug(
+      LOG.debug(
         "y1: {} <= {}", Integer.valueOf(new_y1), Integer.valueOf(last_y1));
 
       Assert.assertTrue(new_x0 >= last_x0);

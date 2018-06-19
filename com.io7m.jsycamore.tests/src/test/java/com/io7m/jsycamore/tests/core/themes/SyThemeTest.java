@@ -64,7 +64,7 @@ public final class SyThemeTest
   public void testSortingMotive()
   {
     final SyTheme t = SyThemeMotive.builder().build();
-    SyThemeTest.checkComparator(t.windowTheme().titleBar().elementOrder());
+    checkComparator(t.windowTheme().titleBar().elementOrder());
   }
 
   @Test
@@ -81,7 +81,7 @@ public final class SyThemeTest
   public void testSortingFenestra()
   {
     final SyTheme t = SyThemeFenestra.builder().build();
-    SyThemeTest.checkComparator(t.windowTheme().titleBar().elementOrder());
+    checkComparator(t.windowTheme().titleBar().elementOrder());
   }
 
   @Test
@@ -98,7 +98,7 @@ public final class SyThemeTest
   public void testSortingStride()
   {
     final SyTheme t = SyThemeStride.builder().build();
-    SyThemeTest.checkComparator(t.windowTheme().titleBar().elementOrder());
+    checkComparator(t.windowTheme().titleBar().elementOrder());
   }
 
   @Test
@@ -115,6 +115,6 @@ public final class SyThemeTest
   public void testSortingBee()
   {
     final SyTheme t = SyThemeBee.builder().build();
-    SyThemeTest.checkComparator(t.windowTheme().titleBar().elementOrder());
+    checkComparator(t.windowTheme().titleBar().elementOrder());
   }
 }

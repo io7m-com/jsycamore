@@ -40,7 +40,7 @@ public final class SyColorsTest
   public void testIdentityRGBtoHSV()
   {
     final AlmostEqualDouble.ContextRelative c =
-      SyColorsTest.createContextRelative();
+      createContextRelative();
 
     QuickCheck.forAllVerbose(
       Vector3DGenerator.createNormal(),
@@ -72,7 +72,7 @@ public final class SyColorsTest
   public void testIdentityHSVtoRGB()
   {
     final AlmostEqualDouble.ContextRelative c =
-      SyColorsTest.createContextRelative();
+      createContextRelative();
 
     QuickCheck.forAllVerbose(
       Vector3DGenerator.createNormal(),
@@ -107,7 +107,7 @@ public final class SyColorsTest
   public void testNoSaturationHSVtoRGB()
   {
     final AlmostEqualDouble.ContextRelative c =
-      SyColorsTest.createContextRelative();
+      createContextRelative();
 
     QuickCheck.forAllVerbose(
       Vector3DGenerator.createNormal(),
@@ -142,7 +142,7 @@ public final class SyColorsTest
   public void testNoSaturationRGBtoHSV()
   {
     final AlmostEqualDouble.ContextRelative c =
-      SyColorsTest.createContextRelative();
+      createContextRelative();
 
     QuickCheck.forAllVerbose(
       Vector3DGenerator.createNormal(),

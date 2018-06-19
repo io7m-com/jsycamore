@@ -152,7 +152,7 @@ public final class WindowDemo
 
       final SyImageCacheResolverType resolver = specification -> {
         final URI uri = specification.uri();
-        Canvas.LOG.debug("loading: {}", uri);
+        LOG.debug("loading: {}", uri);
 
         final URL url = uri.toURL();
         final InputStream stream = url.openStream();
@@ -254,7 +254,7 @@ public final class WindowDemo
       r_executor.scheduleAtFixedRate(
         () -> SwingUtilities.invokeLater(() -> {
 
-          Canvas.LOG.debug(
+          LOG.debug(
             "cache size: {}/{}",
             Long.valueOf(this.image_cache.size()),
             Long.valueOf(this.image_cache.maximumSize()));

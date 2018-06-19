@@ -168,10 +168,10 @@ public final class WindowDump
     int y = 16;
     for (int index = 0; index < themes.size(); ++index) {
       final SyTheme theme = themes.get(index);
-      final SyWindowType w_inactive = WindowDump.createWindow(gui, theme);
+      final SyWindowType w_inactive = createWindow(gui, theme);
       w_inactive.titleBar().setIcon(Optional.of(icon_spec));
 
-      final SyWindowType w_active = WindowDump.createWindow(gui, theme);
+      final SyWindowType w_active = createWindow(gui, theme);
       w_active.titleBar().setIcon(Optional.of(icon_spec));
 
       {
