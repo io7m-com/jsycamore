@@ -1,0 +1,3 @@
+[submodule ".jenkins"]
+	path = .jenkins
+	url = http://www.github.com/io7m/jenkinsfiles
