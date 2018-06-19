@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.tests.core.themes;
 
 import com.io7m.jaffirm.core.PreconditionViolationException;
-import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.api.themes.SyThemeGradientLinear;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
@@ -112,7 +111,7 @@ public final class SyThemeGradientLinearTest
       this,
       (gt, gradient) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (gt, color) -> {
         throw new UnreachableCodeException();

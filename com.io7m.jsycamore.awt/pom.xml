@@ -61,10 +61,6 @@
       <artifactId>com.io7m.jtensors.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.io7m.jfunctional</groupId>
-      <artifactId>com.io7m.jfunctional.core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.io7m.jregions</groupId>
       <artifactId>com.io7m.jregions.core</artifactId>
     </dependency>

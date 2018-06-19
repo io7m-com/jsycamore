@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- *  
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *  
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests.core.themes;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.api.themes.SyThemeColor;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -47,7 +46,7 @@ public final class SyThemeColorTest
       },
       (gt, color) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       });
 
     Assert.assertTrue(called.get());

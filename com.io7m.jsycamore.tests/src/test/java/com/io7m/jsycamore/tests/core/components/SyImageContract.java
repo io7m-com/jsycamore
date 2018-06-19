@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.api.components.SyImageType;
 import com.io7m.jsycamore.api.images.SyImageFormat;
 import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
@@ -63,7 +62,7 @@ public abstract class SyImageContract extends SyComponentContract
       },
       (x, b_image) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, meter) -> {
         throw new UnreachableCodeException();
@@ -91,7 +90,7 @@ public abstract class SyImageContract extends SyComponentContract
       },
       (x, b_image) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, meter) -> {
         throw new UnreachableCodeException();

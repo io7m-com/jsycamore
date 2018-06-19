@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.SyMouseButton;
 import com.io7m.jsycamore.api.components.SyButtonListenerType;
@@ -53,7 +52,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
       this,
       (x, b_button) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, panel) -> {
         throw new UnreachableCodeException();
@@ -82,7 +81,7 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
       this,
       (x, b_button) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, panel) -> {
         throw new UnreachableCodeException();

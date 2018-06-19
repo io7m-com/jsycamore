@@ -51,10 +51,6 @@ import com.io7m.jsycamore.awt.SyAWTComponentRendererContextType;
 import com.io7m.jsycamore.awt.SyAWTTextMeasurement;
 import com.io7m.jsycamore.awt.SyAWTWindowRenderer;
 import com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine;
-import com.io7m.jsycamore.themes.bee.SyThemeBee;
-import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
-import com.io7m.jsycamore.themes.motive.SyThemeMotive;
-import com.io7m.jsycamore.themes.stride.SyThemeStride;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 
 import javax.imageio.ImageIO;
@@ -64,7 +60,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;

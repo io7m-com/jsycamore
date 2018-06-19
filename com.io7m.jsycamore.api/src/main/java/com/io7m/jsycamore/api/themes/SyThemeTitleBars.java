@@ -18,7 +18,6 @@ package com.io7m.jsycamore.api.themes;
 
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jfunctional.Pair;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -219,12 +218,12 @@ public final class SyThemeTitleBars
     final List<SyThemeTitleBarElement> elements =
       SyThemeTitleBars.elementsOrder(title_theme);
 
-    final Pair<List<SyThemeTitleBarElement>, List<SyThemeTitleBarElement>> pair =
+    final SyThemeTitleBarElements pair =
       SyThemeTitleBars.sortElementsLeftRight(
         title_theme, is_closeable, is_maximizable, elements);
 
-    final List<SyThemeTitleBarElement> left = pair.getLeft();
-    final List<SyThemeTitleBarElement> right = pair.getRight();
+    final List<SyThemeTitleBarElement> left = pair.leftElements();
+    final List<SyThemeTitleBarElement> right = pair.rightElements();
 
     final SyThemePaddingType button_pad = title_theme.buttonPadding();
     final int button_pad_left = button_pad.paddingLeft();
@@ -433,7 +432,7 @@ public final class SyThemeTitleBars
     throw new UnreachableCodeException();
   }
 
-  private static Pair<List<SyThemeTitleBarElement>, List<SyThemeTitleBarElement>> sortElementsLeftRight(
+  private static SyThemeTitleBarElements sortElementsLeftRight(
     final SyThemeWindowTitleBarType title_theme,
     final boolean is_closeable,
     final boolean is_maximizable,
@@ -481,6 +480,6 @@ public final class SyThemeTitleBars
       }
     }
 
-    return Pair.pair(elements_left, elements_right);
+    return SyThemeTitleBarElements.of(elements_left, elements_right);
   }
 }

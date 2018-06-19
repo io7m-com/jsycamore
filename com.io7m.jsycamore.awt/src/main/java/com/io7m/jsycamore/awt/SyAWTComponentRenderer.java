@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jfunctional.Unit;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
@@ -184,19 +183,19 @@ public final class SyAWTComponentRenderer implements
 
       object.matchComponentReadable(this, (r, button) -> {
         this.renderButton(graphics, button);
-        return Unit.unit();
+        return Void.class;
       }, (r, panel) -> {
         this.renderPanel(graphics, panel);
-        return Unit.unit();
+        return Void.class;
       }, (r, label) -> {
         this.renderLabel(graphics, label);
-        return Unit.unit();
+        return Void.class;
       }, (r, image) -> {
         this.renderImage(graphics, image);
-        return Unit.unit();
+        return Void.class;
       }, (r, meter) -> {
         this.renderMeter(graphics, meter);
-        return Unit.unit();
+        return Void.class;
       });
 
       final JOTreeNodeReadableType<SyComponentReadableType> node =

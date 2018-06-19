@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- *  
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *  
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jsycamore.api.components.SyLabelType;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
@@ -55,7 +54,7 @@ public abstract class SyLabelContract extends SyComponentContract
       },
       (x, b_label) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, image) -> {
         throw new UnreachableCodeException();
@@ -83,7 +82,7 @@ public abstract class SyLabelContract extends SyComponentContract
       },
       (x, b_label) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, image) -> {
         throw new UnreachableCodeException();

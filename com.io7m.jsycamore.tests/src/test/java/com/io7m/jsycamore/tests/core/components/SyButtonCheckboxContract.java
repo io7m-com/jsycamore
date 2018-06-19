@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests.core.components;
 
-import com.io7m.jfunctional.Unit;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.SyGUIType;
 import com.io7m.jsycamore.api.SyMouseButton;
@@ -62,7 +61,7 @@ public abstract class SyButtonCheckboxContract extends SyComponentContract
       this,
       (x, b_button) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, panel) -> {
         throw new UnreachableCodeException();
@@ -90,7 +89,7 @@ public abstract class SyButtonCheckboxContract extends SyComponentContract
       this,
       (x, b_button) -> {
         called.set(true);
-        return Unit.unit();
+        return Void.class;
       },
       (x, panel) -> {
         throw new UnreachableCodeException();
