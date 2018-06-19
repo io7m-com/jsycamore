@@ -46,10 +46,10 @@ public final class SyColors
     final double degrees)
   {
     Objects.requireNonNull(rgb, "RGB");
-    final Vector3D hsv = SyColors.convertRGBtoHSV(rgb);
+    final Vector3D hsv = convertRGBtoHSV(rgb);
     final Vector3D hsv_rot = Vector3D.of(
       (hsv.x() + degrees) % 360.0, hsv.y(), hsv.z());
-    return SyColors.convertHSVtoRGB(hsv_rot);
+    return convertHSVtoRGB(hsv_rot);
   }
 
   /**

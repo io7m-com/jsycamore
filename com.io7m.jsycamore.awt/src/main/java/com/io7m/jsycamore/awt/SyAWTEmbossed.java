@@ -92,7 +92,7 @@ public final class SyAWTEmbossed
       graphics.clipRect(x, y, w, h);
       graphics.translate(x, y);
 
-      /**
+      /*
        * Light vertical parallelogram on the left.
        */
 
@@ -104,7 +104,7 @@ public final class SyAWTEmbossed
       graphics.setPaint(left);
       graphics.fill(this.poly);
 
-      /**
+      /*
        * Light horizontal parallelogram on the top.
        */
 
@@ -116,7 +116,7 @@ public final class SyAWTEmbossed
       graphics.setPaint(top);
       graphics.fill(this.poly);
 
-      /**
+      /*
        * Dark horizontal parallelogram on the bottom.
        */
 
@@ -128,7 +128,7 @@ public final class SyAWTEmbossed
       graphics.setPaint(bottom);
       graphics.fill(this.poly);
 
-      /**
+      /*
        * Dark vertical parallelogram on the right.
        */
 
@@ -140,7 +140,7 @@ public final class SyAWTEmbossed
       graphics.setPaint(right);
       graphics.fill(this.poly);
 
-      /**
+      /*
        * Fill the center, if necessary.
        */
 
@@ -667,7 +667,7 @@ public final class SyAWTEmbossed
 
     try {
 
-      /**
+      /*
        * Vertical bars
        */
 
@@ -681,7 +681,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Horizontal bars
        */
 
@@ -695,7 +695,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Corner
        */
 
@@ -736,7 +736,7 @@ public final class SyAWTEmbossed
         graphics.setTransform(old_transform);
       }
 
-      /**
+      /*
        * Caps
        */
 
@@ -781,7 +781,7 @@ public final class SyAWTEmbossed
 
     try {
 
-      /**
+      /*
        * Vertical bars
        */
 
@@ -793,7 +793,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Horizontal bars
        */
 
@@ -809,7 +809,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Corner
        */
 
@@ -850,7 +850,7 @@ public final class SyAWTEmbossed
         graphics.setTransform(old_transform);
       }
 
-      /**
+      /*
        * Caps
        */
 
@@ -895,7 +895,7 @@ public final class SyAWTEmbossed
 
     try {
 
-      /**
+      /*
        * Vertical bars
        */
 
@@ -911,7 +911,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Horizontal bars
        */
 
@@ -949,7 +949,7 @@ public final class SyAWTEmbossed
         graphics.setTransform(old_transform);
       }
 
-      /**
+      /*
        * Corner
        */
 
@@ -966,7 +966,7 @@ public final class SyAWTEmbossed
         fill);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Caps
        */
 
@@ -1011,7 +1011,7 @@ public final class SyAWTEmbossed
 
     try {
 
-      /**
+      /*
        * Vertical bars
        */
 
@@ -1027,7 +1027,7 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, emboss_size, length - thickness_of_horizontal);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Horizontal bars
        */
 
@@ -1065,7 +1065,7 @@ public final class SyAWTEmbossed
         graphics.setTransform(old_transform);
       }
 
-      /**
+      /*
        * Corner
        */
 
@@ -1081,7 +1081,7 @@ public final class SyAWTEmbossed
         fill);
       graphics.setTransform(old_transform);
 
-      /**
+      /*
        * Caps
        */
 

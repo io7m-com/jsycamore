@@ -118,18 +118,18 @@ public final class SyWindowViewportAccumulator implements
     final int new_y0 =
       Math.addExact(original_y0, move_y);
     final int mx0 =
-      SyWindowViewportAccumulator.clamp(new_x0, original_x0, original_x1);
+      clamp(new_x0, original_x0, original_x1);
     final int my0 =
-      SyWindowViewportAccumulator.clamp(new_y0, original_y0, original_y1);
+      clamp(new_y0, original_y0, original_y1);
 
     final int size_x = box.sizeX();
     final int size_y = box.sizeY();
     final int new_x1 = Math.addExact(new_x0, size_x);
     final int new_y1 = Math.addExact(new_y0, size_y);
     final int mx1 =
-      SyWindowViewportAccumulator.clamp(new_x1, mx0, original_x1);
+      clamp(new_x1, mx0, original_x1);
     final int my1 =
-      SyWindowViewportAccumulator.clamp(new_y1, my0, original_y1);
+      clamp(new_y1, my0, original_y1);
 
     Preconditions.checkPreconditionI(
       mx0, mx0 >= original_x0, i -> "mx0 must be >= original_x0");

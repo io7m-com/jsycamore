@@ -79,10 +79,10 @@ public final class SyAWTImage
     Objects.requireNonNull(spec, "Image specification");
     Objects.requireNonNull(image, "Image");
 
-    if (SyAWTImage.matchesExpected(spec, image)) {
-      return SyAWTImage.applyFilter(spec, image);
+    if (matchesExpected(spec, image)) {
+      return applyFilter(spec, image);
     }
-    return SyAWTImage.applyFilter(spec, SyAWTImage.applyRescale(spec, image));
+    return applyFilter(spec, applyRescale(spec, image));
   }
 
   private static BufferedImage applyFilter(
@@ -90,7 +90,7 @@ public final class SyAWTImage
     final BufferedImage image)
   {
     final Vector4D filter = spec.filter();
-    if (filter.equals(SyAWTImage.ONE_V4)) {
+    if (Objects.equals(filter, ONE_V4)) {
       return image;
     }
 
@@ -147,7 +147,7 @@ public final class SyAWTImage
     final BufferedImage image)
   {
     final BufferedImage output =
-      SyAWTImage.createCompatible(spec);
+      createCompatible(spec);
 
     final Graphics2D graphics = output.createGraphics();
     try {
@@ -202,12 +202,12 @@ public final class SyAWTImage
       }
       case IMAGE_FORMAT_RGBA_4444: {
         final WritableRaster raster =
-          SyAWTImage.COLOR_MODEL_RGBA_4444.createCompatibleWritableRaster(
+          COLOR_MODEL_RGBA_4444.createCompatibleWritableRaster(
             spec.width(), spec.height());
 
         @SuppressWarnings("UseOfObsoleteCollectionType") final Hashtable<Object, Object> props = new Hashtable<>();
         return new BufferedImage(
-          SyAWTImage.COLOR_MODEL_RGBA_4444,
+          COLOR_MODEL_RGBA_4444,
           raster,
           false,
           props);
@@ -229,7 +229,7 @@ public final class SyAWTImage
       return false;
     }
 
-    final Optional<SyImageFormat> format_opt = SyAWTImage.formatFor(image);
+    final Optional<SyImageFormat> format_opt = formatFor(image);
     return format_opt.isPresent() && format_opt.get() == spec.format();
   }
 
@@ -253,8 +253,10 @@ public final class SyAWTImage
       case BufferedImage.TYPE_USHORT_565_RGB: {
         return Optional.of(SyImageFormat.IMAGE_FORMAT_RGB_565);
       }
+      default: {
+        return Optional.empty();
+      }
     }
-    return Optional.empty();
   }
 
 }

@@ -160,7 +160,7 @@ public final class SyThemeStride
     theme_titlebar_b.setButtonHeight(15);
     theme_titlebar_b.setButtonWidth(15);
     theme_titlebar_b.setButtonTheme(
-      SyThemeStride.createThemeTitlebarButton(spec, 1, true));
+      createThemeTitlebarButton(spec, 1, true));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeStride::elementOrder);
     theme_titlebar_b.setHeight(21);
@@ -244,16 +244,16 @@ public final class SyThemeStride
         SyThemeStride::arrangeWindowComponents));
 
     theme.setButtonRepeatingTheme(
-      SyThemeStride.createThemeButtonRepeating(spec, 1, true));
+      createThemeButtonRepeating(spec, 1, true));
     theme.setButtonCheckboxTheme(
-      SyThemeStride.createThemeButtonCheckbox(spec, 1, true));
+      createThemeButtonCheckbox(spec, 1, true));
 
-    theme.setMeterTheme(SyThemeStride.createThemeMeter(spec));
+    theme.setMeterTheme(createThemeMeter(spec));
 
     theme.setPanelTheme(
-      SyThemeStride.createThemePanel(spec));
+      createThemePanel(spec));
     theme.setLabelTheme(
-      SyThemeStride.createThemeLabel(
+      createThemeLabel(
         spec.foregroundColorActive(),
         spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
@@ -390,8 +390,8 @@ public final class SyThemeStride
     final SyThemeStrideSpecification spec)
   {
     return SyThemeMeter.of(
-      SyThemeStride.createThemeMeterHorizontal(spec),
-      SyThemeStride.createThemeMeterVertical(spec));
+      createThemeMeterHorizontal(spec),
+      createThemeMeterVertical(spec));
   }
 
   private static int elementOrder(
@@ -711,7 +711,7 @@ public final class SyThemeStride
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeStride.builderFrom(
+    return builderFrom(
       SyThemeStrideSpecification.builder().build());
   }
 }

@@ -156,7 +156,7 @@ public final class SyAWTComponentRenderer implements
     final Shape initial_clip,
     final SyComponentReadableType object)
   {
-    /**
+    /*
      * Do not render invisible components.
      */
 
@@ -223,7 +223,7 @@ public final class SyAWTComponentRenderer implements
   {
     final Optional<SyThemeMeter> theme_opt = meter.theme();
     if (!theme_opt.isPresent()) {
-      throw SyAWTComponentRenderer.notAttached(meter);
+      throw notAttached(meter);
     }
 
     final SyThemeMeterType theme = theme_opt.get();
@@ -253,10 +253,9 @@ public final class SyAWTComponentRenderer implements
           () -> meter.isActive() ? t.embossIndicatorActive() : t.embossIndicatorInactive(),
           box_indicator);
 
-        if (outline.isPresent()) {
-          SyAWTDrawing.drawOutline(
-            graphics, outline.get(), box_origin, meter.isActive());
-        }
+        outline.ifPresent(
+          theme_outlint -> SyAWTDrawing.drawOutline(
+            graphics, theme_outlint, box_origin, meter.isActive()));
         break;
       }
       case ORIENTATION_VERTICAL: {
@@ -296,7 +295,7 @@ public final class SyAWTComponentRenderer implements
   {
     final Optional<SyThemeImage> theme_opt = image.theme();
     if (!theme_opt.isPresent()) {
-      throw SyAWTComponentRenderer.notAttached(image);
+      throw notAttached(image);
     }
 
     final PAreaI<SySpaceParentRelativeType> box = image.box();
@@ -347,7 +346,7 @@ public final class SyAWTComponentRenderer implements
   {
     final Optional<SyThemeLabel> theme_opt = label.theme();
     if (!theme_opt.isPresent()) {
-      throw SyAWTComponentRenderer.notAttached(label);
+      throw notAttached(label);
     }
 
     final SyThemeLabelType theme = theme_opt.get();
@@ -379,7 +378,7 @@ public final class SyAWTComponentRenderer implements
   {
     final Optional<SyThemePanel> theme_opt = panel.theme();
     if (!theme_opt.isPresent()) {
-      throw SyAWTComponentRenderer.notAttached(panel);
+      throw notAttached(panel);
     }
 
     if (panel.isPanelTransparent()) {
@@ -430,7 +429,7 @@ public final class SyAWTComponentRenderer implements
   {
     final Optional<SyThemeButtonType> theme_opt = button.theme();
     if (!theme_opt.isPresent()) {
-      throw SyAWTComponentRenderer.notAttached(button);
+      throw notAttached(button);
     }
 
     final SyThemeButtonType theme = theme_opt.get();

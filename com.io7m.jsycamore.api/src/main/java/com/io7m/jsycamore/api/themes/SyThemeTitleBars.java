@@ -60,7 +60,7 @@ public final class SyThemeTitleBars
     final List<SyThemeTitleBarElement> elements =
       new ArrayList<>(SyThemeTitleBarElement.values().length);
     Collections.addAll(elements, SyThemeTitleBarElement.values());
-    Collections.sort(elements, title_theme.elementOrder());
+    elements.sort(title_theme.elementOrder());
     return elements;
   }
 
@@ -159,9 +159,9 @@ public final class SyThemeTitleBars
      */
 
     final List<SyThemeTitleBarElement> elements =
-      SyThemeTitleBars.elementsOrder(title_theme);
+      elementsOrder(title_theme);
     final int non_text_width =
-      SyThemeTitleBars.nonTextWidthRequired(
+      nonTextWidthRequired(
         title_theme, elements, is_closeable, is_maximizable);
 
     final int maximum_width = maximum.sizeX();
@@ -216,10 +216,10 @@ public final class SyThemeTitleBars
       PAreasI.moveToOrigin(maximum_space);
 
     final List<SyThemeTitleBarElement> elements =
-      SyThemeTitleBars.elementsOrder(title_theme);
+      elementsOrder(title_theme);
 
     final SyThemeTitleBarElements pair =
-      SyThemeTitleBars.sortElementsLeftRight(
+      sortElementsLeftRight(
         title_theme, is_closeable, is_maximizable, elements);
 
     final List<SyThemeTitleBarElement> left = pair.leftElements();
@@ -250,7 +250,7 @@ public final class SyThemeTitleBars
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final PAreaI<SySpaceParentRelativeType> aligned =
-              SyThemeTitleBars.alignedButton(
+              alignedButton(
                 maximum_origin,
                 title_theme,
                 text_min_x);
@@ -267,7 +267,7 @@ public final class SyThemeTitleBars
 
             text_min_x = Math.addExact(text_min_x, button_pad_left);
             final PAreaI<SySpaceParentRelativeType> aligned =
-              SyThemeTitleBars.alignedButton(
+              alignedButton(
                 maximum_origin,
                 title_theme,
                 text_min_x);
@@ -287,7 +287,7 @@ public final class SyThemeTitleBars
               "Icon must be shown");
 
             arrangement.setIconBox(
-              SyThemeTitleBars.alignedIcon(
+              alignedIcon(
                 maximum_origin,
                 title_theme,
                 text_min_x));
@@ -312,7 +312,7 @@ public final class SyThemeTitleBars
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
             final PAreaI<SySpaceParentRelativeType> aligned =
-              SyThemeTitleBars.alignedButton(
+              alignedButton(
                 maximum_origin,
                 title_theme,
                 text_max_x);
@@ -329,7 +329,7 @@ public final class SyThemeTitleBars
             text_max_x = Math.subtractExact(text_max_x, button_pad_right);
             text_max_x = Math.subtractExact(text_max_x, button_width);
             final PAreaI<SySpaceParentRelativeType> aligned =
-              SyThemeTitleBars.alignedButton(
+              alignedButton(
                 maximum_origin,
                 title_theme,
                 text_max_x);
@@ -348,7 +348,7 @@ public final class SyThemeTitleBars
               "Icon must be shown");
 
             arrangement.setIconBox(
-              SyThemeTitleBars.alignedIcon(
+              alignedIcon(
                 maximum_origin,
                 title_theme,
                 text_max_x));

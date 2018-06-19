@@ -148,7 +148,7 @@ public final class SyAWTWindowRenderer implements
         Optional.of(SyAWTDrawing.toColor(frame_theme.colorInactive())),
         false);
     } else {
-      this.renderFrameUnembossedActual(
+      SyAWTWindowRenderer.renderFrameUnembossedActual(
         graphics,
         frame_theme,
         window,
@@ -183,7 +183,7 @@ public final class SyAWTWindowRenderer implements
         Optional.of(SyAWTDrawing.toColor(frame_theme.colorActive())),
         true);
     } else {
-      this.renderFrameUnembossedActual(
+      SyAWTWindowRenderer.renderFrameUnembossedActual(
         graphics,
         frame_theme,
         window,
@@ -363,7 +363,7 @@ public final class SyAWTWindowRenderer implements
       }
     }
 
-    /**
+    /*
      * Left frame.
      */
 
@@ -374,7 +374,7 @@ public final class SyAWTWindowRenderer implements
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
-    /**
+    /*
      * Right frame.
      */
 
@@ -386,7 +386,7 @@ public final class SyAWTWindowRenderer implements
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
-    /**
+    /*
      * Top frame.
      */
 
@@ -397,7 +397,7 @@ public final class SyAWTWindowRenderer implements
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
-    /**
+    /*
      * Bottom frame.
      */
 
@@ -408,7 +408,7 @@ public final class SyAWTWindowRenderer implements
         graphics, box, emboss_size, e_left, e_right, e_top, e_bottom, eo_fill);
     }
 
-    /**
+    /*
      * Corners.
      */
 
@@ -493,7 +493,7 @@ public final class SyAWTWindowRenderer implements
     }
   }
 
-  private void renderFrameUnembossedActual(
+  private static void renderFrameUnembossedActual(
     final Graphics2D graphics,
     final SyThemeWindowFrame frame_theme,
     final SyWindowReadableType window,
@@ -509,10 +509,8 @@ public final class SyAWTWindowRenderer implements
     final SyWindowFrameType frame = window.frame();
     final PAreaI<SySpaceParentRelativeType> frame_box = frame.box();
 
-    if (outline_opt.isPresent()) {
-      SyAWTDrawing.drawOutline(
-        graphics, outline_opt.get(), frame_box, active);
-    }
+    outline_opt.ifPresent(
+      theme_outline -> SyAWTDrawing.drawOutline(graphics, theme_outline, frame_box, active));
 
     final int frame_x = frame_box.minimumX();
     final int frame_y = frame_box.minimumY();
@@ -524,7 +522,7 @@ public final class SyAWTWindowRenderer implements
 
     final int bottom_y = frame_height - bottom_height;
 
-    /**
+    /*
      * Left frame.
      */
 
@@ -533,7 +531,7 @@ public final class SyAWTWindowRenderer implements
       graphics.fillRect(0, 0, left_width, frame_height);
     }
 
-    /**
+    /*
      * Right frame.
      */
 
@@ -543,7 +541,7 @@ public final class SyAWTWindowRenderer implements
         frame_width - right_width, 0, right_width, frame_height);
     }
 
-    /**
+    /*
      * Top frame.
      */
 
@@ -552,7 +550,7 @@ public final class SyAWTWindowRenderer implements
       graphics.fillRect(0, 0, frame_width, top_height);
     }
 
-    /**
+    /*
      * Bottom frame.
      */
 

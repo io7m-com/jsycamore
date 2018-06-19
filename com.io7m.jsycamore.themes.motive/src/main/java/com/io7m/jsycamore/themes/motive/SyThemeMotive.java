@@ -174,7 +174,7 @@ public final class SyThemeMotive
     theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 0, 0, 0));
     theme_titlebar_b.setButtonHeight(16);
     theme_titlebar_b.setButtonWidth(16);
-    theme_titlebar_b.setButtonTheme(SyThemeMotive.createThemeTitlebarButton(
+    theme_titlebar_b.setButtonTheme(createThemeTitlebarButton(
       color_active_base,
       color_active_lighter,
       color_active_darker,
@@ -257,12 +257,12 @@ public final class SyThemeMotive
         theme_frame_b.build(),
         SyThemeMotive::arrangeWindowComponents));
 
-    theme.setPanelTheme(SyThemeMotive.createThemePanel(
+    theme.setPanelTheme(createThemePanel(
       background,
       background_lighter,
       background_darker));
 
-    theme.setButtonRepeatingTheme(SyThemeMotive.createThemeButtonRepeating(
+    theme.setButtonRepeatingTheme(createThemeButtonRepeating(
       background,
       background_lighter,
       background_lighter_lighter,
@@ -270,7 +270,7 @@ public final class SyThemeMotive
       2,
       true));
 
-    theme.setButtonCheckboxTheme(SyThemeMotive.createThemeButtonCheckbox(
+    theme.setButtonCheckboxTheme(createThemeButtonCheckbox(
       background,
       background_lighter,
       background_lighter_lighter,
@@ -278,7 +278,7 @@ public final class SyThemeMotive
       2,
       true));
 
-    theme.setMeterTheme(SyThemeMotive.createThemeMeter(
+    theme.setMeterTheme(createThemeMeter(
       spec,
       background,
       background_lighter,
@@ -287,7 +287,7 @@ public final class SyThemeMotive
       background_darker_darker
     ));
 
-    theme.setLabelTheme(SyThemeMotive.createThemeLabel(
+    theme.setLabelTheme(createThemeLabel(
       spec.foregroundColorActive(),
       spec.foregroundColorInactive()));
 
@@ -366,7 +366,7 @@ public final class SyThemeMotive
     final SyTheme theme = window.theme();
     final SyThemeWindowType theme_window = theme.windowTheme();
 
-    /**
+    /*
      * Calculate a frame that borders the entire window, with an exclusion
      * area inside which is placed the titleBar and content.
      */
@@ -387,7 +387,7 @@ public final class SyThemeMotive
         box_frame_inner_initial,
         frame_theme.outline());
 
-    /**
+    /*
      * Calculate a titleBar that appears at the top of the inside of the
      * frame.
      */
@@ -401,7 +401,7 @@ public final class SyThemeMotive
         box_frame_inner.sizeX(),
         titlebar_theme.height());
 
-    /**
+    /*
      * The content area is whatever space is left over.
      */
 
@@ -689,7 +689,7 @@ public final class SyThemeMotive
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeMotive.builderFrom(
+    return builderFrom(
       SyThemeMotiveSpecification.builder().build());
   }
 }

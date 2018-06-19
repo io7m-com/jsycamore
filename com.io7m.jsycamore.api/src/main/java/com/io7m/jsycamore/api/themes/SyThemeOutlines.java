@@ -80,6 +80,6 @@ public final class SyThemeOutlines
     Objects.requireNonNull(outline_opt, "Outline");
 
     return outline_opt.map(
-      outline -> SyThemeOutlines.scaleForOutline(box, outline)).orElse(box);
+      outline -> scaleForOutline(box, outline)).orElse(box);
   }
 }

@@ -89,8 +89,8 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyMeterAbstract.LOG.isTraceEnabled()) {
-      SyMeterAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseHeld: {} {} {} {}",
         mouse_position_first,
         mouse_position_now,
@@ -122,8 +122,8 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyMeterAbstract.LOG.isTraceEnabled()) {
-      SyMeterAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mousePressed: {} {} {}", mouse_position, button, actual);
     }
 
@@ -166,8 +166,8 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
         }
       }
 
-      if (SyMeterAbstract.LOG.isTraceEnabled()) {
-        SyMeterAbstract.LOG.trace("value: {}", Double.valueOf(this.value()));
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("value: {}", Double.valueOf(this.value()));
       }
     });
   }

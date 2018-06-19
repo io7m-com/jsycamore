@@ -112,8 +112,8 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
-      SyButtonCheckboxAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseHeld: {} {} {} {}",
         mouse_position_first,
         mouse_position_now,
@@ -151,8 +151,8 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
-      SyButtonCheckboxAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mousePressed: {} {} {}", mouse_position, button, actual);
     }
 
@@ -194,8 +194,8 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
-      SyButtonCheckboxAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseReleased: {} {} {} {}", mouse_position, button, actual);
     }
 
@@ -244,14 +244,14 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     try {
       this.buttonOnClick();
     } catch (final Throwable e) {
-      SyErrors.ignoreNonErrors(SyButtonCheckboxAbstract.LOG, e);
+      SyErrors.ignoreNonErrors(LOG, e);
     }
 
     for (final SyButtonListenerType x : this.listeners) {
       try {
         x.buttonClicked(this);
       } catch (final Throwable e) {
-        SyErrors.ignoreNonErrors(SyButtonCheckboxAbstract.LOG, e);
+        SyErrors.ignoreNonErrors(LOG, e);
       }
     }
   }
@@ -290,7 +290,7 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
   @Override
   public final boolean mouseNoLongerOver()
   {
-    SyButtonCheckboxAbstract.LOG.trace("mouseNoLongerOver");
+    LOG.trace("mouseNoLongerOver");
     this.over = false;
     this.pressed = false;
     return true;
@@ -304,8 +304,8 @@ public abstract class SyButtonCheckboxAbstract extends SyComponentAbstract imple
     Objects.requireNonNull(mouse_position, "Mouse position");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonCheckboxAbstract.LOG.isTraceEnabled()) {
-      SyButtonCheckboxAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseOver: {} {}",
         mouse_position,
         actual);

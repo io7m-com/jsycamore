@@ -164,7 +164,7 @@ public final class SyThemeFenestra
     theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 3, 0, 0));
     theme_titlebar_b.setButtonHeight(14);
     theme_titlebar_b.setButtonWidth(16);
-    theme_titlebar_b.setButtonTheme(SyThemeFenestra.createThemeTitlebarButton(
+    theme_titlebar_b.setButtonTheme(createThemeTitlebarButton(
       spec,
       background,
       background_lighter,
@@ -250,7 +250,7 @@ public final class SyThemeFenestra
         SyThemeFenestra::arrangeWindowComponents));
 
     theme.setButtonRepeatingTheme(
-      SyThemeFenestra.createThemeButtonRepeating(
+      createThemeButtonRepeating(
         spec,
         background,
         background_lighter,
@@ -259,7 +259,7 @@ public final class SyThemeFenestra
         1,
         true));
 
-    theme.setButtonCheckboxTheme(SyThemeFenestra.createThemeButtonCheckbox(
+    theme.setButtonCheckboxTheme(createThemeButtonCheckbox(
       spec,
       background,
       background_lighter,
@@ -268,12 +268,12 @@ public final class SyThemeFenestra
       1,
       true));
 
-    theme.setMeterTheme(SyThemeFenestra.createThemeMeter(spec));
+    theme.setMeterTheme(createThemeMeter(spec));
 
     theme.setPanelTheme(
-      SyThemeFenestra.createThemePanel(background, background_darker));
+      createThemePanel(background, background_darker));
     theme.setLabelTheme(
-      SyThemeFenestra.createThemeLabel(
+      createThemeLabel(
         spec.foregroundColorActive(),
         spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
@@ -653,7 +653,7 @@ public final class SyThemeFenestra
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeFenestra.builderFrom(
+    return builderFrom(
       SyThemeFenestraSpecification.builder().build());
   }
 }

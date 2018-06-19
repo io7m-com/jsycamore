@@ -53,8 +53,8 @@ public final class SyGUI implements SyGUIType
 
   static {
     LOG = LoggerFactory.getLogger(SyGUI.class);
-    LOG_MOUSE = LoggerFactory.getLogger(SyGUI.LOG.getName() + ".mouse");
-    LOG_SEARCH = LoggerFactory.getLogger(SyGUI.LOG.getName() + ".search");
+    LOG_MOUSE = LoggerFactory.getLogger(LOG.getName() + ".mouse");
+    LOG_SEARCH = LoggerFactory.getLogger(LOG.getName() + ".search");
   }
 
   private final SyTextMeasurementType text_measurement;
@@ -235,7 +235,7 @@ public final class SyGUI implements SyGUIType
 
   private void windowFocusActual(final SyWindowType window)
   {
-    SyGUI.LOG.debug("windowFocusActual: {}", window);
+    LOG.debug("windowFocusActual: {}", window);
 
     Preconditions.checkPrecondition(
       this.windows_open.contains(window),
@@ -346,8 +346,8 @@ public final class SyGUI implements SyGUIType
         if (state.state == MouseButtonState.MOUSE_STATE_DOWN) {
           if (state.component_clicked_last.isPresent()) {
             final SyComponentType component = state.component_clicked_last.get();
-            if (SyGUI.LOG_MOUSE.isTraceEnabled()) {
-              SyGUI.LOG_MOUSE.trace("onMouseHeld: {}", component);
+            if (LOG_MOUSE.isTraceEnabled()) {
+              LOG_MOUSE.trace("onMouseHeld: {}", component);
             }
             component.onMouseHeld(
               state.position_clicked_last,
@@ -393,8 +393,8 @@ public final class SyGUI implements SyGUIType
        * Tell the current component that the cursor is over it.
        */
 
-      if (SyGUI.LOG_MOUSE.isTraceEnabled()) {
-        SyGUI.LOG_MOUSE.trace("onMouseOver: {}", current);
+      if (LOG_MOUSE.isTraceEnabled()) {
+        LOG_MOUSE.trace("onMouseOver: {}", current);
       }
       this.component_over = current_opt;
       current.onMouseOver(position, current);
@@ -409,8 +409,8 @@ public final class SyGUI implements SyGUIType
   {
     if (this.component_over.isPresent()) {
       final SyComponentType previous = this.component_over.get();
-      if (SyGUI.LOG_MOUSE.isTraceEnabled()) {
-        SyGUI.LOG_MOUSE.trace("onMouseNoLongerOver: {}", previous);
+      if (LOG_MOUSE.isTraceEnabled()) {
+        LOG_MOUSE.trace("onMouseNoLongerOver: {}", previous);
       }
       previous.onMouseNoLongerOver();
       this.component_over = Optional.empty();
@@ -466,16 +466,16 @@ public final class SyGUI implements SyGUIType
         state.component_clicked_last = component_opt;
         state.position_clicked_last = position;
 
-        if (SyGUI.LOG_MOUSE.isTraceEnabled()) {
-          SyGUI.LOG_MOUSE.trace("onMousePressed: {}", component);
+        if (LOG_MOUSE.isTraceEnabled()) {
+          LOG_MOUSE.trace("onMousePressed: {}", component);
         }
         component.onMousePressed(position, button, component);
         return state.component_clicked_last;
       }
 
       case MOUSE_STATE_DOWN: {
-        if (SyGUI.LOG_MOUSE.isErrorEnabled()) {
-          SyGUI.LOG_MOUSE.error("mouse button {} is already down", button);
+        if (LOG_MOUSE.isErrorEnabled()) {
+          LOG_MOUSE.error("mouse button {} is already down", button);
         }
         break;
       }
@@ -510,8 +510,8 @@ public final class SyGUI implements SyGUIType
       final Optional<SyComponentType> component =
         window.componentForViewportPosition(position);
 
-      if (SyGUI.LOG_SEARCH.isTraceEnabled()) {
-        SyGUI.LOG_SEARCH.trace(
+      if (LOG_SEARCH.isTraceEnabled()) {
+        LOG_SEARCH.trace(
           "componentForPosition: {} {} {}",
           window, position, component);
       }
@@ -543,8 +543,8 @@ public final class SyGUI implements SyGUIType
 
     switch (state.state) {
       case MOUSE_STATE_UP: {
-        if (SyGUI.LOG_MOUSE.isErrorEnabled()) {
-          SyGUI.LOG_MOUSE.error("mouse button {} is already up", button);
+        if (LOG_MOUSE.isErrorEnabled()) {
+          LOG_MOUSE.error("mouse button {} is already up", button);
         }
         break;
       }
@@ -561,13 +561,13 @@ public final class SyGUI implements SyGUIType
             final PVector2I<SySpaceWindowRelativeType> w_position =
               window.transformViewportRelative(position);
 
-            if (SyGUI.LOG_MOUSE.isTraceEnabled()) {
-              SyGUI.LOG_MOUSE.trace("onMouseReleased: {}", component);
+            if (LOG_MOUSE.isTraceEnabled()) {
+              LOG_MOUSE.trace("onMouseReleased: {}", component);
             }
             component.onMouseReleased(position, button, component);
           } else {
-            if (SyGUI.LOG_MOUSE.isErrorEnabled()) {
-              SyGUI.LOG_MOUSE.error(
+            if (LOG_MOUSE.isErrorEnabled()) {
+              LOG_MOUSE.error(
                 "onMouseReleased: {} has no window",
                 component);
             }

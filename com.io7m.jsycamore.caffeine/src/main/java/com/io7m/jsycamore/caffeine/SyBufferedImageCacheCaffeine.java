@@ -108,11 +108,11 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
 
     final AsyncCacheLoader<? super SyImageSpecification, BufferedImage> loader =
       (AsyncCacheLoader<SyImageSpecification, BufferedImage>) (image_spec, executor) ->
-        SyBufferedImageCacheCaffeine.load(
+        load(
           in_resolver, in_loader, image_spec, executor);
 
     final RemovalListener<SyImageSpecification, BufferedImage> removal_listener =
-      (key, value, cause) -> SyBufferedImageCacheCaffeine.LOG.trace(
+      (key, value, cause) -> LOG.trace(
         "removal: {} {} {}", key, value, cause);
 
     final AsyncLoadingCache<SyImageSpecification, BufferedImage> cache =

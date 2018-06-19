@@ -104,9 +104,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final int target_y)
   {
     if (target_x >= viewport_min_x && target_x <= viewport_max_x) {
-      if (target_y >= viewport_min_y && target_y <= viewport_max_y) {
-        return true;
-      }
+      return target_y >= viewport_min_y && target_y <= viewport_max_y;
     }
 
     return false;
@@ -206,7 +204,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final JOTreeNodeReadableType<SyComponentReadableType> nodeReadable()
   {
-    return SyComponentAbstract.castNode(this.node);
+    return castNode(this.node);
   }
 
   /**
@@ -324,7 +322,7 @@ public abstract class SyComponentAbstract implements SyComponentType
       final int target_x = w_position.x();
       final int target_y = w_position.y();
 
-      if (SyComponentAbstract.isOverlappingComponent(
+      if (isOverlappingComponent(
         min_x, min_y, max_x, max_y, target_x, target_y)) {
 
         final Collection<JOTreeNodeType<SyComponentType>> children =
@@ -408,7 +406,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         parent.onMouseHeld(
           mouse_position_first, mouse_position_now, button, actual);
       } else {
-        SyComponentAbstract.LOG.warn("onMouseHeld: event not consumed");
+        LOG.warn("onMouseHeld: event not consumed");
       }
     }
   }
@@ -431,7 +429,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         final SyComponentType parent = parent_node.get().value();
         parent.onMousePressed(mouse_position, button, actual);
       } else {
-        SyComponentAbstract.LOG.warn("onMousePressed: event not consumed");
+        LOG.warn("onMousePressed: event not consumed");
       }
     }
   }
@@ -454,7 +452,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         final SyComponentType parent = parent_node.get().value();
         parent.onMouseReleased(mouse_position, button, actual);
       } else {
-        SyComponentAbstract.LOG.warn("onMouseReleased: event not consumed");
+        LOG.warn("onMouseReleased: event not consumed");
       }
     }
   }
@@ -474,7 +472,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         final SyComponentType parent = parent_node.get().value();
         parent.onMouseNoLongerOver();
       } else {
-        SyComponentAbstract.LOG.warn("onMouseNoLongerOver: event not consumed");
+        LOG.warn("onMouseNoLongerOver: event not consumed");
       }
     }
   }
@@ -496,7 +494,7 @@ public abstract class SyComponentAbstract implements SyComponentType
         final SyComponentType parent = parent_node.get().value();
         parent.onMouseOver(mouse_position, actual);
       } else {
-        SyComponentAbstract.LOG.warn("onMouseOver: event not consumed");
+        LOG.warn("onMouseOver: event not consumed");
       }
     }
   }
@@ -504,7 +502,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final Optional<SyWindowReadableType> windowReadable()
   {
-    return SyComponentAbstract.cast(this.window());
+    return cast(this.window());
   }
 
   @Override
@@ -525,8 +523,8 @@ public abstract class SyComponentAbstract implements SyComponentType
       delta_x != 0 || delta_y != 0;
 
     try {
-      if (SyComponentAbstract.LOG_RESIZE.isTraceEnabled()) {
-        SyComponentAbstract.LOG_RESIZE.trace(
+      if (LOG_RESIZE.isTraceEnabled()) {
+        LOG_RESIZE.trace(
           "resized: ({}) {} ({}, {})",
           this,
           this.box,
@@ -535,7 +533,7 @@ public abstract class SyComponentAbstract implements SyComponentType
       }
       this.resized(delta_x, delta_y);
     } catch (final Throwable e) {
-      SyErrors.ignoreNonErrors(SyComponentAbstract.LOG, e);
+      SyErrors.ignoreNonErrors(LOG, e);
     }
 
     if (resized) {

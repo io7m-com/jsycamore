@@ -102,8 +102,8 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
-      SyButtonRepeatingAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseHeld: {} {} {} {}",
         mouse_position_first,
         mouse_position_now,
@@ -141,8 +141,8 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
-      SyButtonRepeatingAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mousePressed: {} {} {}", mouse_position, button, actual);
     }
 
@@ -171,8 +171,8 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(button, "Mouse button");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
-      SyButtonRepeatingAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseReleased: {} {} {} {}", mouse_position, button, actual);
     }
 
@@ -220,14 +220,14 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     try {
       this.buttonOnClick();
     } catch (final Throwable e) {
-      SyErrors.ignoreNonErrors(SyButtonRepeatingAbstract.LOG, e);
+      SyErrors.ignoreNonErrors(LOG, e);
     }
 
     for (final SyButtonListenerType x : this.listeners) {
       try {
         x.buttonClicked(this);
       } catch (final Throwable e) {
-        SyErrors.ignoreNonErrors(SyButtonRepeatingAbstract.LOG, e);
+        SyErrors.ignoreNonErrors(LOG, e);
       }
     }
   }
@@ -235,7 +235,7 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
   @Override
   public final boolean mouseNoLongerOver()
   {
-    SyButtonRepeatingAbstract.LOG.trace("mouseNoLongerOver");
+    LOG.trace("mouseNoLongerOver");
     this.over = false;
     this.pressed = false;
     return true;
@@ -249,8 +249,8 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(mouse_position, "Mouse position");
     Objects.requireNonNull(actual, "Component");
 
-    if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
-      SyButtonRepeatingAbstract.LOG.trace(
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(
         "mouseOver: {} {}",
         mouse_position,
         actual);

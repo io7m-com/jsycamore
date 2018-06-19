@@ -80,7 +80,7 @@ public abstract class SyWindowAbstract implements SyWindowType
 
   static {
     LOG = LoggerFactory.getLogger(SyWindowAbstract.class);
-    LOG_FOCUS = LoggerFactory.getLogger(SyWindowAbstract.LOG.getName() + ".focus");
+    LOG_FOCUS = LoggerFactory.getLogger(LOG.getName() + ".focus");
   }
 
   private final SyGUIType gui;
@@ -190,10 +190,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final SyTheme theme()
   {
-    if (this.theme_override.isPresent()) {
-      return this.theme_override.get();
-    }
-    return this.gui.theme();
+    return this.theme_override.orElseGet(this.gui::theme);
   }
 
   private void recalculateBounds(
@@ -315,21 +312,21 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void onWindowGainsFocus()
   {
-    SyWindowAbstract.LOG_FOCUS.trace("focus gained: {}", this);
+    LOG_FOCUS.trace("focus gained: {}", this);
     this.root.titlebar.setActive(SyActive.ACTIVE);
   }
 
   @Override
   public final void onWindowLosesFocus()
   {
-    SyWindowAbstract.LOG_FOCUS.trace("focus lost: {}", this);
+    LOG_FOCUS.trace("focus lost: {}", this);
     this.root.titlebar.setActive(SyActive.INACTIVE);
   }
 
   @Override
   public final void onWindowClosed()
   {
-    SyWindowAbstract.LOG_FOCUS.trace("closed: {}", this);
+    LOG_FOCUS.trace("closed: {}", this);
   }
 
   @Override
@@ -423,7 +420,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     TitleBarText()
     {
       super(() -> {
-        SyWindowAbstract.LOG.debug("refusing to detach titleBar text");
+        LOG.debug("refusing to detach titleBar text");
         return false;
       });
     }
@@ -442,8 +439,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBarIcon extends SyPanelAbstract implements
-    SyPanelType
+  private final class TitleBarIcon extends SyPanelAbstract
   {
     private Optional<TitleBarIconImage> image;
 
@@ -451,7 +447,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     {
       super(
         () -> {
-          SyWindowAbstract.LOG.warn("refusing to detach title bar icon");
+          LOG.warn("refusing to detach title bar icon");
           return false;
         });
 
@@ -531,7 +527,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     TitleBar(final String in_text)
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach title bar");
+        LOG.warn("refusing to detach title bar");
         return false;
       });
 
@@ -722,7 +718,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     TitleBarCloseButton()
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach close box");
+        LOG.warn("refusing to detach close box");
         return false;
       });
     }
@@ -754,7 +750,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     TitleBarMaximizeButton()
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach maximize button");
+        LOG.warn("refusing to detach maximize button");
         return false;
       });
     }
@@ -780,7 +776,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     ContentPane()
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach content pane");
+        LOG.warn("refusing to detach content pane");
         return false;
       });
 
@@ -808,7 +804,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     Frame()
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach frame");
+        LOG.warn("refusing to detach frame");
         return false;
       });
 
@@ -849,7 +845,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     WindowRoot(final String in_text)
     {
       super(() -> {
-        SyWindowAbstract.LOG.warn("refusing to detach window root");
+        LOG.warn("refusing to detach window root");
         return false;
       });
 

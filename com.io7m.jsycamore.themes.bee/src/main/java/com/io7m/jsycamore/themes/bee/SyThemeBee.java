@@ -300,24 +300,24 @@ public final class SyThemeBee
         theme_frame_b.build(),
         SyThemeBee::arrangeWindowComponents));
 
-    theme.setButtonRepeatingTheme(SyThemeBee.createThemeButtonRepeating(
+    theme.setButtonRepeatingTheme(createThemeButtonRepeating(
       spec,
       background,
       background_lighter,
       background_lighter_lighter,
       background_darker));
 
-    theme.setButtonCheckboxTheme(SyThemeBee.createThemeButtonCheckbox(
+    theme.setButtonCheckboxTheme(createThemeButtonCheckbox(
       spec,
       background,
       background_lighter,
       background_lighter_lighter,
       background_darker));
 
-    theme.setMeterTheme(SyThemeBee.createThemeMeter(spec));
+    theme.setMeterTheme(createThemeMeter(spec));
 
-    theme.setPanelTheme(SyThemeBee.createThemePanel(background));
-    theme.setLabelTheme(SyThemeBee.createThemeLabel(
+    theme.setPanelTheme(createThemePanel(background));
+    theme.setLabelTheme(createThemeLabel(
       spec.foregroundColorActive(),
       spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
@@ -328,9 +328,9 @@ public final class SyThemeBee
     final SyThemeBeeSpecification spec)
   {
     final SyThemeMeterOriented h =
-      SyThemeBee.createThemeMeterHorizontal(spec);
+      createThemeMeterHorizontal(spec);
     final SyThemeMeterOriented v =
-      SyThemeBee.createThemeMeterVertical(spec);
+      createThemeMeterVertical(spec);
     return SyThemeMeter.of(h, v);
   }
 
@@ -833,7 +833,7 @@ public final class SyThemeBee
 
   public static SyTheme.Builder builder()
   {
-    return SyThemeBee.builderFrom(
+    return builderFrom(
       SyThemeBeeSpecification.builder().build());
   }
 }

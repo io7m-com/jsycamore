@@ -41,7 +41,7 @@ public interface SyWindowTitleBarType extends SyPanelReadableType
    * @param in_text The text
    */
 
-  void setText(final String in_text);
+  void setText(String in_text);
 
   /**
    * Set the title bar icon.

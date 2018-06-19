@@ -59,22 +59,23 @@ public enum SyMouseButton
   {
     switch (index) {
       case 0:
-        return SyMouseButton.MOUSE_BUTTON_LEFT;
+        return MOUSE_BUTTON_LEFT;
       case 1:
-        return SyMouseButton.MOUSE_BUTTON_MIDDLE;
+        return MOUSE_BUTTON_MIDDLE;
       case 2:
-        return SyMouseButton.MOUSE_BUTTON_RIGHT;
+        return MOUSE_BUTTON_RIGHT;
+      default: {
+        final StringBuilder sb = new StringBuilder(128);
+        sb.append("Invalid mouse button index.");
+        sb.append(System.lineSeparator());
+        sb.append("  Expected: [0, 2]");
+        sb.append(System.lineSeparator());
+        sb.append("  Received: ");
+        sb.append(index);
+        sb.append(System.lineSeparator());
+        throw new IllegalArgumentException(sb.toString());
+      }
     }
-
-    final StringBuilder sb = new StringBuilder(128);
-    sb.append("Invalid mouse button index.");
-    sb.append(System.lineSeparator());
-    sb.append("  Expected: [0, 2]");
-    sb.append(System.lineSeparator());
-    sb.append("  Received: ");
-    sb.append(index);
-    sb.append(System.lineSeparator());
-    throw new IllegalArgumentException(sb.toString());
   }
 
   /**

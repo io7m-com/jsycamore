@@ -88,9 +88,9 @@ public final class SyAWTDrawing
     final int y_max = box.maximumY();
 
     if (active) {
-      graphics.setPaint(SyAWTDrawing.toColor(outline.colorActive()));
+      graphics.setPaint(toColor(outline.colorActive()));
     } else {
-      graphics.setPaint(SyAWTDrawing.toColor(outline.colorInactive()));
+      graphics.setPaint(toColor(outline.colorInactive()));
     }
 
     if (outline.left()) {
@@ -146,7 +146,7 @@ public final class SyAWTDrawing
     final PAreaI<?> in_box,
     final SyThemeColorType color)
   {
-    return SyAWTDrawing.toColor(color.color());
+    return toColor(color.color());
   }
 
   private static Paint toPaintGradient(
@@ -161,7 +161,7 @@ public final class SyAWTDrawing
     final List<Vector3D> g_colors = gradient.colors();
     for (int index = 0; index < size; ++index) {
       fractions[index] = g_distributions.get(index).floatValue();
-      colors[index] = SyAWTDrawing.toColor(g_colors.get(index));
+      colors[index] = toColor(g_colors.get(index));
     }
 
     final double x = (double) in_box.minimumX();
