@@ -16,17 +16,17 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.SyMouseButton;
-import com.io7m.jsycamore.api.themes.SyOrientation;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.themes.SyOrientation;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -62,7 +62,7 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
   @Override
   public final void setOrientation(final SyOrientation o)
   {
-    this.orientation = NullCheck.notNull(o, "Orientation");
+    this.orientation = Objects.requireNonNull(o, "Orientation");
   }
 
   @Override
@@ -84,10 +84,10 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position_first, "Mouse position first");
-    NullCheck.notNull(mouse_position_now, "Mouse position now");
-    NullCheck.notNull(button, "Mouse button");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position_first, "Mouse position first");
+    Objects.requireNonNull(mouse_position_now, "Mouse position now");
+    Objects.requireNonNull(button, "Mouse button");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyMeterAbstract.LOG.isTraceEnabled()) {
       SyMeterAbstract.LOG.trace(
@@ -118,9 +118,9 @@ public abstract class SyMeterAbstract extends SyComponentAbstract implements
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position, "Mouse position");
-    NullCheck.notNull(button, "Mouse button");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position, "Mouse position");
+    Objects.requireNonNull(button, "Mouse button");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyMeterAbstract.LOG.isTraceEnabled()) {
       SyMeterAbstract.LOG.trace(

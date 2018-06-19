@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.SyGUIType;
 import com.io7m.jsycamore.api.renderer.SyGUIRendererType;
@@ -28,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A very inefficient GUI renderer using AWT.
@@ -42,7 +42,7 @@ public final class SyAWTGUIRendererInefficient
     final SyWindowRendererType<BufferedImage, BufferedImage> in_window_renderer)
   {
     this.window_renderer =
-      NullCheck.notNull(in_window_renderer, "Window renderer");
+      Objects.requireNonNull(in_window_renderer, "Window renderer");
   }
 
   /**
@@ -64,8 +64,8 @@ public final class SyAWTGUIRendererInefficient
     final BufferedImage input,
     final SyGUIType ui)
   {
-    NullCheck.notNull(input, "Input image");
-    NullCheck.notNull(ui, "GUI");
+    Objects.requireNonNull(input, "Input image");
+    Objects.requireNonNull(ui, "GUI");
 
     final Graphics2D graphics = input.createGraphics();
 

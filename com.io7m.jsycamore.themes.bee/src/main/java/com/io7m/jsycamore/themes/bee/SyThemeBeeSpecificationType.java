@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.themes.bee;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 
@@ -24,7 +24,7 @@ import org.immutables.value.Value;
  * The parameters for the {@link SyThemeBee} theme.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeBeeSpecificationType
 {
@@ -84,8 +84,7 @@ public interface SyThemeBeeSpecificationType
   }
 
   /**
-   * @return The general foreground color used for text on active components,
-   * etc
+   * @return The general foreground color used for text on active components, etc
    */
 
   @Value.Parameter
@@ -96,8 +95,7 @@ public interface SyThemeBeeSpecificationType
   }
 
   /**
-   * @return The general foreground color used for text on inactive components,
-   * etc
+   * @return The general foreground color used for text on inactive components, etc
    */
 
   @Value.Parameter

@@ -16,11 +16,11 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
-import com.io7m.jsycamore.api.images.SyImageSpecification;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
@@ -66,6 +66,6 @@ public interface SyImageType extends SyComponentType, SyImageReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_image, "Receiver").apply(context, this);
+    return Objects.requireNonNull(on_image, "Receiver").apply(context, this);
   }
 }

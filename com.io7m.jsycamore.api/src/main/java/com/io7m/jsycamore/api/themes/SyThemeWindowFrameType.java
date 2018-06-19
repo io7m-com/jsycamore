@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.api.themes;
 
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 
@@ -27,7 +27,7 @@ import java.util.Optional;
  * The type of window frame theme parameters.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeWindowFrameType
 {

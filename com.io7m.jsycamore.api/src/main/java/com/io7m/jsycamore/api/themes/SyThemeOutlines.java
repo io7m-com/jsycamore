@@ -16,12 +16,12 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.junreachable.UnreachableCodeException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -36,9 +36,8 @@ public final class SyThemeOutlines
   }
 
   /**
-   * Scale the given box appropriately for the given outline. Specifically, the
-   * edges of the box will be inset by {@code 1} pixel for each side that has an
-   * outline enabled.
+   * Scale the given box appropriately for the given outline. Specifically, the edges of the box
+   * will be inset by {@code 1} pixel for each side that has an outline enabled.
    *
    * @param box     The box
    * @param outline The outline
@@ -51,8 +50,8 @@ public final class SyThemeOutlines
     final PAreaI<S> box,
     final SyThemeOutlineType outline)
   {
-    NullCheck.notNull(box, "Box");
-    NullCheck.notNull(outline, "Outline");
+    Objects.requireNonNull(box, "Box");
+    Objects.requireNonNull(outline, "Outline");
 
     return PAreasI.hollowOut(
       box,
@@ -63,8 +62,8 @@ public final class SyThemeOutlines
   }
 
   /**
-   * Call {@link #scaleForOutline(PAreaI, SyThemeOutlineType)} if the outline
-   * is present, or return {@code box} otherwise.
+   * Call {@link #scaleForOutline(PAreaI, SyThemeOutlineType)} if the outline is present, or return
+   * {@code box} otherwise.
    *
    * @param box         The box
    * @param outline_opt The optional outline
@@ -77,8 +76,8 @@ public final class SyThemeOutlines
     final PAreaI<S> box,
     final Optional<SyThemeOutline> outline_opt)
   {
-    NullCheck.notNull(box, "Box");
-    NullCheck.notNull(outline_opt, "Outline");
+    Objects.requireNonNull(box, "Box");
+    Objects.requireNonNull(outline_opt, "Outline");
 
     return outline_opt.map(
       outline -> SyThemeOutlines.scaleForOutline(box, outline)).orElse(box);

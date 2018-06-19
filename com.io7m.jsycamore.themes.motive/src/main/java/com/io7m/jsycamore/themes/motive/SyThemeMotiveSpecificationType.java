@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.themes.motive;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 
@@ -24,7 +24,7 @@ import org.immutables.value.Value;
  * The parameters for the {@link SyThemeMotive} theme.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeMotiveSpecificationType
 {
@@ -40,8 +40,7 @@ public interface SyThemeMotiveSpecificationType
   }
 
   /**
-   * @return The factor by which to scale the active color to produce the light
-   * shade for embossing
+   * @return The factor by which to scale the active color to produce the light shade for embossing
    */
 
   @Value.Parameter
@@ -52,8 +51,7 @@ public interface SyThemeMotiveSpecificationType
   }
 
   /**
-   * @return The factor by which to scale the active color to produce the dark
-   * shade for embossing
+   * @return The factor by which to scale the active color to produce the dark shade for embossing
    */
 
   @Value.Parameter
@@ -86,8 +84,7 @@ public interface SyThemeMotiveSpecificationType
   }
 
   /**
-   * @return The general foreground color used for text on inactive components,
-   * etc
+   * @return The general foreground color used for text on inactive components, etc
    */
 
   @Value.Parameter

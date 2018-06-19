@@ -27,15 +27,12 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 public interface SyComponentMouseEventsType
 {
   /**
-   * Notify the component that the mouse button {@code button} is currently
-   * being held.
+   * Notify the component that the mouse button {@code button} is currently being held.
    *
-   * @param mouse_position_first The position of the mouse cursor when the
-   *                             button was first pressed
+   * @param mouse_position_first The position of the mouse cursor when the button was first pressed
    * @param mouse_position_now   The position of the mouse cursor now
    * @param button               The mouse button
-   * @param actual               The component that was initially under the
-   *                             mouse
+   * @param actual               The component that was initially under the mouse
    */
 
   void onMouseHeld(
@@ -45,8 +42,7 @@ public interface SyComponentMouseEventsType
     SyComponentType actual);
 
   /**
-   * Notify the component that the mouse button {@code button} has just been
-   * pressed.
+   * Notify the component that the mouse button {@code button} has just been pressed.
    *
    * @param mouse_position The position of the mouse cursor now
    * @param button         The mouse button
@@ -59,8 +55,7 @@ public interface SyComponentMouseEventsType
     SyComponentType actual);
 
   /**
-   * Notify the component that the mouse button {@code button} has just been
-   * released.
+   * Notify the component that the mouse button {@code button} has just been released.
    *
    * @param mouse_position The position of the mouse cursor now
    * @param button         The mouse button
@@ -73,15 +68,13 @@ public interface SyComponentMouseEventsType
     SyComponentType actual);
 
   /**
-   * Notify the component that the mouse cursor is no longer over this
-   * component.
+   * Notify the component that the mouse cursor is no longer over this component.
    */
 
   void onMouseNoLongerOver();
 
   /**
-   * Notify the component that the mouse cursor has just moved over this
-   * component.
+   * Notify the component that the mouse cursor has just moved over this component.
    *
    * @param mouse_position The position of the mouse cursor now
    * @param actual         The component that is under the mouse

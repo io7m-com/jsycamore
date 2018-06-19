@@ -16,11 +16,11 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 import com.io7m.jsycamore.api.themes.SyThemeLabel;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -31,8 +31,7 @@ import java.util.function.BiFunction;
 public interface SyLabelReadableType extends SyComponentReadableType
 {
   /**
-   * @return The current theme for the label iff the component is attached to a
-   * window
+   * @return The current theme for the label iff the component is attached to a window
    */
 
   Optional<SyThemeLabel> theme();
@@ -44,8 +43,8 @@ public interface SyLabelReadableType extends SyComponentReadableType
   String text();
 
   /**
-   * Retrieve the horizontal alignment of the text. Text will be aligned within
-   * the bounds specified by {@link #box()}.
+   * Retrieve the horizontal alignment of the text. Text will be aligned within the bounds specified
+   * by {@link #box()}.
    *
    * @return The alignment
    */
@@ -53,8 +52,8 @@ public interface SyLabelReadableType extends SyComponentReadableType
   SyAlignmentHorizontal textAlignmentHorizontal();
 
   /**
-   * Retrieve the vertical alignment of the text. Text will be aligned within
-   * the bounds specified by {@link #box()}.
+   * Retrieve the vertical alignment of the text. Text will be aligned within the bounds specified
+   * by {@link #box()}.
    *
    * @return The alignment
    */
@@ -70,6 +69,6 @@ public interface SyLabelReadableType extends SyComponentReadableType
     final BiFunction<A, SyImageReadableType, B> on_image,
     final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_label, "Receiver").apply(context, this);
+    return Objects.requireNonNull(on_label, "Receiver").apply(context, this);
   }
 }

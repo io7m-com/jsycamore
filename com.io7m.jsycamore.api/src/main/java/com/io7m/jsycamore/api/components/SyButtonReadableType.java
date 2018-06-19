@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.themes.SyThemeButtonType;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -51,6 +51,6 @@ public interface SyButtonReadableType extends SyComponentReadableType
     final BiFunction<A, SyImageReadableType, B> on_image,
     final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_button, "Button").apply(context, this);
+    return Objects.requireNonNull(on_button, "Button").apply(context, this);
   }
 }

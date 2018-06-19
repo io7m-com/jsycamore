@@ -16,9 +16,10 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
+
+import java.util.Objects;
 
 /**
  * Functions for color conversion.
@@ -44,7 +45,7 @@ public final class SyColors
     final Vector3D rgb,
     final double degrees)
   {
-    NullCheck.notNull(rgb, "RGB");
+    Objects.requireNonNull(rgb, "RGB");
     final Vector3D hsv = SyColors.convertRGBtoHSV(rgb);
     final Vector3D hsv_rot = Vector3D.of(
       (hsv.x() + degrees) % 360.0, hsv.y(), hsv.z());
@@ -52,8 +53,8 @@ public final class SyColors
   }
 
   /**
-   * Convert the color {@code input}, which is assumed to represent an RGB
-   * color, to HSV format, writing the result to {@code output}.
+   * Convert the color {@code input}, which is assumed to represent an RGB color, to HSV format,
+   * writing the result to {@code output}.
    *
    * @param input The input RGB color
    *
@@ -63,7 +64,7 @@ public final class SyColors
   public static Vector3D convertRGBtoHSV(
     final Vector3D input)
   {
-    NullCheck.notNull(input, "input");
+    Objects.requireNonNull(input, "input");
 
     final double r = input.x();
     final double g = input.y();
@@ -100,8 +101,8 @@ public final class SyColors
   }
 
   /**
-   * Convert the color {@code input}, which is assumed to represent an HSV
-   * color, to RGB format, writing the result to {@code output}.
+   * Convert the color {@code input}, which is assumed to represent an HSV color, to RGB format,
+   * writing the result to {@code output}.
    *
    * @param input The input HSV color
    *
@@ -111,7 +112,7 @@ public final class SyColors
   public static Vector3D convertHSVtoRGB(
     final Vector3D input)
   {
-    NullCheck.notNull(input, "input");
+    Objects.requireNonNull(input, "input");
 
     double h = input.x();
     final double s = input.y();

@@ -48,8 +48,7 @@ public enum SyMouseButton
   }
 
   /**
-   * Retrieve a button for the given index. The index must be in the range
-   * {@code [0, 2]}.
+   * Retrieve a button for the given index. The index must be in the range {@code [0, 2]}.
    *
    * @param index The button index
    *

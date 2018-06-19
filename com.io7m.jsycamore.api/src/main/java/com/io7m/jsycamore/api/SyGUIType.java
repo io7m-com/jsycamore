@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.api;
 
+import com.io7m.jsycamore.api.text.SyTextMeasurementType;
 import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.windows.SyWindowType;
-import com.io7m.jsycamore.api.text.SyTextMeasurementType;
 
 import java.util.List;
 
@@ -44,8 +44,7 @@ public interface SyGUIType extends SyGUIMouseEventsType
     String title);
 
   /**
-   * @return A read-only list of the currently open windows in order from
-   * nearest to furthest
+   * @return A read-only list of the currently open windows in order from nearest to furthest
    */
 
   List<SyWindowType> windowsOpenOrdered();
@@ -71,8 +70,8 @@ public interface SyGUIType extends SyGUIMouseEventsType
   boolean windowIsOpen(SyWindowType w);
 
   /**
-   * Open the window. The window, once opened, has focus. If the window is
-   * already open, the window gains focus.
+   * Open the window. The window, once opened, has focus. If the window is already open, the window
+   * gains focus.
    *
    * @param w A window
    *
@@ -120,8 +119,8 @@ public interface SyGUIType extends SyGUIMouseEventsType
   String name();
 
   /**
-   * Set the theme for the GUI. This will reload the theme for all windows that
-   * are using the GUI theme.
+   * Set the theme for the GUI. This will reload the theme for all windows that are using the GUI
+   * theme.
    *
    * @param theme The theme
    */

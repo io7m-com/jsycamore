@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.api.images;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import org.immutables.value.Value;
 
@@ -26,13 +26,13 @@ import java.net.URI;
  * An image to be loaded.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyImageSpecificationType
 {
   /**
-   * The URI of an image. This is expected to be mapped in an
-   * implementation-specific manner to an image resource.
+   * The URI of an image. This is expected to be mapped in an implementation-specific manner to an
+   * image resource.
    *
    * @return The name of the image
    *

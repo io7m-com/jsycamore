@@ -18,6 +18,5 @@
  * A 1990s style consumer computer theme.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.themes.fenestra;
 

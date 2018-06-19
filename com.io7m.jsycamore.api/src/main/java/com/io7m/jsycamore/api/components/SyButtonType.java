@@ -16,8 +16,7 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
-
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
@@ -27,8 +26,7 @@ import java.util.function.BiFunction;
 public interface SyButtonType extends SyComponentType, SyButtonReadableType
 {
   /**
-   * Add a listener to the button that will be called whenever the button is
-   * pressed.
+   * Add a listener to the button that will be called whenever the button is pressed.
    *
    * @param r The listener
    */
@@ -53,6 +51,6 @@ public interface SyButtonType extends SyComponentType, SyButtonReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_button, "Button").apply(context, this);
+    return Objects.requireNonNull(on_button, "Button").apply(context, this);
   }
 }

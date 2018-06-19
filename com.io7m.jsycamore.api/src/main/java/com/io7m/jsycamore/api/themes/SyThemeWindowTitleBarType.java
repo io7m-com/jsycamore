@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
 import org.immutables.value.Value;
 
@@ -27,7 +27,7 @@ import java.util.Optional;
  * The style applied to a window title bar.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeWindowTitleBarType
 {
@@ -79,8 +79,7 @@ public interface SyThemeWindowTitleBarType
   SyThemePadding buttonPadding();
 
   /**
-   * @return A comparator that will decide the order of components within a
-   * title bar
+   * @return A comparator that will decide the order of components within a title bar
    */
 
   @Value.Parameter

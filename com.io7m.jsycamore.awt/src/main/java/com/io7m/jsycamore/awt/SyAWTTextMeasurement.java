@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.text.SyTextMeasurementType;
 import net.jcip.annotations.NotThreadSafe;
 
@@ -24,6 +23,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import java.util.WeakHashMap;
 
 /**
@@ -75,14 +75,14 @@ public final class SyAWTTextMeasurement implements SyTextMeasurementType,
   @Override
   public Font decodeFont(final String font)
   {
-    NullCheck.notNull(font, "Font name");
+    Objects.requireNonNull(font, "Font name");
     return this.font_cache.computeIfAbsent(font, Font::decode);
   }
 
   @Override
   public int measureTextDescent(final String font)
   {
-    NullCheck.notNull(font, "Font name");
+    Objects.requireNonNull(font, "Font name");
     final FontMetrics metrics =
       this.graphics.getFontMetrics(this.decodeFont(font));
     return metrics.getDescent();

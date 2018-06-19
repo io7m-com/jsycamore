@@ -16,13 +16,10 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import org.osgi.annotation.versioning.ProviderType;
-
 /**
  * The type of theme providers.
  */
 
-@ProviderType
 public interface SyThemeProviderType
 {
   /**

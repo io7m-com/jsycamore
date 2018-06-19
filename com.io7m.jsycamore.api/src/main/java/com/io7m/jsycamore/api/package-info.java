@@ -18,6 +18,5 @@
  * {@code jsycamore} API specification.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.api;
 

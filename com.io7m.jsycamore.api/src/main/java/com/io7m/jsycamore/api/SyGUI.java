@@ -17,14 +17,13 @@
 package com.io7m.jsycamore.api;
 
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.components.SyComponentType;
-import com.io7m.jsycamore.api.themes.SyTheme;
-import com.io7m.jsycamore.api.windows.SyWindowAbstract;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.api.text.SyTextMeasurementType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.windows.SyWindowAbstract;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
@@ -74,11 +73,11 @@ public final class SyGUI implements SyGUIType
     final SyTheme in_theme)
   {
     this.name =
-      NullCheck.notNull(in_name, "GUI name");
+      Objects.requireNonNull(in_name, "GUI name");
     this.text_measurement =
-      NullCheck.notNull(in_text_measurement, "Text measurement interface");
+      Objects.requireNonNull(in_text_measurement, "Text measurement interface");
     this.theme =
-      NullCheck.notNull(in_theme, "Theme");
+      Objects.requireNonNull(in_theme, "Theme");
 
     this.component_over = Optional.empty();
     this.mouse_button_states = new EnumMap<>(SyMouseButton.class);
@@ -113,7 +112,7 @@ public final class SyGUI implements SyGUIType
     final int height,
     final String title)
   {
-    NullCheck.notNull(title, "Title");
+    Objects.requireNonNull(title, "Title");
 
     final SyWindowType w = new Window(width, height, title);
     this.windows_open.add(w);
@@ -130,7 +129,7 @@ public final class SyGUI implements SyGUIType
 
   private void checkGUI(final SyGUIElementType e)
   {
-    NullCheck.notNull(e, "GUI element");
+    Objects.requireNonNull(e, "GUI element");
     if (!Objects.equals(e.gui(), this)) {
       final StringBuilder sb = new StringBuilder(128);
       sb.append("Attempted to use a GUI element in the wrong GUI context.");
@@ -293,7 +292,7 @@ public final class SyGUI implements SyGUIType
   @Override
   public void setTheme(final SyTheme in_theme)
   {
-    this.theme = NullCheck.notNull(in_theme, "Theme");
+    this.theme = Objects.requireNonNull(in_theme, "Theme");
 
     for (final SyWindowType w : this.windows_open) {
       w.onWindowGUIThemeChanged();
@@ -326,7 +325,7 @@ public final class SyGUI implements SyGUIType
   public Optional<SyComponentType> onMouseMoved(
     final PVector2I<SySpaceViewportType> position)
   {
-    NullCheck.notNull(position, "Position");
+    Objects.requireNonNull(position, "Position");
 
     /*
      * If the mouse button is down, the selected component is delivered a
@@ -423,8 +422,8 @@ public final class SyGUI implements SyGUIType
     final PVector2I<SySpaceViewportType> position,
     final SyMouseButton button)
   {
-    NullCheck.notNull(position, "Position");
-    NullCheck.notNull(button, "Button");
+    Objects.requireNonNull(position, "Position");
+    Objects.requireNonNull(button, "Button");
 
     /*
      * Find out which component the mouse cursor is over, if any.
@@ -501,7 +500,7 @@ public final class SyGUI implements SyGUIType
   private Optional<SyComponentType> componentForPosition(
     final PVector2I<SySpaceViewportType> position)
   {
-    NullCheck.notNull(position, "Position");
+    Objects.requireNonNull(position, "Position");
 
     final Iterator<SyWindowType> window_iter =
       this.windows_open_order.iterator();
@@ -530,8 +529,8 @@ public final class SyGUI implements SyGUIType
     final PVector2I<SySpaceViewportType> position,
     final SyMouseButton button)
   {
-    NullCheck.notNull(position, "Position");
-    NullCheck.notNull(button, "Button");
+    Objects.requireNonNull(position, "Position");
+    Objects.requireNonNull(button, "Button");
 
     final MouseState state = this.mouseGetState(button);
 

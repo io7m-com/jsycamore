@@ -1,10 +1,10 @@
 /*
  * Copyright © 2016 <code@io7m.com> http://io7m.com
- *  
+ *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
- *  
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
@@ -16,14 +16,14 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
-import com.io7m.jsycamore.api.images.SyImageSpecification;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -49,7 +49,7 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
     final BooleanSupplier in_detach_check)
   {
     super(in_detach_check);
-    this.image = NullCheck.notNull(in_image, "Image");
+    this.image = Objects.requireNonNull(in_image, "Image");
     this.align_h = SyAlignmentHorizontal.ALIGN_CENTER;
     this.align_v = SyAlignmentVertical.ALIGN_CENTER;
   }
@@ -70,20 +70,20 @@ public abstract class SyImageAbstract extends SyComponentAbstract implements
   public final void setImageAlignmentVertical(
     final SyAlignmentVertical v)
   {
-    this.align_v = NullCheck.notNull(v, "Alignment");
+    this.align_v = Objects.requireNonNull(v, "Alignment");
   }
 
   @Override
   public final void setImageAlignmentHorizontal(
     final SyAlignmentHorizontal h)
   {
-    this.align_h = NullCheck.notNull(h, "Alignment");
+    this.align_h = Objects.requireNonNull(h, "Alignment");
   }
 
   @Override
   public final void setImage(final SyImageSpecification in_image)
   {
-    this.image = NullCheck.notNull(in_image, "Image specification");
+    this.image = Objects.requireNonNull(in_image, "Image specification");
   }
 
   @Override

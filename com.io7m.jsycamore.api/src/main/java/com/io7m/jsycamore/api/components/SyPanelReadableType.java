@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.themes.SyThemePanel;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -35,10 +35,9 @@ public interface SyPanelReadableType extends SyComponentReadableType
   Optional<SyThemePanel> theme();
 
   /**
-   * A panel may be made <i>transparent</i> iff it is intended to be used a
-   * simple container of other components. A transparent panel works identically
-   * to an ordinary component except that it is not rendered by renderers. All
-   * child components are rendered as normal.
+   * A panel may be made <i>transparent</i> iff it is intended to be used a simple container of
+   * other components. A transparent panel works identically to an ordinary component except that it
+   * is not rendered by renderers. All child components are rendered as normal.
    *
    * @return {@code true} iff this panel is <i>transparent</i>
    */
@@ -54,6 +53,6 @@ public interface SyPanelReadableType extends SyComponentReadableType
     final BiFunction<A, SyImageReadableType, B> on_image,
     final BiFunction<A, SyMeterReadableType, B> on_meter)
   {
-    return NullCheck.notNull(on_panel, "Receiver").apply(context, this);
+    return Objects.requireNonNull(on_panel, "Receiver").apply(context, this);
   }
 }

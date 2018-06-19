@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.themes.SyThemeColorType;
 import com.io7m.jsycamore.api.themes.SyThemeFillType;
@@ -31,6 +30,7 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Functions for drawing in AWT contexts.
@@ -54,7 +54,7 @@ public final class SyAWTDrawing
   public static Color toColor(
     final Vector3D color)
   {
-    NullCheck.notNull(color, "color");
+    Objects.requireNonNull(color, "color");
 
     final double r = Math.min(1.0, Math.max(0.0, color.x()));
     final double g = Math.min(1.0, Math.max(0.0, color.y()));
@@ -68,8 +68,8 @@ public final class SyAWTDrawing
    * @param graphics A graphics context
    * @param outline  The outline
    * @param box      The box
-   * @param active   {@code true} iff the outline should be considered to belong
-   *                 to an <i>active</i> object
+   * @param active   {@code true} iff the outline should be considered to belong to an <i>active</i>
+   *                 object
    */
 
   public static void drawOutline(
@@ -78,9 +78,9 @@ public final class SyAWTDrawing
     final PAreaI<?> box,
     final boolean active)
   {
-    NullCheck.notNull(graphics, "graphics");
-    NullCheck.notNull(outline, "outline");
-    NullCheck.notNull(box, "box");
+    Objects.requireNonNull(graphics, "graphics");
+    Objects.requireNonNull(outline, "outline");
+    Objects.requireNonNull(box, "box");
 
     final int x_min = box.minimumX();
     final int y_min = box.minimumY();
@@ -135,8 +135,8 @@ public final class SyAWTDrawing
     final PAreaI<?> in_box,
     final SyThemeFillType fill)
   {
-    NullCheck.notNull(in_box, "Box");
-    return NullCheck.notNull(fill, "Fill").matchFill(
+    Objects.requireNonNull(in_box, "Box");
+    return Objects.requireNonNull(fill, "Fill").matchFill(
       in_box,
       SyAWTDrawing::toPaintGradient,
       SyAWTDrawing::toPaintColor);

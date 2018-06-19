@@ -23,13 +23,12 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.Policy;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.github.benmanes.caffeine.cache.Weigher;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.awt.SyAWTImage;
 import com.io7m.jsycamore.api.images.SyImageCacheLoaderType;
 import com.io7m.jsycamore.api.images.SyImageCacheResolverType;
 import com.io7m.jsycamore.api.images.SyImageCacheType;
 import com.io7m.jsycamore.api.images.SyImageReferenceType;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.awt.SyAWTImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +36,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.concurrent.CompletableFuture;
@@ -68,11 +68,11 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     final long in_size_max)
   {
     this.cache =
-      NullCheck.notNull(in_cache, "Cache");
+      Objects.requireNonNull(in_cache, "Cache");
     this.image_default =
-      NullCheck.notNull(in_default, "Default image");
+      Objects.requireNonNull(in_default, "Default image");
     this.image_error =
-      NullCheck.notNull(in_error, "Error image");
+      Objects.requireNonNull(in_error, "Error image");
     this.size_max = in_size_max;
   }
 
@@ -81,8 +81,7 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
    *
    * @param in_resolver      The image resolver
    * @param in_loader        The image loader
-   * @param in_executor      An executor for executing long-running IO
-   *                         operations
+   * @param in_executor      An executor for executing long-running IO operations
    * @param in_image_default The default image used whilst loading
    * @param in_image_error   The image displayed when loading fails
    * @param in_maximum_size  The maximum size of the cache in bytes
@@ -98,11 +97,11 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
     final BufferedImage in_image_error,
     final long in_maximum_size)
   {
-    NullCheck.notNull(in_loader, "Loader");
-    NullCheck.notNull(in_resolver, "Resolver");
-    NullCheck.notNull(in_executor, "Executor");
-    NullCheck.notNull(in_image_default, "Default image");
-    NullCheck.notNull(in_image_error, "Error image");
+    Objects.requireNonNull(in_loader, "Loader");
+    Objects.requireNonNull(in_resolver, "Resolver");
+    Objects.requireNonNull(in_executor, "Executor");
+    Objects.requireNonNull(in_image_default, "Default image");
+    Objects.requireNonNull(in_image_error, "Error image");
 
     final Weigher<SyImageSpecification, BufferedImage> weigher =
       (key, value) -> value.getData().getDataBuffer().getSize();
@@ -203,15 +202,15 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
       final CompletableFuture<BufferedImage> in_future)
     {
       this.cache =
-        NullCheck.notNull(in_cache, "Cache");
+        Objects.requireNonNull(in_cache, "Cache");
       this.spec =
-        NullCheck.notNull(in_spec, "Image specification");
+        Objects.requireNonNull(in_spec, "Image specification");
       this.image_default =
-        NullCheck.notNull(in_default, "Default image");
+        Objects.requireNonNull(in_default, "Default image");
       this.image_error =
-        NullCheck.notNull(in_error, "Error image");
+        Objects.requireNonNull(in_error, "Error image");
       this.future =
-        NullCheck.notNull(in_future, "Image future");
+        Objects.requireNonNull(in_future, "Image future");
     }
 
     @Override

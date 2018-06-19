@@ -18,6 +18,5 @@
  * Window types.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.api.windows;
 

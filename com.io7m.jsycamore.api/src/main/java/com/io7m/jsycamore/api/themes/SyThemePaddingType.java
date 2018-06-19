@@ -16,14 +16,14 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 /**
  * A padding specification.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemePaddingType
 {

@@ -16,33 +16,32 @@
 
 package com.io7m.jsycamore.api.themes;
 
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
  * <p>The specification of a gradient.</p>
  *
  * <p>A gradient is specified as a pair of points inside the unit square with
- * the top left corner at {@code (0,0)} and the bottom right at {@code (1,1)},
- * and a list of colors with associated distribution values.</p>
+ * the top left corner at {@code (0,0)} and the bottom right at {@code (1,1)}, and a list of colors
+ * with associated distribution values.</p>
  *
  * <p>Distribution values denote how colors are distributed across the unit
- * square. There must be the same number of distribution values as colors. With
- * three colors {@code (a,b,c)}, and the distribution values {@code
- * (0.0,0.5,1.0)}, the color {@code a} will be blended into {@code b} and {@code
- * b} into {@code c} with {@code b} positioned exactly in the middle of {@code
- * a} and {@code c}. Typically, the list of distribution values will sum to
- * {@code 1.0}, but this is not a hard requirement.</p>
+ * square. There must be the same number of distribution values as colors. With three colors {@code
+ * (a,b,c)}, and the distribution values {@code (0.0,0.5,1.0)}, the color {@code a} will be blended
+ * into {@code b} and {@code b} into {@code c} with {@code b} positioned exactly in the middle of
+ * {@code a} and {@code c}. Typically, the list of distribution values will sum to {@code 1.0}, but
+ * this is not a hard requirement.</p>
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeGradientLinearType extends SyThemeFillType
 {
@@ -115,7 +114,7 @@ public interface SyThemeGradientLinearType extends SyThemeFillType
     final BiFunction<A, SyThemeGradientLinearType, B> on_gradient_linear,
     final BiFunction<A, SyThemeColorType, B> on_color)
   {
-    return NullCheck.notNull(on_gradient_linear, "Gradient function")
+    return Objects.requireNonNull(on_gradient_linear, "Gradient function")
       .apply(context, this);
   }
 }

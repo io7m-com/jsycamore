@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 import org.immutables.value.Value;
 
@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
  * The type of AWT-based component renderer contexts.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyAWTComponentRendererContextType
 {

@@ -16,9 +16,10 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.slf4j.Logger;
+
+import java.util.Objects;
 
 /**
  * Functions to log and ignore exceptions.
@@ -32,8 +33,7 @@ public final class SyErrors
   }
 
   /**
-   * Iff {@code e <: Error}, throw {@code e}. Otherwise, log {@code e} and
-   * suppress it.
+   * Iff {@code e <: Error}, throw {@code e}. Otherwise, log {@code e} and suppress it.
    *
    * @param log A log
    * @param e   An exception
@@ -43,8 +43,8 @@ public final class SyErrors
     final Logger log,
     final Throwable e)
   {
-    NullCheck.notNull(log, "Logger");
-    NullCheck.notNull(e, "Exception");
+    Objects.requireNonNull(log, "Logger");
+    Objects.requireNonNull(e, "Exception");
 
     if (e instanceof Error) {
       throw (Error) e;

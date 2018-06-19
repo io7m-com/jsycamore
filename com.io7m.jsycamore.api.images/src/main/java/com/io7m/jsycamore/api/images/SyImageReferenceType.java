@@ -42,10 +42,9 @@ public interface SyImageReferenceType<T>
   SyImageSpecificationType description();
 
   /**
-   * Retrieve the current image. If the image is not yet loaded, then a default
-   * image will be used. If the image has failed to load, then an image
-   * representing an error will be used. Otherwise, the image itself will be
-   * returned.
+   * Retrieve the current image. If the image is not yet loaded, then a default image will be used.
+   * If the image has failed to load, then an image representing an error will be used. Otherwise,
+   * the image itself will be returned.
    *
    * @return An image
    */

@@ -16,13 +16,11 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
-
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
- * The type of panels. These are simple (possibly invisible) containers for
- * other components.
+ * The type of panels. These are simple (possibly invisible) containers for other components.
  */
 
 public interface SyPanelType extends SyComponentType, SyPanelReadableType
@@ -46,6 +44,6 @@ public interface SyPanelType extends SyComponentType, SyPanelReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_panel, "Receiver").apply(context, this);
+    return Objects.requireNonNull(on_panel, "Receiver").apply(context, this);
   }
 }

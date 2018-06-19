@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.renderer.SyComponentRendererType;
@@ -41,6 +40,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -58,7 +58,7 @@ public final class SyAWTWindowRenderer implements
     final SyComponentRendererType<SyAWTComponentRendererContextType, BufferedImage> in_component_renderer)
   {
     this.component_renderer =
-      NullCheck.notNull(in_component_renderer, "Component renderer");
+      Objects.requireNonNull(in_component_renderer, "Component renderer");
     this.embossed = new SyAWTEmbossed();
   }
 
@@ -79,8 +79,8 @@ public final class SyAWTWindowRenderer implements
     final BufferedImage input,
     final SyWindowType window)
   {
-    NullCheck.notNull(input, "Input image");
-    NullCheck.notNull(window, "Window");
+    Objects.requireNonNull(input, "Input image");
+    Objects.requireNonNull(window, "Window");
 
     final SyAWTComponentRendererContext context =
       SyAWTComponentRendererContext.of(window.viewportAccumulator(), input);

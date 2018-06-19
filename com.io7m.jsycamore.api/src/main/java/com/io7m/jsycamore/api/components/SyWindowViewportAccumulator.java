@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -25,10 +24,10 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.util.ArrayDeque;
+import java.util.Objects;
 
 /**
- * The default implementation of the {@link SyWindowViewportAccumulatorType}
- * interface.
+ * The default implementation of the {@link SyWindowViewportAccumulatorType} interface.
  */
 
 @NotThreadSafe
@@ -102,7 +101,7 @@ public final class SyWindowViewportAccumulator implements
   public void accumulate(
     final PAreaI<SySpaceParentRelativeType> box)
   {
-    NullCheck.notNull(box, "Box");
+    Objects.requireNonNull(box, "Box");
 
     this.saved.push(this.current);
 

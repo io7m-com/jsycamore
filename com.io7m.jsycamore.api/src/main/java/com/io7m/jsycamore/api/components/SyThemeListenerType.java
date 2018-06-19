@@ -19,9 +19,8 @@ package com.io7m.jsycamore.api.components;
 /**
  * Interface describing an object that can receive theme events.
  *
- * @param <T> The type of object that received the initial event (not
- *            necessarily the same type of object as the one receiving the event
- *            now).
+ * @param <T> The type of object that received the initial event (not necessarily the same type of
+ *            object as the one receiving the event now).
  */
 
 public interface SyThemeListenerType<T>

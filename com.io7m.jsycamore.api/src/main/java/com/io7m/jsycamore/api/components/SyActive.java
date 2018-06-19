@@ -23,8 +23,7 @@ package com.io7m.jsycamore.api.components;
 public enum SyActive
 {
   /**
-   * The component is inactive. Accordingly, all children of the component are
-   * inactive too.
+   * The component is inactive. Accordingly, all children of the component are inactive too.
    */
 
   INACTIVE,

@@ -24,22 +24,21 @@ import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
  * components.</p>
  *
  * <p>Whilst traversing a tree of components, a given component can only be
- * rendered within the bounds of its parent component. The positions of
- * components are given relative to their parents. Therefore, it's necessary to
- * calculate the effective viewport for a component based on the values of its
- * ancestors when performing bounds checks.</p>
+ * rendered within the bounds of its parent component. The positions of components are given
+ * relative to their parents. Therefore, it's necessary to calculate the effective viewport for a
+ * component based on the values of its ancestors when performing bounds checks.</p>
  *
  * <p>The viewport accumulator can be thought of as an implicit stack of
- * viewports where each new position and size has the effect of trimming off a
- * portion of the current viewport.</p>
+ * viewports where each new position and size has the effect of trimming off a portion of the
+ * current viewport.</p>
  */
 
 public interface SyWindowViewportAccumulatorType
 {
   /**
    * <p>Reset the accumulator to the given base size. This is typically the
-   * width and height of a containing window. The width and height must be
-   * greater than or equal to {@code 0}.</p>
+   * width and height of a containing window. The width and height must be greater than or equal to
+   * {@code 0}.</p>
    *
    * <p>This will clear the internal accumulator stack.</p>
    *
@@ -53,8 +52,7 @@ public interface SyWindowViewportAccumulatorType
 
   /**
    * <p>Calculate a new viewport based on the given box.</p> <p>The calculated
-   * viewport will always be less than or equal to the previous viewport in
-   * size.</p>
+   * viewport will always be less than or equal to the previous viewport in size.</p>
    *
    * @param box The box
    */
@@ -91,9 +89,8 @@ public interface SyWindowViewportAccumulatorType
    * {@link #accumulate(PAreaI)}.</p>
    *
    * <p>If more {@code restore} calls have been made than {@code accumulate}
-   * calls, the viewport position is reset to {@code (0, 0)} and the size is
-   * reset to the most recent values given to {@link #reset(int, int)} (or
-   * {@code (0,0)} if none exist).</p>
+   * calls, the viewport position is reset to {@code (0, 0)} and the size is reset to the most
+   * recent values given to {@link #reset(int, int)} (or {@code (0,0)} if none exist).</p>
    */
 
   void restore();

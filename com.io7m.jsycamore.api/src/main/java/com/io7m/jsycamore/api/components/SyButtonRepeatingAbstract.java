@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -68,13 +67,13 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
   @Override
   public final void buttonAddListener(final SyButtonListenerType r)
   {
-    this.listeners.add(NullCheck.notNull(r, "Button listener"));
+    this.listeners.add(Objects.requireNonNull(r, "Button listener"));
   }
 
   @Override
   public final void buttonRemoveListener(final SyButtonListenerType r)
   {
-    this.listeners.remove(NullCheck.notNull(r, "Button listener"));
+    this.listeners.remove(Objects.requireNonNull(r, "Button listener"));
   }
 
   @Override
@@ -98,10 +97,10 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position_first, "Mouse first position");
-    NullCheck.notNull(mouse_position_now, "Mouse current position");
-    NullCheck.notNull(button, "Mouse button");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position_first, "Mouse first position");
+    Objects.requireNonNull(mouse_position_now, "Mouse current position");
+    Objects.requireNonNull(button, "Mouse button");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
       SyButtonRepeatingAbstract.LOG.trace(
@@ -138,9 +137,9 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position, "Mouse position");
-    NullCheck.notNull(button, "Mouse button");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position, "Mouse position");
+    Objects.requireNonNull(button, "Mouse button");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
       SyButtonRepeatingAbstract.LOG.trace(
@@ -168,9 +167,9 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     final SyMouseButton button,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position, "Mouse position");
-    NullCheck.notNull(button, "Mouse button");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position, "Mouse position");
+    Objects.requireNonNull(button, "Mouse button");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
       SyButtonRepeatingAbstract.LOG.trace(
@@ -247,8 +246,8 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     final PVector2I<SySpaceViewportType> mouse_position,
     final SyComponentType actual)
   {
-    NullCheck.notNull(mouse_position, "Mouse position");
-    NullCheck.notNull(actual, "Component");
+    Objects.requireNonNull(mouse_position, "Mouse position");
+    Objects.requireNonNull(actual, "Component");
 
     if (SyButtonRepeatingAbstract.LOG.isTraceEnabled()) {
       SyButtonRepeatingAbstract.LOG.trace(

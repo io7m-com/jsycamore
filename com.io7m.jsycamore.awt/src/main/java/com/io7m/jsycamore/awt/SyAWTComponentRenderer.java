@@ -18,7 +18,6 @@ package com.io7m.jsycamore.awt;
 
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jfunctional.Unit;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
@@ -56,6 +55,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -77,11 +77,11 @@ public final class SyAWTComponentRenderer implements
     final SyTextMeasurementType in_measurement)
   {
     this.image_cache =
-      NullCheck.notNull(in_image_cache, "Image cache");
+      Objects.requireNonNull(in_image_cache, "Image cache");
     this.font_cache =
-      NullCheck.notNull(in_font_cache, "Font cache");
+      Objects.requireNonNull(in_font_cache, "Font cache");
     this.measurement =
-      NullCheck.notNull(in_measurement, "Text measurement");
+      Objects.requireNonNull(in_measurement, "Text measurement");
     this.embossed = new SyAWTEmbossed();
   }
 
@@ -126,8 +126,8 @@ public final class SyAWTComponentRenderer implements
     final SyAWTComponentRendererContextType context,
     final SyComponentReadableType object)
   {
-    NullCheck.notNull(context, "Renderer context");
-    NullCheck.notNull(object, "Component");
+    Objects.requireNonNull(context, "Renderer context");
+    Objects.requireNonNull(object, "Component");
 
     final BufferedImage image = context.image();
     final Graphics2D graphics = image.createGraphics();

@@ -16,14 +16,14 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 /**
  * The theme parameters for windows.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeWindowType
 {
@@ -42,8 +42,8 @@ public interface SyThemeWindowType
   SyThemeWindowFrame frame();
 
   /**
-   * @return A function that, given a box representing the window, will return
-   * the positions of the various window components
+   * @return A function that, given a box representing the window, will return the positions of the
+   * various window components
    */
 
   @Value.Parameter

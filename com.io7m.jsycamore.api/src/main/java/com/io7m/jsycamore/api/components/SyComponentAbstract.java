@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
@@ -24,13 +23,13 @@ import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.SyMouseButton;
 import com.io7m.jsycamore.api.SyParentResizeBehavior;
-import com.io7m.jsycamore.api.themes.SyTheme;
-import com.io7m.jsycamore.api.windows.SyWindowReadableType;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.windows.SyWindowReadableType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.jcip.annotations.NotThreadSafe;
@@ -40,12 +39,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 /**
- * The default abstract implementation of the {@link SyComponentType}
- * interface.
+ * The default abstract implementation of the {@link SyComponentType} interface.
  */
 
 @NotThreadSafe
@@ -71,7 +70,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   protected SyComponentAbstract(
     final BooleanSupplier in_detach_check)
   {
-    NullCheck.notNull(in_detach_check, "Detach check");
+    Objects.requireNonNull(in_detach_check, "Detach check");
 
     this.resize_width = SyParentResizeBehavior.BEHAVIOR_FIXED;
     this.resize_height = SyParentResizeBehavior.BEHAVIOR_FIXED;
@@ -116,13 +115,13 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final void setResizeBehaviorWidth(final SyParentResizeBehavior b)
   {
-    this.resize_width = NullCheck.notNull(b, "Behavior");
+    this.resize_width = Objects.requireNonNull(b, "Behavior");
   }
 
   @Override
   public final void setResizeBehaviorHeight(final SyParentResizeBehavior b)
   {
-    this.resize_height = NullCheck.notNull(b, "Behavior");
+    this.resize_height = Objects.requireNonNull(b, "Behavior");
   }
 
   @Override
@@ -189,7 +188,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final void setActive(final SyActive e)
   {
-    this.active = NullCheck.notNull(e, "Activity");
+    this.active = Objects.requireNonNull(e, "Activity");
   }
 
   @Override
@@ -201,7 +200,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final void setVisibility(final SyVisibility v)
   {
-    this.visibility = NullCheck.notNull(v, "Visibility");
+    this.visibility = Objects.requireNonNull(v, "Visibility");
   }
 
   @Override
@@ -211,9 +210,9 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   /**
-   * Indicate whether or not this component should be selectable. This is used
-   * to implement pseudo-components such as the root window component: The
-   * component is visible but should not be selectable by users.
+   * Indicate whether or not this component should be selectable. This is used to implement
+   * pseudo-components such as the root window component: The component is visible but should not be
+   * selectable by users.
    *
    * @param s {@code true} iff the component is selectable
    */
@@ -225,7 +224,7 @@ public abstract class SyComponentAbstract implements SyComponentType
 
   protected final void setWindow(final Optional<SyWindowType> in_window)
   {
-    this.window = NullCheck.notNull(in_window, "Window");
+    this.window = Objects.requireNonNull(in_window, "Window");
   }
 
   @Override
@@ -259,7 +258,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   public final PVector2I<SySpaceComponentRelativeType> transformWindowRelative(
     final PVector2I<SySpaceWindowRelativeType> w_position)
   {
-    NullCheck.notNull(w_position, "Viewport position");
+    Objects.requireNonNull(w_position, "Viewport position");
 
     final PVector2I<SySpaceWindowRelativeType> pos_component =
       this.positionWindowRelative();
@@ -511,7 +510,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final void setBox(final PAreaI<SySpaceParentRelativeType> new_box)
   {
-    NullCheck.notNull(new_box, "Box");
+    Objects.requireNonNull(new_box, "Box");
 
     final int previous_w = this.box.width();
     final int previous_h = this.box.height();

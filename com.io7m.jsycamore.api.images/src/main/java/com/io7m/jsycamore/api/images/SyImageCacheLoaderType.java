@@ -29,9 +29,9 @@ import java.io.InputStream;
 public interface SyImageCacheLoaderType<T>
 {
   /**
-   * Load an image from the given stream. Note that the attributes of the
-   * returned image are <i>not</i> required to match the given specification;
-   * the conversion, resizing, etc are expected to be handled by the caller.
+   * Load an image from the given stream. Note that the attributes of the returned image are
+   * <i>not</i> required to match the given specification; the conversion, resizing, etc are
+   * expected to be handled by the caller.
    *
    * @param specification The image specification
    * @param stream        The image stream

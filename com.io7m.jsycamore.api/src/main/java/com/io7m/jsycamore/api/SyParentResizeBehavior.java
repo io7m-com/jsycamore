@@ -29,15 +29,14 @@ public enum SyParentResizeBehavior
   BEHAVIOR_FIXED,
 
   /**
-   * The component resizes by {@code n} pixels when its parent changes size by
-   * {@code n} pixels.
+   * The component resizes by {@code n} pixels when its parent changes size by {@code n} pixels.
    */
 
   BEHAVIOR_RESIZE,
 
   /**
-   * The component moves down/right by {@code n} pixels when its parent changes
-   * size by {@code n} pixels.
+   * The component moves down/right by {@code n} pixels when its parent changes size by {@code n}
+   * pixels.
    */
 
   BEHAVIOR_MOVE,

@@ -19,8 +19,8 @@ package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
-import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyTheme;
 
 import java.util.Optional;
 
@@ -64,9 +64,8 @@ public interface SyWindowType extends SyWindowEventsType,
   void setBox(PAreaI<SySpaceViewportType> box);
 
   /**
-   * Set the theme for the window. If an empty value is specified, the window
-   * will be reset to whatever is the default theme for the owning {@link
-   * com.io7m.jsycamore.api.SyGUIType}.
+   * Set the theme for the window. If an empty value is specified, the window will be reset to
+   * whatever is the default theme for the owning {@link com.io7m.jsycamore.api.SyGUIType}.
    *
    * @param theme The theme, or an empty value to reset to the GUI default
    */

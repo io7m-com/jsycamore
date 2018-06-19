@@ -27,15 +27,13 @@ public interface SyThemeFillType
   /**
    * Match on the type of fill.
    *
-   * @param context            A context value passed through to the given
-   *                           functions
+   * @param context            A context value passed through to the given functions
    * @param on_gradient_linear Evaluated if this fill is a linear gradient
    * @param on_color           Evaluated if this fill is a flat color
    * @param <A>                The type of opaque context values
    * @param <B>                The type of returned values
    *
-   * @return The value returned by whichever one of the given functions is
-   * evaluated
+   * @return The value returned by whichever one of the given functions is evaluated
    */
 
   <A, B> B matchFill(

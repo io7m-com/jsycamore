@@ -41,16 +41,14 @@ public interface SyThemeButtonType
   Optional<SyThemeEmboss> embossActive();
 
   /**
-   * @return The base fill used for active buttons that are currently under the
-   * mouse cursor
+   * @return The base fill used for active buttons that are currently under the mouse cursor
    */
 
   @Value.Parameter
   SyThemeFillType fillOver();
 
   /**
-   * @return The embossing used for active buttons that are currently under the
-   * mouse cursor
+   * @return The embossing used for active buttons that are currently under the mouse cursor
    */
 
   @Value.Parameter

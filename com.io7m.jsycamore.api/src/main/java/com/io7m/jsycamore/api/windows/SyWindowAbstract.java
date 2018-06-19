@@ -18,7 +18,6 @@ package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jranges.Ranges;
@@ -42,6 +41,11 @@ import com.io7m.jsycamore.api.components.SyPanelType;
 import com.io7m.jsycamore.api.components.SyVisibility;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.api.images.SyImageSpecification;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.themes.SyThemeButtonRepeating;
 import com.io7m.jsycamore.api.themes.SyThemeImage;
@@ -53,11 +57,6 @@ import com.io7m.jsycamore.api.themes.SyThemeWindowArrangementType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBarArrangementType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowType;
-import com.io7m.jsycamore.api.images.SyImageSpecification;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.spaces.SySpaceType;
-import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import com.io7m.junreachable.UnreachableCodeException;
@@ -65,6 +64,7 @@ import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -108,7 +108,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       Ranges.NATURAL_INTEGER,
       "Valid window heights");
 
-    this.gui = NullCheck.notNull(in_gui, "GUI");
+    this.gui = Objects.requireNonNull(in_gui, "GUI");
     this.box = PAreasI.create(0, 0, width, height);
 
     this.root = new WindowRoot(in_text);
@@ -123,7 +123,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void setBox(final PAreaI<SySpaceViewportType> in_box)
   {
-    this.recalculateBounds(NullCheck.notNull(in_box, "Box"), false);
+    this.recalculateBounds(Objects.requireNonNull(in_box, "Box"), false);
   }
 
   @Override
@@ -157,7 +157,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   @Override
   public final void setTheme(final Optional<SyTheme> in_theme)
   {
-    this.theme_override = NullCheck.notNull(in_theme, "Theme");
+    this.theme_override = Objects.requireNonNull(in_theme, "Theme");
     this.recalculateBoundsRefresh(true);
   }
 
@@ -284,7 +284,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   public final PVector2I<SySpaceWindowRelativeType> transformViewportRelative(
     final PVector2I<SySpaceViewportType> v_position)
   {
-    NullCheck.notNull(v_position, "Position");
+    Objects.requireNonNull(v_position, "Position");
 
     return PVector2I.of(
       Math.subtractExact(v_position.x(), this.box.minimumX()),
@@ -295,7 +295,7 @@ public abstract class SyWindowAbstract implements SyWindowType
   public final Optional<SyComponentType> componentForViewportPosition(
     final PVector2I<SySpaceViewportType> v_position)
   {
-    NullCheck.notNull(v_position, "Position");
+    Objects.requireNonNull(v_position, "Position");
     return this.componentForWindowPosition(
       this.transformViewportRelative(v_position));
   }
@@ -395,7 +395,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     final void setIcon(
       final Optional<SyImageSpecification> in_icon)
     {
-      NullCheck.notNull(in_icon, "Icon");
+      Objects.requireNonNull(in_icon, "Icon");
 
       if (this.image.isPresent()) {
         final SyImageType i = this.image.get();
@@ -473,7 +473,7 @@ public abstract class SyWindowAbstract implements SyWindowType
 
     void setIcon(final Optional<SyImageSpecification> in_icon)
     {
-      NullCheck.notNull(in_icon, "Icon");
+      Objects.requireNonNull(in_icon, "Icon");
 
       if (this.image.isPresent()) {
         final SyImageType i = this.image.get();
@@ -535,7 +535,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         return false;
       });
 
-      NullCheck.notNull(in_text, "Text");
+      Objects.requireNonNull(in_text, "Text");
 
       this.text = new TitleBarText();
       this.text.setText(in_text);
@@ -680,7 +680,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     @Override
     public void setText(final String in_text)
     {
-      this.text.setText(NullCheck.notNull(in_text, "Text"));
+      this.text.setText(Objects.requireNonNull(in_text, "Text"));
       SyWindowAbstract.this.recalculateBoundsRefresh(false);
     }
 

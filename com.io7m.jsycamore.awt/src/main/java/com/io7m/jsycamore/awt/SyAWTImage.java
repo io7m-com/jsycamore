@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.awt;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.images.SyImageFormat;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
@@ -32,6 +31,7 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -63,8 +63,8 @@ public final class SyAWTImage
   }
 
   /**
-   * Filter the given image, resizing, filtering, and changing format to match
-   * the given specification.
+   * Filter the given image, resizing, filtering, and changing format to match the given
+   * specification.
    *
    * @param spec  The specification
    * @param image The image
@@ -76,8 +76,8 @@ public final class SyAWTImage
     final SyImageSpecification spec,
     final BufferedImage image)
   {
-    NullCheck.notNull(spec, "Image specification");
-    NullCheck.notNull(image, "Image");
+    Objects.requireNonNull(spec, "Image specification");
+    Objects.requireNonNull(image, "Image");
 
     if (SyAWTImage.matchesExpected(spec, image)) {
       return SyAWTImage.applyFilter(spec, image);
@@ -135,8 +135,8 @@ public final class SyAWTImage
       }
     }
 
-    NullCheck.notNull(scale, "scale");
-    NullCheck.notNull(offsets, "offsets");
+    Objects.requireNonNull(scale, "scale");
+    Objects.requireNonNull(offsets, "offsets");
 
     final BufferedImageOp rs = new RescaleOp(scale, offsets, null);
     return rs.filter(image, image);
@@ -205,8 +205,7 @@ public final class SyAWTImage
           SyAWTImage.COLOR_MODEL_RGBA_4444.createCompatibleWritableRaster(
             spec.width(), spec.height());
 
-        @SuppressWarnings("UseOfObsoleteCollectionType")
-        final Hashtable<Object, Object> props = new Hashtable<>();
+        @SuppressWarnings("UseOfObsoleteCollectionType") final Hashtable<Object, Object> props = new Hashtable<>();
         return new BufferedImage(
           SyAWTImage.COLOR_MODEL_RGBA_4444,
           raster,

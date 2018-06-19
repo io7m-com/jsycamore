@@ -18,6 +18,5 @@
  * A 1990s style object-based workstation theme.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.themes.stride;
 

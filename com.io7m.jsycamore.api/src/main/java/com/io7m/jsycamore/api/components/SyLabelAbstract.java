@@ -16,13 +16,13 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -68,20 +68,20 @@ public abstract class SyLabelAbstract extends SyComponentAbstract implements
   public final void setTextAlignmentVertical(
     final SyAlignmentVertical v)
   {
-    this.align_v = NullCheck.notNull(v, "Alignment");
+    this.align_v = Objects.requireNonNull(v, "Alignment");
   }
 
   @Override
   public final void setTextAlignmentHorizontal(
     final SyAlignmentHorizontal h)
   {
-    this.align_h = NullCheck.notNull(h, "Alignment");
+    this.align_h = Objects.requireNonNull(h, "Alignment");
   }
 
   @Override
   public final void setText(final String in_text)
   {
-    this.text = NullCheck.notNull(in_text, "Text");
+    this.text = Objects.requireNonNull(in_text, "Text");
   }
 
   @Override

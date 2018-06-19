@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.awt;
 
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 
 import java.awt.Graphics2D;
@@ -25,6 +24,7 @@ import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -67,13 +67,13 @@ public final class SyAWTEmbossed
     final Paint bottom,
     final Optional<Paint> fill)
   {
-    NullCheck.notNull(graphics, "Graphics");
-    NullCheck.notNull(box, "Box");
-    NullCheck.notNull(left, "Left paint");
-    NullCheck.notNull(right, "Right paint");
-    NullCheck.notNull(top, "Top paint");
-    NullCheck.notNull(bottom, "Bottom paint");
-    NullCheck.notNull(fill, "Fill paint");
+    Objects.requireNonNull(graphics, "Graphics");
+    Objects.requireNonNull(box, "Box");
+    Objects.requireNonNull(left, "Left paint");
+    Objects.requireNonNull(right, "Right paint");
+    Objects.requireNonNull(top, "Top paint");
+    Objects.requireNonNull(bottom, "Bottom paint");
+    Objects.requireNonNull(fill, "Fill paint");
 
     Preconditions.checkPreconditionI(
       emboss_size,
@@ -175,11 +175,9 @@ public final class SyAWTEmbossed
    * @param left                    The paint used for the left emboss regions
    * @param right                   The paint used for the right emboss regions
    * @param top                     The paint used for the top emboss regions
-   * @param bottom                  The paint used for the bottom emboss
-   *                                regions
+   * @param bottom                  The paint used for the bottom emboss regions
    * @param fill                    The paint used for the fill, if any
-   * @param caps                    {@code true} iff end caps should be
-   *                                rendered
+   * @param caps                    {@code true} iff end caps should be rendered
    */
 
   public void drawEmbossedL(
@@ -198,13 +196,13 @@ public final class SyAWTEmbossed
     final Optional<Paint> fill,
     final boolean caps)
   {
-    NullCheck.notNull(graphics, "Graphics context");
-    NullCheck.notNull(shape, "Shape");
-    NullCheck.notNull(left, "Left paint");
-    NullCheck.notNull(right, "Right paint");
-    NullCheck.notNull(top, "Top paint");
-    NullCheck.notNull(bottom, "Bottom paint");
-    NullCheck.notNull(fill, "Fill paint");
+    Objects.requireNonNull(graphics, "Graphics context");
+    Objects.requireNonNull(shape, "Shape");
+    Objects.requireNonNull(left, "Left paint");
+    Objects.requireNonNull(right, "Right paint");
+    Objects.requireNonNull(top, "Top paint");
+    Objects.requireNonNull(bottom, "Bottom paint");
+    Objects.requireNonNull(fill, "Fill paint");
 
     Preconditions.checkPreconditionI(
       thickness_of_horizontal,

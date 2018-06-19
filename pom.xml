@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor</artifactId>
-    <version>1.0.2</version>
+    <version>3.0.0-beta0006</version>
   </parent>
 
   <groupId>com.io7m.jsycamore</groupId>
@@ -18,7 +22,6 @@
   <url>http://github.com/io7m/jsycamore</url>
 
   <modules>
-    <module>com.io7m.jsycamore.annotations</module>
     <module>com.io7m.jsycamore.api.images</module>
     <module>com.io7m.jsycamore.api.renderer</module>
     <module>com.io7m.jsycamore.api.spaces</module>
@@ -26,7 +29,6 @@
     <module>com.io7m.jsycamore.api</module>
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.caffeine</module>
-    <module>com.io7m.jsycamore.checkstyle</module>
     <module>com.io7m.jsycamore.documentation</module>
     <module>com.io7m.jsycamore.tests</module>
     <module>com.io7m.jsycamore.themes.bee</module>
@@ -36,10 +38,6 @@
   </modules>
 
   <properties>
-    <siteReposDirectory>com/io7m/jsycamore</siteReposDirectory>
-    <siteDocumentationDirectory>com/io7m/jsycamore/com.io7m.jsycamore.documentation</siteDocumentationDirectory>
-    <io7m.checkstyle.artifact>com.io7m.jsycamore.checkstyle</io7m.checkstyle.artifact>
-    <io7m.checkstyle.path>/com/io7m/jsycamore/checkstyle/checkstyle.xml</io7m.checkstyle.path>
     <io7m.api.previousVersion>0.1.0</io7m.api.previousVersion>
   </properties>
 
@@ -99,11 +97,6 @@
         <version>[1.0.0, 2.0.0)</version>
       </dependency>
       <dependency>
-        <groupId>com.io7m.jnull</groupId>
-        <artifactId>com.io7m.jnull.core</artifactId>
-        <version>[1.0.0, 2.0.0)</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
         <version>[1.0.0, 2.0.0)</version>
@@ -147,6 +140,11 @@
         <groupId>com.io7m.jregions</groupId>
         <artifactId>com.io7m.jregions.core</artifactId>
         <version>[1.0.0, 2.0.0)</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.immutables.style</groupId>
+        <artifactId>com.io7m.immutables.style</artifactId>
+        <version>0.0.1</version>
       </dependency>
 
       <dependency>
@@ -206,14 +204,13 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Require JDK >= 1.8 -->
+        <!-- Require JDK >= 9 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <optimize>true</optimize>
+            <source>9</source>
+            <target>9</target>
           </configuration>
         </plugin>
 

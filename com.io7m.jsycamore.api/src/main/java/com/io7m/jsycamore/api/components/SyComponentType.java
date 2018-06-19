@@ -19,9 +19,9 @@ package com.io7m.jsycamore.api.components;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.SyParentResizeBehavior;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
@@ -68,8 +68,7 @@ public interface SyComponentType extends SyComponentParentEventsType,
   void setBox(PAreaI<SySpaceParentRelativeType> box);
 
   /**
-   * @return The window to which the most distant ancestor of this component is
-   * attached
+   * @return The window to which the most distant ancestor of this component is attached
    */
 
   Optional<SyWindowType> window();
@@ -105,8 +104,7 @@ public interface SyComponentType extends SyComponentParentEventsType,
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
-   * @return The value returned by whichever one of the given functions is
-   * evaluated
+   * @return The value returned by whichever one of the given functions is evaluated
    */
 
   <A, B> B matchComponent(

@@ -16,9 +16,9 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jnull.NullCheck;
 import com.io7m.jsycamore.api.themes.SyOrientation;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
@@ -52,6 +52,6 @@ public interface SyMeterType extends SyComponentType, SyMeterReadableType
     final BiFunction<A, SyImageType, B> on_image,
     final BiFunction<A, SyMeterType, B> on_meter)
   {
-    return NullCheck.notNull(on_meter, "Receiver").apply(context, this);
+    return Objects.requireNonNull(on_meter, "Receiver").apply(context, this);
   }
 }

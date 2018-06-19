@@ -19,7 +19,6 @@ package com.io7m.jsycamore.api.themes;
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jfunctional.Pair;
-import com.io7m.jnull.NullCheck;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -45,10 +44,9 @@ public final class SyThemeTitleBars
   }
 
   /**
-   * Calculate the order in which any title bar elements will appear. The
-   * returned list will contain the order in which title bar elements appear.
-   * There will be entries for all possible element types, even if that element
-   * would not actually appear in the title bar.
+   * Calculate the order in which any title bar elements will appear. The returned list will contain
+   * the order in which title bar elements appear. There will be entries for all possible element
+   * types, even if that element would not actually appear in the title bar.
    *
    * @param title_theme The title bar theme
    *
@@ -58,7 +56,7 @@ public final class SyThemeTitleBars
   public static List<SyThemeTitleBarElement> elementsOrder(
     final SyThemeWindowTitleBarType title_theme)
   {
-    NullCheck.notNull(title_theme, "Theme");
+    Objects.requireNonNull(title_theme, "Theme");
 
     final List<SyThemeTitleBarElement> elements =
       new ArrayList<>(SyThemeTitleBarElement.values().length);
@@ -68,8 +66,8 @@ public final class SyThemeTitleBars
   }
 
   /**
-   * Determine how much horizontal space is needed to contain all of the
-   * non-text elements in the window, including padding.
+   * Determine how much horizontal space is needed to contain all of the non-text elements in the
+   * window, including padding.
    */
 
   private static int nonTextWidthRequired(
@@ -78,8 +76,8 @@ public final class SyThemeTitleBars
     final boolean is_closeable,
     final boolean is_maximizable)
   {
-    NullCheck.notNull(title_theme, "Theme");
-    NullCheck.notNull(elements, "Elements");
+    Objects.requireNonNull(title_theme, "Theme");
+    Objects.requireNonNull(elements, "Elements");
 
     final SyThemePaddingType button_padding = title_theme.buttonPadding();
 
@@ -129,21 +127,18 @@ public final class SyThemeTitleBars
   }
 
   /**
-   * Calculate the minimum amount of horizontal space needed to contain all of
-   * the content that will appear in the title bar.
+   * Calculate the minimum amount of horizontal space needed to contain all of the content that will
+   * appear in the title bar.
    *
    * @param measurement    A measurement interface
-   * @param maximum        The maximum possible area that the title bar can
-   *                       cover
+   * @param maximum        The maximum possible area that the title bar can cover
    * @param title_theme    The title bar theme
    * @param title_text     The title bar text
-   * @param is_closeable   {@code true} iff the title bar is attached to a
-   *                       window that is closeable
-   * @param is_maximizable {@code true} iff the title bar is attached to a
-   *                       window that is maximizable
+   * @param is_closeable   {@code true} iff the title bar is attached to a window that is closeable
+   * @param is_maximizable {@code true} iff the title bar is attached to a window that is
+   *                       maximizable
    *
-   * @return The minimum width that is required to hold the contents of the
-   * title bar
+   * @return The minimum width that is required to hold the contents of the title bar
    */
 
   public static int minimumWidthRequired(
@@ -154,10 +149,10 @@ public final class SyThemeTitleBars
     final boolean is_closeable,
     final boolean is_maximizable)
   {
-    NullCheck.notNull(measurement, "Text measurement");
-    NullCheck.notNull(maximum, "Maximum");
-    NullCheck.notNull(title_theme, "Title theme");
-    NullCheck.notNull(title_text, "Title text");
+    Objects.requireNonNull(measurement, "Text measurement");
+    Objects.requireNonNull(maximum, "Maximum");
+    Objects.requireNonNull(title_theme, "Title theme");
+    Objects.requireNonNull(title_text, "Title text");
 
     /*
      * Work out how much space is required for anything that isn't the titleBar

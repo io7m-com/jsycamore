@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.api.themes;
 
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import org.immutables.value.Value;
 
@@ -25,7 +25,7 @@ import org.immutables.value.Value;
  * The boxes for components that appear in windows.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeWindowArrangementType
 {

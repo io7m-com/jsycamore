@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.themes.stride;
 
-import com.io7m.jnull.NullCheck;
+import java.util.Objects;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.images.SyImageFormat;
@@ -95,7 +95,7 @@ public final class SyThemeStride
   public static SyTheme.Builder builderFrom(
     final SyThemeStrideSpecification spec)
   {
-    NullCheck.notNull(spec, "Specification");
+    Objects.requireNonNull(spec, "Specification");
 
     final SyTheme.Builder theme = SyTheme.builder();
 
@@ -398,8 +398,8 @@ public final class SyThemeStride
     final SyThemeTitleBarElement e0,
     final SyThemeTitleBarElement e1)
   {
-    NullCheck.notNull(e0, "Left");
-    NullCheck.notNull(e1, "Right");
+    Objects.requireNonNull(e0, "Left");
+    Objects.requireNonNull(e1, "Right");
 
     switch (e0) {
       case ELEMENT_CLOSE_BUTTON: {
@@ -476,9 +476,9 @@ public final class SyThemeStride
     final SyWindowReadableType window,
     final PAreaI<SySpaceParentRelativeType> window_box)
   {
-    NullCheck.notNull(measurement, "Measurement");
-    NullCheck.notNull(window, "Window");
-    NullCheck.notNull(window_box, "Window box");
+    Objects.requireNonNull(measurement, "Measurement");
+    Objects.requireNonNull(window, "Window");
+    Objects.requireNonNull(window_box, "Window box");
 
     final SyTheme theme = window.theme();
     final SyThemeWindowType theme_window = theme.windowTheme();

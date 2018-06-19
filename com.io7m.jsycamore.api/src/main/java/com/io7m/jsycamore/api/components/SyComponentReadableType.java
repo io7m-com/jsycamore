@@ -19,10 +19,10 @@ package com.io7m.jsycamore.api.components;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.SyParentResizeBehavior;
-import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
@@ -35,9 +35,8 @@ import java.util.function.BiFunction;
 public interface SyComponentReadableType
 {
   /**
-   * Components may be active or inactive. A component that is inactive will not
-   * receive input events, and will typically be rendered as "greyed" out by
-   * renderers.
+   * Components may be active or inactive. A component that is inactive will not receive input
+   * events, and will typically be rendered as "greyed" out by renderers.
    *
    * @return {@code true} iff this component is active
    */
@@ -53,8 +52,7 @@ public interface SyComponentReadableType
   SyActive activity();
 
   /**
-   * Determine whether this component is visible or not based on the visibility
-   * of its ancestors.
+   * Determine whether this component is visible or not based on the visibility of its ancestors.
    *
    * @return {@code true} iff this component is visible
    */
@@ -122,8 +120,7 @@ public interface SyComponentReadableType
    * @param <A>       The type of opaque context values
    * @param <B>       The type of returned values
    *
-   * @return The value returned by whichever one of the given functions is
-   * evaluated
+   * @return The value returned by whichever one of the given functions is evaluated
    */
 
   <A, B> B matchComponentReadable(

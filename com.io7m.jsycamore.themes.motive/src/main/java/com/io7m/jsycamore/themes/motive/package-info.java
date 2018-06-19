@@ -18,6 +18,5 @@
  * A 1980s style workstation theme.
  */
 
-@com.io7m.jnull.NonNullByDefault
 package com.io7m.jsycamore.themes.motive;
 

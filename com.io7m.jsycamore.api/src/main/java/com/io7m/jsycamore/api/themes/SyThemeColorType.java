@@ -16,18 +16,18 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jnull.NullCheck;
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import org.immutables.value.Value;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
  * The type of colors.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeColorType extends SyThemeFillType
 {
@@ -44,6 +44,6 @@ public interface SyThemeColorType extends SyThemeFillType
     final BiFunction<A, SyThemeGradientLinearType, B> on_gradient_linear,
     final BiFunction<A, SyThemeColorType, B> on_color)
   {
-    return NullCheck.notNull(on_color, "Color function").apply(context, this);
+    return Objects.requireNonNull(on_color, "Color function").apply(context, this);
   }
 }

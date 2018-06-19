@@ -17,9 +17,9 @@
 package com.io7m.jsycamore.api.themes;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyTextMeasurementType;
+import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 
 /**
  * A function for arranging the components of a window.

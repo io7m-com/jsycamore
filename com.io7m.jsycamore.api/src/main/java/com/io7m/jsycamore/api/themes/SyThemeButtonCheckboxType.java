@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.annotations.SyImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
 import org.immutables.value.Value;
 
@@ -26,7 +26,7 @@ import java.util.Optional;
  * A button theme specification.
  */
 
-@SyImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface SyThemeButtonCheckboxType extends SyThemeButtonType
 {

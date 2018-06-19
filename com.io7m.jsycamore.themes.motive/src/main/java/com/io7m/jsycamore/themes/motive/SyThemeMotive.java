@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.themes.motive;
 
-import com.io7m.jnull.NullCheck;
+import java.util.Objects;
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.images.SyImageFormat;
@@ -101,7 +101,7 @@ public final class SyThemeMotive
   public static SyTheme.Builder builderFrom(
     final SyThemeMotiveSpecification spec)
   {
-    NullCheck.notNull(spec, "Specification");
+    Objects.requireNonNull(spec, "Specification");
 
     final SyTheme.Builder theme = SyTheme.builder();
 
@@ -359,9 +359,9 @@ public final class SyThemeMotive
     final SyWindowReadableType window,
     final PAreaI<SySpaceParentRelativeType> window_box)
   {
-    NullCheck.notNull(measurement, "Text measurement");
-    NullCheck.notNull(window, "Window");
-    NullCheck.notNull(window_box, "Box");
+    Objects.requireNonNull(measurement, "Text measurement");
+    Objects.requireNonNull(window, "Window");
+    Objects.requireNonNull(window_box, "Box");
 
     final SyTheme theme = window.theme();
     final SyThemeWindowType theme_window = theme.windowTheme();
@@ -619,8 +619,8 @@ public final class SyThemeMotive
     final SyThemeTitleBarElement e0,
     final SyThemeTitleBarElement e1)
   {
-    NullCheck.notNull(e0, "Left");
-    NullCheck.notNull(e1, "Right");
+    Objects.requireNonNull(e0, "Left");
+    Objects.requireNonNull(e1, "Right");
 
     switch (e0) {
       case ELEMENT_CLOSE_BUTTON: {
