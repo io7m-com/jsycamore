@@ -53,6 +53,7 @@ import com.io7m.jsycamore.api.themes.SyThemePanel;
 import com.io7m.jsycamore.api.themes.SyThemeTitleBars;
 import com.io7m.jsycamore.api.themes.SyThemeWindowArrangementFunctionType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowArrangementType;
+import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBar;
 import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBarArrangementType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowTitleBarType;
 import com.io7m.jsycamore.api.themes.SyThemeWindowType;
@@ -182,7 +183,7 @@ public abstract class SyWindowAbstract implements SyWindowType
     sb.append(this.root.titlebar.text());
     sb.append("\" ");
     PAreasI.showToBuilder(this.box(), sb);
-    sb.append("]");
+    sb.append(']');
     return sb.toString();
   }
 
@@ -230,18 +231,16 @@ public abstract class SyWindowAbstract implements SyWindowType
       "Root box must contain titleBar box");
 
     this.box = window_box;
-    this.root.titlebar.text.setTextAlignmentHorizontal(
-      theme.windowTheme().titleBar().textAlignment());
+
+    final SyThemeWindowTitleBar theme_title_bar = window_theme.titleBar();
+    this.root.titlebar.text.setTextAlignmentHorizontal(theme_title_bar.textAlignment());
     this.root.titlebar.setBox(boxes.titlebarBox());
     this.root.frame.setBox(boxes.frameBox());
     this.root.frame.box_inner = (boxes.frameExclusionBox());
     this.root.content_pane.setBox(boxes.contentBox());
     this.root.setBox(root_box);
-
-    this.root.titlebar.maximize_button.setIcon(
-      window_theme.titleBar().buttonMaximizeIcon());
-    this.root.titlebar.close_button.setIcon(
-      window_theme.titleBar().buttonCloseIcon());
+    this.root.titlebar.maximize_button.setIcon(theme_title_bar.buttonMaximizeIcon());
+    this.root.titlebar.close_button.setIcon(theme_title_bar.buttonCloseIcon());
 
     this.transform_context.reset(window_box.sizeX(), window_box.sizeY());
 
@@ -399,11 +398,12 @@ public abstract class SyWindowAbstract implements SyWindowType
       }
 
       if (in_icon.isPresent()) {
+        final PAreaI<SySpaceParentRelativeType> box = super.box();
         final SyImageSpecification icon = in_icon.get();
         final SyImageType i = SyImage.create(icon);
         i.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
         i.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-        i.setBox(PAreasI.create(0, 0, this.box().sizeX(), this.box().sizeY()));
+        i.setBox(PAreasI.create(0, 0, box.sizeX(), box.sizeY()));
         this.node().childAdd(i.node());
         this.image = Optional.of(i);
       }
@@ -490,8 +490,7 @@ public abstract class SyWindowAbstract implements SyWindowType
         "Titlebar icon must not leak components");
     }
 
-    private final class TitleBarIconImage extends SyImageAbstract implements
-      SyImageType
+    private final class TitleBarIconImage extends SyImageAbstract
     {
       TitleBarIconImage(
         final SyImageSpecification in_image)
@@ -514,8 +513,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBar extends SyPanelAbstract implements
-    SyWindowTitleBarType
+  private final class TitleBar
+    extends SyPanelAbstract implements SyWindowTitleBarType
   {
     private final TitleBarCloseButton close_button;
     private final TitleBarText text;
@@ -576,7 +575,7 @@ public abstract class SyWindowAbstract implements SyWindowType
       sb.append(this.text.text());
       sb.append("\" ");
       PAreasI.showToBuilder(super.box(), sb);
-      sb.append("]");
+      sb.append(']');
       return sb.toString();
     }
 
@@ -711,8 +710,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBarCloseButton extends IconButton implements
-    SyWindowCloseButtonType
+  private final class TitleBarCloseButton
+    extends IconButton implements SyWindowCloseButtonType
   {
     TitleBarCloseButton()
     {
@@ -743,8 +742,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class TitleBarMaximizeButton extends IconButton implements
-    SyWindowMaximizeButtonType
+  private final class TitleBarMaximizeButton
+    extends IconButton implements SyWindowMaximizeButtonType
   {
     TitleBarMaximizeButton()
     {
@@ -769,8 +768,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class ContentPane extends SyPanelAbstract implements
-    SyWindowContentPaneType
+  private final class ContentPane
+    extends SyPanelAbstract implements SyWindowContentPaneType
   {
     ContentPane()
     {
@@ -795,8 +794,8 @@ public abstract class SyWindowAbstract implements SyWindowType
     }
   }
 
-  private final class Frame extends SyPanelAbstract implements
-    SyWindowFrameType
+  private final class Frame
+    extends SyPanelAbstract implements SyWindowFrameType
   {
     private PAreaI<SySpaceParentRelativeType> box_inner;
 

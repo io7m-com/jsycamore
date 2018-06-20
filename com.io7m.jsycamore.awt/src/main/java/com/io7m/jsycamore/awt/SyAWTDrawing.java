@@ -168,11 +168,10 @@ public final class SyAWTDrawing
     return Objects.requireNonNull(fill, "Fill").matchFill(
       in_box,
       SyAWTDrawing::toPaintGradient,
-      SyAWTDrawing::toPaintColor);
+      (in_box1, color) -> toPaintColor(color));
   }
 
   private static Paint toPaintColor(
-    final PAreaI<?> in_box,
     final SyThemeColorType color)
   {
     return toColor(color.color());

@@ -172,6 +172,12 @@ public final class SyBufferedImageCacheCaffeine implements SyImageCacheType<Buff
   }
 
   @Override
+  public String toString()
+  {
+    return "[SyBufferedImageCacheCaffeine]";
+  }
+
+  @Override
   public long count()
   {
     return this.cache.synchronous().estimatedSize();

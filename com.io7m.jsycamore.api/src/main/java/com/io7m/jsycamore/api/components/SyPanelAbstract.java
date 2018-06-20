@@ -27,8 +27,8 @@ import java.util.function.BooleanSupplier;
  */
 
 @NotThreadSafe
-public abstract class SyPanelAbstract extends SyComponentAbstract implements
-  SyPanelType
+public abstract class SyPanelAbstract
+  extends SyComponentAbstract implements SyPanelType
 {
   private static final Logger LOG;
 

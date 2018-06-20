@@ -83,8 +83,7 @@ public final class SyThemeTitleBars
     int non_text_width = 0;
     final int button_pad_left = button_padding.paddingLeft();
     final int button_pad_right = button_padding.paddingRight();
-    for (int index = 0; index < elements.size(); ++index) {
-      final SyThemeTitleBarElement element = elements.get(index);
+    for (final SyThemeTitleBarElement element : elements) {
       switch (element) {
         case ELEMENT_CLOSE_BUTTON: {
           if (is_closeable) {

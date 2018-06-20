@@ -167,13 +167,12 @@ public final class SyThemeFenestra
       spec,
       background,
       background_lighter,
-      background_lighter_lighter,
       background_darker,
       1,
       true));
 
     theme.setMeterTheme(createThemeMeter(spec));
-    theme.setPanelTheme(createThemePanel(background, background_darker));
+    theme.setPanelTheme(createThemePanel(background));
     theme.setLabelTheme(createThemeLabel(
       spec.foregroundColorActive(),
       spec.foregroundColorInactive()));
@@ -212,13 +211,14 @@ public final class SyThemeFenestra
     theme_titlebar_b.setIconWidth(16);
     theme_titlebar_b.setIconTheme(SyThemeImage.builder().build());
     theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
+    final Vector4D white = Vector4D.of(1.0, 1.0, 1.0, 1.0);
     theme_titlebar_b.setButtonCloseIcon(
       SyImageSpecification.of(
         ICON_CLOSE,
         16,
         14,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
     theme_titlebar_b.setButtonMaximizeIcon(
       SyImageSpecification.of(
@@ -226,7 +226,7 @@ public final class SyThemeFenestra
         16,
         14,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
@@ -254,13 +254,14 @@ public final class SyThemeFenestra
     final SyThemeEmboss theme_frame_emboss_active,
     final SyThemeEmboss theme_frame_emboss_inactive)
   {
+    final Vector3D frame_color = spec.frameColor();
     final SyThemeWindowFrame.Builder theme_frame_b = SyThemeWindowFrame.builder();
     theme_frame_b.setBottomHeight(4);
     theme_frame_b.setTopHeight(18 + (4 * 2));
     theme_frame_b.setLeftWidth(4);
     theme_frame_b.setRightWidth(4);
-    theme_frame_b.setColorActive(spec.frameColor());
-    theme_frame_b.setColorInactive(spec.frameColor());
+    theme_frame_b.setColorActive(frame_color);
+    theme_frame_b.setColorInactive(frame_color);
     theme_frame_b.setTopLeftStyle(FRAME_CORNER_NONE);
     theme_frame_b.setTopRightStyle(FRAME_CORNER_NONE);
     theme_frame_b.setBottomLeftStyle(FRAME_CORNER_NONE);
@@ -301,50 +302,55 @@ public final class SyThemeFenestra
   {
     final SyThemeMeterOriented.Builder b = SyThemeMeterOriented.builder();
 
-    b.setFillContainerActive(SyThemeColor.of(Vector3D.of(1.0, 1.0, 1.0)));
+    final Vector3D frame_color = spec.frameColor();
+    final SyThemeColor white = SyThemeColor.of(Vector3D.of(1.0, 1.0, 1.0));
+
+    b.setFillContainerActive(white);
     b.setEmbossContainerActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.frameColor(), 0.8),
-      Vectors3D.scale(spec.frameColor(), 1.8),
-      Vectors3D.scale(spec.frameColor(), 0.8),
-      Vectors3D.scale(spec.frameColor(), 1.8),
+      Vectors3D.scale(frame_color, 0.8),
+      Vectors3D.scale(frame_color, 1.8),
+      Vectors3D.scale(frame_color, 0.8),
+      Vectors3D.scale(frame_color, 1.8),
       1
     ));
 
-    b.setFillContainerInactive(SyThemeColor.of(Vector3D.of(1.0, 1.0, 1.0)));
+    b.setFillContainerInactive(white);
     b.setEmbossContainerInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.frameColor(), 0.8),
-      Vectors3D.scale(spec.frameColor(), 1.8),
-      Vectors3D.scale(spec.frameColor(), 0.8),
-      Vectors3D.scale(spec.frameColor(), 1.8),
+      Vectors3D.scale(frame_color, 0.8),
+      Vectors3D.scale(frame_color, 1.8),
+      Vectors3D.scale(frame_color, 0.8),
+      Vectors3D.scale(frame_color, 1.8),
       1
     ));
 
-    b.setFillIndicatorActive(SyThemeColor.of(spec.titlebarColorActive()));
+    final Vector3D color_active = spec.titlebarColorActive();
+    b.setFillIndicatorActive(SyThemeColor.of(color_active));
     b.setEmbossIndicatorActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.titlebarColorActive(), 1.5),
-      Vectors3D.scale(spec.titlebarColorActive(), 0.5),
-      Vectors3D.scale(spec.titlebarColorActive(), 1.5),
-      Vectors3D.scale(spec.titlebarColorActive(), 0.5),
+      Vectors3D.scale(color_active, 1.5),
+      Vectors3D.scale(color_active, 0.5),
+      Vectors3D.scale(color_active, 1.5),
+      Vectors3D.scale(color_active, 0.5),
       1
     ));
 
-    b.setFillIndicatorInactive(SyThemeColor.of(spec.titlebarColorInactive()));
+    final Vector3D color_inactive = spec.titlebarColorInactive();
+    b.setFillIndicatorInactive(SyThemeColor.of(color_inactive));
     b.setEmbossIndicatorInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.titlebarColorInactive(), 1.5),
-      Vectors3D.scale(spec.titlebarColorInactive(), 0.5),
-      Vectors3D.scale(spec.titlebarColorInactive(), 1.5),
-      Vectors3D.scale(spec.titlebarColorInactive(), 0.5),
+      Vectors3D.scale(color_inactive, 1.5),
+      Vectors3D.scale(color_inactive, 0.5),
+      Vectors3D.scale(color_inactive, 1.5),
+      Vectors3D.scale(color_inactive, 0.5),
       1
     ));
 
-    return SyThemeMeter.of(b.build(), b.build());
+    final SyThemeMeterOriented meter = b.build();
+    return SyThemeMeter.of(meter, meter);
   }
 
   private static SyThemeButtonCheckbox createThemeButtonCheckbox(
     final SyThemeFenestraSpecificationType spec,
     final Vector3D background,
     final Vector3D background_lighter,
-    final Vector3D background_lighter_lighter,
     final Vector3D background_darker,
     final int emboss,
     final boolean outline)
@@ -544,11 +550,9 @@ public final class SyThemeFenestra
   }
 
   private static SyThemePanel createThemePanel(
-    final Vector3D background,
-    final Vector3D background_darker)
+    final Vector3D background)
   {
-    final SyThemePanel.Builder theme_panel_b =
-      SyThemePanel.builder();
+    final SyThemePanel.Builder theme_panel_b = SyThemePanel.builder();
     theme_panel_b.setFillActive(SyThemeColor.of(background));
     theme_panel_b.setFillInactive(SyThemeColor.of(background));
     return theme_panel_b.build();
@@ -672,7 +676,6 @@ public final class SyThemeFenestra
 
   public static SyTheme.Builder builder()
   {
-    return builderFrom(
-      SyThemeFenestraSpecification.builder().build());
+    return builderFrom(SyThemeFenestraSpecification.builder().build());
   }
 }

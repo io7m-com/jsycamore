@@ -201,9 +201,7 @@ public final class SyThemeMotive
 
     theme.setMeterTheme(createThemeMeter(
       spec,
-      background,
       background_lighter,
-      background_lighter_lighter,
       background_darker,
       background_darker_darker
     ));
@@ -262,11 +260,12 @@ public final class SyThemeMotive
     theme_titlebar_text_b.setTextColorActive(text_color_active);
     theme_titlebar_text_b.setTextColorInactive(text_color_inactive);
     theme_titlebar_b.setTextAlignment(SyAlignmentHorizontal.ALIGN_CENTER);
-    theme_titlebar_b.setTextPadding(SyThemePadding.of(0, 0, 0, 0));
+    final SyThemePadding zero_padding = SyThemePadding.of(0, 0, 0, 0);
+    theme_titlebar_b.setTextPadding(zero_padding);
     theme_titlebar_b.setTextTheme(theme_titlebar_text_b.build());
 
     theme_titlebar_b.setPanelTheme(theme_titlebar_panel);
-    theme_titlebar_b.setButtonPadding(SyThemePadding.of(0, 0, 0, 0));
+    theme_titlebar_b.setButtonPadding(zero_padding);
     theme_titlebar_b.setButtonHeight(16);
     theme_titlebar_b.setButtonWidth(16);
     theme_titlebar_b.setButtonTheme(createThemeTitlebarButton(
@@ -276,8 +275,8 @@ public final class SyThemeMotive
       color_inactive_base,
       color_inactive_lighter,
       color_inactive_darker,
-      1,
-      false));
+      1
+    ));
     theme_titlebar_b.setButtonAlignment(SyAlignmentVertical.ALIGN_CENTER);
     theme_titlebar_b.setElementOrder(SyThemeMotive::elementOrder);
     theme_titlebar_b.setHeight(16);
@@ -287,13 +286,14 @@ public final class SyThemeMotive
     theme_titlebar_b.setIconTheme(SyThemeImage.builder().build());
     theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
 
+    final Vector4D white = Vector4D.of(1.0, 1.0, 1.0, 1.0);
     theme_titlebar_b.setButtonCloseIcon(
       SyImageSpecification.of(
         ICON_CLOSE,
         16,
         16,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
     theme_titlebar_b.setButtonMaximizeIcon(
       SyImageSpecification.of(
@@ -301,7 +301,7 @@ public final class SyThemeMotive
         16,
         16,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
     return theme_titlebar_b.build();
   }
@@ -374,9 +374,7 @@ public final class SyThemeMotive
 
   private static SyThemeMeter createThemeMeter(
     final SyThemeMotiveSpecification spec,
-    final Vector3D background,
     final Vector3D background_lighter,
-    final Vector3D background_lighter_lighter,
     final Vector3D background_darker,
     final Vector3D background_darker_darker)
   {
@@ -418,7 +416,8 @@ public final class SyThemeMotive
       1
     ));
 
-    return SyThemeMeter.of(b.build(), b.build());
+    final SyThemeMeterOriented meter = b.build();
+    return SyThemeMeter.of(meter, meter);
   }
 
   /**
@@ -647,8 +646,7 @@ public final class SyThemeMotive
     final Vector3D color_inactive,
     final Vector3D color_inactive_lighter,
     final Vector3D color_inactive_darker,
-    final int emboss,
-    final boolean outline)
+    final int emboss)
   {
     final SyThemeButtonRepeating.Builder theme_button_b =
       SyThemeButtonRepeating.builder();
@@ -769,7 +767,6 @@ public final class SyThemeMotive
 
   public static SyTheme.Builder builder()
   {
-    return builderFrom(
-      SyThemeMotiveSpecification.builder().build());
+    return builderFrom(SyThemeMotiveSpecification.builder().build());
   }
 }

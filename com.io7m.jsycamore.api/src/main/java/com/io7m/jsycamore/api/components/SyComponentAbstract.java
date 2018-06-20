@@ -269,8 +269,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final PVector2I<SySpaceWindowRelativeType> positionWindowRelative()
   {
-    final ArrayDeque<SyComponentReadableType> ancestors =
-      new ArrayDeque<>();
+    final ArrayDeque<SyComponentReadableType> ancestors = new ArrayDeque<>();
 
     JOTreeNodeType<SyComponentType> n = this.node;
     while (true) {
@@ -289,12 +288,14 @@ public abstract class SyComponentAbstract implements SyComponentType
 
     while (!ancestors.isEmpty()) {
       final SyComponentReadableType ancestor = ancestors.pop();
-      x = Math.addExact(x, ancestor.box().minimumX());
-      y = Math.addExact(y, ancestor.box().minimumY());
+      final PAreaI<SySpaceParentRelativeType> ancestor_box = ancestor.box();
+      x = Math.addExact(x, ancestor_box.minimumX());
+      y = Math.addExact(y, ancestor_box.minimumY());
     }
 
-    x = Math.addExact(x, this.box().minimumX());
-    y = Math.addExact(y, this.box().minimumY());
+    final PAreaI<SySpaceParentRelativeType> t_box = this.box();
+    x = Math.addExact(x, t_box.minimumX());
+    y = Math.addExact(y, t_box.minimumY());
     return PVector2I.of(x, y);
   }
 
@@ -610,13 +611,13 @@ public abstract class SyComponentAbstract implements SyComponentType
   protected final String toNamedString(final String name)
   {
     final StringBuilder sb = new StringBuilder(128);
-    sb.append("[");
+    sb.append('[');
     sb.append(name);
     sb.append(" 0x");
     sb.append(Integer.toHexString(this.hashCode()));
-    sb.append(" ");
+    sb.append(' ');
     PAreasI.showToBuilder(this.box(), sb);
-    sb.append("]");
+    sb.append(']');
     return sb.toString();
   }
 

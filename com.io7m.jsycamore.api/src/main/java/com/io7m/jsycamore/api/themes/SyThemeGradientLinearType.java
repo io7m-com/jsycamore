@@ -60,7 +60,9 @@ public interface SyThemeGradientLinearType extends SyThemeFillType
     final Integer d_size_b = Integer.valueOf(d_size);
 
     Preconditions.checkPreconditionV(
-      c_size > 0, "Number of colors (%d) must be > 0", c_size_b);
+      c_size > 0,
+      "Number of colors (%d) must be > 0",
+      c_size_b);
 
     Preconditions.checkPreconditionV(
       d_size == c_size,
@@ -69,8 +71,8 @@ public interface SyThemeGradientLinearType extends SyThemeFillType
       d_size_b);
 
     double dist = 0.0;
-    for (int index = 0; index < d_size; ++index) {
-      final double current = dists.get(index).doubleValue();
+    for (final Double b_current : dists) {
+      final double current = b_current.doubleValue();
       Preconditions.checkPreconditionV(
         current >= dist,
         "Distribution values must be given in increasing order (%f >= %f)",

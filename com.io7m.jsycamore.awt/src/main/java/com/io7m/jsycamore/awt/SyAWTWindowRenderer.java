@@ -156,15 +156,16 @@ public final class SyAWTWindowRenderer implements
     }
 
     if (hasVisibleBottomRightCorner(parameters)) {
+      final int bottom_right_arm_length = parameters.bottomRightArmLength();
       embossed.drawEmbossedL(
         graphics,
         SyAWTEmbossedCornerL.builder()
           .setShape(L_SHAPE_SE)
-          .setX(frame_box.sizeX() - parameters.bottomRightArmLength())
-          .setY(frame_box.sizeY() - parameters.bottomRightArmLength())
+          .setX(frame_box.sizeX() - bottom_right_arm_length)
+          .setY(frame_box.sizeY() - bottom_right_arm_length)
           .setThicknessOfHorizontal(parameters.bottomHeight())
           .setThicknessOfVertical(parameters.rightWidth())
-          .setArmLength(parameters.bottomRightArmLength())
+          .setArmLength(bottom_right_arm_length)
           .setEmbossSize(parameters.embossSize())
           .setPaintLeft(e_left)
           .setPaintRight(e_right)

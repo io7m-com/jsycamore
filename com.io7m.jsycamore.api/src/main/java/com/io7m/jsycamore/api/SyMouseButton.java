@@ -67,12 +67,13 @@ public enum SyMouseButton
       default: {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("Invalid mouse button index.");
-        sb.append(System.lineSeparator());
+        final String separator = System.lineSeparator();
+        sb.append(separator);
         sb.append("  Expected: [0, 2]");
-        sb.append(System.lineSeparator());
+        sb.append(separator);
         sb.append("  Received: ");
         sb.append(index);
-        sb.append(System.lineSeparator());
+        sb.append(separator);
         throw new IllegalArgumentException(sb.toString());
       }
     }

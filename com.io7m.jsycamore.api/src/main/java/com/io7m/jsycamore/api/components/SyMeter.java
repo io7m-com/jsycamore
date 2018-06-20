@@ -47,17 +47,17 @@ public final class SyMeter extends SyMeterAbstract
     final StringBuilder sb = new StringBuilder(128);
     sb.append("[SyMeter 0x");
     sb.append(Integer.toHexString(this.hashCode()));
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.value());
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.box().sizeX());
-    sb.append("x");
+    sb.append('x');
     sb.append(this.box().sizeY());
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.box().minimumX());
-    sb.append("+");
+    sb.append('+');
     sb.append(this.box().minimumY());
-    sb.append("]");
+    sb.append(']');
     return sb.toString();
   }
 

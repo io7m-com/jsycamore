@@ -113,10 +113,11 @@ public final class SyAWTComponentRenderer implements
 
     final StringBuilder sb = new StringBuilder(128);
     sb.append("Cannot render a component that is not attached to a window.");
-    sb.append(System.lineSeparator());
+    final String separator = System.lineSeparator();
+    sb.append(separator);
     sb.append("  Component: ");
     sb.append(c);
-    sb.append(System.lineSeparator());
+    sb.append(separator);
     return new IllegalStateException(sb.toString());
   }
 

@@ -100,15 +100,17 @@ public final class SyThemeStride
 
     final SyTheme.Builder theme = SyTheme.builder();
 
+    final Vector3D titlebar_color_active = spec.titlebarColorActive();
     final Vector3D title_color_active_lighter =
-      Vectors3D.scale(spec.titlebarColorActive(), 3.0);
+      Vectors3D.scale(titlebar_color_active, 3.0);
     final Vector3D title_color_active_darker =
-      Vectors3D.scale(spec.titlebarColorActive(), 2.0);
+      Vectors3D.scale(titlebar_color_active, 2.0);
 
+    final Vector3D frame_color = spec.frameColor();
     final Vector3D frame_color_lighter =
-      Vectors3D.scale(spec.frameColor(), 1.2);
+      Vectors3D.scale(frame_color, 1.2);
     final Vector3D frame_color_darker =
-      Vectors3D.scale(spec.frameColor(), 0.8);
+      Vectors3D.scale(frame_color, 0.8);
 
     final Vector3D title_color_inactive_base =
       spec.titlebarColorInactive();
@@ -149,9 +151,8 @@ public final class SyThemeStride
     theme.setButtonCheckboxTheme(createThemeButtonCheckbox(spec, 1, true));
     theme.setMeterTheme(createThemeMeter(spec));
     theme.setPanelTheme(createThemePanel(spec));
-    theme.setLabelTheme(createThemeLabel(
-      spec.foregroundColorActive(),
-      spec.foregroundColorInactive()));
+    theme.setLabelTheme(
+      createThemeLabel(spec.foregroundColorActive(), spec.foregroundColorInactive()));
     theme.setImageTheme(SyThemeImage.builder().build());
     return theme;
   }
@@ -161,13 +162,14 @@ public final class SyThemeStride
     final SyThemeEmboss theme_frame_emboss_active,
     final SyThemeEmboss theme_frame_emboss_inactive)
   {
+    final Vector3D frame_color = spec.frameColor();
     final SyThemeWindowFrame.Builder theme_frame_b = SyThemeWindowFrame.builder();
     theme_frame_b.setBottomHeight(5);
     theme_frame_b.setTopHeight(0);
     theme_frame_b.setLeftWidth(0);
     theme_frame_b.setRightWidth(0);
-    theme_frame_b.setColorActive(spec.frameColor());
-    theme_frame_b.setColorInactive(spec.frameColor());
+    theme_frame_b.setColorActive(frame_color);
+    theme_frame_b.setColorInactive(frame_color);
     theme_frame_b.setOutline(SyThemeOutline.of(
       true, true, true, true,
       Vector3D.of(0.0, 0.0, 0.0),
@@ -202,13 +204,14 @@ public final class SyThemeStride
     theme_titlebar_b.setIconWidth(0);
     theme_titlebar_b.setIconTheme(SyThemeImage.builder().build());
     theme_titlebar_b.setIconAlignment(SyAlignmentVertical.ALIGN_CENTER);
+    final Vector4D white = Vector4D.of(1.0, 1.0, 1.0, 1.0);
     theme_titlebar_b.setButtonCloseIcon(
       SyImageSpecification.of(
         ICON_CLOSE,
         15,
         15,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
     theme_titlebar_b.setButtonMaximizeIcon(
       SyImageSpecification.of(
@@ -216,7 +219,7 @@ public final class SyThemeStride
         15,
         15,
         SyImageFormat.IMAGE_FORMAT_RGBA_8888,
-        Vector4D.of(1.0, 1.0, 1.0, 1.0),
+        white,
         SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST));
 
     final SyThemeLabel.Builder theme_titlebar_text_b = SyThemeLabel.builder();
@@ -304,64 +307,67 @@ public final class SyThemeStride
   private static SyThemeMeterOriented createThemeMeterHorizontal(
     final SyThemeStrideSpecification spec)
   {
-    final SyThemeMeterOriented.Builder b =
-      SyThemeMeterOriented.builder();
+    final SyThemeMeterOriented.Builder b = SyThemeMeterOriented.builder();
 
-    b.setFillContainerActive(
-      SyThemeColor.of(Vectors3D.scale(spec.backgroundColor(), 0.9)));
+    final Vector3D background_color = spec.backgroundColor();
+    b.setFillContainerActive(SyThemeColor.of(Vectors3D.scale(background_color, 0.9)));
     b.setEmbossContainerActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       1
     ));
 
-    b.setFillContainerInactive(
-      SyThemeColor.of(Vectors3D.scale(spec.backgroundColor(), 0.9)));
+    b.setFillContainerInactive(SyThemeColor.of(Vectors3D.scale(background_color, 0.9)));
     b.setEmbossContainerInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       1
     ));
 
-    final SyThemeGradientLinear gradient;
-    {
-      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
-      gb.setPoint0(Vector2D.of(0.0, 0.0));
-      gb.setPoint1(Vector2D.of(0.0, 1.0));
-
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.0));
-      gb.addDistributions(0.0);
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.5));
-      gb.addDistributions(0.5);
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.0));
-      gb.addDistributions(1.0);
-
-      gradient = gb.build();
-    }
+    final Vector3D color_primary_active =
+      spec.colorPrimaryActive();
+    final SyThemeGradientLinear gradient =
+      createThemeMeterHorizontalGradientActive(color_primary_active);
 
     b.setFillIndicatorActive(gradient);
     b.setEmbossIndicatorActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
+      Vectors3D.scale(color_primary_active, 0.8),
+      Vectors3D.scale(color_primary_active, 0.6),
+      Vectors3D.scale(color_primary_active, 0.8),
+      Vectors3D.scale(color_primary_active, 0.6),
       1
     ));
 
     b.setFillIndicatorInactive(gradient);
     b.setEmbossIndicatorInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
+      Vectors3D.scale(color_primary_active, 0.8),
+      Vectors3D.scale(color_primary_active, 0.6),
+      Vectors3D.scale(color_primary_active, 0.8),
+      Vectors3D.scale(color_primary_active, 0.6),
       1
     ));
 
     return b.build();
+  }
+
+  private static SyThemeGradientLinear createThemeMeterHorizontalGradientActive(
+    final Vector3D color_primary_active)
+  {
+    final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+    gb.setPoint0(Vector2D.of(0.0, 0.0));
+    gb.setPoint1(Vector2D.of(0.0, 1.0));
+
+    gb.addColors(Vectors3D.scale(color_primary_active, 1.0));
+    gb.addDistributions(0.0);
+    gb.addColors(Vectors3D.scale(color_primary_active, 1.5));
+    gb.addDistributions(0.5);
+    gb.addColors(Vectors3D.scale(color_primary_active, 1.0));
+    gb.addDistributions(1.0);
+    return gb.build();
   }
 
   private static SyThemeMeterOriented createThemeMeterVertical(
@@ -370,61 +376,64 @@ public final class SyThemeStride
     final SyThemeMeterOriented.Builder b =
       SyThemeMeterOriented.builder();
 
-    b.setFillContainerActive(
-      SyThemeColor.of(Vectors3D.scale(spec.backgroundColor(), 0.9)));
+    final Vector3D background_color = spec.backgroundColor();
+    b.setFillContainerActive(SyThemeColor.of(Vectors3D.scale(background_color, 0.9)));
     b.setEmbossContainerActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       1
     ));
 
-    b.setFillContainerInactive(
-      SyThemeColor.of(Vectors3D.scale(spec.backgroundColor(), 0.9)));
+    b.setFillContainerInactive(SyThemeColor.of(Vectors3D.scale(background_color, 0.9)));
     b.setEmbossContainerInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       1
     ));
 
-    final SyThemeGradientLinear gradient;
-    {
-      final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
-      gb.setPoint0(Vector2D.of(0.0, 0.0));
-      gb.setPoint1(Vector2D.of(1.0, 0.0));
-
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.0));
-      gb.addDistributions(0.0);
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.5));
-      gb.addDistributions(0.5);
-      gb.addColors(Vectors3D.scale(spec.colorPrimaryActive(), 1.0));
-      gb.addDistributions(1.0);
-
-      gradient = gb.build();
-    }
+    final Vector3D primary_active = spec.colorPrimaryActive();
+    final SyThemeGradientLinear gradient = createThemeMeterVerticalGradientActive(spec);
 
     b.setFillIndicatorActive(gradient);
     b.setEmbossIndicatorActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
+      Vectors3D.scale(primary_active, 0.8),
+      Vectors3D.scale(primary_active, 0.6),
+      Vectors3D.scale(primary_active, 0.8),
+      Vectors3D.scale(primary_active, 0.6),
       1
     ));
 
     b.setFillIndicatorInactive(gradient);
     b.setEmbossIndicatorInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.8),
-      Vectors3D.scale(spec.colorPrimaryActive(), 0.6),
+      Vectors3D.scale(primary_active, 0.8),
+      Vectors3D.scale(primary_active, 0.6),
+      Vectors3D.scale(primary_active, 0.8),
+      Vectors3D.scale(primary_active, 0.6),
       1
     ));
 
     return b.build();
+  }
+
+  private static SyThemeGradientLinear createThemeMeterVerticalGradientActive(
+    final SyThemeStrideSpecification spec)
+  {
+    final SyThemeGradientLinear.Builder gb = SyThemeGradientLinear.builder();
+    gb.setPoint0(Vector2D.of(0.0, 0.0));
+    gb.setPoint1(Vector2D.of(1.0, 0.0));
+
+    final Vector3D primary_active = spec.colorPrimaryActive();
+    gb.addColors(Vectors3D.scale(primary_active, 1.0));
+    gb.addDistributions(0.0);
+    gb.addColors(Vectors3D.scale(primary_active, 1.5));
+    gb.addDistributions(0.5);
+    gb.addColors(Vectors3D.scale(primary_active, 1.0));
+    gb.addDistributions(1.0);
+    return gb.build();
   }
 
   private static SyThemeMeter createThemeMeter(
@@ -568,21 +577,21 @@ public final class SyThemeStride
   private static SyThemePanel createThemePanel(
     final SyThemeStrideSpecification spec)
   {
-    final SyThemePanel.Builder theme_panel_b =
-      SyThemePanel.builder();
+    final SyThemePanel.Builder theme_panel_b = SyThemePanel.builder();
 
+    final Vector3D background_color = spec.backgroundColor();
     theme_panel_b.setOutline(
       SyThemeOutline.of(
         true,
         true,
         true,
         true,
-        Vectors3D.scale(spec.backgroundColor(), 0.5),
-        Vectors3D.scale(spec.backgroundColor(), 0.5),
+        Vectors3D.scale(background_color, 0.5),
+        Vectors3D.scale(background_color, 0.5),
         true));
 
-    theme_panel_b.setFillActive(SyThemeColor.of(spec.backgroundColor()));
-    theme_panel_b.setFillInactive(SyThemeColor.of(spec.backgroundColor()));
+    theme_panel_b.setFillActive(SyThemeColor.of(background_color));
+    theme_panel_b.setFillInactive(SyThemeColor.of(background_color));
     return theme_panel_b.build();
   }
 
@@ -594,40 +603,41 @@ public final class SyThemeStride
     final SyThemeButtonRepeating.Builder theme_button_b =
       SyThemeButtonRepeating.builder();
 
+    final Vector3D background_color = spec.backgroundColor();
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true, true, true, true,
         spec.foregroundColorActive(),
-        Vectors3D.scale(spec.backgroundColor(), 0.5),
+        Vectors3D.scale(background_color, 0.5),
         true));
     }
 
-    theme_button_b.setFillActive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillActive(SyThemeColor.of(background_color));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillInactive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillInactive(SyThemeColor.of(background_color));
 
-    theme_button_b.setFillOver(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillOver(SyThemeColor.of(background_color));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillPressed(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillPressed(SyThemeColor.of(background_color));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       emboss
     ));
 
@@ -642,40 +652,41 @@ public final class SyThemeStride
     final SyThemeButtonCheckbox.Builder theme_button_b =
       SyThemeButtonCheckbox.builder();
 
+    final Vector3D background_color = spec.backgroundColor();
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true, true, true, true,
         spec.foregroundColorActive(),
-        Vectors3D.scale(spec.backgroundColor(), 0.5),
+        Vectors3D.scale(background_color, 0.5),
         true));
     }
 
-    theme_button_b.setFillActive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillActive(SyThemeColor.of(background_color));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillInactive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillInactive(SyThemeColor.of(background_color));
 
-    theme_button_b.setFillOver(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillOver(SyThemeColor.of(background_color));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillPressed(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillPressed(SyThemeColor.of(background_color));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       emboss
     ));
 
@@ -699,6 +710,7 @@ public final class SyThemeStride
     final SyThemeButtonRepeating.Builder theme_button_b =
       SyThemeButtonRepeating.builder();
 
+    final Vector3D background_color = spec.backgroundColor();
     if (outline) {
       theme_button_b.setOutline(SyThemeOutline.of(
         true,
@@ -706,43 +718,43 @@ public final class SyThemeStride
         true,
         true,
         spec.foregroundColorActive(),
-        Vectors3D.scale(spec.backgroundColor(), 0.5),
+        Vectors3D.scale(background_color, 0.5),
         true));
     }
 
-    theme_button_b.setFillActive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillActive(SyThemeColor.of(background_color));
     theme_button_b.setEmbossActive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillInactive(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillInactive(SyThemeColor.of(background_color));
     theme_button_b.setEmbossInactive(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillOver(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillOver(SyThemeColor.of(background_color));
     theme_button_b.setEmbossOver(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
       emboss
     ));
 
-    theme_button_b.setFillPressed(SyThemeColor.of(spec.backgroundColor()));
+    theme_button_b.setFillPressed(SyThemeColor.of(background_color));
     theme_button_b.setEmbossPressed(SyThemeEmboss.of(
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
-      Vectors3D.scale(spec.backgroundColor(), 0.8),
-      Vectors3D.scale(spec.backgroundColor(), 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
+      Vectors3D.scale(background_color, 0.8),
+      Vectors3D.scale(background_color, 1.2),
       emboss
     ));
 
@@ -755,7 +767,6 @@ public final class SyThemeStride
 
   public static SyTheme.Builder builder()
   {
-    return builderFrom(
-      SyThemeStrideSpecification.builder().build());
+    return builderFrom(SyThemeStrideSpecification.builder().build());
   }
 }

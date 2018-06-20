@@ -172,8 +172,7 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(actual, "Component");
 
     if (LOG.isTraceEnabled()) {
-      LOG.trace(
-        "mouseReleased: {} {} {} {}", mouse_position, button, actual);
+      LOG.trace("mouseReleased: {} {} {}", mouse_position, button, actual);
     }
 
     switch (button) {
@@ -250,10 +249,7 @@ public abstract class SyButtonRepeatingAbstract extends SyComponentAbstract impl
     Objects.requireNonNull(actual, "Component");
 
     if (LOG.isTraceEnabled()) {
-      LOG.trace(
-        "mouseOver: {} {}",
-        mouse_position,
-        actual);
+      LOG.trace("mouseOver: {} {}", mouse_position, actual);
     }
 
     this.over = true;

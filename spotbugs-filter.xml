@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0">
+
+  <!-- Generated types -->
+  <Match>
+    <Or>
+      <Class name="~com\.io7m\.jsycamore\..+\$Builder"/>
+      <Class name="~com\.io7m\.jsycamore\..+\$InitShim"/>
+
+      <Class name="com.io7m.jsycamore.api.themes.SyTheme"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeButtonCheckbox"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeButtonRepeating"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeColor"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeEmboss"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeGradientLinear"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeImage"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeLabel"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeMeter"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeMeterOriented"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeOutline"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemePadding"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemePanel"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeTitleBarElements"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeWindow"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeWindowArrangement"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeWindowFrame"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeWindowTitleBar"/>
+      <Class name="com.io7m.jsycamore.api.themes.SyThemeWindowTitleBarArrangement"/>
+
+      <Class name="com.io7m.jsycamore.api.images.SyImageSpecification"/>
+
+      <Class name="com.io7m.jsycamore.awt.SyAWTComponentRendererContext"/>
+      <Class name="com.io7m.jsycamore.awt.SyAWTEmbossedCornerL"/>
+      <Class name="com.io7m.jsycamore.awt.SyAWTEmbossedRectangle"/>
+      <Class name="com.io7m.jsycamore.awt.SyAWTWindowRendererEmbossedFrameParameters"/>
+
+      <Class name="com.io7m.jsycamore.themes.bee.SyThemeBeeSpecification"/>
+      <Class name="com.io7m.jsycamore.themes.fenestra.SyThemeFenestraSpecification"/>
+      <Class name="com.io7m.jsycamore.themes.motive.SyThemeMotiveSpecification"/>
+      <Class name="com.io7m.jsycamore.themes.stride.SyThemeStrideSpecification"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Package name="com.io7m.jsycamore.awt"/>
+    <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING"/>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.api.themes.SyColors"/>
+    <Bug pattern="FE_FLOATING_POINT_EQUALITY"/>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.api.windows.SyWindowAbstract$ContentPane"/>
+    <Bug pattern="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTOR"/>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.caffeine.SyBufferedImageCacheCaffeine"/>
+    <Method name="size"/>
+    <Bug pattern="OI_OPTIONAL_ISSUES_USES_IMMEDIATE_EXECUTION"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Bug pattern="CRLF_INJECTION_LOGS"/>
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
+      <Bug pattern="CE_CLASS_ENVY"/>
+      <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
+      <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
+      <Bug pattern="IA_AMBIGUOUS_INVOCATION_OF_INHERITED_OR_OUTER_METHOD"/>
+      <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
+    </Or>
+  </Match>
+
+</FindBugsFilter>

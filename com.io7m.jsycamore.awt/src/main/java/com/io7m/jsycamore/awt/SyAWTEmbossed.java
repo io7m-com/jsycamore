@@ -124,8 +124,9 @@ public final class SyAWTEmbossed
        * Fill the center, if necessary.
        */
 
-      if (rectangle.paintFill().isPresent()) {
-        final Paint f = rectangle.paintFill().get();
+      final Optional<Paint> fill_opt = rectangle.paintFill();
+      if (fill_opt.isPresent()) {
+        final Paint f = fill_opt.get();
         graphics.setPaint(f);
         graphics.fillRect(
           emboss_size,
@@ -160,8 +161,11 @@ public final class SyAWTEmbossed
     final Paint old_paint = graphics.getPaint();
 
     try {
-      graphics.clipRect(corner.x(), corner.y(), corner.armLength(), corner.armLength());
-      graphics.translate(corner.x(), corner.y());
+      final int arm_length = corner.armLength();
+      final int x = corner.x();
+      final int y = corner.y();
+      graphics.clipRect(x, y, arm_length, arm_length);
+      graphics.translate(x, y);
 
       switch (corner.shape()) {
         case L_SHAPE_NW: {
@@ -281,9 +285,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_NW,
+      shape,
+      shape == LShape.L_SHAPE_NW,
       s -> "L-Shape must be L_SHAPE_NW");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -348,9 +353,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_NE,
+      shape,
+      shape == LShape.L_SHAPE_NE,
       s -> "L-Shape must be L_SHAPE_NE");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -414,9 +420,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_SW,
+      shape,
+      shape == LShape.L_SHAPE_SW,
       s -> "L-Shape must be L_SHAPE_SW");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -479,9 +486,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_SE,
+      shape,
+      shape == LShape.L_SHAPE_SE,
       s -> "L-Shape must be L_SHAPE_SE");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -547,9 +555,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_SE,
+      shape,
+      shape == LShape.L_SHAPE_SE,
       s -> "L-Shape must be L_SHAPE_SE");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -600,8 +609,9 @@ public final class SyAWTEmbossed
       this.drawEmbossedCornerSE(graphics, corner);
       graphics.setTransform(old_transform);
 
-      if (corner.paintFill().isPresent()) {
-        final Paint fill_paint = corner.paintFill().get();
+      final Optional<Paint> fill_opt = corner.paintFill();
+      if (fill_opt.isPresent()) {
+        final Paint fill_paint = fill_opt.get();
 
         graphics.translate(length + emboss_size - thickness_of_vertical, 0);
         graphics.setPaint(fill_paint);
@@ -645,9 +655,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_SW,
+      shape,
+      shape == LShape.L_SHAPE_SW,
       s -> "L-Shape must be L_SHAPE_SW");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -694,8 +705,9 @@ public final class SyAWTEmbossed
       this.drawEmbossedCornerSW(graphics, corner);
       graphics.setTransform(old_transform);
 
-      if (corner.paintFill().isPresent()) {
-        final Paint fill_paint = corner.paintFill().get();
+      final Optional<Paint> fill_opt = corner.paintFill();
+      if (fill_opt.isPresent()) {
+        final Paint fill_paint = fill_opt.get();
 
         graphics.translate(emboss_size, 0);
         graphics.setPaint(fill_paint);
@@ -739,9 +751,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_NE,
+      shape,
+      shape == LShape.L_SHAPE_NE,
       s -> "L-Shape must be L_SHAPE_NE");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -782,8 +795,9 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      if (corner.paintFill().isPresent()) {
-        final Paint fill_paint = corner.paintFill().get();
+      final Optional<Paint> fill_opt = corner.paintFill();
+      if (fill_opt.isPresent()) {
+        final Paint fill_paint = fill_opt.get();
 
         graphics.translate(0, emboss_size);
         graphics.setPaint(fill_paint);
@@ -837,9 +851,10 @@ public final class SyAWTEmbossed
     final Graphics2D graphics,
     final SyAWTEmbossedCornerL corner)
   {
+    final LShape shape = corner.shape();
     Preconditions.checkPrecondition(
-      corner.shape(),
-      corner.shape() == LShape.L_SHAPE_NW,
+      shape,
+      shape == LShape.L_SHAPE_NW,
       s -> "L-Shape must be L_SHAPE_NW");
 
     final int thickness_of_horizontal = corner.thicknessOfHorizontal();
@@ -880,8 +895,9 @@ public final class SyAWTEmbossed
       graphics.fillRect(0, 0, length - thickness_of_vertical, emboss_size);
       graphics.setTransform(old_transform);
 
-      if (corner.paintFill().isPresent()) {
-        final Paint fill_paint = corner.paintFill().get();
+      final Optional<Paint> fill_opt = corner.paintFill();
+      if (fill_opt.isPresent()) {
+        final Paint fill_paint = fill_opt.get();
 
         graphics.translate(emboss_size, thickness_of_horizontal);
         graphics.setPaint(fill_paint);

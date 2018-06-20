@@ -19,7 +19,6 @@ package com.io7m.jsycamore.api;
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
 import com.io7m.jsycamore.api.text.SyTextMeasurementType;
 import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.windows.SyWindowAbstract;
@@ -114,7 +113,7 @@ public final class SyGUI implements SyGUIType
   {
     Objects.requireNonNull(title, "Title");
 
-    final SyWindowType w = new Window(width, height, title);
+    final SyWindowType w = new Window(this, width, height, title);
     this.windows_open.add(w);
     this.windows_open_order.add(w);
     this.windowFocusActual(w);
@@ -132,17 +131,18 @@ public final class SyGUI implements SyGUIType
     Objects.requireNonNull(e, "GUI element");
     if (!Objects.equals(e.gui(), this)) {
       final StringBuilder sb = new StringBuilder(128);
+      final String separator = System.lineSeparator();
       sb.append("Attempted to use a GUI element in the wrong GUI context.");
-      sb.append(System.lineSeparator());
+      sb.append(separator);
       sb.append("  Element:     ");
       sb.append(e);
-      sb.append(System.lineSeparator());
+      sb.append(separator);
       sb.append("  Element GUI: ");
       sb.append(e.gui());
-      sb.append(System.lineSeparator());
+      sb.append(separator);
       sb.append("  Current GUI: ");
       sb.append(this);
-      sb.append(System.lineSeparator());
+      sb.append(separator);
       throw new IllegalArgumentException(sb.toString());
     }
   }
@@ -153,7 +153,7 @@ public final class SyGUI implements SyGUIType
     final StringBuilder sb = new StringBuilder(128);
     sb.append("[SyGUI ");
     sb.append(this.name);
-    sb.append("]");
+    sb.append(']');
     return sb.toString();
   }
 
@@ -555,11 +555,6 @@ public final class SyGUI implements SyGUIType
 
           final Optional<SyWindowType> window_opt = component.window();
           if (window_opt.isPresent()) {
-            final SyWindowType window = window_opt.get();
-
-            final PVector2I<SySpaceWindowRelativeType> w_position =
-              window.transformViewportRelative(position);
-
             if (LOG_MOUSE.isTraceEnabled()) {
               LOG_MOUSE.trace("onMouseReleased: {}", component);
             }
@@ -600,14 +595,15 @@ public final class SyGUI implements SyGUIType
     }
   }
 
-  private final class Window extends SyWindowAbstract
+  private static class Window extends SyWindowAbstract
   {
     Window(
-      final int width,
-      final int height,
+      final SyGUI in_gui,
+      final int in_width,
+      final int in_height,
       final String in_text)
     {
-      super(SyGUI.this, width, height, in_text);
+      super(in_gui, in_width, in_height, in_text);
     }
   }
 }

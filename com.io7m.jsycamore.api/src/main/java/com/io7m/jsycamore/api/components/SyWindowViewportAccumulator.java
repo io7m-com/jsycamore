@@ -71,13 +71,13 @@ public final class SyWindowViewportAccumulator implements
     final StringBuilder sb =
       new StringBuilder("[SyWindowViewportAccumulator ");
     sb.append(this.current.minimumX());
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.current.minimumY());
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.current.maximumX());
-    sb.append(" ");
+    sb.append(' ');
     sb.append(this.current.maximumY());
-    sb.append("]");
+    sb.append(']');
     return sb.toString();
   }
 
