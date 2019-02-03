@@ -62,15 +62,23 @@
     <Bug pattern="OI_OPTIONAL_ISSUES_USES_IMMEDIATE_EXECUTION"/>
   </Match>
 
+  <!-- False positive? -->
+  <Match>
+    <Class name="com.io7m.jsycamore.api.windows.SyWindowAbstract"/>
+    <Bug pattern="PCOA_PARTIALLY_CONSTRUCTED_OBJECT_ACCESS"/>
+  </Match>
+
   <Match>
     <Or>
-      <Bug pattern="CRLF_INJECTION_LOGS"/>
-      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
-      <Bug pattern="CE_CLASS_ENVY"/>
-      <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
       <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
-      <Bug pattern="IA_AMBIGUOUS_INVOCATION_OF_INHERITED_OR_OUTER_METHOD"/>
       <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>
+      <Bug pattern="CE_CLASS_ENVY"/>
+      <Bug pattern="CRLF_INJECTION_LOGS"/>
+      <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL"/>
+      <Bug pattern="IA_AMBIGUOUS_INVOCATION_OF_INHERITED_OR_OUTER_METHOD"/>
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER"/>
+      <Bug pattern="OPM_OVERLY_PERMISSIVE_METHOD"/>
+      <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
     </Or>
   </Match>
 
