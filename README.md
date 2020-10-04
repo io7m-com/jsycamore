@@ -1,10 +1,15 @@
 jsycamore
 ===
 
-[![Build Status](https://travis-ci.org/io7m/jsycamore.svg)](https://travis-ci.org/io7m/jsycamore)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.io7m.jsycamore/com.io7m.jsycamore/badge.png)](https://maven-badges.herokuapp.com/maven-central/com.io7m.jsycamore/com.io7m.jsycamore)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b90ebe26bdab481188d8ea6c071d3c97)](https://www.codacy.com/app/github_79/jsycamore?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=io7m/jsycamore&amp;utm_campaign=Badge_Grade)
+[![Maven Central](https://img.shields.io/maven-central/v/com.io7m.jsycamore/com.io7m.jsycamore.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.jsycamore%22)
+[![Maven Central (snapshot)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.io7m.jsycamore/com.io7m.jsycamore.svg?style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/io7m/jsycamore/)
+[![Codecov](https://img.shields.io/codecov/c/github/io7m/jsycamore.svg?style=flat-square)](https://codecov.io/gh/io7m/jsycamore)
 
-See https://io7m.github.io/jsycamore/ for more information.
+![jsycamore](./src/site/resources/jsycamore.jpg?raw=true)
 
-![jsycamore](./src/site/resources/jsycamore.png?raw=true)
+| JVM             | Platform | Status |
+|-----------------|----------|--------|
+| OpenJDK LTS     | Linux    | [![Build (OpenJDK LTS, Linux)](https://img.shields.io/github/workflow/status/io7m/jsycamore/main-openjdk_lts-linux)](https://github.com/io7m/jsycamore/actions?query=workflow%3Amain-openjdk_lts-linux) |
+| OpenJDK Current | Linux    | [![Build (OpenJDK Current, Linux)](https://img.shields.io/github/workflow/status/io7m/jsycamore/main-openjdk_current-linux)](https://github.com/io7m/jsycamore/actions?query=workflow%3Amain-openjdk_current-linux)
+| OpenJDK Current | Windows  | [![Build (OpenJDK Current, Windows)](https://img.shields.io/github/workflow/status/io7m/jsycamore/main-openjdk_current-windows)](https://github.com/io7m/jsycamore/actions?query=workflow%3Amain-openjdk_current-windows)
+
