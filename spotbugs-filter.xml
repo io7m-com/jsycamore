@@ -69,6 +69,50 @@
   </Match>
 
   <Match>
+    <Class name="com.io7m.jsycamore.api.SyGUI"/>
+    <Method name="windowsOpenOrdered"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.api.windows.SyWindowAbstract"/>
+    <Method name="gui"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.themes.bee.SyThemeBee"/>
+    <Or>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING"/>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.themes.fenestra.SyThemeFenestra"/>
+    <Or>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING"/>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.themes.stride.SyThemeStride"/>
+    <Or>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING"/>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Or>
+  </Match>
+
+  <Match>
+    <Class name="com.io7m.jsycamore.themes.motive.SyThemeMotive"/>
+    <Or>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING"/>
+      <Bug pattern="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"/>
+    </Or>
+  </Match>
+
+  <Match>
     <Or>
       <Bug pattern="ACEM_ABSTRACT_CLASS_EMPTY_METHODS"/>
       <Bug pattern="AI_ANNOTATION_ISSUES_NEEDS_NULLABLE"/>

@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.awt</name>
-  <description>OpenGL GUI library (AWT code)</description>
+  <description>Embedded GUI library (AWT code)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>

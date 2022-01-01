@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.caffeine</name>
-  <description>OpenGL GUI library (Caffeine image cache)</description>
+  <description>Embedded GUI library (Caffeine image cache)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>

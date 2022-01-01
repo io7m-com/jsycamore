@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.tests</name>
-  <description>OpenGL GUI library (Unit tests)</description>
+  <description>Embedded GUI library (Unit tests)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <properties>

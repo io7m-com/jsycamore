@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.api.images</name>
-  <description>OpenGL GUI library (Images API)</description>
+  <description>Embedded GUI library (Images API)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>

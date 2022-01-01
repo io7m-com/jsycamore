@@ -18,7 +18,7 @@
 
   <packaging>pom</packaging>
   <name>com.io7m.jsycamore</name>
-  <description>OpenGL GUI library</description>
+  <description>Embedded GUI library</description>
   <url>http://github.com/io7m/jsycamore</url>
 
   <modules>

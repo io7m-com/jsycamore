@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.api.text</name>
-  <description>OpenGL GUI library (Text API)</description>
+  <description>Embedded GUI library (Text API)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <build>

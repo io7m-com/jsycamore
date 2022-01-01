@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.documentation</name>
-  <description>OpenGL GUI library (Documentation)</description>
+  <description>Embedded GUI library (Documentation)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>

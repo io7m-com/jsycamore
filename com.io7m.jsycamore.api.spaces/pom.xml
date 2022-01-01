@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.api.spaces</name>
-  <description>OpenGL GUI library (Spaces API)</description>
+  <description>Embedded GUI library (Spaces API)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <build>

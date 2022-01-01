@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.themes.stride</name>
-  <description>OpenGL GUI library (Stride theme)</description>
+  <description>Embedded GUI library (Stride theme)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>

@@ -14,7 +14,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.themes.motive</name>
-  <description>OpenGL GUI library (Motive theme)</description>
+  <description>Embedded GUI library (Motive theme)</description>
   <url>http://io7m.github.io/jsycamore/</url>
 
   <dependencies>
