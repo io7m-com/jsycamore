@@ -34,11 +34,6 @@
       <artifactId>com.io7m.jsycamore.api.text</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.jsycamore.api.images</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>com.io7m.jaffirm</groupId>

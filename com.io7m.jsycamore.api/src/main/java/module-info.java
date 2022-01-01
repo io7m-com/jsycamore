@@ -29,7 +29,6 @@ module com.io7m.jsycamore.api
   requires com.io7m.jorchard.core;
   requires com.io7m.jranges.core;
   requires com.io7m.jregions.core;
-  requires com.io7m.jsycamore.api.images;
   requires com.io7m.jsycamore.api.spaces;
   requires com.io7m.jsycamore.api.text;
   requires com.io7m.jtensors.core;
@@ -37,8 +36,5 @@ module com.io7m.jsycamore.api
   requires jcip.annotations;
   requires org.slf4j;
 
-  exports com.io7m.jsycamore.api.components;
-  exports com.io7m.jsycamore.api.themes;
-  exports com.io7m.jsycamore.api.windows;
   exports com.io7m.jsycamore.api;
 }
