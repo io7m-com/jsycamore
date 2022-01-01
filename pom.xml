@@ -40,6 +40,7 @@
   <properties>
     <io7m.api.previousVersion>0.1.0</io7m.api.previousVersion>
     <junit.version>5.8.2</junit.version>
+    <io7m.org.immutables.value.version>2.8.3</io7m.org.immutables.value.version>
   </properties>
 
   <licenses>
@@ -95,17 +96,17 @@
       <dependency>
         <groupId>com.io7m.jaffirm</groupId>
         <artifactId>com.io7m.jaffirm.core</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.4</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
-        <version>2.1.1</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jranges</groupId>
         <artifactId>com.io7m.jranges.core</artifactId>
-        <version>3.0.0</version>
+        <version>4.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jorchard</groupId>
@@ -115,12 +116,12 @@
       <dependency>
         <groupId>com.io7m.jtensors</groupId>
         <artifactId>com.io7m.jtensors.core</artifactId>
-        <version>9.0.0</version>
+        <version>10.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jtensors</groupId>
         <artifactId>com.io7m.jtensors.generators</artifactId>
-        <version>9.0.0</version>
+        <version>10.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jcip</groupId>
@@ -135,7 +136,7 @@
       <dependency>
         <groupId>com.io7m.jregions</groupId>
         <artifactId>com.io7m.jregions.core</artifactId>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.immutables.style</groupId>
@@ -146,7 +147,7 @@
       <dependency>
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
-        <version>2.6.1</version>
+        <version>${io7m.org.immutables.value.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -183,6 +184,16 @@
         <artifactId>org.osgi.service.component.annotations</artifactId>
         <version>1.4.0</version>
       </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>1.1.2</version>
+      </dependency>
 
       <dependency>
         <groupId>net.java.quickcheck</groupId>
@@ -206,6 +217,21 @@
   <build>
     <pluginManagement>
       <plugins>
+        <!-- Configure compiler -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <annotationProcessorPaths>
+              <dependency>
+                <groupId>org.immutables</groupId>
+                <artifactId>value</artifactId>
+                <version>${io7m.org.immutables.value.version}</version>
+              </dependency>
+            </annotationProcessorPaths>
+          </configuration>
+        </plugin>
+
         <!-- jstructural plugin for generating documentation. -->
         <plugin>
           <groupId>com.io7m.jstructural</groupId>

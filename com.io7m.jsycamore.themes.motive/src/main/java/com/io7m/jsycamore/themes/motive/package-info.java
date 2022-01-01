@@ -18,5 +18,11 @@
  * A 1980s style workstation theme.
  */
 
+@Export
+@Version("1.0.0")
+@Capability(namespace = "com.io7m.jsycamore.theme", attribute = {"name:String=Motive"})
 package com.io7m.jsycamore.themes.motive;
 
+import org.osgi.annotation.bundle.Capability;
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

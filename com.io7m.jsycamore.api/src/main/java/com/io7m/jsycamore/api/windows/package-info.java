@@ -18,5 +18,9 @@
  * Window types.
  */
 
+@Export
+@Version("1.0.0")
 package com.io7m.jsycamore.api.windows;
 
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

@@ -18,5 +18,11 @@
  * A 1990s style object-based workstation theme.
  */
 
+@Export
+@Version("1.0.0")
+@Capability(namespace = "com.io7m.jsycamore.theme", attribute = {"name:String=Stride"})
 package com.io7m.jsycamore.themes.stride;
 
+import org.osgi.annotation.bundle.Capability;
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

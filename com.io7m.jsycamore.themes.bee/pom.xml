@@ -67,42 +67,16 @@
       <artifactId>com.io7m.immutables.style</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.bundle</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- Check style -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-
-      <!-- Analyze semantic versioning -->
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-baseline-maven-plugin</artifactId>
-      </plugin>
-
-      <!-- Spot bugs -->
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-
-      <!-- Produce OSGi bundle -->
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-maven-plugin</artifactId>
-        <configuration>
-          <bnd><![CDATA[
-            Export-Package: \
-              com.io7m.jsycamore.themes.bee
-            Provide-Capability: \
-              com.io7m.jsycamore.theme;name:String=Bee
-]]></bnd>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

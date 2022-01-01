@@ -18,5 +18,9 @@
  * Themes API.
  */
 
+@Export
+@Version("1.0.0")
 package com.io7m.jsycamore.api.themes;
 
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

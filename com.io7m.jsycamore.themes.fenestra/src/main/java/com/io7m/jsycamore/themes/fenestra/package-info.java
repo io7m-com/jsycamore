@@ -18,5 +18,11 @@
  * A 1990s style consumer computer theme.
  */
 
+@Export
+@Version("1.0.0")
+@Capability(namespace = "com.io7m.jsycamore.theme", attribute = {"name:String=Fenestra"})
 package com.io7m.jsycamore.themes.fenestra;
 
+import org.osgi.annotation.bundle.Capability;
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;
