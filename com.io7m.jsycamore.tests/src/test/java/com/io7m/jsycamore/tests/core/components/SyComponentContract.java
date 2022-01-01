@@ -23,19 +23,17 @@ import com.io7m.jsycamore.api.components.SyActive;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyVisibility;
 import com.io7m.jsycamore.api.components.SyWindowViewportAccumulator;
-import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public abstract class SyComponentContract
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   protected abstract SyGUIType gui();
 
   protected abstract SyComponentType create();
@@ -43,296 +41,296 @@ public abstract class SyComponentContract
   @Test
   public void testComponentActive()
   {
-    final SyComponentType c0 = this.create();
-    Assert.assertEquals(SyActive.ACTIVE, c0.activity());
-    Assert.assertTrue(c0.isActive());
+    final var c0 = this.create();
+    assertEquals(SyActive.ACTIVE, c0.activity());
+    assertTrue(c0.isActive());
 
     c0.setActive(SyActive.INACTIVE);
-    Assert.assertEquals(SyActive.INACTIVE, c0.activity());
-    Assert.assertFalse(c0.isActive());
+    assertEquals(SyActive.INACTIVE, c0.activity());
+    assertFalse(c0.isActive());
 
     c0.setActive(SyActive.ACTIVE);
-    Assert.assertEquals(SyActive.ACTIVE, c0.activity());
-    Assert.assertTrue(c0.isActive());
+    assertEquals(SyActive.ACTIVE, c0.activity());
+    assertTrue(c0.isActive());
   }
 
   @Test
   public void testComponentActiveInherited()
   {
-    final SyComponentType c0 = this.create();
-    final SyComponentType c1 = this.create();
+    final var c0 = this.create();
+    final var c1 = this.create();
 
     c0.node().childAdd(c1.node());
 
-    Assert.assertTrue(c0.isActive());
-    Assert.assertTrue(c1.isActive());
+    assertTrue(c0.isActive());
+    assertTrue(c1.isActive());
 
     c0.setActive(SyActive.INACTIVE);
 
-    Assert.assertFalse(c0.isActive());
-    Assert.assertFalse(c1.isActive());
+    assertFalse(c0.isActive());
+    assertFalse(c1.isActive());
 
     c0.setActive(SyActive.ACTIVE);
 
-    Assert.assertTrue(c0.isActive());
-    Assert.assertTrue(c1.isActive());
+    assertTrue(c0.isActive());
+    assertTrue(c1.isActive());
 
     c1.setActive(SyActive.INACTIVE);
 
-    Assert.assertTrue(c0.isActive());
-    Assert.assertFalse(c1.isActive());
+    assertTrue(c0.isActive());
+    assertFalse(c1.isActive());
 
     c1.setActive(SyActive.ACTIVE);
 
-    Assert.assertTrue(c0.isActive());
-    Assert.assertTrue(c1.isActive());
+    assertTrue(c0.isActive());
+    assertTrue(c1.isActive());
   }
 
   @Test
   public void testComponentVisible()
   {
-    final SyComponentType c0 = this.create();
-    Assert.assertEquals(SyVisibility.VISIBILITY_VISIBLE, c0.visibility());
-    Assert.assertTrue(c0.isVisible());
+    final var c0 = this.create();
+    assertEquals(SyVisibility.VISIBILITY_VISIBLE, c0.visibility());
+    assertTrue(c0.isVisible());
 
     c0.setVisibility(SyVisibility.VISIBILITY_INVISIBLE);
-    Assert.assertEquals(SyVisibility.VISIBILITY_INVISIBLE, c0.visibility());
-    Assert.assertFalse(c0.isVisible());
+    assertEquals(SyVisibility.VISIBILITY_INVISIBLE, c0.visibility());
+    assertFalse(c0.isVisible());
 
     c0.setVisibility(SyVisibility.VISIBILITY_VISIBLE);
-    Assert.assertEquals(SyVisibility.VISIBILITY_VISIBLE, c0.visibility());
-    Assert.assertTrue(c0.isVisible());
+    assertEquals(SyVisibility.VISIBILITY_VISIBLE, c0.visibility());
+    assertTrue(c0.isVisible());
   }
 
   @Test
   public void testComponentVisibleInherited()
   {
-    final SyComponentType c0 = this.create();
-    final SyComponentType c1 = this.create();
+    final var c0 = this.create();
+    final var c1 = this.create();
 
     c0.node().childAdd(c1.node());
 
-    Assert.assertTrue(c0.isVisible());
-    Assert.assertTrue(c1.isVisible());
+    assertTrue(c0.isVisible());
+    assertTrue(c1.isVisible());
 
     c0.setVisibility(SyVisibility.VISIBILITY_INVISIBLE);
 
-    Assert.assertFalse(c0.isVisible());
-    Assert.assertFalse(c1.isVisible());
+    assertFalse(c0.isVisible());
+    assertFalse(c1.isVisible());
 
     c0.setVisibility(SyVisibility.VISIBILITY_VISIBLE);
 
-    Assert.assertTrue(c0.isVisible());
-    Assert.assertTrue(c1.isVisible());
+    assertTrue(c0.isVisible());
+    assertTrue(c1.isVisible());
 
     c1.setVisibility(SyVisibility.VISIBILITY_INVISIBLE);
 
-    Assert.assertTrue(c0.isVisible());
-    Assert.assertFalse(c1.isVisible());
+    assertTrue(c0.isVisible());
+    assertFalse(c1.isVisible());
 
     c1.setVisibility(SyVisibility.VISIBILITY_VISIBLE);
 
-    Assert.assertTrue(c0.isVisible());
-    Assert.assertTrue(c1.isVisible());
+    assertTrue(c0.isVisible());
+    assertTrue(c1.isVisible());
   }
 
   @Test
   public void testComponentForWindowRelative()
   {
-    final SyComponentType c0 = this.create();
+    final var c0 = this.create();
     c0.setBox(PAreasI.create(0, 0, 64, 64));
 
-    final SyWindowViewportAccumulatorType c = SyWindowViewportAccumulator.create();
+    final var c = SyWindowViewportAccumulator.create();
     c.reset(64, 64);
 
     {
-      final Optional<SyComponentType> cc =
+      final var cc =
         c0.componentForWindowRelative(PVector2I.of(0, 0), c);
-      Assert.assertEquals(Optional.of(c0), cc);
+      assertEquals(Optional.of(c0), cc);
     }
 
     {
-      final Optional<SyComponentType> cc =
+      final var cc =
         c0.componentForWindowRelative(PVector2I.of(65, 65), c);
-      Assert.assertEquals(Optional.empty(), cc);
+      assertEquals(Optional.empty(), cc);
     }
   }
 
   @Test
   public void testComponentForWindowRelativeInvisible()
   {
-    final SyComponentType c0 = this.create();
+    final var c0 = this.create();
     c0.setBox(PAreasI.create(0, 0, 64, 64));
     c0.setVisibility(SyVisibility.VISIBILITY_INVISIBLE);
 
-    final SyWindowViewportAccumulatorType c = SyWindowViewportAccumulator.create();
+    final var c = SyWindowViewportAccumulator.create();
     c.reset(64, 64);
 
     {
-      final Optional<SyComponentType> cc =
+      final var cc =
         c0.componentForWindowRelative(PVector2I.of(0, 0), c);
-      Assert.assertEquals(Optional.empty(), cc);
+      assertEquals(Optional.empty(), cc);
     }
 
     {
-      final Optional<SyComponentType> cc =
+      final var cc =
         c0.componentForWindowRelative(PVector2I.of(65, 65), c);
-      Assert.assertEquals(Optional.empty(), cc);
+      assertEquals(Optional.empty(), cc);
     }
   }
 
   @Test
   public void testComponentWindowless()
   {
-    final SyComponentType c0 = this.create();
-    Assert.assertEquals(Optional.empty(), c0.window());
-    Assert.assertEquals(Optional.empty(), c0.windowReadable());
+    final var c0 = this.create();
+    assertEquals(Optional.empty(), c0.window());
+    assertEquals(Optional.empty(), c0.windowReadable());
   }
 
   @Test
   public void testComponentParentResizeFixed()
   {
-    final SyComponentType c0 = this.create();
+    final var c0 = this.create();
     c0.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
     c0.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorWidth());
 
-    final SyComponentType c1 = this.create();
+    final var c1 = this.create();
     c1.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
     c1.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c1.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c1.resizeBehaviorWidth());
 
     c0.setBox(PAreasI.create(0, 0, 32, 32));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().sizeX());
-    Assert.assertEquals(32L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(32L, (long) c0.box().sizeX());
+    assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
-    Assert.assertEquals(0L, (long) c1.box().minimumX());
-    Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L, (long) c1.box().sizeY());
+    assertEquals(0L, (long) c1.box().minimumX());
+    assertEquals(0L, (long) c1.box().minimumY());
+    assertEquals(16L, (long) c1.box().sizeX());
+    assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().sizeX());
-    Assert.assertEquals(64L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(64L, (long) c0.box().sizeX());
+    assertEquals(64L, (long) c0.box().sizeY());
 
-    Assert.assertEquals(0L, (long) c1.box().minimumX());
-    Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L, (long) c1.box().sizeY());
+    assertEquals(0L, (long) c1.box().minimumX());
+    assertEquals(0L, (long) c1.box().minimumY());
+    assertEquals(16L, (long) c1.box().sizeX());
+    assertEquals(16L, (long) c1.box().sizeY());
   }
 
   @Test
   public void testComponentParentResizeResize()
   {
-    final SyComponentType c0 = this.create();
+    final var c0 = this.create();
     c0.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
     c0.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorWidth());
 
-    final SyComponentType c1 = this.create();
+    final var c1 = this.create();
     c1.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_RESIZE);
     c1.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_RESIZE);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_RESIZE,
       c1.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_RESIZE,
       c1.resizeBehaviorWidth());
 
     c0.setBox(PAreasI.create(0, 0, 32, 32));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().sizeX());
-    Assert.assertEquals(32L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(32L, (long) c0.box().sizeX());
+    assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
-    Assert.assertEquals(0L, (long) c1.box().minimumX());
-    Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L, (long) c1.box().sizeY());
+    assertEquals(0L, (long) c1.box().minimumX());
+    assertEquals(0L, (long) c1.box().minimumY());
+    assertEquals(16L, (long) c1.box().sizeX());
+    assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().sizeX());
-    Assert.assertEquals(64L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(64L, (long) c0.box().sizeX());
+    assertEquals(64L, (long) c0.box().sizeY());
 
-    Assert.assertEquals(0L, (long) c1.box().minimumX());
-    Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L + 32L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L + 32L, (long) c1.box().sizeY());
+    assertEquals(0L, (long) c1.box().minimumX());
+    assertEquals(0L, (long) c1.box().minimumY());
+    assertEquals(16L + 32L, (long) c1.box().sizeX());
+    assertEquals(16L + 32L, (long) c1.box().sizeY());
   }
 
   @Test
   public void testComponentParentResizeMove()
   {
-    final SyComponentType c0 = this.create();
+    final var c0 = this.create();
     c0.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_FIXED);
     c0.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_FIXED);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_FIXED,
       c0.resizeBehaviorWidth());
 
-    final SyComponentType c1 = this.create();
+    final var c1 = this.create();
     c1.setResizeBehaviorHeight(SyParentResizeBehavior.BEHAVIOR_MOVE);
     c1.setResizeBehaviorWidth(SyParentResizeBehavior.BEHAVIOR_MOVE);
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_MOVE,
       c1.resizeBehaviorHeight());
-    Assert.assertEquals(
+    assertEquals(
       SyParentResizeBehavior.BEHAVIOR_MOVE,
       c1.resizeBehaviorWidth());
 
     c0.setBox(PAreasI.create(0, 0, 32, 32));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(32L, (long) c0.box().sizeX());
-    Assert.assertEquals(32L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(32L, (long) c0.box().sizeX());
+    assertEquals(32L, (long) c0.box().sizeY());
 
     c1.setBox(PAreasI.create(0, 0, 16, 16));
-    Assert.assertEquals(0L, (long) c1.box().minimumX());
-    Assert.assertEquals(0L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L, (long) c1.box().sizeY());
+    assertEquals(0L, (long) c1.box().minimumX());
+    assertEquals(0L, (long) c1.box().minimumY());
+    assertEquals(16L, (long) c1.box().sizeX());
+    assertEquals(16L, (long) c1.box().sizeY());
 
     c0.node().childAdd(c1.node());
 
     c0.setBox(PAreasI.create(0, 0, 64, 64));
-    Assert.assertEquals(0L, (long) c0.box().minimumX());
-    Assert.assertEquals(0L, (long) c0.box().minimumY());
-    Assert.assertEquals(64L, (long) c0.box().sizeX());
-    Assert.assertEquals(64L, (long) c0.box().sizeY());
+    assertEquals(0L, (long) c0.box().minimumX());
+    assertEquals(0L, (long) c0.box().minimumY());
+    assertEquals(64L, (long) c0.box().sizeX());
+    assertEquals(64L, (long) c0.box().sizeY());
 
-    Assert.assertEquals(32L, (long) c1.box().minimumX());
-    Assert.assertEquals(32L, (long) c1.box().minimumY());
-    Assert.assertEquals(16L, (long) c1.box().sizeX());
-    Assert.assertEquals(16L, (long) c1.box().sizeY());
+    assertEquals(32L, (long) c1.box().minimumX());
+    assertEquals(32L, (long) c1.box().minimumY());
+    assertEquals(16L, (long) c1.box().sizeX());
+    assertEquals(16L, (long) c1.box().sizeY());
   }
 }

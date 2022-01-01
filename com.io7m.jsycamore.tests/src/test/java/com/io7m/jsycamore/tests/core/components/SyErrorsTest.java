@@ -17,15 +17,12 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jsycamore.api.components.SyErrors;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 public final class SyErrorsTest
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   @Test
   public void testIgnored()
   {
@@ -37,9 +34,10 @@ public final class SyErrorsTest
   @Test
   public void testNotIgnored()
   {
-    this.expected.expect(Error.class);
-    SyErrors.ignoreNonErrors(
-      LoggerFactory.getLogger(SyErrorsTest.class),
-      new Error("error"));
+    Assertions.assertThrows(Error.class, () -> {
+      SyErrors.ignoreNonErrors(
+        LoggerFactory.getLogger(SyErrorsTest.class),
+        new Error("error"));
+    });
   }
 }

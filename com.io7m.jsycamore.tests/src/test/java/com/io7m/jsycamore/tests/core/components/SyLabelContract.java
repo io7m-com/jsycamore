@@ -20,10 +20,13 @@ import com.io7m.jsycamore.api.components.SyLabelType;
 import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyLabelContract extends SyComponentContract
 {
@@ -33,16 +36,16 @@ public abstract class SyLabelContract extends SyComponentContract
   @Test
   public void testWindowlessTheme()
   {
-    final SyLabelType c = this.create();
-    Assert.assertFalse(c.window().isPresent());
-    Assert.assertFalse(c.theme().isPresent());
+    final var c = this.create();
+    assertFalse(c.window().isPresent());
+    assertFalse(c.theme().isPresent());
   }
 
   @Test
   public final void testMatch()
   {
-    final SyLabelType label = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var label = this.create();
+    final var called = new AtomicBoolean(false);
 
     label.matchComponent(
       this,
@@ -63,14 +66,14 @@ public abstract class SyLabelContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testMatchReadable()
   {
-    final SyLabelType label = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var label = this.create();
+    final var called = new AtomicBoolean(false);
 
     label.matchComponentReadable(
       this,
@@ -91,22 +94,22 @@ public abstract class SyLabelContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testIdentities()
   {
-    final SyLabelType label = this.create();
+    final var label = this.create();
 
-    for (final SyAlignmentHorizontal a : SyAlignmentHorizontal.values()) {
+    for (final var a : SyAlignmentHorizontal.values()) {
       label.setTextAlignmentHorizontal(a);
-      Assert.assertEquals(a, label.textAlignmentHorizontal());
+      assertEquals(a, label.textAlignmentHorizontal());
     }
 
-    for (final SyAlignmentVertical a : SyAlignmentVertical.values()) {
+    for (final var a : SyAlignmentVertical.values()) {
       label.setTextAlignmentVertical(a);
-      Assert.assertEquals(a, label.textAlignmentVertical());
+      assertEquals(a, label.textAlignmentVertical());
     }
   }
 }

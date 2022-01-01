@@ -19,26 +19,24 @@ package com.io7m.jsycamore.tests.core.themes;
 import com.io7m.jsycamore.api.themes.SyThemeColor;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public final class SyThemeColorTest
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   @Test
   public void testMatch()
   {
-    final SyThemeColor.Builder b = SyThemeColor.builder();
+    final var b = SyThemeColor.builder();
     b.setColor(Vector3D.of(0.0, 0.0, 0.0));
-    final SyThemeColor r = b.build();
-    Assert.assertEquals(Vector3D.of(0.0, 0.0, 0.0), r.color());
+    final var r = b.build();
+    assertEquals(Vector3D.of(0.0, 0.0, 0.0), r.color());
 
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var called = new AtomicBoolean(false);
     r.matchFill(
       this,
       (gt, gradient) -> {
@@ -49,6 +47,6 @@ public final class SyThemeColorTest
         return Void.class;
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 }

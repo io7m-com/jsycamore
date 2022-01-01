@@ -22,15 +22,16 @@ import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.jtensors.generators.Vector3DGenerator;
 import net.java.quickcheck.QuickCheck;
 import net.java.quickcheck.characteristic.AbstractCharacteristic;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class SyColorsTest
 {
   private static AlmostEqualDouble.ContextRelative createContextRelative()
   {
-    final AlmostEqualDouble.ContextRelative c =
+    final var c =
       new AlmostEqualDouble.ContextRelative();
     c.setMaxAbsoluteDifference(0.01);
     return c;
@@ -39,7 +40,7 @@ public final class SyColorsTest
   @Test
   public void testIdentityRGBtoHSV()
   {
-    final AlmostEqualDouble.ContextRelative c =
+    final var c =
       createContextRelative();
 
     QuickCheck.forAllVerbose(
@@ -50,28 +51,28 @@ public final class SyColorsTest
         protected void doSpecify(final Vector3D rgb)
           throws Throwable
         {
-          final Vector3D hsv = SyColors.convertRGBtoHSV(rgb);
-          final Vector3D rgb_out = SyColors.convertHSVtoRGB(hsv);
+          final var hsv = SyColors.convertRGBtoHSV(rgb);
+          final var rgb_out = SyColors.convertHSVtoRGB(hsv);
 
           System.out.println("rgb:     " + rgb);
           System.out.println("hsv:     " + hsv);
           System.out.println("rgb_out: " + rgb_out);
 
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, rgb.x(), rgb_out.x()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, rgb.y(), rgb_out.y()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, rgb.z(), rgb_out.z()));
         }
       });
   }
 
   @Test
-  @Ignore("Test is currently broken for unknown reasons.")
+  @Disabled("Test is currently broken for unknown reasons.")
   public void testIdentityHSVtoRGB()
   {
-    final AlmostEqualDouble.ContextRelative c =
+    final var c =
       createContextRelative();
 
     QuickCheck.forAllVerbose(
@@ -82,22 +83,22 @@ public final class SyColorsTest
         protected void doSpecify(final Vector3D raw)
           throws Throwable
         {
-          final Vector3D hsv =
+          final var hsv =
             Vector3D.of(raw.x() * 360.0, raw.y(), raw.z());
-          final Vector3D rgb =
+          final var rgb =
             SyColors.convertHSVtoRGB(hsv);
-          final Vector3D hsv_out =
+          final var hsv_out =
             SyColors.convertRGBtoHSV(rgb);
 
           System.out.println("hsv:     " + hsv);
           System.out.println("rgb:     " + rgb);
           System.out.println("hsv_out: " + hsv_out);
 
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, hsv.x(), hsv_out.x()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, hsv.y(), hsv_out.y()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, hsv.z(), hsv_out.z()));
         }
       });
@@ -106,7 +107,7 @@ public final class SyColorsTest
   @Test
   public void testNoSaturationHSVtoRGB()
   {
-    final AlmostEqualDouble.ContextRelative c =
+    final var c =
       createContextRelative();
 
     QuickCheck.forAllVerbose(
@@ -117,22 +118,22 @@ public final class SyColorsTest
         protected void doSpecify(final Vector3D raw)
           throws Throwable
         {
-          final Vector3D hsv =
+          final var hsv =
             Vector3D.of(raw.x() * 360.0, 0.0, raw.z());
-          final Vector3D rgb =
+          final var rgb =
             SyColors.convertHSVtoRGB(hsv);
-          final Vector3D hsv_out =
+          final var hsv_out =
             SyColors.convertRGBtoHSV(rgb);
 
           System.out.println("hsv:     " + hsv);
           System.out.println("rgb:     " + rgb);
           System.out.println("hsv_out: " + hsv_out);
 
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, -1.0, hsv_out.x()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, 0.0, hsv_out.y()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, rgb.x(), hsv_out.z()));
         }
       });
@@ -141,7 +142,7 @@ public final class SyColorsTest
   @Test
   public void testNoSaturationRGBtoHSV()
   {
-    final AlmostEqualDouble.ContextRelative c =
+    final var c =
       createContextRelative();
 
     QuickCheck.forAllVerbose(
@@ -152,19 +153,19 @@ public final class SyColorsTest
         protected void doSpecify(final Vector3D raw)
           throws Throwable
         {
-          final Vector3D rgb =
+          final var rgb =
             Vector3D.of(raw.x(), raw.x(), raw.x());
-          final Vector3D hsv_out =
+          final var hsv_out =
             SyColors.convertRGBtoHSV(rgb);
 
           System.out.println("rgb:     " + rgb);
           System.out.println("hsv_out: " + hsv_out);
 
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, -1.0, hsv_out.x()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, 0.0, hsv_out.y()));
-          Assert.assertTrue(
+          assertTrue(
             AlmostEqualDouble.almostEqual(c, rgb.x(), hsv_out.z()));
         }
       });

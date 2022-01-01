@@ -43,7 +43,7 @@ public final class SyImageTest extends SyImageContract
   @Override
   protected SyImageType create()
   {
-    final SyImageSpecification spec = SyImageSpecification.of(
+    final var spec = SyImageSpecification.of(
       URI.create("default"),
       32,
       32,

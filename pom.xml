@@ -39,6 +39,7 @@
 
   <properties>
     <io7m.api.previousVersion>0.1.0</io7m.api.previousVersion>
+    <junit.version>5.8.2</junit.version>
   </properties>
 
   <licenses>
@@ -184,14 +185,20 @@
       </dependency>
 
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-      </dependency>
-      <dependency>
         <groupId>net.java.quickcheck</groupId>
         <artifactId>quickcheck</artifactId>
         <version>0.6</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

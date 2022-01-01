@@ -18,45 +18,38 @@ package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jorchard.core.JOTreeExceptionDetachDenied;
 import com.io7m.jorchard.core.JOTreeNodeType;
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.SyGUIType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyImageType;
-import com.io7m.jsycamore.api.components.SyPanelReadableType;
 import com.io7m.jsycamore.api.images.SyImageFormat;
 import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
-import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.windows.SyWindowCloseButtonType;
-import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
 import com.io7m.jsycamore.api.windows.SyWindowMaximizeButtonType;
-import com.io7m.jsycamore.api.windows.SyWindowTitleBarType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.themes.bee.SyThemeBee;
 import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
 import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public abstract class SyWindowContract
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   private static boolean isCloseOrMaximize(
     final JOTreeNodeType<SyComponentType> node)
   {
     if (!node.isRoot()) {
       if (node.value() instanceof SyImageType) {
-        final JOTreeNodeType<SyComponentType> parent = node.parent().get();
+        final var parent = node.parent().get();
         return parent.value() instanceof SyWindowCloseButtonType
           || parent.value() instanceof SyWindowMaximizeButtonType;
       }
@@ -72,145 +65,146 @@ public abstract class SyWindowContract
   @Test
   public final void testCreate()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
-    final PAreaI<SySpaceViewportType> box = w.box();
+    final var w = this.create(640, 480, "Main 0");
+    final var box = w.box();
 
-    Assert.assertEquals(640L, (long) box.sizeX());
-    Assert.assertEquals(480L, (long) box.sizeY());
-    Assert.assertEquals(0L, (long) box.minimumX());
-    Assert.assertEquals(0L, (long) box.minimumY());
+    assertEquals(640L, (long) box.sizeX());
+    assertEquals(480L, (long) box.sizeY());
+    assertEquals(0L, (long) box.minimumX());
+    assertEquals(0L, (long) box.minimumY());
 
-    final SyWindowTitleBarType titlebar = w.titleBar();
-    Assert.assertEquals("Main 0", titlebar.text());
+    final var titlebar = w.titleBar();
+    assertEquals("Main 0", titlebar.text());
 
-    Assert.assertTrue(w.isFocused());
+    assertTrue(w.isFocused());
   }
 
   @Test
   public final void testOpenClose()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyGUIType g = w.gui();
+    final var w = this.create(640, 480, "Main 0");
+    final var g = w.gui();
 
-    Assert.assertTrue(w.isOpen());
-    Assert.assertTrue(w.isFocused());
+    assertTrue(w.isOpen());
+    assertTrue(w.isFocused());
 
     g.windowClose(w);
 
-    Assert.assertFalse(w.isOpen());
-    Assert.assertFalse(w.isFocused());
+    assertFalse(w.isOpen());
+    assertFalse(w.isFocused());
 
     g.windowOpen(w);
 
-    Assert.assertTrue(w.isOpen());
-    Assert.assertTrue(w.isFocused());
+    assertTrue(w.isOpen());
+    assertTrue(w.isFocused());
   }
 
   @Test
   public final void testCloseable()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var w = this.create(640, 480, "Main 0");
 
-    Assert.assertTrue(w.isCloseable());
+    assertTrue(w.isCloseable());
     w.setCloseable(true);
-    Assert.assertTrue(w.isCloseable());
+    assertTrue(w.isCloseable());
     w.setCloseable(false);
-    Assert.assertFalse(w.isCloseable());
+    assertFalse(w.isCloseable());
     w.setCloseable(true);
-    Assert.assertTrue(w.isCloseable());
+    assertTrue(w.isCloseable());
   }
 
   @Test
   public final void testMaximizable()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var w = this.create(640, 480, "Main 0");
 
-    Assert.assertTrue(w.isMaximizable());
+    assertTrue(w.isMaximizable());
     w.setMaximizable(true);
-    Assert.assertTrue(w.isMaximizable());
+    assertTrue(w.isMaximizable());
     w.setMaximizable(false);
-    Assert.assertFalse(w.isMaximizable());
+    assertFalse(w.isMaximizable());
     w.setMaximizable(true);
-    Assert.assertTrue(w.isMaximizable());
+    assertTrue(w.isMaximizable());
   }
 
   @Test
   public final void testTheme()
   {
-    final SyTheme theme_default = SyThemeMotive.builder().build();
-    final SyTheme theme_other = SyThemeBee.builder().build();
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var theme_default = SyThemeMotive.builder().build();
+    final var theme_other = SyThemeBee.builder().build();
+    final var w = this.create(640, 480, "Main 0");
 
-    Assert.assertEquals(theme_default, w.theme());
+    assertEquals(theme_default, w.theme());
     w.setTheme(Optional.of(theme_other));
-    Assert.assertEquals(theme_other, w.theme());
+    assertEquals(theme_other, w.theme());
     w.setTheme(Optional.empty());
-    Assert.assertEquals(theme_default, w.theme());
+    assertEquals(theme_default, w.theme());
   }
 
   @Test
   public final void testSetTitle()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var w = this.create(640, 480, "Main 0");
 
-    final SyWindowTitleBarType titlebar = w.titleBar();
-    Assert.assertEquals("Main 0", titlebar.text());
+    final var titlebar = w.titleBar();
+    assertEquals("Main 0", titlebar.text());
 
     titlebar.setText("Main 1");
-    Assert.assertEquals("Main 1", titlebar.text());
+    assertEquals("Main 1", titlebar.text());
   }
 
   @Test
   public final void testDetachContentPaneDenied()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyWindowContentPaneType content = w.contentPane();
+    final var w = this.create(640, 480, "Main 0");
+    final var content = w.contentPane();
 
-    this.expected.expect(JOTreeExceptionDetachDenied.class);
-    content.node().detach();
+    assertThrows(JOTreeExceptionDetachDenied.class, () -> {
+      content.node().detach();
+    });
   }
 
   @Test
   public final void testDetachTitlebarDenied()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyWindowTitleBarType titlebar = w.titleBar();
+    final var w = this.create(640, 480, "Main 0");
+    final var titlebar = w.titleBar();
 
-    final SyWindowContentPaneType content = w.contentPane();
-    final JOTreeNodeType<SyComponentType> c_node = content.node();
-    final JOTreeNodeType<SyComponentType> root = c_node.parent().get();
+    final var content = w.contentPane();
+    final var c_node = content.node();
+    final var root = c_node.parent().get();
 
     JOTreeNodeType<SyComponentType> titlebar_node = null;
-    for (final JOTreeNodeType<SyComponentType> n : root.children()) {
+    for (final var n : root.children()) {
       if (Objects.equals(n.value(), titlebar)) {
         titlebar_node = n;
       }
     }
 
-    Assert.assertNotNull(titlebar_node);
-    this.expected.expect(JOTreeExceptionDetachDenied.class);
-    titlebar_node.detach();
+    assertNotNull(titlebar_node);
+    final JOTreeNodeType<SyComponentType> titlebarNode = titlebar_node;
+    assertThrows(JOTreeExceptionDetachDenied.class, titlebarNode::detach);
   }
 
   @Test
   public final void testDetachEverythingDenied()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var w = this.create(640, 480, "Main 0");
 
-    final SyWindowContentPaneType content = w.contentPane();
-    final JOTreeNodeType<SyComponentType> c_node = content.node();
-    final JOTreeNodeType<SyComponentType> root = c_node.parent().get();
-    Assert.assertTrue(root.isRoot());
+    final var content = w.contentPane();
+    final var c_node = content.node();
+    final var root = c_node.parent().get();
+    assertTrue(root.isRoot());
 
-    final ArrayList<JOTreeNodeType<SyComponentType>> all = new ArrayList<>(100);
+    final var all = new ArrayList<JOTreeNodeType<SyComponentType>>(100);
     root.forEachBreadthFirst(all, (input, depth, node) -> {
       input.add((JOTreeNodeType<SyComponentType>) node);
     });
 
     {
-      final Iterator<JOTreeNodeType<SyComponentType>> iter = all.iterator();
+      final var iter = all.iterator();
       while (iter.hasNext()) {
-        final JOTreeNodeType<SyComponentType> node = iter.next();
+        final var node = iter.next();
 
         /*
          * The images on close and maximize buttons are a special case and
@@ -221,15 +215,15 @@ public abstract class SyWindowContract
           continue;
         }
 
-        Assert.assertFalse(node.isDetachAllowed());
+        assertFalse(node.isDetachAllowed());
         if (node.isRoot()) {
           iter.remove();
         }
       }
     }
 
-    long caught = 0L;
-    for (final JOTreeNodeType<SyComponentType> node : all) {
+    var caught = 0L;
+    for (final var node : all) {
       try {
         if (isCloseOrMaximize(node)) {
           ++caught;
@@ -243,38 +237,38 @@ public abstract class SyWindowContract
       }
     }
 
-    Assert.assertEquals((long) all.size(), caught);
+    assertEquals((long) all.size(), caught);
   }
 
   @Test
   public final void testOnFocus()
   {
-    final SyWindowType w = this.create(640, 480, "Main 0");
-    final SyWindowTitleBarType tb = w.titleBar();
+    final var w = this.create(640, 480, "Main 0");
+    final var tb = w.titleBar();
 
-    Assert.assertTrue(tb.isActive());
-    Assert.assertTrue(tb.isVisible());
+    assertTrue(tb.isActive());
+    assertTrue(tb.isVisible());
 
     w.onWindowLosesFocus();
-    Assert.assertFalse(tb.isActive());
-    Assert.assertTrue(tb.isVisible());
+    assertFalse(tb.isActive());
+    assertTrue(tb.isVisible());
 
     w.onWindowGainsFocus();
-    Assert.assertTrue(tb.isActive());
-    Assert.assertTrue(tb.isVisible());
+    assertTrue(tb.isActive());
+    assertTrue(tb.isVisible());
   }
 
   @Test
   public final void testThemeIconCorrect()
     throws Exception
   {
-    final SyTheme theme_start = SyThemeMotive.builder().build();
-    final SyTheme theme_next = SyThemeFenestra.builder().build();
+    final var theme_start = SyThemeMotive.builder().build();
+    final var theme_next = SyThemeFenestra.builder().build();
 
-    Assert.assertFalse(theme_start.windowTheme().titleBar().iconPresent());
-    Assert.assertTrue(theme_next.windowTheme().titleBar().iconPresent());
+    assertFalse(theme_start.windowTheme().titleBar().iconPresent());
+    assertTrue(theme_next.windowTheme().titleBar().iconPresent());
 
-    final SyImageSpecification icon_spec = SyImageSpecification.of(
+    final var icon_spec = SyImageSpecification.of(
       SyWindowContract.class.getResource("/com/io7m/jsycamore/tests/awt/paper.png").toURI(),
       16,
       16,
@@ -282,48 +276,48 @@ public abstract class SyWindowContract
       Vector4D.of(1.0, 1.0, 1.0, 1.0),
       SyImageScaleInterpolation.SCALE_INTERPOLATION_NEAREST);
 
-    final SyWindowType w = this.create(640, 480, "Main 0");
+    final var w = this.create(640, 480, "Main 0");
     w.setTheme(Optional.of(theme_start));
 
-    final SyWindowTitleBarType tb = w.titleBar();
-    final SyPanelReadableType icon = tb.iconPanel();
+    final var tb = w.titleBar();
+    final var icon = tb.iconPanel();
 
-    Assert.assertEquals(
+    assertEquals(
       0L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().sizeX());
-    Assert.assertEquals(0L, (long) icon.box().sizeY());
+    assertEquals(0L, (long) icon.box().sizeX());
+    assertEquals(0L, (long) icon.box().sizeY());
 
     tb.setIcon(Optional.of(icon_spec));
 
-    Assert.assertEquals(
+    assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().sizeX());
-    Assert.assertEquals(0L, (long) icon.box().sizeY());
+    assertEquals(0L, (long) icon.box().sizeX());
+    assertEquals(0L, (long) icon.box().sizeY());
 
     w.setTheme(Optional.of(theme_next));
 
-    Assert.assertEquals(
+    assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(16L, (long) icon.box().sizeX());
-    Assert.assertEquals(16L, (long) icon.box().sizeY());
+    assertEquals(16L, (long) icon.box().sizeX());
+    assertEquals(16L, (long) icon.box().sizeY());
 
     w.setTheme(Optional.of(theme_start));
 
-    Assert.assertEquals(
+    assertEquals(
       1L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().sizeX());
-    Assert.assertEquals(0L, (long) icon.box().sizeY());
+    assertEquals(0L, (long) icon.box().sizeX());
+    assertEquals(0L, (long) icon.box().sizeY());
 
     tb.setIcon(Optional.empty());
 
-    Assert.assertEquals(
+    assertEquals(
       0L,
       (long) icon.nodeReadable().childrenReadable().size());
-    Assert.assertEquals(0L, (long) icon.box().sizeX());
-    Assert.assertEquals(0L, (long) icon.box().sizeY());
+    assertEquals(0L, (long) icon.box().sizeX());
+    assertEquals(0L, (long) icon.box().sizeY());
   }
 }

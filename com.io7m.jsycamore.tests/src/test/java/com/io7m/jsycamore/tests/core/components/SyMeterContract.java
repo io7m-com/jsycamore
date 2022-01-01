@@ -17,20 +17,21 @@
 package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jsycamore.api.SyGUIType;
 import com.io7m.jsycamore.api.SyMouseButton;
 import com.io7m.jsycamore.api.components.SyMeterType;
 import com.io7m.jsycamore.api.themes.SyOrientation;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import net.java.quickcheck.QuickCheck;
 import net.java.quickcheck.characteristic.AbstractCharacteristic;
 import net.java.quickcheck.generator.support.DoubleGenerator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyMeterContract extends SyComponentContract
 {
@@ -40,16 +41,16 @@ public abstract class SyMeterContract extends SyComponentContract
   @Test
   public void testWindowlessTheme()
   {
-    final SyMeterType c = this.create();
-    Assert.assertFalse(c.window().isPresent());
-    Assert.assertFalse(c.theme().isPresent());
+    final var c = this.create();
+    assertFalse(c.window().isPresent());
+    assertFalse(c.theme().isPresent());
   }
 
   @Test
   public final void testMatch()
   {
-    final SyMeterType meter = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var meter = this.create();
+    final var called = new AtomicBoolean(false);
 
     meter.matchComponent(
       this,
@@ -70,14 +71,14 @@ public abstract class SyMeterContract extends SyComponentContract
         return Void.class;
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testMatchReadable()
   {
-    final SyMeterType meter = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var meter = this.create();
+    final var called = new AtomicBoolean(false);
 
     meter.matchComponentReadable(
       this,
@@ -98,240 +99,240 @@ public abstract class SyMeterContract extends SyComponentContract
         return Void.class;
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testIdentities()
   {
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
 
-    Assert.assertEquals(0.0, meter.value(), 0.0);
-    Assert.assertEquals(
+    assertEquals(0.0, meter.value(), 0.0);
+    assertEquals(
       SyOrientation.ORIENTATION_HORIZONTAL, meter.orientation());
   }
 
   @Test
   public final void testPressLeftAttachedHorizontal()
   {
-    final SyGUIType gui = this.gui();
-    final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
+    final var gui = this.gui();
+    final var window = gui.windowCreate(320, 240, "Window 0");
 
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
     meter.setBox(PAreasI.create(0, 0, 64, 32));
     window.contentPane().node().childAdd(meter.node());
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.0, meter.value(), 0.0);
+      assertTrue(pressed_event);
+      assertEquals(0.0, meter.value(), 0.0);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(32, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.406, meter.value(), 0.001);
+      assertTrue(pressed_event);
+      assertEquals(0.406, meter.value(), 0.001);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(64, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.906, meter.value(), 0.001);
+      assertTrue(pressed_event);
+      assertEquals(0.906, meter.value(), 0.001);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(3000, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(pressed_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
   }
 
   @Test
   public final void testHeldLeftAttachedHorizontal()
   {
-    final SyGUIType gui = this.gui();
-    final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
+    final var gui = this.gui();
+    final var window = gui.windowCreate(320, 240, "Window 0");
 
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
     meter.setBox(PAreasI.create(0, 0, 64, 32));
     window.contentPane().node().childAdd(meter.node());
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.0, meter.value(), 0.0);
+      assertTrue(held_event);
+      assertEquals(0.0, meter.value(), 0.0);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(32, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.406, meter.value(), 0.001);
+      assertTrue(held_event);
+      assertEquals(0.406, meter.value(), 0.001);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(64, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.906, meter.value(), 0.001);
+      assertTrue(held_event);
+      assertEquals(0.906, meter.value(), 0.001);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(3000, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(held_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
   }
 
   @Test
   public final void testPressLeftAttachedVertical()
   {
-    final SyGUIType gui = this.gui();
-    final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
+    final var gui = this.gui();
+    final var window = gui.windowCreate(320, 240, "Window 0");
 
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
     meter.setBox(PAreasI.create(0, 0, 32, 64));
     meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
     window.contentPane().node().childAdd(meter.node());
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(-3000, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(pressed_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(pressed_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(0, 32),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.843, meter.value(), 0.001);
+      assertTrue(pressed_event);
+      assertEquals(0.843, meter.value(), 0.001);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(0, 64),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.343, meter.value(), 0.001);
+      assertTrue(pressed_event);
+      assertEquals(0.343, meter.value(), 0.001);
     }
 
     {
-      final boolean pressed_event = meter.mousePressed(
+      final var pressed_event = meter.mousePressed(
         PVector2I.of(0, 3000),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(0.0, meter.value(), 0.0);
+      assertTrue(pressed_event);
+      assertEquals(0.0, meter.value(), 0.0);
     }
   }
 
   @Test
   public final void testPressLeftHeldVertical()
   {
-    final SyGUIType gui = this.gui();
-    final SyWindowType window = gui.windowCreate(320, 240, "Window 0");
+    final var gui = this.gui();
+    final var window = gui.windowCreate(320, 240, "Window 0");
 
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
     meter.setBox(PAreasI.create(0, 0, 32, 64));
     meter.setOrientation(SyOrientation.ORIENTATION_VERTICAL);
     window.contentPane().node().childAdd(meter.node());
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(-3000, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(held_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(1.0, meter.value(), 0.0);
+      assertTrue(held_event);
+      assertEquals(1.0, meter.value(), 0.0);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(0, 32),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.843, meter.value(), 0.001);
+      assertTrue(held_event);
+      assertEquals(0.843, meter.value(), 0.001);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(0, 64),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.343, meter.value(), 0.001);
+      assertTrue(held_event);
+      assertEquals(0.343, meter.value(), 0.001);
     }
 
     {
-      final boolean held_event = meter.mouseHeld(
+      final var held_event = meter.mouseHeld(
         PVector2I.of(0, 0),
         PVector2I.of(0, 3000),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         meter);
-      Assert.assertTrue(held_event);
-      Assert.assertEquals(0.0, meter.value(), 0.0);
+      assertTrue(held_event);
+      assertEquals(0.0, meter.value(), 0.0);
     }
   }
 
   @Test
   public final void testValue()
   {
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
 
     QuickCheck.forAllVerbose(
       new DoubleGenerator(0.0, 1.0),
@@ -342,7 +343,7 @@ public abstract class SyMeterContract extends SyComponentContract
           throws Throwable
         {
           meter.setValue(any.doubleValue());
-          Assert.assertEquals(any.doubleValue(), meter.value(), 0.0);
+          assertEquals(any.doubleValue(), meter.value(), 0.0);
         }
       });
   }
@@ -350,7 +351,7 @@ public abstract class SyMeterContract extends SyComponentContract
   @Test
   public final void testValueRange()
   {
-    final SyMeterType meter = this.create();
+    final var meter = this.create();
 
     QuickCheck.forAllVerbose(
       new DoubleGenerator(-100.0, 100.0),
@@ -363,11 +364,11 @@ public abstract class SyMeterContract extends SyComponentContract
           meter.setValue(any.doubleValue());
 
           if (any.doubleValue() >= 1.0) {
-            Assert.assertEquals(1.0, meter.value(), 0.0);
+            assertEquals(1.0, meter.value(), 0.0);
           } else if (any.doubleValue() <= 0.0) {
-            Assert.assertEquals(0.0, meter.value(), 0.0);
+            assertEquals(0.0, meter.value(), 0.0);
           } else {
-            Assert.assertEquals(any.doubleValue(), meter.value(), 0.0);
+            assertEquals(any.doubleValue(), meter.value(), 0.0);
           }
         }
       });

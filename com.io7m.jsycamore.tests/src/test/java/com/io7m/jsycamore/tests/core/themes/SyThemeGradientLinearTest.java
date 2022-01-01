@@ -21,44 +21,41 @@ import com.io7m.jsycamore.api.themes.SyThemeGradientLinear;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector3D;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public final class SyThemeGradientLinearTest
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   @Test
   public void testPreconditionWrongDistributions()
   {
-    final SyThemeGradientLinear.Builder b = SyThemeGradientLinear.builder();
+    final var b = SyThemeGradientLinear.builder();
     b.addColors(Vector3D.of(0.0, 0.0, 0.0));
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(PreconditionViolationException.class);
-    b.build();
+    assertThrows(PreconditionViolationException.class, b::build);
   }
 
   @Test
   public void testPreconditionTooFewColors()
   {
-    final SyThemeGradientLinear.Builder b = SyThemeGradientLinear.builder();
+    final var b = SyThemeGradientLinear.builder();
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(PreconditionViolationException.class);
-    b.build();
+    assertThrows(PreconditionViolationException.class, b::build);
   }
 
   @Test
   public void testPreconditionDisorderedDistributions()
   {
-    final SyThemeGradientLinear.Builder b = SyThemeGradientLinear.builder();
+    final var b = SyThemeGradientLinear.builder();
     b.addColors(Vector3D.of(0.0, 0.0, 0.0));
     b.addColors(Vector3D.of(1.0, 1.0, 1.0));
     b.addDistributions(1.0);
@@ -66,14 +63,13 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    this.expected.expect(PreconditionViolationException.class);
-    b.build();
+    assertThrows(PreconditionViolationException.class, b::build);
   }
 
   @Test
   public void testOK()
   {
-    final SyThemeGradientLinear.Builder b = SyThemeGradientLinear.builder();
+    final var b = SyThemeGradientLinear.builder();
     b.addColors(Vector3D.of(0.0, 0.0, 0.0));
     b.addColors(Vector3D.of(1.0, 1.0, 1.0));
     b.addDistributions(0.0);
@@ -81,23 +77,23 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    final SyThemeGradientLinear r = b.build();
-    Assert.assertEquals(2L, (long) r.colors().size());
-    Assert.assertEquals(Vector3D.of(0.0, 0.0, 0.0), r.colors().get(0));
-    Assert.assertEquals(Vector3D.of(1.0, 1.0, 1.0), r.colors().get(1));
+    final var r = b.build();
+    assertEquals(2L, (long) r.colors().size());
+    assertEquals(Vector3D.of(0.0, 0.0, 0.0), r.colors().get(0));
+    assertEquals(Vector3D.of(1.0, 1.0, 1.0), r.colors().get(1));
 
-    Assert.assertEquals(2L, (long) r.distributions().size());
-    Assert.assertEquals(0.0, r.distributions().get(0).floatValue(), 0.0);
-    Assert.assertEquals(1.0, r.distributions().get(1).floatValue(), 0.0);
+    assertEquals(2L, (long) r.distributions().size());
+    assertEquals(0.0, r.distributions().get(0).floatValue(), 0.0);
+    assertEquals(1.0, r.distributions().get(1).floatValue(), 0.0);
 
-    Assert.assertEquals(Vector2D.of(0.0, 0.0), r.point0());
-    Assert.assertEquals(Vector2D.of(1.0, 1.0), r.point1());
+    assertEquals(Vector2D.of(0.0, 0.0), r.point0());
+    assertEquals(Vector2D.of(1.0, 1.0), r.point1());
   }
 
   @Test
   public void testMatch()
   {
-    final SyThemeGradientLinear.Builder b = SyThemeGradientLinear.builder();
+    final var b = SyThemeGradientLinear.builder();
     b.addColors(Vector3D.of(0.0, 0.0, 0.0));
     b.addColors(Vector3D.of(1.0, 1.0, 1.0));
     b.addDistributions(0.0);
@@ -105,8 +101,8 @@ public final class SyThemeGradientLinearTest
     b.setPoint0(Vector2D.of(0.0, 0.0));
     b.setPoint1(Vector2D.of(1.0, 1.0));
 
-    final SyThemeGradientLinear r = b.build();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var r = b.build();
+    final var called = new AtomicBoolean(false);
     r.matchFill(
       this,
       (gt, gradient) -> {
@@ -117,6 +113,6 @@ public final class SyThemeGradientLinearTest
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 }

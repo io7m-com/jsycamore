@@ -18,10 +18,12 @@ package com.io7m.jsycamore.tests.core.components;
 
 import com.io7m.jsycamore.api.components.SyPanelType;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyPanelContract extends SyComponentContract
 {
@@ -31,28 +33,28 @@ public abstract class SyPanelContract extends SyComponentContract
   @Test
   public void testTransparency()
   {
-    final SyPanelType c = this.create();
+    final var c = this.create();
 
-    Assert.assertFalse(c.isPanelTransparent());
+    assertFalse(c.isPanelTransparent());
     c.setPanelTransparent(true);
-    Assert.assertTrue(c.isPanelTransparent());
+    assertTrue(c.isPanelTransparent());
     c.setPanelTransparent(false);
-    Assert.assertFalse(c.isPanelTransparent());
+    assertFalse(c.isPanelTransparent());
   }
 
   @Test
   public void testWindowlessTheme()
   {
-    final SyPanelType c = this.create();
-    Assert.assertFalse(c.window().isPresent());
-    Assert.assertFalse(c.theme().isPresent());
+    final var c = this.create();
+    assertFalse(c.window().isPresent());
+    assertFalse(c.theme().isPresent());
   }
 
   @Test
   public final void testMatch()
   {
-    final SyPanelType panel = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var panel = this.create();
+    final var called = new AtomicBoolean(false);
 
     panel.matchComponent(
       this,
@@ -73,14 +75,14 @@ public abstract class SyPanelContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testMatchReadable()
   {
-    final SyPanelType panel = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var panel = this.create();
+    final var called = new AtomicBoolean(false);
 
     panel.matchComponentReadable(
       this,
@@ -101,6 +103,6 @@ public abstract class SyPanelContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 }

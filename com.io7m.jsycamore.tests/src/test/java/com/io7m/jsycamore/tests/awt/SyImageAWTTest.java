@@ -21,14 +21,16 @@ import com.io7m.jsycamore.api.images.SyImageScaleInterpolation;
 import com.io7m.jsycamore.api.images.SyImageSpecification;
 import com.io7m.jsycamore.awt.SyAWTImage;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class SyImageAWTTest
 {
@@ -46,8 +48,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
       URI.create("anything"),
@@ -58,7 +60,7 @@ public final class SyImageAWTTest
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
-    Assert.assertSame(image, filtered);
+    Assertions.assertSame(image, filtered);
   }
 
   @Test
@@ -67,8 +69,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     for (final SyImageScaleInterpolation v : SyImageScaleInterpolation.values()) {
       final SyImageSpecification spec = SyImageSpecification.of(
@@ -80,13 +82,13 @@ public final class SyImageAWTTest
         v);
 
       final BufferedImage filtered = SyAWTImage.filter(spec, image);
-      Assert.assertNotSame(image, filtered);
+      Assertions.assertNotSame(image, filtered);
 
-      Assert.assertEquals(32L, (long) filtered.getWidth());
-      Assert.assertEquals(32L, (long) filtered.getHeight());
+      assertEquals(32L, (long) filtered.getWidth());
+      assertEquals(32L, (long) filtered.getHeight());
 
       final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
-      Assert.assertSame(filtered_again, filtered);
+      Assertions.assertSame(filtered_again, filtered);
     }
   }
 
@@ -96,8 +98,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
       URI.create("anything"),
@@ -108,16 +110,16 @@ public final class SyImageAWTTest
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
-    Assert.assertNotSame(image, filtered);
+    Assertions.assertNotSame(image, filtered);
 
-    Assert.assertEquals(64L, (long) filtered.getWidth());
-    Assert.assertEquals(64L, (long) filtered.getHeight());
-    Assert.assertEquals(
+    assertEquals(64L, (long) filtered.getWidth());
+    assertEquals(64L, (long) filtered.getHeight());
+    assertEquals(
       (long) BufferedImage.TYPE_USHORT_565_RGB,
       (long) filtered.getType());
 
     final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
-    Assert.assertSame(filtered_again, filtered);
+    Assertions.assertSame(filtered_again, filtered);
   }
 
   @Test
@@ -126,8 +128,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
       URI.create("anything"),
@@ -138,16 +140,16 @@ public final class SyImageAWTTest
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
-    Assert.assertNotSame(image, filtered);
+    Assertions.assertNotSame(image, filtered);
 
-    Assert.assertEquals(64L, (long) filtered.getWidth());
-    Assert.assertEquals(64L, (long) filtered.getHeight());
-    Assert.assertEquals(
+    assertEquals(64L, (long) filtered.getWidth());
+    assertEquals(64L, (long) filtered.getHeight());
+    assertEquals(
       (long) BufferedImage.TYPE_3BYTE_BGR,
       (long) filtered.getType());
 
     final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
-    Assert.assertSame(filtered_again, filtered);
+    Assertions.assertSame(filtered_again, filtered);
   }
 
   @Test
@@ -156,8 +158,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
       URI.create("anything"),
@@ -168,16 +170,16 @@ public final class SyImageAWTTest
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
-    Assert.assertNotSame(image, filtered);
+    Assertions.assertNotSame(image, filtered);
 
-    Assert.assertEquals(64L, (long) filtered.getWidth());
-    Assert.assertEquals(64L, (long) filtered.getHeight());
-    Assert.assertEquals(
+    assertEquals(64L, (long) filtered.getWidth());
+    assertEquals(64L, (long) filtered.getHeight());
+    assertEquals(
       (long) BufferedImage.TYPE_BYTE_GRAY,
       (long) filtered.getType());
 
     final BufferedImage filtered_again = SyAWTImage.filter(spec, filtered);
-    Assert.assertSame(filtered_again, filtered);
+    Assertions.assertSame(filtered_again, filtered);
   }
 
   @Test
@@ -186,8 +188,8 @@ public final class SyImageAWTTest
   {
     final BufferedImage image = load("circle-x-8x.png");
 
-    Assert.assertEquals(64L, (long) image.getWidth());
-    Assert.assertEquals(64L, (long) image.getHeight());
+    assertEquals(64L, (long) image.getWidth());
+    assertEquals(64L, (long) image.getHeight());
 
     final SyImageSpecification spec = SyImageSpecification.of(
       URI.create("anything"),
@@ -198,11 +200,11 @@ public final class SyImageAWTTest
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     final BufferedImage filtered = SyAWTImage.filter(spec, image);
-    Assert.assertNotSame(image, filtered);
+    Assertions.assertNotSame(image, filtered);
 
-    Assert.assertEquals(64L, (long) filtered.getWidth());
-    Assert.assertEquals(64L, (long) filtered.getHeight());
-    Assert.assertEquals(
+    assertEquals(64L, (long) filtered.getWidth());
+    assertEquals(64L, (long) filtered.getHeight());
+    assertEquals(
       (long) BufferedImage.TYPE_CUSTOM,
       (long) filtered.getType());
   }

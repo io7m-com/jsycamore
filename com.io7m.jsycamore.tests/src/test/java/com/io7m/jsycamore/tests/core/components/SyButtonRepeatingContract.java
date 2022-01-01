@@ -23,11 +23,14 @@ import com.io7m.jsycamore.api.components.SyButtonState;
 import com.io7m.jsycamore.api.components.SyButtonType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyButtonRepeatingContract extends SyComponentContract
 {
@@ -37,16 +40,16 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
   @Test
   public void testWindowlessTheme()
   {
-    final SyButtonType c = this.create();
-    Assert.assertFalse(c.window().isPresent());
-    Assert.assertFalse(c.theme().isPresent());
+    final var c = this.create();
+    assertFalse(c.window().isPresent());
+    assertFalse(c.theme().isPresent());
   }
 
   @Test
   public final void testMatch()
   {
-    final SyButtonType button = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var button = this.create();
+    final var called = new AtomicBoolean(false);
 
     button.matchComponent(
       this,
@@ -68,14 +71,14 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
       });
 
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testMatchReadable()
   {
-    final SyButtonType button = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var button = this.create();
+    final var called = new AtomicBoolean(false);
 
     button.matchComponentReadable(
       this,
@@ -96,191 +99,191 @@ public abstract class SyButtonRepeatingContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testOver()
   {
-    final SyButtonType button = this.create();
+    final var button = this.create();
     button.setBox(PAreasI.create(0, 0, 32, 32));
 
-    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
     {
-      final boolean over_event =
+      final var over_event =
         button.mouseOver(PVector2I.of(0, 0), button);
-      Assert.assertTrue(over_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      assertTrue(over_event);
+      assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
     }
 
     {
-      final boolean over_event = button.mouseNoLongerOver();
-      Assert.assertTrue(over_event);
-      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+      final var over_event = button.mouseNoLongerOver();
+      assertTrue(over_event);
+      assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
   }
 
   @Test
   public final void testPressLeft()
   {
-    final AtomicInteger pressed = new AtomicInteger(0);
-    final SyButtonType button = this.create();
+    final var pressed = new AtomicInteger(0);
+    final var button = this.create();
     button.setBox(PAreasI.create(0, 0, 32, 32));
 
-    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
-    final SyButtonListenerType listener = b -> pressed.incrementAndGet();
+    final var listener = (SyButtonListenerType) b -> pressed.incrementAndGet();
     button.buttonAddListener(listener);
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean pressed_event = button.mousePressed(
+      final var pressed_event = button.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(SyButtonState.BUTTON_PRESSED, button.buttonState());
+      assertTrue(pressed_event);
+      assertEquals(SyButtonState.BUTTON_PRESSED, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean released_event = button.mouseReleased(
+      final var released_event = button.mouseReleased(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
-      Assert.assertTrue(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+      assertTrue(released_event);
+      assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
 
-    Assert.assertEquals(1L, (long) pressed.get());
+    assertEquals(1L, (long) pressed.get());
 
     button.buttonRemoveListener(listener);
 
     {
-      final boolean pressed_event = button.mousePressed(
+      final var pressed_event = button.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
-      Assert.assertTrue(pressed_event);
-      Assert.assertEquals(SyButtonState.BUTTON_PRESSED, button.buttonState());
+      assertTrue(pressed_event);
+      assertEquals(SyButtonState.BUTTON_PRESSED, button.buttonState());
     }
 
-    Assert.assertEquals(1L, (long) pressed.get());
+    assertEquals(1L, (long) pressed.get());
 
     {
-      final boolean released_event = button.mouseReleased(
+      final var released_event = button.mouseReleased(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
-      Assert.assertTrue(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+      assertTrue(released_event);
+      assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
 
-    Assert.assertEquals(1L, (long) pressed.get());
+    assertEquals(1L, (long) pressed.get());
   }
 
   @Test
   public final void testPressRight()
   {
-    final AtomicInteger pressed = new AtomicInteger(0);
-    final SyButtonType button = this.create();
+    final var pressed = new AtomicInteger(0);
+    final var button = this.create();
     button.setBox(PAreasI.create(0, 0, 32, 32));
 
-    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
-    final SyButtonListenerType listener = b -> pressed.incrementAndGet();
+    final var listener = (SyButtonListenerType) b -> pressed.incrementAndGet();
     button.buttonAddListener(listener);
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean pressed_event = button.mousePressed(
+      final var pressed_event = button.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_RIGHT,
         button);
-      Assert.assertFalse(pressed_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      assertFalse(pressed_event);
+      assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean released_event = button.mouseReleased(
+      final var released_event = button.mouseReleased(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_RIGHT,
         button);
-      Assert.assertFalse(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      assertFalse(released_event);
+      assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     button.buttonRemoveListener(listener);
 
     {
-      final boolean pressed_event = button.mousePressed(
+      final var pressed_event = button.mousePressed(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_RIGHT,
         button);
-      Assert.assertFalse(pressed_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      assertFalse(pressed_event);
+      assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean released_event = button.mouseReleased(
+      final var released_event = button.mouseReleased(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_RIGHT,
         button);
-      Assert.assertFalse(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
+      assertFalse(released_event);
+      assertEquals(SyButtonState.BUTTON_OVER, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
   }
 
   @Test
   public final void testNoOver()
   {
-    final SyButtonType button = this.create();
+    final var button = this.create();
     button.setBox(PAreasI.create(0, 0, 32, 32));
 
-    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
     {
-      final boolean over_event = button.mouseNoLongerOver();
-      Assert.assertTrue(over_event);
-      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+      final var over_event = button.mouseNoLongerOver();
+      assertTrue(over_event);
+      assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
   }
 
   @Test
   public final void testReleaseWithoutPress()
   {
-    final AtomicInteger pressed = new AtomicInteger(0);
-    final SyButtonType button = this.create();
+    final var pressed = new AtomicInteger(0);
+    final var button = this.create();
     button.setBox(PAreasI.create(0, 0, 32, 32));
 
-    Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+    assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
 
-    final SyButtonListenerType listener = b -> pressed.incrementAndGet();
+    final var listener = (SyButtonListenerType) b -> pressed.incrementAndGet();
     button.buttonAddListener(listener);
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
 
     {
-      final boolean released_event = button.mouseReleased(
+      final var released_event = button.mouseReleased(
         PVector2I.of(0, 0),
         SyMouseButton.MOUSE_BUTTON_LEFT,
         button);
-      Assert.assertTrue(released_event);
-      Assert.assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
+      assertTrue(released_event);
+      assertEquals(SyButtonState.BUTTON_ACTIVE, button.buttonState());
     }
 
-    Assert.assertEquals(0L, (long) pressed.get());
+    assertEquals(0L, (long) pressed.get());
   }
 }

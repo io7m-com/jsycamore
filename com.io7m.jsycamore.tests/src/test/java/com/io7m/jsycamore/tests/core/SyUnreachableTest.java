@@ -17,10 +17,12 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class SyUnreachableTest
 {
@@ -40,43 +42,53 @@ public final class SyUnreachableTest
     }
   }
 
-  @Test(expected = UnreachableCodeException.class)
+  @Test
   public void testImageAWT()
     throws Exception
   {
-    execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.awt.SyAWTImage");
+    assertThrows(UnreachableCodeException.class, () -> {
+      execNoArgPrivateConstructor(
+        "com.io7m.jsycamore.awt.SyAWTImage");
+    });
   }
 
-  @Test(expected = UnreachableCodeException.class)
+  @Test
   public void testThemeBee()
     throws Exception
   {
-    execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.themes.bee.SyThemeBee");
+    assertThrows(UnreachableCodeException.class, () -> {
+      execNoArgPrivateConstructor(
+        "com.io7m.jsycamore.themes.bee.SyThemeBee");
+    });
   }
 
-  @Test(expected = UnreachableCodeException.class)
+  @Test
   public void testThemeMotive()
     throws Exception
   {
-    execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.themes.motive.SyThemeMotive");
+    assertThrows(UnreachableCodeException.class, () -> {
+      execNoArgPrivateConstructor(
+        "com.io7m.jsycamore.themes.motive.SyThemeMotive");
+    });
   }
 
-  @Test(expected = UnreachableCodeException.class)
+  @Test
   public void testThemeStride()
     throws Exception
   {
-    execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.themes.stride.SyThemeStride");
+    assertThrows(UnreachableCodeException.class, () -> {
+      execNoArgPrivateConstructor(
+        "com.io7m.jsycamore.themes.stride.SyThemeStride");
+    });
   }
 
-  @Test(expected = UnreachableCodeException.class)
+  @Test
   public void testErrors()
     throws Exception
   {
-    execNoArgPrivateConstructor(
-      "com.io7m.jsycamore.api.components.SyErrors");
+    assertThrows(UnreachableCodeException.class, () -> {
+      execNoArgPrivateConstructor(
+        "com.io7m.jsycamore.api.components.SyErrors");
+    });
   }
 }

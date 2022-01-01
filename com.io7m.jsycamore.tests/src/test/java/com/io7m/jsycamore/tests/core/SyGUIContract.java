@@ -17,35 +17,28 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jranges.RangeCheckException;
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.SyGUIType;
 import com.io7m.jsycamore.api.SyMouseButton;
-import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyLabelReadableType;
-import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowContentPaneType;
 import com.io7m.jsycamore.api.windows.SyWindowFrameType;
 import com.io7m.jsycamore.api.windows.SyWindowTitleBarType;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.themes.fenestra.SyThemeFenestra;
 import com.io7m.jsycamore.themes.motive.SyThemeMotive;
 import com.io7m.jsycamore.themes.stride.SyThemeStride;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyGUIContract
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   protected abstract SyGUIType create(String name);
 
   protected abstract SyGUIType createWithTheme(
@@ -55,463 +48,468 @@ public abstract class SyGUIContract
   @Test
   public final void testCreate()
   {
-    final SyGUIType g = this.create("main");
-    Assert.assertEquals("main", g.name());
-    Assert.assertEquals(SyThemeMotive.builder().build(), g.theme());
-    Assert.assertTrue(g.windowsOpenOrdered().isEmpty());
+    final var g = this.create("main");
+    assertEquals("main", g.name());
+    assertEquals(SyThemeMotive.builder().build(), g.theme());
+    assertTrue(g.windowsOpenOrdered().isEmpty());
   }
 
   @Test
   public final void testCreateWithTheme()
   {
-    final SyTheme theme = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", theme);
-    Assert.assertEquals("main", g.name());
-    Assert.assertEquals(theme, g.theme());
-    Assert.assertTrue(g.windowsOpenOrdered().isEmpty());
+    final var theme = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", theme);
+    assertEquals("main", g.name());
+    assertEquals(theme, g.theme());
+    assertTrue(g.windowsOpenOrdered().isEmpty());
   }
 
   @Test
   public final void testCreateWindowNegativeWidth()
   {
-    final SyGUIType g = this.create("main");
-    this.expected.expect(RangeCheckException.class);
-    g.windowCreate(-1, 200, "title");
+    final var g = this.create("main");
+
+    assertThrows(RangeCheckException.class, () -> {
+      g.windowCreate(-1, 200, "title");
+    });
   }
 
   @Test
   public final void testCreateWindowNegativeHeight()
   {
-    final SyGUIType g = this.create("main");
-    this.expected.expect(RangeCheckException.class);
-    g.windowCreate(100, -1, "title");
+    final var g = this.create("main");
+    assertThrows(RangeCheckException.class, () -> {
+      g.windowCreate(100, -1, "title");
+    });
   }
 
   @Test
   public final void testWindowFocusedWrongGUI()
   {
-    final SyGUIType g0 = this.create("main");
-    final SyGUIType g1 = this.create("other");
+    final var g0 = this.create("main");
+    final var g1 = this.create("other");
+    final var w0 =
+      g0.windowCreate(100, 100, "title");
 
-    final SyWindowType w0 = g0.windowCreate(100, 100, "title");
-    this.expected.expect(IllegalArgumentException.class);
-    g1.windowIsFocused(w0);
+    assertThrows(IllegalArgumentException.class, () -> {
+      g1.windowIsFocused(w0);
+    });
   }
 
   @Test
   public final void testCreateWindow()
   {
-    final SyGUIType g = this.create("main");
+    final var g = this.create("main");
 
-    final SyWindowType w = g.windowCreate(640, 480, "Window 0");
-    Assert.assertEquals(g.theme(), w.theme());
-    Assert.assertEquals("Window 0", w.titleBar().text());
+    final var w = g.windowCreate(640, 480, "Window 0");
+    assertEquals(g.theme(), w.theme());
+    assertEquals("Window 0", w.titleBar().text());
 
-    final List<SyWindowType> windows = g.windowsOpenOrdered();
-    Assert.assertEquals(1L, (long) windows.size());
-    Assert.assertEquals(w, windows.get(0));
-    Assert.assertTrue(g.windowIsFocused(w));
-    Assert.assertTrue(w.isFocused());
+    final var windows = g.windowsOpenOrdered();
+    assertEquals(1L, (long) windows.size());
+    assertEquals(w, windows.get(0));
+    assertTrue(g.windowIsFocused(w));
+    assertTrue(w.isFocused());
 
-    final PAreaI<SySpaceViewportType> window_box = w.box();
+    final var window_box = w.box();
 
-    Assert.assertEquals(0L, (long) window_box.minimumX());
-    Assert.assertEquals(0L, (long) window_box.minimumY());
-    Assert.assertEquals(640L, (long) window_box.sizeX());
-    Assert.assertEquals(480L, (long) window_box.sizeY());
+    assertEquals(0L, (long) window_box.minimumX());
+    assertEquals(0L, (long) window_box.minimumY());
+    assertEquals(640L, (long) window_box.sizeX());
+    assertEquals(480L, (long) window_box.sizeY());
   }
 
   @Test
   public final void testWindowFocus()
   {
-    final SyGUIType g = this.create("main");
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
-    final SyWindowType w1 = g.windowCreate(640, 480, "Window 1");
+    final var g = this.create("main");
+    final var w0 = g.windowCreate(640, 480, "Window 0");
+    final var w1 = g.windowCreate(640, 480, "Window 1");
 
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isFocused());
-    Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
-    Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isFocused());
+    assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
+    assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
 
     g.windowFocus(w0);
 
-    Assert.assertTrue(w0.isFocused());
-    Assert.assertFalse(w1.isFocused());
-    Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w0));
-    Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w1));
+    assertTrue(w0.isFocused());
+    assertFalse(w1.isFocused());
+    assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w0));
+    assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w1));
 
     g.windowFocus(w1);
 
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isFocused());
-    Assert.assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
-    Assert.assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isFocused());
+    assertEquals(0L, (long) g.windowsOpenOrdered().indexOf(w1));
+    assertEquals(1L, (long) g.windowsOpenOrdered().indexOf(w0));
   }
 
   @Test
   public final void testWindowThemeChange()
   {
-    final SyTheme theme = SyThemeFenestra.builder().build();
+    final var theme = SyThemeFenestra.builder().build();
     final SyThemeType theme_default = SyThemeMotive.builder().build();
 
-    final SyGUIType g = this.create("main");
-    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
+    final var g = this.create("main");
+    final var w0 = g.windowCreate(640, 480, "Main 0");
 
-    Assert.assertEquals(theme_default, g.theme());
-    Assert.assertEquals(theme_default, w0.theme());
+    assertEquals(theme_default, g.theme());
+    assertEquals(theme_default, w0.theme());
 
     g.setTheme(theme);
 
-    Assert.assertEquals(theme, g.theme());
-    Assert.assertEquals(theme, w0.theme());
+    assertEquals(theme, g.theme());
+    assertEquals(theme, w0.theme());
   }
 
   @Test
   public final void testWindowThemeChangeOpenClosed()
   {
-    final SyTheme theme = SyThemeFenestra.builder().build();
+    final var theme = SyThemeFenestra.builder().build();
     final SyThemeType theme_default = SyThemeMotive.builder().build();
 
-    final SyGUIType g = this.create("main");
-    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
+    final var g = this.create("main");
+    final var w0 = g.windowCreate(640, 480, "Main 0");
 
-    Assert.assertEquals(theme_default, g.theme());
-    Assert.assertEquals(theme_default, w0.theme());
+    assertEquals(theme_default, g.theme());
+    assertEquals(theme_default, w0.theme());
 
     g.windowClose(w0);
     g.setTheme(theme);
 
-    Assert.assertEquals(theme, g.theme());
-    Assert.assertEquals(theme, w0.theme());
+    assertEquals(theme, g.theme());
+    assertEquals(theme, w0.theme());
   }
 
   @Test
   public final void testWindowOpenCloseMulti()
   {
-    final SyGUIType g = this.create("main");
-    final SyWindowType w0 = g.windowCreate(640, 480, "Main 0");
-    final SyWindowType w1 = g.windowCreate(640, 480, "Main 1");
+    final var g = this.create("main");
+    final var w0 = g.windowCreate(640, 480, "Main 0");
+    final var w1 = g.windowCreate(640, 480, "Main 1");
 
-    Assert.assertTrue(w0.isOpen());
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isOpen());
-    Assert.assertTrue(w1.isFocused());
+    assertTrue(w0.isOpen());
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isOpen());
+    assertTrue(w1.isFocused());
 
     g.windowClose(w1);
 
-    Assert.assertTrue(w0.isOpen());
-    Assert.assertTrue(w0.isFocused());
-    Assert.assertFalse(w1.isOpen());
-    Assert.assertFalse(w1.isFocused());
+    assertTrue(w0.isOpen());
+    assertTrue(w0.isFocused());
+    assertFalse(w1.isOpen());
+    assertFalse(w1.isFocused());
 
     g.windowOpen(w1);
 
-    Assert.assertTrue(w0.isOpen());
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isOpen());
-    Assert.assertTrue(w1.isFocused());
+    assertTrue(w0.isOpen());
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isOpen());
+    assertTrue(w1.isFocused());
 
     g.windowClose(w0);
 
-    Assert.assertFalse(w0.isOpen());
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isOpen());
-    Assert.assertTrue(w1.isFocused());
+    assertFalse(w0.isOpen());
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isOpen());
+    assertTrue(w1.isFocused());
 
     g.windowClose(w1);
 
-    Assert.assertFalse(w0.isOpen());
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertFalse(w1.isOpen());
-    Assert.assertFalse(w1.isFocused());
+    assertFalse(w0.isOpen());
+    assertFalse(w0.isFocused());
+    assertFalse(w1.isOpen());
+    assertFalse(w1.isFocused());
 
     g.windowOpen(w0);
 
-    Assert.assertTrue(w0.isOpen());
-    Assert.assertTrue(w0.isFocused());
-    Assert.assertFalse(w1.isOpen());
-    Assert.assertFalse(w1.isFocused());
+    assertTrue(w0.isOpen());
+    assertTrue(w0.isFocused());
+    assertFalse(w1.isOpen());
+    assertFalse(w1.isFocused());
 
     g.windowOpen(w1);
 
-    Assert.assertTrue(w0.isOpen());
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isOpen());
-    Assert.assertTrue(w1.isFocused());
+    assertTrue(w0.isOpen());
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isOpen());
+    assertTrue(w1.isFocused());
   }
 
   @Test
   public final void testWindowFocusMulti()
   {
-    final SyGUIType g =
+    final var g =
       this.createWithTheme("main", SyThemeStride.builder().build());
 
-    final SyWindowType w0 = g.windowCreate(320, 240, "Window 0");
-    final SyWindowType w1 = g.windowCreate(320, 240, "Window 1");
+    final var w0 = g.windowCreate(320, 240, "Window 0");
+    final var w1 = g.windowCreate(320, 240, "Window 1");
     w1.setBox(PAreasI.create(320, 0, 320, 240));
 
-    Assert.assertFalse(w0.isFocused());
-    Assert.assertTrue(w1.isFocused());
+    assertFalse(w0.isFocused());
+    assertTrue(w1.isFocused());
 
     {
       g.onMouseDown(
         PVector2I.of(2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(w0.isFocused());
-      Assert.assertFalse(w1.isFocused());
+      assertTrue(w0.isFocused());
+      assertFalse(w1.isFocused());
     }
 
     {
       g.onMouseDown(
         PVector2I.of(320 + 2, 2), SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(w1.isFocused());
-      Assert.assertFalse(w0.isFocused());
+      assertTrue(w1.isFocused());
+      assertFalse(w0.isFocused());
     }
   }
 
   @Test
   public final void testWindowMouseOverFrame()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(2, 2));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowFrameType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyWindowFrameType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(640 + 2, 480 + 2));
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
   }
 
   @Test
   public final void testWindowMouseOverContentPane()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(32, 32));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyWindowContentPaneType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(640 + 32, 480 + 32));
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
   }
 
   @Test
   public final void testWindowMouseOverMulti()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(320, 10));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyLabelReadableType);
-      Assert.assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyLabelReadableType);
+      assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(325, 10));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyLabelReadableType);
-      Assert.assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyLabelReadableType);
+      assertTrue(cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(320, 100));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyWindowContentPaneType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(325, 100));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(cc instanceof SyWindowContentPaneType);
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(cc instanceof SyWindowContentPaneType);
     }
   }
 
   @Test
   public final void testWindowMouseOverTitlebar()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(320, 10));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(640 + 10, 480 + 10));
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
   }
 
   @Test
   public final void testWindowMouseOverTitlebarOffset()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
     w0.setBox(PAreasI.moveAbsolute(w0.box(), 32, 32));
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(32 + 320 + 10, 32 + 10));
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseMoved(PVector2I.of(32 + 640 + 10, 32 + 480 + 10));
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
   }
 
   @Test
   public final void testWindowMouseOverTitlebarDragLeftButton()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseDown(
           PVector2I.of(320, 10),
           SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(PVector2I.of(320 + 15, 20));
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseUp(
           PVector2I.of(320 + 15, 20),
           SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
-    final PAreaI<SySpaceViewportType> box = w0.box();
-    Assert.assertEquals(15L, (long) box.minimumX());
-    Assert.assertEquals(10L, (long) box.minimumY());
-    Assert.assertEquals(640L, (long) box.sizeX());
-    Assert.assertEquals(480L, (long) box.sizeY());
+    final var box = w0.box();
+    assertEquals(15L, (long) box.minimumX());
+    assertEquals(10L, (long) box.minimumY());
+    assertEquals(640L, (long) box.sizeX());
+    assertEquals(480L, (long) box.sizeY());
   }
 
   @Test
   public final void testWindowClickNothing()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseDown(
           PVector2I.of(800, 600),
           SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseUp(
           PVector2I.of(800, 600),
           SyMouseButton.MOUSE_BUTTON_LEFT);
-      Assert.assertFalse(c.isPresent());
+      assertFalse(c.isPresent());
     }
   }
 
   @Test
   public final void testWindowMouseOverTitlebarDragRightButton()
   {
-    final SyTheme t = SyThemeMotive.builder().build();
-    final SyGUIType g = this.createWithTheme("main", t);
-    final SyWindowType w0 = g.windowCreate(640, 480, "Window 0");
+    final var t = SyThemeMotive.builder().build();
+    final var g = this.createWithTheme("main", t);
+    final var w0 = g.windowCreate(640, 480, "Window 0");
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseDown(
           PVector2I.of(320, 10),
           SyMouseButton.MOUSE_BUTTON_RIGHT);
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(PVector2I.of(320 + 15, 20));
 
     {
-      final Optional<SyComponentType> c =
+      final var c =
         g.onMouseUp(
           PVector2I.of(320 + 15, 20),
           SyMouseButton.MOUSE_BUTTON_RIGHT);
-      Assert.assertTrue(c.isPresent());
-      final SyComponentType cc = c.get();
-      Assert.assertTrue(
+      assertTrue(c.isPresent());
+      final var cc = c.get();
+      assertTrue(
         cc instanceof SyLabelReadableType);
-      Assert.assertTrue(
+      assertTrue(
         cc.node().parent().get().value() instanceof SyWindowTitleBarType);
     }
 
     g.onMouseMoved(PVector2I.of(800, 600));
 
-    final PAreaI<SySpaceViewportType> box = w0.box();
-    Assert.assertEquals(0L, (long) box.minimumX());
-    Assert.assertEquals(0L, (long) box.minimumY());
-    Assert.assertEquals(640L, (long) box.sizeX());
-    Assert.assertEquals(480L, (long) box.sizeY());
+    final var box = w0.box();
+    assertEquals(0L, (long) box.minimumX());
+    assertEquals(0L, (long) box.minimumY());
+    assertEquals(640L, (long) box.sizeX());
+    assertEquals(480L, (long) box.sizeY());
   }
 }

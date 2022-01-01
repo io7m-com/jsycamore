@@ -23,10 +23,11 @@ import com.io7m.jsycamore.api.themes.SyTheme;
 import com.io7m.jsycamore.awt.SyAWTWindowFrameEmbossing;
 import com.io7m.jsycamore.awt.SyAWTWindowRendererEmbossedFrameParameters;
 import com.io7m.jsycamore.themes.motive.SyThemeMotiveProvider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class SyAWTWindowFrameEmbossingTest
 {
@@ -47,9 +48,9 @@ public final class SyAWTWindowFrameEmbossingTest
         Optional.empty(),
         frame_box);
 
-    Assert.assertEquals(21L, (long) params.bottomRightArmLength());
-    Assert.assertEquals(21L, (long) params.bottomLeftArmLength());
-    Assert.assertEquals(21L, (long) params.topRightArmLength());
-    Assert.assertEquals(21L, (long) params.topLeftArmLength());
+    assertEquals(21L, (long) params.bottomRightArmLength());
+    assertEquals(21L, (long) params.bottomLeftArmLength());
+    assertEquals(21L, (long) params.topRightArmLength());
+    assertEquals(21L, (long) params.topLeftArmLength());
   }
 }

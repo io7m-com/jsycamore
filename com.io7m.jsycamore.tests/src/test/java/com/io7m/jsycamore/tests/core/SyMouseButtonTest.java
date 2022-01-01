@@ -17,27 +17,25 @@
 package com.io7m.jsycamore.tests.core;
 
 import com.io7m.jsycamore.api.SyMouseButton;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class SyMouseButtonTest
 {
-  @Rule public ExpectedException expected = ExpectedException.none();
-
   @Test
   public void testOf()
   {
-    Assert.assertEquals(
+    Assertions.assertEquals(
       SyMouseButton.MOUSE_BUTTON_LEFT, SyMouseButton.ofIndex(0));
-    Assert.assertEquals(
+    Assertions.assertEquals(
       SyMouseButton.MOUSE_BUTTON_MIDDLE, SyMouseButton.ofIndex(1));
-    Assert.assertEquals(
+    Assertions.assertEquals(
       SyMouseButton.MOUSE_BUTTON_RIGHT, SyMouseButton.ofIndex(2));
 
     for (int index = 0; index < 3; ++index) {
-      Assert.assertEquals(
+      Assertions.assertEquals(
         (long) index,
         (long) SyMouseButton.ofIndex(index).index());
     }
@@ -46,14 +44,16 @@ public final class SyMouseButtonTest
   @Test
   public void testOfInvalid1()
   {
-    this.expected.expect(IllegalArgumentException.class);
-    SyMouseButton.ofIndex(-1);
+    assertThrows(IllegalArgumentException.class, () -> {
+      SyMouseButton.ofIndex(-1);
+    });
   }
 
   @Test
   public void testOfInvalid3()
   {
-    this.expected.expect(IllegalArgumentException.class);
-    SyMouseButton.ofIndex(3);
+    assertThrows(IllegalArgumentException.class, () -> {
+      SyMouseButton.ofIndex(3);
+    });
   }
 }

@@ -24,11 +24,14 @@ import com.io7m.jsycamore.api.themes.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.themes.SyAlignmentVertical;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector4D;
 import com.io7m.junreachable.UnreachableCodeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyImageContract extends SyComponentContract
 {
@@ -38,16 +41,16 @@ public abstract class SyImageContract extends SyComponentContract
   @Test
   public void testWindowlessTheme()
   {
-    final SyImageType c = this.create();
-    Assert.assertFalse(c.window().isPresent());
-    Assert.assertFalse(c.theme().isPresent());
+    final var c = this.create();
+    assertFalse(c.window().isPresent());
+    assertFalse(c.theme().isPresent());
   }
 
   @Test
   public final void testMatch()
   {
-    final SyImageType image = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var image = this.create();
+    final var called = new AtomicBoolean(false);
 
     image.matchComponent(
       this,
@@ -68,14 +71,14 @@ public abstract class SyImageContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testMatchReadable()
   {
-    final SyImageType image = this.create();
-    final AtomicBoolean called = new AtomicBoolean(false);
+    final var image = this.create();
+    final var called = new AtomicBoolean(false);
 
     image.matchComponentReadable(
       this,
@@ -96,25 +99,25 @@ public abstract class SyImageContract extends SyComponentContract
         throw new UnreachableCodeException();
       });
 
-    Assert.assertTrue(called.get());
+    assertTrue(called.get());
   }
 
   @Test
   public final void testIdentities()
   {
-    final SyImageType image = this.create();
+    final var image = this.create();
 
-    for (final SyAlignmentHorizontal a : SyAlignmentHorizontal.values()) {
+    for (final var a : SyAlignmentHorizontal.values()) {
       image.setImageAlignmentHorizontal(a);
-      Assert.assertEquals(a, image.imageAlignmentHorizontal());
+      assertEquals(a, image.imageAlignmentHorizontal());
     }
 
-    for (final SyAlignmentVertical a : SyAlignmentVertical.values()) {
+    for (final var a : SyAlignmentVertical.values()) {
       image.setImageAlignmentVertical(a);
-      Assert.assertEquals(a, image.imageAlignmentVertical());
+      assertEquals(a, image.imageAlignmentVertical());
     }
 
-    final SyImageSpecification spec = SyImageSpecification.of(
+    final var spec = SyImageSpecification.of(
       URI.create("x"),
       32,
       32,
@@ -123,6 +126,6 @@ public abstract class SyImageContract extends SyComponentContract
       SyImageScaleInterpolation.SCALE_INTERPOLATION_BILINEAR);
 
     image.setImage(spec);
-    Assert.assertEquals(spec, image.image());
+    assertEquals(spec, image.image());
   }
 }
