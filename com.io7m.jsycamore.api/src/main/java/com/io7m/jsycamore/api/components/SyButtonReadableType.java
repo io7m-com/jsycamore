@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,18 +14,14 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api;
-
-import com.io7m.junreachable.UnreachableCodeException;
+package com.io7m.jsycamore.api.components;
 
 /**
- * Marker type for locating resources.
+ * Read-only access to a button.
  */
 
-public final class JSycamore
+public interface SyButtonReadableType
+  extends SyComponentReadableType
 {
-  private JSycamore()
-  {
-    throw new UnreachableCodeException();
-  }
+
 }

@@ -15,7 +15,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.tests</name>
   <description>Embedded GUI library (Unit tests)</description>
-  <url>http://io7m.github.io/jsycamore/</url>
+  <url>https://www.io7m.com/software/jsycamore/</url>
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
@@ -30,6 +30,26 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.jsycamore.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.jsycamore.awt</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.jsycamore.vanilla</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.jsycamore.components.standard</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.jsycamore.theme.primal</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -89,6 +109,23 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
     </dependency>
   </dependencies>
 

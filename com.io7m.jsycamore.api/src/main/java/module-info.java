@@ -26,6 +26,7 @@ module com.io7m.jsycamore.api
   requires static com.io7m.immutables.style;
 
   requires com.io7m.jaffirm.core;
+  requires com.io7m.jattribute.core;
   requires com.io7m.jorchard.core;
   requires com.io7m.jranges.core;
   requires com.io7m.jregions.core;
@@ -36,5 +37,10 @@ module com.io7m.jsycamore.api
   requires jcip.annotations;
   requires org.slf4j;
 
+  exports com.io7m.jsycamore.api.components;
+  exports com.io7m.jsycamore.api.events;
+  exports com.io7m.jsycamore.api.mouse;
+  exports com.io7m.jsycamore.api.rendering;
+  exports com.io7m.jsycamore.api.windows;
   exports com.io7m.jsycamore.api;
 }

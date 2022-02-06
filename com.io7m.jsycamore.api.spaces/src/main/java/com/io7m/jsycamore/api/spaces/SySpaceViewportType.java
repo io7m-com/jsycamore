@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,7 +17,8 @@
 package com.io7m.jsycamore.api.spaces;
 
 /**
- * The viewport-relative coordinate space.
+ * The viewport coordinate space. These are the coordinates that are within
+ * the bounds of a viewport, relative to the viewport's origin.
  */
 
 public interface SySpaceViewportType extends SySpaceType

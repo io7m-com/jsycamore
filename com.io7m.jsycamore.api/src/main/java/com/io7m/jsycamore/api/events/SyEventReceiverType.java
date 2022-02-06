@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,13 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.spaces;
+package com.io7m.jsycamore.api.events;
 
-/**
- * The window-relative coordinate space.
- */
-
-public interface SySpaceWindowRelativeType extends SySpaceType
+public interface SyEventReceiverType
 {
-  // No value-level representation.
+  boolean eventSend(SyEventType event);
 }
