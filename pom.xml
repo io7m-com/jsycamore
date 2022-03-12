@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor</artifactId>
-    <version>7.0.0-beta0003</version>
+    <version>7.0.0-beta0004</version>
   </parent>
 
   <groupId>com.io7m.jsycamore</groupId>
@@ -22,8 +22,6 @@
   <url>http://github.com/io7m/jsycamore</url>
 
   <modules>
-    <module>com.io7m.jsycamore.api.spaces</module>
-    <module>com.io7m.jsycamore.api.text</module>
     <module>com.io7m.jsycamore.api</module>
     <module>com.io7m.jsycamore.tests</module>
     <module>com.io7m.jsycamore.vanilla</module>
