@@ -137,6 +137,10 @@ public abstract class SyButtonAbstract
             .flatMap(component -> {
               this.setMouseOver(Objects.equals(component, this));
               return Optional.empty();
+            })
+            .orElseGet(() -> {
+              this.setMouseOver(false);
+              return null;
             });
           yield true;
         }

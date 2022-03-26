@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
+import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_RIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,8 +65,27 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
     assertEquals(0, this.clicks);
 
     c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_LEFT, c));
-    assertEquals(1, this.clicks);
     assertFalse(c.isPressed());
+    assertEquals(1, this.clicks);
+  }
+
+  /**
+   * Pressing a button using the wrong mouse button does nothing.
+   */
+
+  @Test
+  public void testButtonPressReleaseRight()
+  {
+    final var c = this.newComponent();
+    c.setOnClickListener(() -> this.clicks++);
+
+    c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_RIGHT, c));
+    assertFalse(c.isPressed());
+    assertEquals(0, this.clicks);
+
+    c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_RIGHT, c));
+    assertFalse(c.isPressed());
+    assertEquals(0, this.clicks);
   }
 
   /**
@@ -84,8 +105,29 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
 
     c.eventSend(new SyMouseEventOnNoLongerOver());
     c.eventSend(new SyMouseEventOnReleased(ELSEWHERE, MOUSE_BUTTON_LEFT, c));
-    assertEquals(0, this.clicks);
     assertFalse(c.isPressed());
+    assertEquals(0, this.clicks);
+  }
+
+  /**
+   * Pressing a button and then releasing the button with the cursor elsewhere
+   * works.
+   */
+
+  @Test
+  public void testButtonPressReleaseNotOverDrag()
+  {
+    final var c = this.newComponent();
+    c.setOnClickListener(() -> this.clicks++);
+
+    c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_LEFT, c));
+    assertTrue(c.isPressed());
+    assertEquals(0, this.clicks);
+
+    c.eventSend(new SyMouseEventOnHeld(Z, ELSEWHERE, MOUSE_BUTTON_LEFT, c));
+    c.eventSend(new SyMouseEventOnReleased(ELSEWHERE, MOUSE_BUTTON_LEFT, c));
+    assertFalse(c.isPressed());
+    assertEquals(0, this.clicks);
   }
 
   /**
