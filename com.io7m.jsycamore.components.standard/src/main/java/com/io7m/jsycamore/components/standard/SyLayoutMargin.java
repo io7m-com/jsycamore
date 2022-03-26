@@ -60,10 +60,10 @@ public final class SyLayoutMargin extends SyLayoutAbstract
   public void setPaddingAll(
     final int padding)
   {
-    this.paddingTop.set(padding);
-    this.paddingBottom.set(padding);
-    this.paddingLeft.set(padding);
-    this.paddingRight.set(padding);
+    this.paddingTop().set(padding);
+    this.paddingBottom().set(padding);
+    this.paddingLeft().set(padding);
+    this.paddingRight().set(padding);
   }
 
   /**

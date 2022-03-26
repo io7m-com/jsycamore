@@ -17,7 +17,10 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
@@ -29,7 +32,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyComponentContract<T extends SyComponentType>
 {
+  protected SyLayoutContextType layoutContext;
+
   protected abstract T newComponent();
+
+  @BeforeEach
+  public void componentSetup()
+  {
+    this.layoutContext = Mockito.mock(SyLayoutContextType.class);
+  }
 
   @Test
   public final void testComponentActiveOK()

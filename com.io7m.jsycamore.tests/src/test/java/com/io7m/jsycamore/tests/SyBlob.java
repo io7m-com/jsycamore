@@ -60,6 +60,15 @@ public final class SyBlob extends SyComponentAbstract
 
   }
 
+  public SyBlob(
+    final int x,
+    final int y)
+  {
+    this();
+    this.setPreferredSizeX(x);
+    this.setPreferredSizeY(y);
+  }
+
   @Override
   public PAreaSizeI<SySpaceParentRelativeType> layout(
     final SyLayoutContextType layoutContext,
