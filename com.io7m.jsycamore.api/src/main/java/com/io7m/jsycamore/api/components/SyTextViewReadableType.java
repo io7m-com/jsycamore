@@ -17,9 +17,28 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_VIEW;
+
+/**
+ * Read-only access to text views.
+ */
 
 public interface SyTextViewReadableType
   extends SyComponentReadableType
 {
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(TEXT_VIEW);
+  }
+
+  /**
+   * @return The current text
+   */
+
   AttributeReadableType<String> text();
 }

@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.windows;
 
+/**
+ * A window lost focus.
+ */
+
 public record SyWindowFocusLost()
   implements SyWindowEventType
 {

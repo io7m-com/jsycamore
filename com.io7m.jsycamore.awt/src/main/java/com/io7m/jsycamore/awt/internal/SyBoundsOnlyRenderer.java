@@ -28,16 +28,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class SyBoundsOnlyRenderer
+/**
+ * A trivial renderer that only renders the bounds of objects.
+ */
+
+public final class SyBoundsOnlyRenderer implements SyRendererType
 {
+  /**
+   * A trivial renderer that only renders the bounds of objects.
+   */
+
   public SyBoundsOnlyRenderer()
   {
 
   }
 
+  @Override
   public void render(
     final Graphics2D g,
-    final SyScreenType gui,
+    final SyScreenType screen,
     final SyWindowType window)
   {
     final var oldTransform = g.getTransform();
@@ -54,10 +63,8 @@ public final class SyBoundsOnlyRenderer
       g.drawRect(0, 0, bounds.sizeX(), bounds.sizeY());
       g.setClip(0, 0, bounds.sizeX(), bounds.sizeY());
 
-      final var root =
-        window.rootNodeReadable();
-
-      this.renderComponent(g, gui, root);
+      final var root = window.rootNodeReadable();
+      this.renderComponent(g, screen, root);
 
     } finally {
       g.setTransform(oldTransform);
@@ -74,7 +81,6 @@ public final class SyBoundsOnlyRenderer
     if (!component.isVisible()) {
       return;
     }
-
 
     final var oldTransform = g.getTransform();
     final var oldClip = g.getClip();

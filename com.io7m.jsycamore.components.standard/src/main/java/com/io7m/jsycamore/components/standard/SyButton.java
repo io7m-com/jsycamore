@@ -16,28 +16,56 @@
 
 package com.io7m.jsycamore.components.standard;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
-import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
+import com.io7m.jsycamore.api.components.SyAlignmentVertical;
+import com.io7m.jsycamore.api.components.SyButtonWithTextType;
 import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 
-public final class SyButton extends SyButtonAbstract
+/**
+ * A button with a text label.
+ */
+
+public final class SyButton
+  extends SyButtonAbstract
+  implements SyButtonWithTextType
 {
   private final SyTextView text;
+  private final SyAlign align;
+  private final SyLayoutMargin margin;
+
+  /**
+   * A button with a text label.
+   */
 
   public SyButton()
   {
+    this.margin = new SyLayoutMargin();
+    this.margin.setPaddingAll(8);
+
+    this.align = new SyAlign();
+    this.align.alignmentHorizontal()
+      .set(SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER);
+    this.align.alignmentVertical()
+      .set(SyAlignmentVertical.ALIGN_VERTICAL_CENTER);
+
     this.text = new SyTextView();
-    this.node().childAdd(this.text.node());
+    this.align.childAdd(this.text);
+    this.margin.childAdd(this.align);
+    this.childAdd(this.margin);
   }
 
-  @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
+  /**
+   * A button with a text label.
+   *
+   * @param initialText The initial text
+   */
+
+  public SyButton(
+    final String initialText)
   {
-    return constraints.sizeMaximum();
+    this();
+    this.setText(initialText);
   }
 
   @Override
@@ -51,5 +79,18 @@ public final class SyButton extends SyButtonAbstract
   protected void onClicked()
   {
 
+  }
+
+  @Override
+  public AttributeType<String> text()
+  {
+    return this.text.text();
+  }
+
+  @Override
+  public void setText(
+    final String newText)
+  {
+    this.text.setText(newText);
   }
 }

@@ -26,6 +26,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * An immutable window set.
+ */
+
 public final class SyWindowSet
 {
   private final Set<SyWindowType> windows;
@@ -54,10 +58,20 @@ public final class SyWindowSet
     }
   }
 
+  /**
+   * Create an empty window set.
+   *
+   * @return The empty set
+   */
+
   public static SyWindowSet empty()
   {
     return new SyWindowSet(Set.of(), Set.of(), List.of());
   }
+
+  /**
+   * @return The focused window in the set, if any
+   */
 
   public Optional<SyWindowType> windowFocused()
   {
@@ -67,20 +81,40 @@ public final class SyWindowSet
     return Optional.of(this.windowsOpenOrdered.get(0));
   }
 
+  /**
+   * @return The set of windows
+   */
+
   public Set<SyWindowType> windows()
   {
     return this.windows;
   }
+
+  /**
+   * @return The set of windows that are open
+   */
 
   public Set<SyWindowType> windowsOpen()
   {
     return this.windowsOpen;
   }
 
+  /**
+   * @return The set of windows that are open in depth order
+   */
+
   public List<SyWindowType> windowsOpenOrdered()
   {
     return this.windowsOpenOrdered;
   }
+
+  /**
+   * Open the given window. The window is added to the set of open windows.
+   *
+   * @param window The window
+   *
+   * @return This set with the given window open
+   */
 
   public SyWindowSetChanged windowOpen(
     final SyWindowType window)
@@ -130,6 +164,14 @@ public final class SyWindowSet
     );
   }
 
+  /**
+   * Close the given window.
+   *
+   * @param window The window
+   *
+   * @return This set with the given window closed
+   */
+
   public SyWindowSetChanged windowClose(
     final SyWindowType window)
   {
@@ -161,6 +203,14 @@ public final class SyWindowSet
       focusGained
     );
   }
+
+  /**
+   * Focus the given window.
+   *
+   * @param window The window
+   *
+   * @return This set with the given window focused
+   */
 
   public SyWindowSetChanged windowFocus(
     final SyWindowType window)
@@ -201,6 +251,12 @@ public final class SyWindowSet
       focusGainedActually
     );
   }
+
+  /**
+   * @param window The window
+   *
+   * @return {@code true} if the given window is open
+   */
 
   public boolean windowIsOpen(
     final SyWindowType window)

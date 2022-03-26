@@ -18,11 +18,21 @@ package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeType;
 
+/**
+ * Write access to text views.
+ */
+
 public interface SyTextViewType
   extends SyTextViewReadableType, SyComponentType
 {
   @Override
   AttributeType<String> text();
+
+  /**
+   * Set the text.
+   *
+   * @param text The text
+   */
 
   default void setText(
     final String text)

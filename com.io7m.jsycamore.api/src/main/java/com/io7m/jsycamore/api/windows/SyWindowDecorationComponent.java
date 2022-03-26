@@ -16,22 +16,76 @@
 
 package com.io7m.jsycamore.api.windows;
 
+/**
+ * Enumerations identifying the components that can be attached directly to a
+ * window.
+ */
+
 public enum SyWindowDecorationComponent
 {
+  /**
+   * The window closed button.
+   */
   WINDOW_BUTTON_CLOSE,
+  /**
+   * The window maximize button.
+   */
   WINDOW_BUTTON_MAXIMIZE,
+  /**
+   * The window menu button.
+   */
   WINDOW_BUTTON_MENU,
+  /**
+   * The window's content area.
+   */
   WINDOW_CONTENT_AREA,
+  /**
+   * The eastern resize box.
+   */
   WINDOW_RESIZE_E,
+  /**
+   * The northern resize box.
+   */
   WINDOW_RESIZE_N,
+  /**
+   * The northeastern resize box.
+   */
   WINDOW_RESIZE_NE,
+  /**
+   * The northwestern resize box.
+   */
   WINDOW_RESIZE_NW,
+  /**
+   * The southern resize box.
+   */
   WINDOW_RESIZE_S,
+  /**
+   * The southeastern resize box.
+   */
   WINDOW_RESIZE_SE,
+  /**
+   * The southwestern resize box.
+   */
   WINDOW_RESIZE_SW,
+  /**
+   * The western resize box.
+   */
   WINDOW_RESIZE_W,
+  /**
+   * The root.
+   */
   WINDOW_ROOT,
+  /**
+   * The title bar.
+   */
   WINDOW_TITLE;
+
+  /**
+   * Some window components are decorations. Decorations are made invisible when
+   * windows are set to undecorated mode.
+   *
+   * @return {@code true} if the component is a "decoration"
+   */
 
   public boolean isDecoration()
   {

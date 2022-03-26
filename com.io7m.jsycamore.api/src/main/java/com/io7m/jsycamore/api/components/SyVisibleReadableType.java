@@ -18,6 +18,10 @@ package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeReadableType;
 
+/**
+ * Read-only access to objects that can be visible or invisible.
+ */
+
 public interface SyVisibleReadableType
 {
   /**

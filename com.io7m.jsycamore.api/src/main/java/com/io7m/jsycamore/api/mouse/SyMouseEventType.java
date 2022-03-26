@@ -18,6 +18,10 @@ package com.io7m.jsycamore.api.mouse;
 
 import com.io7m.jsycamore.api.events.SyEventType;
 
+/**
+ * The base type of mouse events.
+ */
+
 public sealed interface SyMouseEventType extends SyEventType
   permits SyMouseEventOnHeld,
   SyMouseEventOnNoLongerOver,

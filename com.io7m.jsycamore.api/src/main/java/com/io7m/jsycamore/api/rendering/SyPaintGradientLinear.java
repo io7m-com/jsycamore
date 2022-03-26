@@ -38,6 +38,11 @@ import java.util.Objects;
  * b} into {@code c} with {@code b} positioned exactly in the middle of {@code
  * a} and {@code c}. Typically, the list of distribution values will sum to
  * {@code 1.0}, but this is not a hard requirement.</p>
+ *
+ * @param point0       The start point
+ * @param point1       The end point
+ * @param colors       The color points
+ * @param distribution The point distribution
  */
 
 public record SyPaintGradientLinear(
@@ -45,9 +50,17 @@ public record SyPaintGradientLinear(
   Vector2D point1,
   List<PVector4D<SySpaceRGBAPreType>> colors,
   List<Double> distribution
-)
-  implements SyPaintFillType, SyPaintEdgeType
+) implements SyPaintFillType, SyPaintEdgeType
 {
+  /**
+   * <p>The specification of a gradient.</p>
+   *
+   * @param point0       The start point
+   * @param point1       The end point
+   * @param colors       The color points
+   * @param distribution The point distribution
+   */
+
   public SyPaintGradientLinear
   {
     Objects.requireNonNull(point0, "point0");

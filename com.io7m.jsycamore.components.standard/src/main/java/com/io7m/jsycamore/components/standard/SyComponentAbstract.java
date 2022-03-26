@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jattribute.core.Attributes;
 import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
@@ -35,7 +34,6 @@ import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import org.osgi.annotation.versioning.ProviderType;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -43,8 +41,8 @@ import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.components.SyVisibility.VISIBILITY_VISIBLE;
 
 /**
- * A convenient abstract implementation of a component, to make it easier
- * to implement new components.
+ * A convenient abstract implementation of a component, to make it easier to
+ * implement new components.
  */
 
 @ProviderType
@@ -55,6 +53,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   private final AttributeType<SyVisibility> visibility;
   private final AttributeType<PVector2I<SySpaceParentRelativeType>> position;
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> size;
+  private volatile boolean mouseOver;
 
   protected SyComponentAbstract()
   {
@@ -92,6 +91,18 @@ public abstract class SyComponentAbstract implements SyComponentType
       return targetY >= viewportMinY && targetY <= viewportMaxY;
     }
     return false;
+  }
+
+  @Override
+  public final boolean isMouseOver()
+  {
+    return this.mouseOver;
+  }
+
+  protected final void setMouseOver(
+    final boolean over)
+  {
+    this.mouseOver = over;
   }
 
   @Override

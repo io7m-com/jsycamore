@@ -20,7 +20,6 @@ import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
-import com.io7m.jsycamore.api.SyThemeType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
@@ -29,6 +28,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowFocusGained;
 import com.io7m.jsycamore.api.windows.SyWindowFocusLost;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -39,6 +39,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A screen.
+ */
+
 public final class SyScreen implements SyScreenType
 {
   private final SyThemeType theme;
@@ -46,6 +50,13 @@ public final class SyScreen implements SyScreenType
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
   private SyWindowSet windows;
   private Optional<SyComponentType> componentOver;
+
+  /**
+   * A screen.
+   *
+   * @param inTheme The theme
+   * @param inSize  The screen size
+   */
 
   public SyScreen(
     final SyThemeType inTheme,

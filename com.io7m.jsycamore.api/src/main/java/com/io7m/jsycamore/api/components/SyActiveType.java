@@ -27,6 +27,12 @@ public interface SyActiveType extends SyActiveReadableType
   @Override
   AttributeType<SyActive> activity();
 
+  /**
+   * Set the activity of the component.
+   *
+   * @param active The activity
+   */
+
   default void setActive(
     final SyActive active)
   {

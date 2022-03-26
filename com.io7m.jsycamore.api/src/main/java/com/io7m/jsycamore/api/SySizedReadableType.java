@@ -20,7 +20,17 @@ import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 
+/**
+ * Read only access to information about objects that have sizes.
+ *
+ * @param <T> The coordinate space
+ */
+
 public interface SySizedReadableType<T extends SySpaceType>
 {
+  /**
+   * @return The object's size
+   */
+
   AttributeReadableType<PAreaSizeI<T>> size();
 }

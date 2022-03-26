@@ -18,16 +18,13 @@ package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyBoundedReadableType;
 import com.io7m.jsycamore.api.SyScreenType;
-import com.io7m.jsycamore.api.SyThemeType;
 import com.io7m.jsycamore.api.components.SyComponentType;
-import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -36,29 +33,94 @@ import java.util.Optional;
 
 public interface SyWindowType extends SyWindowReadableType
 {
+  /**
+   * @return The screen to which this window belongs.
+   */
+
   SyScreenType screen();
 
-  void layout(SyThemeType theme);
+  /**
+   * Execute a layout pass on the window.
+   *
+   * @param layoutContext The layout context
+   */
+
+  void layout(SyLayoutContextType layoutContext);
+
+  /**
+   * Send an event to the window.
+   *
+   * @param event The event
+   */
 
   void eventSend(SyWindowEventType event);
+
+  /**
+   * Find a component given a viewport position.
+   *
+   * @param position The position
+   *
+   * @return A component, if any
+   */
 
   Optional<SyComponentType> componentForViewportPosition(
     PVector2I<SySpaceViewportType> position);
 
+  /**
+   * Transform the given viewport position to a window-relative position.
+   *
+   * @param viewportPosition The viewport position
+   *
+   * @return A window-relative position
+   */
+
   PVector2I<SySpaceWindowType> transformViewportRelative(
     PVector2I<SySpaceViewportType> viewportPosition);
+
+  /**
+   * Find the component under the given window-relative position.
+   *
+   * @param w_position The window-relative position
+   *
+   * @return The component, if any
+   */
 
   Optional<SyComponentType> componentForWindowPosition(
     PVector2I<SySpaceWindowType> w_position);
 
+  /**
+   * Toggle the "maximized" nature of the window.
+   *
+   * @param viewportSize The size of the maximized window
+   */
+
   void setMaximizeToggle(
     PAreaSizeI<SySpaceViewportType> viewportSize);
 
+  @Override
   AttributeType<Boolean> decorated();
+
+  /**
+   * Set the window position.
+   *
+   * @param newPosition The new position
+   */
 
   void setPosition(
     PVector2I<SySpaceViewportType> newPosition);
 
+  /**
+   * Set the window size.
+   *
+   * @param newSize The new size
+   */
+
   void setSize(
     PAreaSizeI<SySpaceViewportType> newSize);
+
+  /**
+   * @return The content area component
+   */
+
+  SyComponentType contentArea();
 }

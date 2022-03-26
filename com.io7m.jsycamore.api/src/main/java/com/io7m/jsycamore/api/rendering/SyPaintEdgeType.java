@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.rendering;
 
+/**
+ * The type of paints applied to edges.
+ */
+
 public sealed interface SyPaintEdgeType
   extends SyPaintType
   permits SyPaintFlat, SyPaintGradientLinear

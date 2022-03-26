@@ -23,11 +23,12 @@ import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
 import com.io7m.jsycamore.api.rendering.SyPaintedGroup;
 import com.io7m.jsycamore.api.rendering.SyPaintedGroups;
 import com.io7m.jsycamore.api.rendering.SyPaintedShape;
-import com.io7m.jsycamore.api.rendering.SyRectangle;
+import com.io7m.jsycamore.api.rendering.SyShapePolygon;
+import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jsycamore.awt.internal.SyAWTShapeRenderer;
-import com.io7m.jsycamore.awt.internal.SyMultiplyComposite;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
 import com.io7m.jtensors.core.unparameterized.vectors.Vector2D;
 
@@ -89,17 +90,28 @@ public final class SyPaintDemo
               new SyPaintedShape<>(
                 Optional.of(new SyPaintFlat(blue)),
                 Optional.of(new SyPaintFlat(red)),
-                new SyRectangle<>(PAreasI.moveAbsolute(base, 32, 32))
+                new SyShapeRectangle<>(PAreasI.moveAbsolute(base, 32, 32))
               ),
               new SyPaintedShape<>(
                 Optional.of(new SyPaintFlat(blue)),
                 Optional.of(gradient0),
-                new SyRectangle<>(PAreasI.moveAbsolute(base, 80, 32))
+                new SyShapeRectangle<>(PAreasI.moveAbsolute(base, 80, 32))
               ),
               new SyPaintedShape<>(
                 Optional.empty(),
                 Optional.of(gradient0),
-                new SyRectangle<>(PAreasI.moveAbsolute(base, 32, 80))
+                new SyShapeRectangle<>(PAreasI.moveAbsolute(base, 32, 80))
+              ),
+              new SyPaintedShape<>(
+                Optional.of(new SyPaintFlat(blue)),
+                Optional.of(gradient0),
+                new SyShapePolygon<>(
+                  List.of(
+                    PVector2I.of(128, 128),
+                    PVector2I.of(150, 140),
+                    PVector2I.of(130, 160)
+                  )
+                )
               )
             )
           )
@@ -110,8 +122,6 @@ public final class SyPaintDemo
       try {
         graphics.setPaint(new Color(0.34f, 0.41f, 0.47f));
         graphics.fillRect(32, 32, 256, 256);
-
-        graphics.setComposite(SyMultiplyComposite.get());
         graphics.setPaint(new TexturePaint(
           texture,
           new Rectangle(0, 0, 256, 256)

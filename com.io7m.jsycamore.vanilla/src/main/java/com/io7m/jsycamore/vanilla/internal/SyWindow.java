@@ -22,10 +22,10 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
-import com.io7m.jsycamore.api.SyThemeType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
@@ -172,6 +172,12 @@ public final class SyWindow implements SyWindowType
   }
 
   @Override
+  public SyComponentType contentArea()
+  {
+    return this.root.contentArea();
+  }
+
+  @Override
   public SyScreenType screen()
   {
     return this.gui;
@@ -179,9 +185,10 @@ public final class SyWindow implements SyWindowType
 
   @Override
   public void layout(
-    final SyThemeType theme)
+    final SyLayoutContextType layoutContext)
   {
-    this.root.layout(theme, this.constraints);
+    Objects.requireNonNull(layoutContext, "layoutContext");
+    this.root.layout(layoutContext, this.constraints);
   }
 
   @Override

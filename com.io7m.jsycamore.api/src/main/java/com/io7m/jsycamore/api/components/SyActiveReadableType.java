@@ -39,4 +39,10 @@ public interface SyActiveReadableType
    */
 
   AttributeReadableType<SyActive> activity();
+
+  /**
+   * @return {@code true} if the mouse is over this component
+   */
+
+  boolean isMouseOver();
 }

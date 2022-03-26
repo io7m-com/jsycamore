@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to menu bars.
+ */
+
 public interface SyMenuBarType
   extends SyMenuBarReadableType, SyComponentType
 {

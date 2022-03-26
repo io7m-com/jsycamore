@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to text areas.
+ */
+
 public interface SyTextAreaType
   extends SyTextAreaReadableType, SyComponentType
 {

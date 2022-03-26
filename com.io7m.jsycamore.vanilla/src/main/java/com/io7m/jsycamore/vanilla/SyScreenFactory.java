@@ -19,14 +19,22 @@ package com.io7m.jsycamore.vanilla;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenFactoryType;
 import com.io7m.jsycamore.api.SyScreenType;
-import com.io7m.jsycamore.api.SyThemeType;
+import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.vanilla.internal.SyScreen;
 
 import java.util.Objects;
 
+/**
+ * A factory of screens.
+ */
+
 public final class SyScreenFactory implements SyScreenFactoryType
 {
+  /**
+   * A factory of screens.
+   */
+
   public SyScreenFactory()
   {
 

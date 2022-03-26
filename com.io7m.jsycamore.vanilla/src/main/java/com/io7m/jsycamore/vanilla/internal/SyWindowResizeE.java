@@ -17,18 +17,26 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
-import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.junreachable.UnreachableCodeException;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_E;
+
+/**
+ * An east resize button.
+ */
 
 public final class SyWindowResizeE extends SyWindowComponent
 {
@@ -52,6 +60,16 @@ public final class SyWindowResizeE extends SyWindowComponent
   private boolean onMouseEvent(
     final SyMouseEventType event)
   {
+    if (event instanceof SyMouseEventOnOver) {
+      this.setMouseOver(true);
+      return true;
+    }
+
+    if (event instanceof SyMouseEventOnNoLongerOver) {
+      this.setMouseOver(false);
+      return true;
+    }
+
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
@@ -93,14 +111,8 @@ public final class SyWindowResizeE extends SyWindowComponent
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
+  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
   {
-    final var newSize =
-      theme.sizeForWindowDecorationComponent(constraints, this.semantic());
-
-    this.setSize(newSize);
-    return newSize;
+    return List.of(SyThemeClassNameStandard.WINDOW_RESIZE_E, BUTTON);
   }
 }

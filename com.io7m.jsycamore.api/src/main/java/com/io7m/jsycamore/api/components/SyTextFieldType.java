@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to text fields.
+ */
+
 public interface SyTextFieldType
   extends SyTextFieldReadableType, SyComponentType
 {

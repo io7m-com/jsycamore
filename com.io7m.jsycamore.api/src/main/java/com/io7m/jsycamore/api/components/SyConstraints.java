@@ -16,9 +16,19 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
+
+import static java.lang.Integer.MAX_VALUE;
+
+/**
+ * A set of size constraints.
+ *
+ * @param sizeMinimumX The minimum allowed size on the X axis
+ * @param sizeMaximumX The maximum allowed size on the X axis
+ * @param sizeMinimumY The minimum allowed size on the Y axis
+ * @param sizeMaximumY The maximum allowed size on the Y axis
+ */
 
 public record SyConstraints(
   int sizeMinimumX,
@@ -26,30 +36,29 @@ public record SyConstraints(
   int sizeMaximumX,
   int sizeMaximumY)
 {
-  public SyConstraints
+  /**
+   * A set of size constraints.
+   *
+   * @param sizeMinimumX The minimum allowed size on the X axis
+   * @param sizeMaximumX The maximum allowed size on the X axis
+   * @param sizeMinimumY The minimum allowed size on the Y axis
+   * @param sizeMaximumY The maximum allowed size on the Y axis
+   */
+
+  public SyConstraints(
+    final int sizeMinimumX,
+    final int sizeMinimumY,
+    final int sizeMaximumX,
+    final int sizeMaximumY)
   {
-    Preconditions.checkPreconditionV(
-      0 <= sizeMinimumX,
-      "0 <= Minimum X %d",
-      sizeMinimumX
-    );
-    Preconditions.checkPreconditionV(
-      0 <= sizeMinimumY,
-      "0 <= Minimum Y %d",
-      sizeMinimumY
-    );
-    Preconditions.checkPreconditionV(
-      sizeMinimumX <= sizeMaximumX,
-      "Minimum X %d <= Maximum X %d",
-      sizeMinimumX,
-      sizeMaximumX
-    );
-    Preconditions.checkPreconditionV(
-      sizeMinimumY <= sizeMaximumY,
-      "Minimum Y %d <= Maximum Y %d",
-      sizeMinimumY,
-      sizeMaximumY
-    );
+    this.sizeMinimumX =
+      clamp(0, MAX_VALUE, sizeMinimumX);
+    this.sizeMaximumX =
+      clamp(this.sizeMinimumX, MAX_VALUE, sizeMaximumX);
+    this.sizeMinimumY =
+      clamp(0, MAX_VALUE, sizeMinimumY);
+    this.sizeMaximumY =
+      clamp(this.sizeMinimumY, MAX_VALUE, sizeMaximumY);
   }
 
   private static int clamp(
@@ -60,15 +69,38 @@ public record SyConstraints(
     return Math.max(min, Math.min(max, x));
   }
 
+  /**
+   * @param <T> The coordinate space type
+   *
+   * @return The minimum area size that can fit in these constraints
+   */
+
   public <T extends SySpaceType> PAreaSizeI<T> sizeMinimum()
   {
     return PAreaSizeI.of(this.sizeMinimumX, this.sizeMinimumY);
   }
 
+  /**
+   * @param <T> The coordinate space type
+   *
+   * @return The maximum area size that can fit in these constraints
+   */
+
   public <T extends SySpaceType> PAreaSizeI<T> sizeMaximum()
   {
     return PAreaSizeI.of(this.sizeMaximumX, this.sizeMaximumY);
   }
+
+  /**
+   * Produce an area size based on the given size values, clamped such that they
+   * will fit within these constraints.
+   *
+   * @param <T>   The coordinate space type
+   * @param sizeX The size on the X axis
+   * @param sizeY The size on the Y axis
+   *
+   * @return A clamped area size
+   */
 
   public <T extends SySpaceType> PAreaSizeI<T> sizeWithin(
     final int sizeX,
@@ -79,6 +111,12 @@ public record SyConstraints(
       clamp(this.sizeMinimumY, this.sizeMaximumY, sizeY)
     );
   }
+
+  /**
+   * @param size The area size
+   *
+   * @return {@code true} if the given size fits within these constraints
+   */
 
   public boolean isSatisfiedBy(
     final PAreaSizeI<?> size)

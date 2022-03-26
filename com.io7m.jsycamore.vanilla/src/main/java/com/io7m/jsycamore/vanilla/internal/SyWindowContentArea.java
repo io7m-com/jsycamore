@@ -16,13 +16,18 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
-import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
+
+/**
+ * A window content area.
+ */
 
 public final class SyWindowContentArea extends SyWindowComponent
 {
@@ -39,16 +44,8 @@ public final class SyWindowContentArea extends SyWindowComponent
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
+  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
   {
-    final var newSize =
-      theme.sizeForWindowDecorationComponent(
-        constraints, this.semantic()
-      );
-
-    this.size().set(newSize);
-    return newSize;
+    return List.of(SyThemeClassNameStandard.WINDOW_CONTENT_AREA, CONTAINER);
   }
 }

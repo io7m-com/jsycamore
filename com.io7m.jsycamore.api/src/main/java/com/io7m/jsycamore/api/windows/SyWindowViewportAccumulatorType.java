@@ -53,9 +53,8 @@ public interface SyWindowViewportAccumulatorType
 
   /**
    * <p>Calculate a new viewport based on the given bounds.</p> <p>The
-   * calculated
-   * viewport will always be less than or equal to the previous viewport in
-   * size.</p>
+   * calculated viewport will always be less than or equal to the previous
+   * viewport in size.</p>
    *
    * @param box The bounds
    */

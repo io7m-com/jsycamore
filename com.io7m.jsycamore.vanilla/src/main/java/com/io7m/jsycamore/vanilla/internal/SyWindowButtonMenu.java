@@ -16,15 +16,19 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
-import com.io7m.jsycamore.api.components.SyConstraints;
-import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_MENU;
 
-public final class SyWindowButtonMenu extends SyWindowComponent
+/**
+ * A window menu button.
+ */
+
+public final class SyWindowButtonMenu extends SyWindowButtonComponent
 {
   SyWindowButtonMenu()
   {
@@ -32,21 +36,14 @@ public final class SyWindowButtonMenu extends SyWindowComponent
   }
 
   @Override
-  protected boolean onEvent(
-    final SyEventType event)
+  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
   {
-    return false;
+    return List.of(SyThemeClassNameStandard.WINDOW_BUTTON_MENU, BUTTON);
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
+  protected void onClicked()
   {
-    final var newSize =
-      theme.sizeForWindowDecorationComponent(constraints, this.semantic());
 
-    this.size().set(newSize);
-    return newSize;
   }
 }

@@ -30,27 +30,28 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A convenient abstract implementation of a button, to make it easier
- * to implement new buttons.
+ * A convenient abstract implementation of a button, to make it easier to
+ * implement new buttons.
  */
 
 @ProviderType
 public abstract class SyButtonAbstract
   extends SyComponentAbstract implements SyButtonType
 {
-  private boolean over;
   private boolean pressed;
   private Runnable listener;
 
   protected SyButtonAbstract()
   {
-    this.listener = () -> {};
+    this.listener = () -> {
+    };
   }
 
   @Override
   public final void removeOnClickListener()
   {
-    this.listener = () -> {};
+    this.listener = () -> {
+    };
   }
 
   @Override
@@ -68,6 +69,12 @@ public abstract class SyButtonAbstract
       return this.onMouseEvent(mouseEvent);
     }
     return this.onOtherEvent(event);
+  }
+
+  @Override
+  public final boolean isPressed()
+  {
+    return this.pressed;
   }
 
   /**
@@ -89,11 +96,11 @@ public abstract class SyButtonAbstract
      */
 
     if (event instanceof SyMouseEventOnOver) {
-      this.over = true;
+      this.setMouseOver(true);
       return true;
     }
     if (event instanceof SyMouseEventOnNoLongerOver) {
-      this.over = false;
+      this.setMouseOver(false);
       return true;
     }
 
@@ -102,14 +109,14 @@ public abstract class SyButtonAbstract
      */
 
     if (event instanceof SyMouseEventOnPressed onPressed) {
-      this.over = true;
+      this.setMouseOver(true);
       return switch (onPressed.button()) {
-        case MOUSE_BUTTON_LEFT: {
+        case MOUSE_BUTTON_LEFT -> {
           this.pressed = true;
           yield true;
         }
-        case MOUSE_BUTTON_MIDDLE:
-        case MOUSE_BUTTON_RIGHT: {
+        case MOUSE_BUTTON_MIDDLE,
+          MOUSE_BUTTON_RIGHT -> {
           yield false;
         }
       };
@@ -122,19 +129,18 @@ public abstract class SyButtonAbstract
 
     if (event instanceof SyMouseEventOnHeld onHeld) {
       return switch (onHeld.button()) {
-        case MOUSE_BUTTON_LEFT: {
+        case MOUSE_BUTTON_LEFT -> {
           this.window()
             .flatMap(window -> {
               return window.componentForViewportPosition(onHeld.mousePositionNow());
             })
             .flatMap(component -> {
-              this.over = Objects.equals(component, this);
+              this.setMouseOver(Objects.equals(component, this));
               return Optional.empty();
             });
           yield true;
         }
-        case MOUSE_BUTTON_MIDDLE:
-        case MOUSE_BUTTON_RIGHT: {
+        case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
           yield false;
         }
       };
@@ -142,14 +148,14 @@ public abstract class SyButtonAbstract
 
     if (event instanceof SyMouseEventOnReleased onReleased) {
       return switch (onReleased.button()) {
-        case MOUSE_BUTTON_LEFT: {
+        case MOUSE_BUTTON_LEFT -> {
 
           /*
            * Only trigger the button if the cursor is still over the button
            * when the mouse button is released.
            */
 
-          if (this.pressed && this.over) {
+          if (this.pressed && this.isMouseOver()) {
             try {
               this.onClicked();
               this.listener.run();
@@ -163,7 +169,7 @@ public abstract class SyButtonAbstract
                */
 
               this.pressed = false;
-              this.over = false;
+              this.setMouseOver(false);
             }
           }
 
@@ -171,8 +177,7 @@ public abstract class SyButtonAbstract
           yield true;
         }
 
-        case MOUSE_BUTTON_MIDDLE:
-        case MOUSE_BUTTON_RIGHT: {
+        case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
           yield false;
         }
       };

@@ -18,28 +18,29 @@ package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+
+/**
+ * A simple text view.
+ */
 
 public final class SyTextView
   extends SyComponentAbstract implements SyTextViewType
 {
   private final AttributeType<String> text;
 
+  /**
+   * A simple text view.
+   */
+
   public SyTextView()
   {
-    this.text = SyComponentAttributes.get().create("");
-  }
-
-  @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
-  {
-    return constraints.sizeMaximum();
+    final var attributes = SyComponentAttributes.get();
+    this.text = attributes.create("");
   }
 
   @Override
@@ -47,6 +48,26 @@ public final class SyTextView
     final SyEventType event)
   {
     return false;
+  }
+
+  @Override
+  public PAreaSizeI<SySpaceParentRelativeType> layout(
+    final SyLayoutContextType layoutContext,
+    final SyConstraints constraints)
+  {
+    final var font =
+      layoutContext.themeCurrent()
+        .findForComponent(this)
+        .font(layoutContext, this);
+
+    final var textNow = this.text.get();
+    final var width = font.textWidth(textNow);
+    final var height = font.textHeight();
+
+    final var newSize =
+      constraints.<SySpaceParentRelativeType>sizeWithin(width, height);
+    this.setSize(newSize);
+    return newSize;
   }
 
   @Override

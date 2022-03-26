@@ -20,10 +20,23 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+/**
+ * Writable access to information about objects that have bounds.
+ *
+ * @param <T> The coordinate space
+ */
+
 public interface SyBoundedType<T extends SySpaceType>
   extends SyBoundedReadableType<T>, SySizedType<T>
 {
+  @Override
   AttributeType<PVector2I<T>> position();
+
+  /**
+   * Set the position of the object.
+   *
+   * @param newPosition The new position
+   */
 
   default void setPosition(
     final PVector2I<T> newPosition)

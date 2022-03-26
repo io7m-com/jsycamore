@@ -25,7 +25,6 @@ module com.io7m.jsycamore.components.standard
 
   requires transitive com.io7m.jorchard.core;
   requires transitive com.io7m.jregions.core;
-  requires transitive com.io7m.jsycamore.api.spaces;
   requires transitive com.io7m.jsycamore.api;
   requires transitive com.io7m.jtensors.core;
   requires transitive com.io7m.jattribute.core;

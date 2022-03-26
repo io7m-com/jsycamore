@@ -42,15 +42,20 @@ import java.util.function.Function;
 import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.components.SyVisibility.VISIBILITY_VISIBLE;
 
+/**
+ * A window decoration component.
+ */
+
 public abstract class SyWindowComponent implements SyComponentType
 {
   private final SyWindowDecorationComponent semantic;
   private final JOTreeNodeType<SyComponentType> node;
-  private Optional<SyWindowType> window;
   private final AttributeType<SyActive> activity;
   private final AttributeType<SyVisibility> visibility;
   private final AttributeType<PVector2I<SySpaceParentRelativeType>> position;
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> size;
+  private Optional<SyWindowType> window;
+  private volatile boolean mouseOver;
 
   protected SyWindowComponent(
     final SyWindowDecorationComponent inSemantic)
@@ -292,5 +297,17 @@ public abstract class SyWindowComponent implements SyComponentType
       .decorated()
       .get()
       .booleanValue();
+  }
+
+  @Override
+  public final boolean isMouseOver()
+  {
+    return this.mouseOver;
+  }
+
+  protected final void setMouseOver(
+    final boolean over)
+  {
+    this.mouseOver = over;
   }
 }

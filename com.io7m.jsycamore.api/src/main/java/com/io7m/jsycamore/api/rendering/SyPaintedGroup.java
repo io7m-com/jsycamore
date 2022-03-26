@@ -22,10 +22,25 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A possibly-clipped group of shapes.
+ *
+ * @param clipShape     The clip shape
+ * @param shapesInOrder The list of shapes in draw order
+ * @param <T>           The coordinate space
+ */
+
 public record SyPaintedGroup<T extends SySpaceType>(
   Optional<SyShapeType<T>> clipShape,
   List<SyPaintedShape<T>> shapesInOrder)
 {
+  /**
+   * A possibly-clipped group of shapes.
+   *
+   * @param clipShape     The clip shape
+   * @param shapesInOrder The list of shapes in draw order
+   */
+
   public SyPaintedGroup
   {
     Objects.requireNonNull(clipShape, "clipShape");

@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.rendering;
 
+/**
+ * The type of paints applied as fills.
+ */
+
 public sealed interface SyPaintFillType
   extends SyPaintType
   permits SyPaintFlat, SyPaintGradientLinear

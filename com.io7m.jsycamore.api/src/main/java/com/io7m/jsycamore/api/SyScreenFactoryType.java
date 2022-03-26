@@ -18,6 +18,7 @@ package com.io7m.jsycamore.api;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyThemeType;
 
 /**
  * The type of user interface factories.
@@ -25,6 +26,15 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 
 public interface SyScreenFactoryType
 {
+  /**
+   * Create a new screen.
+   *
+   * @param theme The initial theme
+   * @param size  The viewport size
+   *
+   * @return A new screen
+   */
+
   SyScreenType create(
     SyThemeType theme,
     PAreaSizeI<SySpaceViewportType> size

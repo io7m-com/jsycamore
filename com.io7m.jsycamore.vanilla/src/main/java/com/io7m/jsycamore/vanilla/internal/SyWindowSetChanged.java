@@ -19,11 +19,33 @@ package com.io7m.jsycamore.vanilla.internal;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 
 import java.util.Optional;
+import java.util.function.Function;
+
+/**
+ * An event indicating that the window set changed.
+ *
+ * @param newSet      The new window set
+ * @param focusGained The window that gained focus
+ * @param focusLost   The window that lost focus
+ */
 
 public record SyWindowSetChanged(
   SyWindowSet newSet,
   Optional<SyWindowType> focusLost,
   Optional<SyWindowType> focusGained)
 {
+  /**
+   * Apply a function to the current window set, yielding a new window set
+   * change.
+   *
+   * @param f A function
+   *
+   * @return The window set change
+   */
 
+  public SyWindowSetChanged then(
+    final Function<SyWindowSet, SyWindowSetChanged> f)
+  {
+    return f.apply(this.newSet);
+  }
 }

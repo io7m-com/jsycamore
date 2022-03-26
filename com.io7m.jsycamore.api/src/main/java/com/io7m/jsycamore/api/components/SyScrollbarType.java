@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to scrollbars.
+ */
+
 public interface SyScrollbarType
   extends SyScrollbarReadableType, SyComponentType
 {

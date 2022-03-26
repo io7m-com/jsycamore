@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.windows;
 
+/**
+ * A window has been closed.
+ */
+
 public record SyWindowClosed()
   implements SyWindowEventType
 {

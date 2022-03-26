@@ -16,12 +16,17 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
-import com.io7m.jsycamore.api.components.SyConstraints;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_CLOSE;
+
+/**
+ * A window close button.
+ */
 
 public final class SyWindowButtonClose extends SyWindowButtonComponent
 {
@@ -31,15 +36,9 @@ public final class SyWindowButtonClose extends SyWindowButtonComponent
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
-    final SyConstraints constraints)
+  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
   {
-    final var newSize =
-      theme.sizeForWindowDecorationComponent(constraints, this.semantic());
-
-    this.size().set(newSize);
-    return newSize;
+    return List.of(SyThemeClassNameStandard.WINDOW_BUTTON_CLOSE, BUTTON);
   }
 
   @Override

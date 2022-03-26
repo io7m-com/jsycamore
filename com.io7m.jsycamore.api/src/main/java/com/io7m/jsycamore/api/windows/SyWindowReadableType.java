@@ -17,7 +17,6 @@
 package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jattribute.core.AttributeReadableType;
-import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.SyBoundedReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
@@ -36,7 +35,15 @@ public interface SyWindowReadableType
 
   JOTreeNodeReadableType<SyComponentReadableType> rootNodeReadable();
 
+  /**
+   * @return An attribute indicating if the window is maximized
+   */
+
   AttributeReadableType<Boolean> maximized();
+
+  /**
+   * @return An attribute indicating if the window is decorated
+   */
 
   AttributeReadableType<Boolean> decorated();
 }

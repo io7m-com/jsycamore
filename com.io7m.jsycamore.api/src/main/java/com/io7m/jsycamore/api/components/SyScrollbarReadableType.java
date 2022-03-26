@@ -16,8 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLBAR;
+
+/**
+ * Read-only access to scrollbars.
+ */
+
 public interface SyScrollbarReadableType
   extends SyComponentReadableType
 {
-
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(SCROLLBAR);
+  }
 }

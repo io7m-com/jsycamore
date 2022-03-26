@@ -1,0 +1,117 @@
+/*
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+ * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+
+package com.io7m.jsycamore.awt.internal;
+
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
+
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.Objects;
+import java.util.WeakHashMap;
+
+/**
+ * A font directory that loads fonts using AWT.
+ */
+
+public final class SyFontDirectoryAWT implements SyFontDirectoryType
+{
+  private final WeakHashMap<String, SyFontAWT> fontCache;
+  private final Graphics2D graphics;
+
+  private SyFontDirectoryAWT()
+  {
+    final BufferedImage image =
+      new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+    this.graphics = image.createGraphics();
+    this.fontCache = new WeakHashMap<>(8);
+  }
+
+  private SyFontAWT decodeFont(
+    final String font)
+  {
+    Objects.requireNonNull(font, "Font name");
+    return this.fontCache.computeIfAbsent(
+      font, name -> new SyFontAWT(this.graphics, Font.decode(name), name));
+  }
+
+  /**
+   * Create a new font directory.
+   *
+   * @return The directory
+   */
+
+  public static SyFontDirectoryType create()
+  {
+    return new SyFontDirectoryAWT();
+  }
+
+  @Override
+  public SyFontType get(
+    final String name)
+  {
+    return this.decodeFont(Objects.requireNonNull(name, "name"));
+  }
+
+  private static final class SyFontAWT implements SyFontType
+  {
+    private final Font font;
+    private final FontMetrics metrics;
+    private final String name;
+
+    SyFontAWT(
+      final Graphics2D graphics,
+      final Font inFont,
+      final String inName)
+    {
+      this.font =
+        Objects.requireNonNull(inFont, "font");
+      this.metrics =
+        graphics.getFontMetrics(this.font);
+      this.name =
+        Objects.requireNonNull(inName, "name");
+    }
+
+    @Override
+    public int textHeight()
+    {
+      return this.metrics.getHeight();
+    }
+
+    @Override
+    public int textWidth(
+      final String text)
+    {
+      return this.metrics.stringWidth(text);
+    }
+
+    @Override
+    public int textDescent()
+    {
+      return this.metrics.getDescent();
+    }
+
+    @Override
+    public String identifier()
+    {
+      return this.name;
+    }
+  }
+}

@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.rendering;
 
+/**
+ * The base types of paints.
+ */
+
 public sealed interface SyPaintType
   permits SyPaintEdgeType, SyPaintFillType
 {

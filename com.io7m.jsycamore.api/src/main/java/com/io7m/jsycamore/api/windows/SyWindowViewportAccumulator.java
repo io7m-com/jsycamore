@@ -25,6 +25,10 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import java.util.ArrayDeque;
 import java.util.Objects;
 
+/**
+ * The default implementation of the viewport accumulator interface.
+ */
+
 public final class SyWindowViewportAccumulator
   implements SyWindowViewportAccumulatorType
 {

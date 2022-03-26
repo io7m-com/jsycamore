@@ -16,7 +16,19 @@
 
 package com.io7m.jsycamore.api.events;
 
+/**
+ * The type of objects that can receive events.
+ */
+
 public interface SyEventReceiverType
 {
+  /**
+   * Send an event to this receiver.
+   *
+   * @param event The event
+   *
+   * @return {@code true} if the event was understood and consumed
+   */
+
   boolean eventSend(SyEventType event);
 }

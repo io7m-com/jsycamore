@@ -16,8 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.METER;
+
+/**
+ * Read-only access to meters.
+ */
+
 public interface SyMeterReadableType
   extends SyComponentReadableType
 {
-
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(METER);
+  }
 }

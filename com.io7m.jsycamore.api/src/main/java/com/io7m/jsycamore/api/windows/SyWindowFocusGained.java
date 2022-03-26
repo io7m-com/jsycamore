@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.api.windows;
 
+/**
+ * A window gained focus.
+ */
+
 public record SyWindowFocusGained()
   implements SyWindowEventType
 {

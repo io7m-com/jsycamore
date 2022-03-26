@@ -16,8 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
-public interface SyGridViewReadableType
-  extends SyComponentReadableType
-{
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.GRID_VIEW;
+
+/**
+ * Read-only access to grid views.
+ */
+
+public interface SyGridViewReadableType
+  extends SyContainerReadableType
+{
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(GRID_VIEW);
+  }
 }

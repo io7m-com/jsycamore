@@ -20,6 +20,10 @@ import com.io7m.jattribute.core.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A factory of attributes.
+ */
+
 public final class SyWindowAttributes
 {
   private static final Logger LOG =
@@ -34,6 +38,10 @@ public final class SyWindowAttributes
   {
 
   }
+
+  /**
+   * @return The attribute factory
+   */
 
   public static Attributes get()
   {

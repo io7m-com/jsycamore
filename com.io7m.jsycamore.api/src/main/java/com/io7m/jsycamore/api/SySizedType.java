@@ -20,10 +20,23 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 
+/**
+ * Writable access to information about objects that have sizes.
+ *
+ * @param <T> The coordinate space
+ */
+
 public interface SySizedType<T extends SySpaceType>
   extends SySizedReadableType<T>
 {
+  @Override
   AttributeType<PAreaSizeI<T>> size();
+
+  /**
+   * Set the size of the object.
+   *
+   * @param newSize The new size
+   */
 
   default void setSize(
     final PAreaSizeI<T> newSize)

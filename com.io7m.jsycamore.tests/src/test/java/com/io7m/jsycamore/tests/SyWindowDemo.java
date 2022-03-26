@@ -20,10 +20,18 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
-import com.io7m.jsycamore.awt.internal.SyBoundsOnlyRenderer;
+import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
+import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
+import com.io7m.jsycamore.awt.internal.SyRendererType;
+import com.io7m.jsycamore.components.standard.SyButton;
+import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
+import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
+import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.slf4j.Logger;
@@ -78,11 +86,15 @@ public final class SyWindowDemo
   {
     private final SyScreenType screen;
     private final SyWindowType window0;
-    private final SyBoundsOnlyRenderer renderer;
+    private final SyFontDirectoryType fontDirectory;
+    private SyRendererType renderer;
 
     Canvas()
     {
       this.setFocusable(true);
+
+      this.fontDirectory =
+        SyFontDirectoryAWT.create();
 
       final var theme =
         new SyThemePrimalFactory().create();
@@ -91,10 +103,10 @@ public final class SyWindowDemo
         new SyScreenFactory()
           .create(theme, PAreaSizeI.of(800, 600));
 
-      this.window0 =
-        this.screen.windowCreate(640, 480);
-      this.renderer =
-        new SyBoundsOnlyRenderer();
+      this.window0 = this.screen.windowCreate(640, 480);
+
+      this.renderer = new SyAWTRenderer(this.fontDirectory);
+      // this.renderer = new SyBoundsOnlyRenderer();
 
       final var executor =
         Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -177,7 +189,26 @@ public final class SyWindowDemo
         }
       });
 
+      final var margin = new SyLayoutMargin();
+      margin.setPaddingAll(8);
+
+      final var horizontal = new SyLayoutHorizontal();
+      horizontal.paddingBetween().set(8);
+      margin.childAdd(horizontal);
+
+      final var button0 = new SyButton("Button 0");
+      button0.setOnClickListener(() -> LOG.debug("click 0"));
+      final var button1 = new SyButton("Button 1");
+      button1.setOnClickListener(() -> LOG.debug("click 1"));
+      final var button2 = new SyButton("Button 2");
+      button2.setOnClickListener(() -> LOG.debug("click 2"));
+
+      horizontal.childAdd(button0);
+      horizontal.childAdd(button1);
+      horizontal.childAdd(button2);
+
       this.window0.decorated().set(TRUE);
+      this.window0.contentArea().childAdd(margin);
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {
@@ -194,8 +225,14 @@ public final class SyWindowDemo
       g2.setColor(Color.GRAY);
       g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+      final var layoutContext =
+        new SyLayoutContext(
+          this.fontDirectory,
+          this.screen.theme()
+        );
+
       this.screen.windowsOpenOrderedNow().forEach(window -> {
-        window.layout(this.screen.theme());
+        window.layout(layoutContext);
         this.renderer.render(g2, this.screen, window);
       });
     }

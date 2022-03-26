@@ -17,14 +17,15 @@
 package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.rendering.SyCompositeShape;
 import com.io7m.jsycamore.api.rendering.SyPaintEdgeType;
 import com.io7m.jsycamore.api.rendering.SyPaintFillType;
 import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
 import com.io7m.jsycamore.api.rendering.SyPaintedGroups;
 import com.io7m.jsycamore.api.rendering.SyPaintedShape;
-import com.io7m.jsycamore.api.rendering.SyRectangle;
+import com.io7m.jsycamore.api.rendering.SyShapeComposite;
+import com.io7m.jsycamore.api.rendering.SyShapePolygon;
+import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.rendering.SyShapeType;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
@@ -35,12 +36,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
+import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
+/**
+ * An AWT shape renderer.
+ */
+
 public final class SyAWTShapeRenderer
 {
+  /**
+   * An AWT shape renderer.
+   */
+
   public SyAWTShapeRenderer()
   {
 
@@ -64,24 +74,58 @@ public final class SyAWTShapeRenderer
     final Optional<SyPaintFillType> fill,
     final SyShapeType<T> shape)
   {
-    if (shape instanceof SyRectangle<T> rectangle) {
+    if (shape instanceof SyShapeRectangle<T> rectangle) {
       renderShapeRectangle(graphics, edge, fill, rectangle);
       return;
     }
 
-    if (shape instanceof SyCompositeShape<T> composite) {
+    if (shape instanceof SyShapePolygon<T> polygon) {
+      renderShapePolygon(graphics, edge, fill, polygon);
+      return;
+    }
+
+    if (shape instanceof SyShapeComposite<T> composite) {
       for (final var subShape : composite.shapes()) {
         renderShape(graphics, edge, fill, subShape);
       }
-      return;
     }
+  }
+
+  private static <T extends SySpaceType> void renderShapePolygon(
+    final Graphics2D graphics,
+    final Optional<SyPaintEdgeType> edge,
+    final Optional<SyPaintFillType> fill,
+    final SyShapePolygon<T> polygon)
+  {
+    final var area = polygon.boundingArea();
+    final var points = polygon.points();
+    final var size = points.size();
+    final var xpoints = new int[size];
+    final var ypoints = new int[size];
+    for (int index = 0; index < size; ++index) {
+      xpoints[index] = points.get(index).x();
+      ypoints[index] = points.get(index).y();
+    }
+
+    final var p =
+      new Polygon(xpoints, ypoints, size);
+
+    fill.ifPresent(fillPaint -> {
+      graphics.setPaint(fillToPaint(area, fillPaint));
+      graphics.fillPolygon(p);
+    });
+
+    edge.ifPresent(edgePaint -> {
+      graphics.setPaint(edgeToPaint(area, edgePaint));
+      graphics.drawPolygon(p);
+    });
   }
 
   private static <T extends SySpaceType> void renderShapeRectangle(
     final Graphics2D graphics,
     final Optional<SyPaintEdgeType> edge,
     final Optional<SyPaintFillType> fill,
-    final SyRectangle<T> rectangle)
+    final SyShapeRectangle<T> rectangle)
   {
     fill.ifPresent(fillPaint -> {
       final var area = rectangle.area();
@@ -191,7 +235,7 @@ public final class SyAWTShapeRenderer
   private static <T extends SySpaceType> Shape toShape(
     final SyShapeType<T> shape)
   {
-    if (shape instanceof SyRectangle rectangle) {
+    if (shape instanceof SyShapeRectangle rectangle) {
       final var area = rectangle.boundingArea();
       return new Rectangle2D.Double(
         (double) area.minimumX(),
@@ -203,6 +247,14 @@ public final class SyAWTShapeRenderer
 
     throw new UnreachableCodeException();
   }
+
+  /**
+   * Render a set of painted groups.
+   *
+   * @param graphics The graphics context
+   * @param groups   The painted groups
+   * @param <T>      The coordinate system
+   */
 
   public <T extends SySpaceType> void renderGroups(
     final Graphics2D graphics,

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.components;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.SyBoundedReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 
 import java.util.Optional;
@@ -30,7 +31,8 @@ import java.util.Optional;
 public interface SyComponentReadableType
   extends SyActiveReadableType,
   SyVisibleReadableType,
-  SyBoundedReadableType<SySpaceParentRelativeType>
+  SyBoundedReadableType<SySpaceParentRelativeType>,
+  SyThemeableReadableType
 {
   /**
    * @return The window to which this component belongs
@@ -86,5 +88,16 @@ public interface SyComponentReadableType
         yield true;
       }
     };
+  }
+
+  /**
+   * A convenience method to return the number of children of this component.
+   *
+   * @return The number of children
+   */
+
+  default int childCount()
+  {
+    return this.nodeReadable().childrenReadable().size();
   }
 }

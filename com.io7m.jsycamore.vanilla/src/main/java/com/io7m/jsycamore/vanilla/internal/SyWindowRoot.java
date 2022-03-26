@@ -17,18 +17,28 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyThemeType;
+import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.EnumMap;
+import java.util.List;
+import java.util.Objects;
 
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_ROOT;
+
+/**
+ * The window root component.
+ */
 
 public final class SyWindowRoot extends SyWindowComponent
 {
@@ -75,9 +85,12 @@ public final class SyWindowRoot extends SyWindowComponent
 
   @Override
   public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyThemeType theme,
+    final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    Objects.requireNonNull(layoutContext, "layoutContext");
+    Objects.requireNonNull(constraints, "constraints");
+
     this.setSize(constraints.sizeMaximum());
 
     /*
@@ -90,15 +103,18 @@ public final class SyWindowRoot extends SyWindowComponent
       final var content =
         this.windowComponents.get(WINDOW_CONTENT_AREA);
 
-      content.setSize(constraints.sizeMaximum());
+      content.layout(layoutContext, constraints);
       content.setPosition(PVectors2I.zero());
-      return this.size().get();
+      return constraints.sizeMaximum();
     }
 
     /*
      * Sort the child nodes so that they appear in the correct Z order
      * according to the theme.
      */
+
+    final var theme =
+      layoutContext.themeCurrent();
 
     this.node()
       .childrenSort((o1, o2) -> {
@@ -116,8 +132,13 @@ public final class SyWindowRoot extends SyWindowComponent
         entry.getKey();
       final var component =
         entry.getValue();
+
+      final var restrictedSize =
+        theme.sizeForWindowDecorationComponent(constraints, semantic);
+      final var componentConstraints =
+        new SyConstraints(0, 0, restrictedSize.sizeX(), restrictedSize.sizeY());
       final var componentSize =
-        component.layout(theme, constraints);
+        component.layout(layoutContext, componentConstraints);
 
       component.position().set(
         theme.positionForWindowDecorationComponent(
@@ -128,5 +149,20 @@ public final class SyWindowRoot extends SyWindowComponent
     }
 
     return this.size().get();
+  }
+
+  /**
+   * @return The content area
+   */
+
+  public SyComponentType contentArea()
+  {
+    return this.windowComponents.get(WINDOW_CONTENT_AREA);
+  }
+
+  @Override
+  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(SyThemeClassNameStandard.WINDOW_ROOT, CONTAINER);
   }
 }

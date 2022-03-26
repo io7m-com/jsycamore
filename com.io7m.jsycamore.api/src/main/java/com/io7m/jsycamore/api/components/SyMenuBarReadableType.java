@@ -16,8 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_BAR;
+
+/**
+ * Read-only access to menu bars.
+ */
+
 public interface SyMenuBarReadableType
   extends SyComponentReadableType
 {
-
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(MENU_BAR);
+  }
 }

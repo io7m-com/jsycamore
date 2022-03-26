@@ -21,9 +21,22 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A list of painted groups.
+ *
+ * @param groups The groups in draw order
+ * @param <T>    The coordinate system space
+ */
+
 public record SyPaintedGroups<T extends SySpaceType>(
   List<SyPaintedGroup<T>> groups)
 {
+  /**
+   * A list of painted groups.
+   *
+   * @param groups The groups in draw order
+   */
+
   public SyPaintedGroups
   {
     Objects.requireNonNull(groups, "groups");

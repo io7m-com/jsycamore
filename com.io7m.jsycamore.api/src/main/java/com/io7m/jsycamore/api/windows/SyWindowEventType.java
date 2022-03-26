@@ -18,6 +18,10 @@ package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jsycamore.api.events.SyEventType;
 
+/**
+ * The type of events relating to windows.
+ */
+
 public sealed interface SyWindowEventType
   extends SyEventType
   permits SyWindowClosed, SyWindowFocusGained, SyWindowFocusLost

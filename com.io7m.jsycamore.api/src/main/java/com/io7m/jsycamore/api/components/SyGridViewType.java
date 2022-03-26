@@ -16,8 +16,12 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to grid views.
+ */
+
 public interface SyGridViewType
-  extends SyGridViewReadableType, SyComponentType
+  extends SyGridViewReadableType, SyContainerType
 {
 
 }

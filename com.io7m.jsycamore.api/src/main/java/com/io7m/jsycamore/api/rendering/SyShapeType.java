@@ -17,10 +17,33 @@
 package com.io7m.jsycamore.api.rendering;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 
+/**
+ * The base type of shapes.
+ *
+ * @param <T> The coordinate space type
+ */
+
 public sealed interface SyShapeType<T extends SySpaceType>
-  permits SyCompositeShape, SyRectangle
+  permits SyShapeComposite,
+  SyShapePolygon,
+  SyShapeRectangle
 {
+  /**
+   * @return The bounding area of the shape
+   */
+
   PAreaI<T> boundingArea();
+
+  /**
+   * @return The size of the shape bounds
+   */
+
+  default PAreaSizeI<T> size()
+  {
+    return PAreasI.size(this.boundingArea());
+  }
 }

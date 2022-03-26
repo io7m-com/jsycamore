@@ -16,8 +16,12 @@
 
 package com.io7m.jsycamore.api.components;
 
+/**
+ * Write access to list views.
+ */
+
 public interface SyListViewType
-  extends SyListViewReadableType, SyComponentType
+  extends SyListViewReadableType, SyContainerType
 {
 
 }

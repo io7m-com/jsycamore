@@ -16,8 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
-public interface SyListViewReadableType
-  extends SyComponentReadableType
-{
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.LIST_VIEW;
+
+/**
+ * Read-only access to list views.
+ */
+
+public interface SyListViewReadableType
+  extends SyContainerReadableType
+{
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(LIST_VIEW);
+  }
 }

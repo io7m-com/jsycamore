@@ -21,11 +21,28 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A shape with paints applied.
+ *
+ * @param edgePaint The edge paint
+ * @param fillPaint The fill paint
+ * @param shape     The shape
+ * @param <T>       The type of coordinate space
+ */
+
 public record SyPaintedShape<T extends SySpaceType>(
   Optional<SyPaintEdgeType> edgePaint,
   Optional<SyPaintFillType> fillPaint,
   SyShapeType<T> shape)
 {
+  /**
+   * A shape with paints applied.
+   *
+   * @param edgePaint The edge paint
+   * @param fillPaint The fill paint
+   * @param shape     The shape
+   */
+
   public SyPaintedShape
   {
     Objects.requireNonNull(edgePaint, "edgePaint");

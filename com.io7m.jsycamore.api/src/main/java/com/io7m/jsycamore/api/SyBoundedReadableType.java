@@ -22,6 +22,12 @@ import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+/**
+ * Read only access to information about objects that have bounds.
+ *
+ * @param <T> The coordinate space
+ */
+
 public interface SyBoundedReadableType<T extends SySpaceType>
   extends SySizedReadableType<T>
 {
@@ -41,6 +47,10 @@ public interface SyBoundedReadableType<T extends SySpaceType>
       size.sizeX(),
       size.sizeY());
   }
+
+  /**
+   * @return The position of the top-left corner of the object
+   */
 
   AttributeReadableType<PVector2I<T>> position();
 }

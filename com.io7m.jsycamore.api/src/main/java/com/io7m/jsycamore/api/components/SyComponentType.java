@@ -19,14 +19,16 @@ package com.io7m.jsycamore.api.components;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyBoundedType;
-import com.io7m.jsycamore.api.SyThemeType;
 import com.io7m.jsycamore.api.events.SyEventReceiverType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.themes.SyThemeableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,7 +40,8 @@ public interface SyComponentType
   SyVisibleType,
   SyActiveType,
   SyEventReceiverType,
-  SyBoundedType<SySpaceParentRelativeType>
+  SyBoundedType<SySpaceParentRelativeType>,
+  SyThemeableType
 {
   /**
    * @return The tree node for this component
@@ -52,11 +55,69 @@ public interface SyComponentType
 
   Optional<SyWindowType> window();
 
-  PAreaSizeI<SySpaceParentRelativeType> layout(
-    SyThemeType theme,
-    SyConstraints constraints);
+  /**
+   * Specify a size for this component in response to a set of size constraints.
+   * This default implementation simply sets the size of the component to the
+   * maximum size allowed by the constraints.
+   *
+   * @param layoutContext The current layout context
+   * @param constraints   The size constraints
+   *
+   * @return A size for this component
+   */
+
+  default PAreaSizeI<SySpaceParentRelativeType> layout(
+    final SyLayoutContextType layoutContext,
+    final SyConstraints constraints)
+  {
+    Objects.requireNonNull(layoutContext, "layoutContext");
+    Objects.requireNonNull(constraints, "constraints");
+
+    final var childNodes = this.node().children();
+    for (final var childNode : childNodes) {
+      childNode.value().layout(layoutContext, constraints);
+    }
+
+    this.setSize(constraints.sizeMaximum());
+    return constraints.sizeMaximum();
+  }
+
+  /**
+   * Find the component under the given window-relative position. The method can
+   * return this component if applicable, but should return a child component if
+   * one overlaps the given position.
+   *
+   * @param windowPosition The window position
+   * @param context        The viewport accumulator
+   *
+   * @return The component, if any
+   */
 
   Optional<SyComponentType> componentForWindowRelative(
     PVector2I<SySpaceWindowType> windowPosition,
     SyWindowViewportAccumulatorType context);
+
+  /**
+   * A convenience function to add a component as a child of this component.
+   *
+   * @param component The child component
+   */
+
+  default void childAdd(
+    final SyComponentType component)
+  {
+    this.node().childAdd(component.node());
+  }
+
+  /**
+   * A convenience function to remove a component from this component.
+   *
+   * @param component The child component
+   */
+
+  default void childRemove(
+    final SyComponentType component)
+  {
+    this.node().childRemove(component.node());
+  }
 }

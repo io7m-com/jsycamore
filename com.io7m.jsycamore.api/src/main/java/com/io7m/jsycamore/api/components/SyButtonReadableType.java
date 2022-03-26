@@ -16,6 +16,12 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
+
 /**
  * Read-only access to a button.
  */
@@ -23,5 +29,15 @@ package com.io7m.jsycamore.api.components;
 public interface SyButtonReadableType
   extends SyComponentReadableType
 {
+  @Override
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return List.of(BUTTON);
+  }
 
+  /**
+   * @return {@code true} if the button is currently pressed
+   */
+
+  boolean isPressed();
 }

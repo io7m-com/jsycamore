@@ -21,9 +21,21 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
 
 import java.util.Objects;
 
+/**
+ * A simple flat color paint.
+ *
+ * @param color The color
+ */
+
 public record SyPaintFlat(PVector4D<SySpaceRGBAPreType> color)
   implements SyPaintFillType, SyPaintEdgeType
 {
+  /**
+   * A simple flat color paint.
+   *
+   * @param color The color
+   */
+
   public SyPaintFlat
   {
     Objects.requireNonNull(color, "color");
