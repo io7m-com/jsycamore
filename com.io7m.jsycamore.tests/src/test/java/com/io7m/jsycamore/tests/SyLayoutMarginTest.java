@@ -80,6 +80,30 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
     assertEquals(128, b.size().get().sizeY());
   }
 
+  /**
+   * A massive pixel margin does not break.
+   */
+
+  @Test
+  public void testMarginTooLarge()
+  {
+    final var c = this.newComponent();
+    c.setPaddingAll(256);
+
+    final var b = new SyBlob();
+    b.setPreferredSizeX(128);
+    b.setPreferredSizeY(128);
+    c.childAdd(b);
+
+    final var cs = new SyConstraints(0, 0, 128, 128);
+    c.layout(this.layoutContext, cs);
+
+    assertEquals(256, b.position().get().x());
+    assertEquals(256, b.position().get().y());
+    assertEquals(0, b.size().get().sizeX());
+    assertEquals(0, b.size().get().sizeY());
+  }
+
   @Override
   protected SyLayoutMargin newComponent()
   {

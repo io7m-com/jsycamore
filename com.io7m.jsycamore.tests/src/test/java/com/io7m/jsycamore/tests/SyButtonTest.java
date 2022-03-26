@@ -150,6 +150,33 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
     assertFalse(c.isMouseOver());
   }
 
+  /**
+   * Setting button texts works.
+   */
+
+  @Test
+  public void testButtonText()
+  {
+    final var c = this.newComponent();
+    c.setText("A");
+    assertEquals("A", c.text().get());
+    c.text().set("B");
+    assertEquals("B", c.text().get());
+    c.setText("C");
+    assertEquals("C", c.text().get());
+  }
+
+  /**
+   * Setting the initial button text works.
+   */
+
+  @Test
+  public void testButtonTextInitial()
+  {
+    final var c = new SyButton("Z");
+    assertEquals("Z", c.text().get());
+  }
+
   @Override
   protected SyButton newComponent()
   {
