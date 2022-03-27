@@ -105,8 +105,12 @@
     </dependency>
 
     <dependency>
-      <groupId>net.java.quickcheck</groupId>
-      <artifactId>quickcheck</artifactId>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik-api</artifactId>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>

@@ -36,6 +36,7 @@
     <io7m.org.immutables.value.version>2.8.3</io7m.org.immutables.value.version>
     <javafx.version>18-ea+1</javafx.version>
     <mockito.version>4.4.0</mockito.version>
+    <jqwik.version>1.6.4</jqwik.version>
   </properties>
 
   <licenses>
@@ -231,6 +232,17 @@
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
         <version>${javafx.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-engine</artifactId>
+        <version>${jqwik.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-api</artifactId>
+        <version>${jqwik.version}</version>
       </dependency>
 
       <dependency>
