@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,118 +14,55 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
 package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.rendering.SyPaintEdgeType;
 import com.io7m.jsycamore.api.rendering.SyPaintFillType;
 import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
-import com.io7m.jsycamore.api.rendering.SyPaintedGroups;
-import com.io7m.jsycamore.api.rendering.SyPaintedShape;
-import com.io7m.jsycamore.api.rendering.SyShapeComposite;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapePolygon;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
-import com.io7m.jsycamore.api.rendering.SyShapeType;
+import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Polygon;
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import java.util.Optional;
 
 /**
- * An AWT shape renderer.
+ * An AWT node renderer.
  */
 
-public final class SyAWTShapeRenderer
+public final class SyAWTNodeRenderer
 {
   /**
-   * An AWT shape renderer.
+   * An AWT node renderer.
    */
 
-  public SyAWTShapeRenderer()
+  public SyAWTNodeRenderer()
   {
 
   }
 
-  private static <T extends SySpaceType> void renderPaintedShape(
-    final Graphics2D graphics,
-    final SyPaintedShape<T> painted)
-  {
-    renderShape(
-      graphics,
-      painted.edgePaint(),
-      painted.fillPaint(),
-      painted.shape()
-    );
-  }
-
-  private static <T extends SySpaceType> void renderShape(
+  private static void renderShapeRectangle(
     final Graphics2D graphics,
     final Optional<SyPaintEdgeType> edge,
     final Optional<SyPaintFillType> fill,
-    final SyShapeType<T> shape)
-  {
-    if (shape instanceof SyShapeRectangle<T> rectangle) {
-      renderShapeRectangle(graphics, edge, fill, rectangle);
-      return;
-    }
-
-    if (shape instanceof SyShapePolygon<T> polygon) {
-      renderShapePolygon(graphics, edge, fill, polygon);
-      return;
-    }
-
-    if (shape instanceof SyShapeComposite<T> composite) {
-      for (final var subShape : composite.shapes()) {
-        renderShape(graphics, edge, fill, subShape);
-      }
-    }
-  }
-
-  private static <T extends SySpaceType> void renderShapePolygon(
-    final Graphics2D graphics,
-    final Optional<SyPaintEdgeType> edge,
-    final Optional<SyPaintFillType> fill,
-    final SyShapePolygon<T> polygon)
-  {
-    final var area = polygon.boundingArea();
-    final var points = polygon.points();
-    final var size = points.size();
-    final var xpoints = new int[size];
-    final var ypoints = new int[size];
-    for (int index = 0; index < size; ++index) {
-      xpoints[index] = points.get(index).x();
-      ypoints[index] = points.get(index).y();
-    }
-
-    final var p =
-      new Polygon(xpoints, ypoints, size);
-
-    fill.ifPresent(fillPaint -> {
-      graphics.setPaint(fillToPaint(area, fillPaint));
-      graphics.fillPolygon(p);
-    });
-
-    edge.ifPresent(edgePaint -> {
-      graphics.setPaint(edgeToPaint(area, edgePaint));
-      graphics.drawPolygon(p);
-    });
-  }
-
-  private static <T extends SySpaceType> void renderShapeRectangle(
-    final Graphics2D graphics,
-    final Optional<SyPaintEdgeType> edge,
-    final Optional<SyPaintFillType> fill,
-    final SyShapeRectangle<T> rectangle)
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
   {
     fill.ifPresent(fillPaint -> {
       final var area = rectangle.area();
@@ -150,6 +87,41 @@ public final class SyAWTShapeRenderer
     });
   }
 
+  private static void renderShapePolygon(
+    final Graphics2D graphics,
+    final Optional<SyPaintEdgeType> edge,
+    final Optional<SyPaintFillType> fill,
+    final SyShapePolygon<SySpaceComponentRelativeType> polygon)
+  {
+    final var awtPoly = awtPolygon(polygon);
+
+    fill.ifPresent(fillPaint -> {
+      final var area = polygon.boundingArea();
+      graphics.setPaint(fillToPaint(area, fillPaint));
+      graphics.fillPolygon(awtPoly);
+    });
+
+    edge.ifPresent(edgePaint -> {
+      final var area = polygon.boundingArea();
+      graphics.setPaint(edgeToPaint(area, edgePaint));
+      graphics.drawPolygon(awtPoly);
+    });
+  }
+
+  private static Polygon awtPolygon(
+    final SyShapePolygon<SySpaceComponentRelativeType> polygon)
+  {
+    final var xp = new int[polygon.points().size()];
+    final var yp = new int[polygon.points().size()];
+    for (int index = 0; index < xp.length; ++index) {
+      final var pp =
+        polygon.points().get(index);
+      xp[index] = pp.x();
+      yp[index] = pp.y();
+    }
+    return new Polygon(xp, yp, xp.length);
+  }
+
   private static <T extends SySpaceType> Paint fillToPaint(
     final PAreaI<T> boundingArea,
     final SyPaintFillType fillPaint)
@@ -168,10 +140,10 @@ public final class SyAWTShapeRenderer
   private static Color toColor4(
     final PVector4D<SySpaceRGBAPreType> color)
   {
-    final double r = Math.min(1.0, Math.max(0.0, color.x()));
-    final double g = Math.min(1.0, Math.max(0.0, color.y()));
-    final double b = Math.min(1.0, Math.max(0.0, color.z()));
-    final double a = Math.min(1.0, Math.max(0.0, color.w()));
+    final var r = Math.min(1.0, Math.max(0.0, color.x()));
+    final var g = Math.min(1.0, Math.max(0.0, color.y()));
+    final var b = Math.min(1.0, Math.max(0.0, color.z()));
+    final var a = Math.min(1.0, Math.max(0.0, color.w()));
     return new Color((float) r, (float) g, (float) b, (float) a);
   }
 
@@ -232,47 +204,77 @@ public final class SyAWTShapeRenderer
     return toColor4(flat.color());
   }
 
-  private static <T extends SySpaceType> Shape toShape(
-    final SyShapeType<T> shape)
-  {
-    if (shape instanceof SyShapeRectangle rectangle) {
-      final var area = rectangle.boundingArea();
-      return new Rectangle2D.Double(
-        (double) area.minimumX(),
-        (double) area.minimumY(),
-        (double) area.sizeX(),
-        (double) area.sizeY()
-      );
-    }
-
-    throw new UnreachableCodeException();
-  }
-
   /**
-   * Render a set of painted groups.
+   * Render the given node.
    *
-   * @param graphics The graphics context
-   * @param groups   The painted groups
-   * @param <T>      The coordinate system
+   * @param graphics2D The graphics context
+   * @param renderNode The render node
    */
 
-  public <T extends SySpaceType> void renderGroups(
-    final Graphics2D graphics,
-    final SyPaintedGroups<T> groups)
+  public void renderNode(
+    final Graphics2D graphics2D,
+    final SyRenderNodeType renderNode)
   {
-    for (final var group : groups.groups()) {
-      final var existingClip = graphics.getClip();
-      try {
-        group.clipShape()
-          .map(SyAWTShapeRenderer::toShape)
-          .ifPresent(graphics::setClip);
-
-        for (final var shape : group.shapesInOrder()) {
-          renderPaintedShape(graphics, shape);
-        }
-      } finally {
-        graphics.setClip(existingClip);
+    if (renderNode instanceof SyRenderNodeShape shape) {
+      renderNodeShape(graphics2D, shape);
+      return;
+    }
+    if (renderNode instanceof SyRenderNodeText text) {
+      renderNodeText(graphics2D, text);
+      return;
+    }
+    if (renderNode instanceof SyRenderNodeComposite composite) {
+      for (final var node : composite.nodes()) {
+        this.renderNode(graphics2D, node);
       }
+      return;
+    }
+  }
+
+  private static void renderNodeText(
+    final Graphics2D g,
+    final SyRenderNodeText textNode)
+  {
+    final var text = textNode.text();
+    if (text.isEmpty()) {
+      return;
+    }
+
+    final var size = textNode.size();
+    final var sizeX = size.sizeX();
+    final var sizeY = size.sizeY();
+    final var area =
+      PAreasI.<SySpaceType>create(0, 0, sizeX, sizeY);
+
+    final var font =
+      Font.decode(textNode.font().description().identifier());
+
+    final var metrics =
+      g.getFontMetrics(font);
+    final var width =
+      metrics.stringWidth(text);
+    final var lineMetrics =
+      metrics.getLineMetrics(text, g);
+
+    final var x = (sizeX / 2) - (width / 2);
+    final var y = lineMetrics.getHeight() - (lineMetrics.getDescent() / 2.0f);
+
+    g.setFont(font);
+    g.setPaint(fillToPaint(area, textNode.fillPaint()));
+    g.drawString(text, x, y);
+  }
+
+  private static void renderNodeShape(
+    final Graphics2D g,
+    final SyRenderNodeShape shape)
+  {
+    if (shape.shape() instanceof SyShapeRectangle<SySpaceComponentRelativeType> rectangle) {
+      renderShapeRectangle(g, shape.edgePaint(), shape.fillPaint(), rectangle);
+      return;
+    }
+    if (shape.shape() instanceof SyShapePolygon<SySpaceComponentRelativeType> polygon) {
+      renderShapePolygon(g, shape.edgePaint(), shape.fillPaint(), polygon);
+      return;
     }
   }
 }

@@ -30,13 +30,17 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
 
 public final class SyWindowButtonClose extends SyWindowButtonComponent
 {
-  SyWindowButtonClose()
+  /**
+   * A window close button.
+   */
+
+  public SyWindowButtonClose()
   {
-    super(WINDOW_BUTTON_CLOSE);
+    super(WINDOW_BUTTON_CLOSE, List.of());
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_BUTTON_CLOSE, BUTTON);
   }

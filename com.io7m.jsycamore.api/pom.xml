@@ -38,6 +38,10 @@
       <groupId>com.io7m.jattribute</groupId>
       <artifactId>com.io7m.jattribute.core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.io7m.jcolorspace</groupId>
+      <artifactId>com.io7m.jcolorspace.core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.osgi</groupId>

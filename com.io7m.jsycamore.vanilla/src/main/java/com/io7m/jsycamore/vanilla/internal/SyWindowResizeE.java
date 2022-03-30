@@ -17,6 +17,8 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyButtonReadableType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -31,6 +33,8 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.List;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_E;
 
@@ -38,55 +42,63 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
  * An east resize button.
  */
 
-public final class SyWindowResizeE extends SyWindowComponent
+public final class SyWindowResizeE
+  extends SyWindowComponent
+  implements SyButtonReadableType
 {
+  private boolean pressed;
   private PAreaSizeI<SySpaceViewportType> windowStartSize;
 
   SyWindowResizeE()
   {
-    super(WINDOW_RESIZE_E);
+    super(WINDOW_RESIZE_E, List.of());
   }
 
   @Override
-  protected boolean onEvent(
+  protected SyEventConsumed onEvent(
     final SyEventType event)
   {
     if (event instanceof SyMouseEventType mouseEvent) {
       return this.onMouseEvent(mouseEvent);
     }
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
-  private boolean onMouseEvent(
+  private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
     if (event instanceof SyMouseEventOnOver) {
       this.setMouseOver(true);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     if (event instanceof SyMouseEventOnNoLongerOver) {
       this.setMouseOver(false);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
+          this.pressed = true;
+
           final var window =
             this.window().orElseThrow(UnreachableCodeException::new);
 
           this.windowStartSize = window.size().get();
-          yield true;
+          yield EVENT_CONSUMED;
         }
-        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> false;
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
       };
     }
 
     if (event instanceof SyMouseEventOnReleased onReleased) {
       return switch (onReleased.button()) {
-        case MOUSE_BUTTON_LEFT -> true;
-        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> false;
+        case MOUSE_BUTTON_LEFT -> {
+          this.pressed = false;
+          yield EVENT_CONSUMED;
+        }
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
       };
     }
 
@@ -104,15 +116,21 @@ public final class SyWindowResizeE extends SyWindowComponent
         this.window().orElseThrow(UnreachableCodeException::new);
 
       window.setSize(newSize);
-      return true;
+      return EVENT_CONSUMED;
     }
 
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_RESIZE_E, BUTTON);
+  }
+
+  @Override
+  public boolean isPressed()
+  {
+    return this.pressed;
   }
 }

@@ -21,6 +21,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyBoundedType;
 import com.io7m.jsycamore.api.events.SyEventReceiverType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.mouse.SyMouseAcceptingType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeableType;
@@ -40,6 +41,7 @@ public interface SyComponentType
   SyVisibleType,
   SyActiveType,
   SyEventReceiverType,
+  SyMouseAcceptingType,
   SyBoundedType<SySpaceParentRelativeType>,
   SyThemeableType
 {
@@ -89,13 +91,15 @@ public interface SyComponentType
    *
    * @param windowPosition The window position
    * @param context        The viewport accumulator
+   * @param query          The type of query
    *
    * @return The component, if any
    */
 
   Optional<SyComponentType> componentForWindowRelative(
     PVector2I<SySpaceWindowType> windowPosition,
-    SyWindowViewportAccumulatorType context);
+    SyWindowViewportAccumulatorType context,
+    SyComponentQuery query);
 
   /**
    * A convenience function to add a component as a child of this component.

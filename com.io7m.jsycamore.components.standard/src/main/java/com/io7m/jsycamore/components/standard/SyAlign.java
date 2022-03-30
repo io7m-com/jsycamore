@@ -24,10 +24,12 @@ import com.io7m.jsycamore.api.components.SyAlignType;
 import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.components.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyConstraints;
-import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+
+import java.util.List;
 
 import static com.io7m.jsycamore.api.components.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
 import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
@@ -37,10 +39,26 @@ import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTIC
  * alignment.
  */
 
-public final class SyAlign extends SyComponentAbstract implements SyAlignType
+public final class SyAlign extends SyLayoutAbstract implements SyAlignType
 {
   private final AttributeType<SyAlignmentHorizontal> alignH;
   private final AttributeType<SyAlignmentVertical> alignV;
+
+  /**
+   * A container that aligns child components to the given horizontal and
+   * vertical alignment.
+   *
+   * @param themeClassesExtra The extra theme classes, if any
+   */
+
+  public SyAlign(
+    final List<SyThemeClassNameType> themeClassesExtra)
+  {
+    super(themeClassesExtra);
+    final var attributes = SyComponentAttributes.get();
+    this.alignH = attributes.create(ALIGN_HORIZONTAL_LEFT);
+    this.alignV = attributes.create(ALIGN_VERTICAL_CENTER);
+  }
 
   /**
    * A container that aligns child components to the given horizontal and
@@ -49,9 +67,7 @@ public final class SyAlign extends SyComponentAbstract implements SyAlignType
 
   public SyAlign()
   {
-    final var attributes = SyComponentAttributes.get();
-    this.alignH = attributes.create(ALIGN_HORIZONTAL_LEFT);
-    this.alignV = attributes.create(ALIGN_VERTICAL_CENTER);
+    this(List.of());
   }
 
   @Override
@@ -135,13 +151,6 @@ public final class SyAlign extends SyComponentAbstract implements SyAlignType
 
     this.setSize(newSize);
     return newSize;
-  }
-
-  @Override
-  protected boolean onEvent(
-    final SyEventType event)
-  {
-    return false;
   }
 
   @Override

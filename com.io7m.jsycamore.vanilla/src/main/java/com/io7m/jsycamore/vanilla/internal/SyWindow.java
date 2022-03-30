@@ -22,6 +22,7 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
@@ -49,7 +50,7 @@ public final class SyWindow implements SyWindowType
 {
   private final SyWindowViewportAccumulatorType viewportAccumulator;
   private final SyWindowRoot root;
-  private final SyScreenType gui;
+  private final SyScreenType screen;
   private final AttributeType<PVector2I<SySpaceViewportType>> positionAttribute;
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> sizeAttribute;
   private final AttributeType<Boolean> maximized;
@@ -61,11 +62,11 @@ public final class SyWindow implements SyWindowType
   private SyConstraints constraints;
 
   SyWindow(
-    final SyScreenType inGUI,
+    final SyScreenType inScreen,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
-    this.gui =
-      Objects.requireNonNull(inGUI, "inGUI");
+    this.screen =
+      Objects.requireNonNull(inScreen, "inGUI");
     this.size =
       Objects.requireNonNull(inSize, "inSize");
     this.sizeMaximized =
@@ -180,7 +181,7 @@ public final class SyWindow implements SyWindowType
   @Override
   public SyScreenType screen()
   {
-    return this.gui;
+    return this.screen;
   }
 
   @Override
@@ -221,22 +222,31 @@ public final class SyWindow implements SyWindowType
 
   @Override
   public Optional<SyComponentType> componentForViewportPosition(
-    final PVector2I<SySpaceViewportType> viewportPosition)
+    final PVector2I<SySpaceViewportType> viewportPosition,
+    final SyComponentQuery query)
   {
     Objects.requireNonNull(viewportPosition, "Position");
+    Objects.requireNonNull(query, "query");
+
     return this.componentForWindowPosition(
-      this.transformViewportRelative(viewportPosition)
+      this.transformViewportRelative(viewportPosition),
+      query
     );
   }
 
   @Override
   public Optional<SyComponentType> componentForWindowPosition(
-    final PVector2I<SySpaceWindowType> windowPosition)
+    final PVector2I<SySpaceWindowType> windowPosition,
+    final SyComponentQuery query)
   {
+    Objects.requireNonNull(windowPosition, "windowPosition");
+    Objects.requireNonNull(query, "query");
+
     if (this.isInBoundsWindowRelative(windowPosition)) {
       return this.root.componentForWindowRelative(
         windowPosition,
-        this.viewportAccumulator
+        this.viewportAccumulator,
+        query
       );
     }
 

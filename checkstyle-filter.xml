@@ -34,4 +34,7 @@
   <suppress files="SyButtonAbstract.java"
             checks="NPathComplexity"/>
 
+  <suppress files="SyThemeValues.java"
+            checks="NPathComplexity"/>
+
 </suppressions>

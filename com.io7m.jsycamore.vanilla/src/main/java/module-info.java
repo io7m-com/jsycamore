@@ -24,6 +24,7 @@ module com.io7m.jsycamore.vanilla
   requires static org.osgi.annotation.bundle;
 
   requires transitive com.io7m.jsycamore.api;
+  requires transitive com.io7m.jsycamore.components.standard;
 
   requires com.io7m.jaffirm.core;
   requires com.io7m.jorchard.core;

@@ -25,10 +25,10 @@ public interface SyFontDirectoryType
   /**
    * Open a font.
    *
-   * @param name The font name
+   * @param description The font description
    *
    * @return A font
    */
 
-  SyFontType get(String name);
+  SyFontType get(SyFontDescription description);
 }

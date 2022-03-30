@@ -21,8 +21,10 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -40,15 +42,29 @@ public final class SyLayoutMargin extends SyLayoutAbstract
   /**
    * A trivial container that pads each edge with a configurable amount of empty
    * space.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
    */
 
-  public SyLayoutMargin()
+  public SyLayoutMargin(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
+    super(inThemeClassesExtra);
     final var attributes = SyComponentAttributes.get();
     this.paddingTop = attributes.create(0);
     this.paddingBottom = attributes.create(0);
     this.paddingLeft = attributes.create(0);
     this.paddingRight = attributes.create(0);
+  }
+
+  /**
+   * A trivial container that pads each edge with a configurable amount of empty
+   * space.
+   */
+
+  public SyLayoutMargin()
+  {
+    this(List.of());
   }
 
   /**

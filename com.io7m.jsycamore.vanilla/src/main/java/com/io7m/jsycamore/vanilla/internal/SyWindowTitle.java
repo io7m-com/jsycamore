@@ -16,6 +16,10 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
+import com.io7m.jsycamore.api.components.SyAlignmentVertical;
+import com.io7m.jsycamore.api.components.SyButtonReadableType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -26,71 +30,106 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+import com.io7m.jsycamore.components.standard.SyAlign;
+import com.io7m.jsycamore.components.standard.SyLayoutMargin;
+import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.List;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.WINDOW_TITLE_TEXT;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_TITLE;
 
 /**
  * A window title component.
  */
 
-public final class SyWindowTitle extends SyWindowComponent
+public final class SyWindowTitle
+  extends SyWindowComponent
+  implements SyButtonReadableType
 {
+  private final SyTextView text;
+  private final SyAlign align;
+  private final SyLayoutMargin margin;
   private PVector2I<SySpaceViewportType> windowStart;
+  private boolean pressed;
 
   SyWindowTitle()
   {
-    super(WINDOW_TITLE);
+    super(WINDOW_TITLE, List.of());
     this.windowStart = PVectors2I.zero();
+
+    this.margin = new SyLayoutMargin();
+    this.margin.setPaddingAll(3);
+    this.margin.setMouseQueryAccepting(false);
+
+    this.align = new SyAlign();
+    this.align.alignmentHorizontal()
+      .set(SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER);
+    this.align.alignmentVertical()
+      .set(SyAlignmentVertical.ALIGN_VERTICAL_CENTER);
+    this.align.setMouseQueryAccepting(false);
+
+    this.text = new SyTextView(List.of(WINDOW_TITLE_TEXT));
+    this.text.setText("Window Title");
+    this.text.setMouseQueryAccepting(false);
+
+    this.align.childAdd(this.text);
+    this.margin.childAdd(this.align);
+    this.childAdd(this.margin);
   }
 
   @Override
-  protected boolean onEvent(
+  protected SyEventConsumed onEvent(
     final SyEventType event)
   {
     if (event instanceof SyMouseEventType mouseEvent) {
       return this.onMouseEvent(mouseEvent);
     }
 
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
-  private boolean onMouseEvent(
+  private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
     if (event instanceof SyMouseEventOnOver) {
       this.setMouseOver(true);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     if (event instanceof SyMouseEventOnNoLongerOver) {
       this.setMouseOver(false);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
+          this.pressed = true;
           this.windowStart =
             this.window()
               .orElseThrow(UnreachableCodeException::new)
               .position()
               .get();
-          yield true;
+          yield EVENT_CONSUMED;
         }
-        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> false;
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
       };
     }
 
     if (event instanceof SyMouseEventOnReleased onReleased) {
       return switch (onReleased.button()) {
-        case MOUSE_BUTTON_LEFT -> true;
-        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> false;
+        case MOUSE_BUTTON_LEFT -> {
+          this.pressed = false;
+          yield EVENT_CONSUMED;
+        }
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
       };
     }
 
@@ -108,14 +147,20 @@ public final class SyWindowTitle extends SyWindowComponent
         .orElseThrow(UnreachableCodeException::new)
         .setPosition(newPosition);
 
-      return true;
+      return EVENT_CONSUMED;
     }
 
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public boolean isPressed()
+  {
+    return this.pressed;
+  }
+
+  @Override
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_TITLE, BUTTON);
   }

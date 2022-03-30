@@ -49,10 +49,10 @@ public interface SyFontType
   int textDescent();
 
   /**
-   * A unique identifier for a font, such as "IBM Plex Sans Mono Bold 14".
+   * The font description.
    *
-   * @return A string that uniquely identifies the font
+   * @return The description of the font
    */
 
-  String identifier();
+  SyFontDescription description();
 }

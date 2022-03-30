@@ -14,9 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.jsycamore.awt.internal;
 
+import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.text.SyFontType;
 
@@ -45,11 +45,13 @@ public final class SyFontDirectoryAWT implements SyFontDirectoryType
   }
 
   private SyFontAWT decodeFont(
-    final String font)
+    final SyFontDescription font)
   {
     Objects.requireNonNull(font, "Font name");
     return this.fontCache.computeIfAbsent(
-      font, name -> new SyFontAWT(this.graphics, Font.decode(name), name));
+      font.identifier(),
+      name -> new SyFontAWT(this.graphics, Font.decode(name), font)
+    );
   }
 
   /**
@@ -65,28 +67,30 @@ public final class SyFontDirectoryAWT implements SyFontDirectoryType
 
   @Override
   public SyFontType get(
-    final String name)
+    final SyFontDescription description)
   {
-    return this.decodeFont(Objects.requireNonNull(name, "name"));
+    return this.decodeFont(
+      Objects.requireNonNull(description, "description")
+    );
   }
 
   private static final class SyFontAWT implements SyFontType
   {
     private final Font font;
     private final FontMetrics metrics;
-    private final String name;
+    private final SyFontDescription description;
 
     SyFontAWT(
       final Graphics2D graphics,
       final Font inFont,
-      final String inName)
+      final SyFontDescription inFontDescription)
     {
       this.font =
         Objects.requireNonNull(inFont, "font");
       this.metrics =
         graphics.getFontMetrics(this.font);
-      this.name =
-        Objects.requireNonNull(inName, "name");
+      this.description =
+        Objects.requireNonNull(inFontDescription, "description");
     }
 
     @Override
@@ -109,9 +113,9 @@ public final class SyFontDirectoryAWT implements SyFontDirectoryType
     }
 
     @Override
-    public String identifier()
+    public SyFontDescription description()
     {
-      return this.name;
+      return this.description;
     }
   }
 }

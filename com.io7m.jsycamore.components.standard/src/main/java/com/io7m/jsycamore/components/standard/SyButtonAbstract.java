@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.components.SyButtonType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -24,10 +25,16 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import org.osgi.annotation.versioning.ProviderType;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * A convenient abstract implementation of a button, to make it easier to
@@ -41,8 +48,10 @@ public abstract class SyButtonAbstract
   private boolean pressed;
   private Runnable listener;
 
-  protected SyButtonAbstract()
+  protected SyButtonAbstract(
+    final List<SyThemeClassNameType> themeClassesExtra)
   {
+    super(themeClassesExtra);
     this.listener = () -> {
     };
   }
@@ -62,7 +71,7 @@ public abstract class SyButtonAbstract
   }
 
   @Override
-  protected final boolean onEvent(
+  protected final SyEventConsumed onEvent(
     final SyEventType event)
   {
     if (event instanceof SyMouseEventType mouseEvent) {
@@ -86,9 +95,9 @@ public abstract class SyButtonAbstract
    * @return {@code true} if the event has been consumed
    */
 
-  protected abstract boolean onOtherEvent(SyEventType event);
+  protected abstract SyEventConsumed onOtherEvent(SyEventType event);
 
-  private boolean onMouseEvent(
+  private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
     /*
@@ -97,11 +106,11 @@ public abstract class SyButtonAbstract
 
     if (event instanceof SyMouseEventOnOver) {
       this.setMouseOver(true);
-      return true;
+      return EVENT_CONSUMED;
     }
     if (event instanceof SyMouseEventOnNoLongerOver) {
       this.setMouseOver(false);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     /*
@@ -113,11 +122,11 @@ public abstract class SyButtonAbstract
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
           this.pressed = true;
-          yield true;
+          yield EVENT_CONSUMED;
         }
         case MOUSE_BUTTON_MIDDLE,
           MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }
@@ -132,20 +141,21 @@ public abstract class SyButtonAbstract
         case MOUSE_BUTTON_LEFT -> {
           this.window()
             .flatMap(window -> {
-              return window.componentForViewportPosition(onHeld.mousePositionNow());
+              return window.componentForViewportPosition(
+                onHeld.mousePositionNow(), FIND_FOR_MOUSE_CURSOR);
             })
             .flatMap(component -> {
               this.setMouseOver(Objects.equals(component, this));
-              return Optional.empty();
+              return Optional.of(component);
             })
             .orElseGet(() -> {
               this.setMouseOver(false);
               return null;
             });
-          yield true;
+          yield EVENT_CONSUMED;
         }
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }
@@ -178,11 +188,11 @@ public abstract class SyButtonAbstract
           }
 
           this.pressed = false;
-          yield true;
+          yield EVENT_CONSUMED;
         }
 
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }

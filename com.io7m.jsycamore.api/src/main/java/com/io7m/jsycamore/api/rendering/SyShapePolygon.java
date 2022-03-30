@@ -44,6 +44,21 @@ public record SyShapePolygon<T extends SySpaceType>(List<PVector2I<T>> points)
     Objects.requireNonNull(points, "points");
   }
 
+  /**
+   * Create a polygon from the given array of points.
+   *
+   * @param points The points
+   * @param <T>    The coordinate space type
+   *
+   * @return A convex polygon
+   */
+
+  public static <T extends SySpaceType> SyShapePolygon<T> of(
+    final PVector2I<T>... points)
+  {
+    return new SyShapePolygon<>(List.of(points));
+  }
+
   @Override
   public PAreaI<T> boundingArea()
   {

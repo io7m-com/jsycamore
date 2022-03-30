@@ -23,12 +23,14 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_RIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,6 +133,36 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   }
 
   /**
+   * Pressing a button and then dragging the mouse works.
+   */
+
+  @Test
+  public void testButtonScreenPressDrag()
+  {
+    final var c = this.newComponent();
+    this.windowContentArea().childAdd(c);
+    this.window().layout(this.layoutContext);
+    this.screen().mouseMoved(Z);
+
+    c.setOnClickListener(() -> this.clicks++);
+
+    this.screen().mouseDown(Z, MOUSE_BUTTON_LEFT);
+    assertTrue(c.isPressed());
+    assertTrue(c.isMouseOver());
+    assertEquals(0, this.clicks);
+
+    this.screen().mouseMoved(Z);
+    assertTrue(c.isPressed());
+    assertTrue(c.isMouseOver());
+    assertEquals(0, this.clicks);
+
+    this.screen().mouseUp(Z, MOUSE_BUTTON_LEFT);
+    assertFalse(c.isPressed());
+    assertTrue(c.isMouseOver());
+    assertEquals(1, this.clicks);
+  }
+
+  /**
    * Moving the cursor over the button works.
    */
 
@@ -175,6 +207,17 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   {
     final var c = new SyButton("Z");
     assertEquals("Z", c.text().get());
+  }
+
+  /**
+   * A button doesn't accept window events.
+   */
+
+  @Test
+  public void testWindowEvents()
+  {
+    final var c = this.newComponent();
+    assertEquals(EVENT_NOT_CONSUMED, c.eventSend(new SyWindowClosed()));
   }
 
   @Override

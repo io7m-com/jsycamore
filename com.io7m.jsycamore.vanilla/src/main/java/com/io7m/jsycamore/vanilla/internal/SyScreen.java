@@ -20,6 +20,7 @@ import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
@@ -38,6 +39,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
 
 /**
  * A screen.
@@ -149,7 +152,7 @@ public final class SyScreen implements SyScreenType
      */
 
     final var currentOpt =
-      this.componentForPosition(position);
+      this.componentForPosition(position, FIND_FOR_MOUSE_CURSOR);
 
     /*
      * If the cursor is currently over a component...
@@ -194,9 +197,11 @@ public final class SyScreen implements SyScreenType
   }
 
   private Optional<SyComponentType> componentForPosition(
-    final PVector2I<SySpaceViewportType> position)
+    final PVector2I<SySpaceViewportType> position,
+    final SyComponentQuery query)
   {
     Objects.requireNonNull(position, "Position");
+    Objects.requireNonNull(query, "query");
 
     final var windowIterator =
       this.windows.windowsOpenOrdered().iterator();
@@ -204,7 +209,7 @@ public final class SyScreen implements SyScreenType
     while (windowIterator.hasNext()) {
       final var window = windowIterator.next();
       final var component =
-        window.componentForViewportPosition(position);
+        window.componentForViewportPosition(position, query);
 
       if (component.isPresent()) {
         return component;
@@ -227,7 +232,7 @@ public final class SyScreen implements SyScreenType
      */
 
     final var componentOpt =
-      this.componentForPosition(position);
+      this.componentForPosition(position, FIND_FOR_MOUSE_CURSOR);
 
     if (componentOpt.isEmpty()) {
       return Optional.empty();

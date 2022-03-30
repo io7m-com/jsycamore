@@ -16,8 +16,16 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
+import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
+import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,13 +41,51 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class SyComponentContract<T extends SyComponentType>
 {
   protected SyLayoutContextType layoutContext;
+  private SyThemeType theme;
+  private SyScreenType screen;
+  private SyWindowType window;
+  private SyFontDirectoryType fonts;
 
   protected abstract T newComponent();
 
   @BeforeEach
   public void componentSetup()
   {
-    this.layoutContext = Mockito.mock(SyLayoutContextType.class);
+    this.fonts =
+      SyFontDirectoryAWT.create();
+    this.theme =
+      new SyThemePrimalFactory()
+        .create();
+    this.screen =
+      new SyScreenFactory()
+        .create(this.theme, PAreaSizeI.of(1024, 1024));
+    this.window =
+      this.screen.windowCreate(512, 512);
+    this.window.decorated()
+      .set(false);
+
+    this.layoutContext =
+      Mockito.mock(SyLayoutContextType.class);
+
+    Mockito.when(this.layoutContext.themeCurrent())
+      .thenReturn(this.theme);
+    Mockito.when(this.layoutContext.fonts())
+      .thenReturn(this.fonts);
+  }
+
+  protected final SyScreenType screen()
+  {
+    return this.screen;
+  }
+
+  protected final SyComponentType windowContentArea()
+  {
+    return this.window().contentArea();
+  }
+
+  protected final SyWindowType window()
+  {
+    return this.window;
   }
 
   @Test

@@ -29,9 +29,20 @@ public record SyRenderNodeNoop() implements SyRenderNodeType
   private static final PAreaSizeI<SySpaceComponentRelativeType> ZERO =
     PAreaSizeI.of(0, 0);
 
+  private static final SyRenderNodeNoop NOOP = new SyRenderNodeNoop();
+
   @Override
   public PAreaSizeI<SySpaceComponentRelativeType> size()
   {
     return ZERO;
+  }
+
+  /**
+   * @return A no-op render node.
+   */
+
+  public static SyRenderNodeNoop noop()
+  {
+    return NOOP;
   }
 }

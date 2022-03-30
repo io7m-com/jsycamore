@@ -16,11 +16,14 @@
 
 package com.io7m.jsycamore.api.spaces;
 
+import com.io7m.jcolorspace.core.ColorSpaceTagLinearRGBType;
+
 /**
  * The RGBA (premultiplied alpha) color space.
  */
 
-public interface SySpaceRGBAPreType extends SySpaceType
+public interface SySpaceRGBAPreType
+  extends SySpaceType, ColorSpaceTagLinearRGBType
 {
   // No value-level representation.
 }

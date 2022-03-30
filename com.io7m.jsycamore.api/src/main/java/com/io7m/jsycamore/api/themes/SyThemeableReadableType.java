@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.api.themes;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * The type of readable objects that can have theme information applied to
@@ -26,6 +27,23 @@ import java.util.List;
 
 public interface SyThemeableReadableType
 {
+  /**
+   * Obtain the list of theme classes in preference order that are the default
+   * classes for a particular type of component.
+   *
+   * @return The list of theme classes
+   */
+
+  List<SyThemeClassNameType> themeClassesDefaultForComponent();
+
+  /**
+   * Obtain the list of extra theme classes in preference order.
+   *
+   * @return The list of theme classes
+   */
+
+  List<SyThemeClassNameType> themeClassesExtra();
+
   /**
    * Obtain the list of theme classes in preference order. When searching for
    * theme information, the theme will be consulted for each class in the list
@@ -38,5 +56,11 @@ public interface SyThemeableReadableType
    * @return The list of theme classes
    */
 
-  List<SyThemeClassNameType> themeClassesInPreferenceOrder();
+  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  {
+    return Stream.concat(
+      this.themeClassesExtra().stream(),
+      this.themeClassesDefaultForComponent().stream()
+    ).toList();
+  }
 }

@@ -22,23 +22,30 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyActive;
+import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyVisibility;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import org.osgi.annotation.versioning.ProviderType;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.components.SyVisibility.VISIBILITY_VISIBLE;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * A convenient abstract implementation of a component, to make it easier to
@@ -53,10 +60,16 @@ public abstract class SyComponentAbstract implements SyComponentType
   private final AttributeType<SyVisibility> visibility;
   private final AttributeType<PVector2I<SySpaceParentRelativeType>> position;
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> size;
+  private final List<SyThemeClassNameType> themeClassesExtra;
   private volatile boolean mouseOver;
+  private volatile boolean mouseAcceptQuery = true;
 
-  protected SyComponentAbstract()
+  protected SyComponentAbstract(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
+    this.themeClassesExtra =
+      Objects.requireNonNull(inThemeClassesExtra, "themeClassesExtra");
+
     final var attributes =
       SyComponentAttributes.get();
 
@@ -91,6 +104,25 @@ public abstract class SyComponentAbstract implements SyComponentType
       return targetY >= viewportMinY && targetY <= viewportMaxY;
     }
     return false;
+  }
+
+  @Override
+  public final List<SyThemeClassNameType> themeClassesExtra()
+  {
+    return this.themeClassesExtra;
+  }
+
+  @Override
+  public final boolean isMouseQueryAccepting()
+  {
+    return this.mouseAcceptQuery;
+  }
+
+  @Override
+  public final void setMouseQueryAccepting(
+    final boolean accepting)
+  {
+    this.mouseAcceptQuery = accepting;
   }
 
   @Override
@@ -153,14 +185,14 @@ public abstract class SyComponentAbstract implements SyComponentType
   }
 
   @Override
-  public final boolean eventSend(
+  public final SyEventConsumed eventSend(
     final SyEventType event)
   {
     /*
      * Only deliver the event to this component if it is active.
      */
 
-    boolean consumed = true;
+    SyEventConsumed consumed = EVENT_CONSUMED;
     if (this.isActive()) {
       consumed = this.onEvent(event);
     }
@@ -170,7 +202,7 @@ public abstract class SyComponentAbstract implements SyComponentType
      * the parent component instead.
      */
 
-    if (!consumed) {
+    if (consumed == EVENT_NOT_CONSUMED) {
       final var parentOpt = this.node.parent();
       if (parentOpt.isPresent()) {
         final SyComponentType parent = parentOpt.get().value();
@@ -190,13 +222,18 @@ public abstract class SyComponentAbstract implements SyComponentType
    * @return {@code true} if the event has been consumed
    */
 
-  protected abstract boolean onEvent(SyEventType event);
+  protected abstract SyEventConsumed onEvent(SyEventType event);
 
   @Override
   public final Optional<SyComponentType> componentForWindowRelative(
     final PVector2I<SySpaceWindowType> windowPosition,
-    final SyWindowViewportAccumulatorType context)
+    final SyWindowViewportAccumulatorType context,
+    final SyComponentQuery query)
   {
+    Objects.requireNonNull(windowPosition, "windowPosition");
+    Objects.requireNonNull(context, "context");
+    Objects.requireNonNull(query, "query");
+
     /*
      * If this component is invisible, then none of the children are
      * visible either and so there's no point returning them.
@@ -229,13 +266,21 @@ public abstract class SyComponentAbstract implements SyComponentType
           final var child =
             childNode.value();
           final var childOpt =
-            child.componentForWindowRelative(windowPosition, context);
+            child.componentForWindowRelative(windowPosition, context, query);
           if (childOpt.isPresent()) {
             return childOpt;
           }
         }
 
-        return Optional.of(this);
+        return switch (query) {
+          case FIND_SPATIALLY -> Optional.of(this);
+          case FIND_FOR_MOUSE_CURSOR -> {
+            if (this.isMouseQueryAccepting()) {
+              yield Optional.of(this);
+            }
+            yield Optional.empty();
+          }
+        };
       }
 
       return Optional.empty();

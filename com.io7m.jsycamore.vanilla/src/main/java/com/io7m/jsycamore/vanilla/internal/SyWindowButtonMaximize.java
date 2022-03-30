@@ -33,11 +33,11 @@ public final class SyWindowButtonMaximize
 {
   SyWindowButtonMaximize()
   {
-    super(WINDOW_BUTTON_MAXIMIZE);
+    super(WINDOW_BUTTON_MAXIMIZE, List.of());
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_BUTTON_MAXIMIZE, BUTTON);
   }

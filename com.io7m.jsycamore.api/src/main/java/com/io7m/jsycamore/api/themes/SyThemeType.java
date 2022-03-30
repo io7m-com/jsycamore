@@ -16,16 +16,6 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.api.rendering.SyPaintEdgeType;
-import com.io7m.jsycamore.api.rendering.SyPaintFillType;
-import com.io7m.jsycamore.api.rendering.SyPaintFlat;
-import com.io7m.jsycamore.api.themes.SyThemeParameterType.SyParameterColorRGBA;
-
-import java.util.Map;
-import java.util.Optional;
-
-import static com.io7m.jsycamore.api.themes.SyThemeParameterType.SyParameterString;
-
 /**
  * A theme instance.
  */
@@ -44,93 +34,8 @@ public interface SyThemeType extends SyThemeWindowType
     SyThemeableReadableType component);
 
   /**
-   * Set the value of a parameter.
-   *
-   * @param parameter The parameter
+   * @return The theme values
    */
 
-  void setParameter(
-    SyThemeParameterType parameter);
-
-  /**
-   * @return A read-only view of the theme's declared parameters
-   */
-
-  Map<String, SyThemeParameterType> parameters();
-
-  /**
-   * Retrieve a parameter by name.
-   *
-   * @param parameter The parameter
-   *
-   * @return A parameter, if one exists
-   */
-
-  default Optional<SyThemeParameterType> parameterFor(
-    final SyThemeParameterType parameter)
-  {
-    return Optional.ofNullable(this.parameters().get(parameter.name()));
-  }
-
-  /**
-   * Retrieve a parameter by name.
-   *
-   * @param parameter The parameter
-   *
-   * @return A parameter, if one exists
-   */
-
-  default Optional<SyParameterString> parameterForString(
-    final SyThemeParameterType parameter)
-  {
-    return Optional.ofNullable(this.parameters().get(parameter.name()))
-      .map(SyParameterString.class::cast);
-  }
-
-  /**
-   * Retrieve a parameter by name.
-   *
-   * @param parameter The parameter
-   *
-   * @return A parameter, if one exists
-   */
-
-  default Optional<SyParameterColorRGBA> parameterForRGBA(
-    final SyThemeParameterType parameter)
-  {
-    return Optional.ofNullable(this.parameters().get(parameter.name()))
-      .map(SyParameterColorRGBA.class::cast);
-  }
-
-  /**
-   * Retrieve a parameter by name.
-   *
-   * @param parameter The parameter
-   *
-   * @return A parameter, if one exists
-   */
-
-  default Optional<SyPaintFillType> parameterForFillRGBA(
-    final SyThemeParameterType parameter)
-  {
-    return Optional.ofNullable(this.parameters().get(parameter.name()))
-      .map(SyParameterColorRGBA.class::cast)
-      .map(x -> new SyPaintFlat(x.value()));
-  }
-
-  /**
-   * Retrieve a parameter by name.
-   *
-   * @param parameter The parameter
-   *
-   * @return A parameter, if one exists
-   */
-
-  default Optional<SyPaintEdgeType> parameterForEdgeRGBA(
-    final SyThemeParameterType parameter)
-  {
-    return Optional.ofNullable(this.parameters().get(parameter.name()))
-      .map(SyParameterColorRGBA.class::cast)
-      .map(x -> new SyPaintFlat(x.value()));
-  }
+  SyThemeValuesType values();
 }

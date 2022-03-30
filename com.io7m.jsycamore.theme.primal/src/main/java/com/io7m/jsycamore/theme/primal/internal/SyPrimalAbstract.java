@@ -21,10 +21,9 @@ import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeComponentType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
-
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.TEXT_FONT;
 
 /**
  * The base type of theme components in the Primal theme.
@@ -43,7 +42,8 @@ public abstract class SyPrimalAbstract implements SyThemeComponentType
   public SyPrimalAbstract(
     final SyThemePrimal inTheme)
   {
-    this.theme = Objects.requireNonNull(inTheme, "theme");
+    this.theme =
+      Objects.requireNonNull(inTheme, "theme");
   }
 
   /**
@@ -74,7 +74,11 @@ public abstract class SyPrimalAbstract implements SyThemeComponentType
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    return context.fonts()
-      .get(this.theme.parameterForString(TEXT_FONT).orElseThrow().value());
+    try {
+      return context.fonts()
+        .get(this.theme.values().font(SyPrimalValues.TEXT_FONT));
+    } catch (final SyThemeValueException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

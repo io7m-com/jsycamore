@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.windows;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
@@ -59,12 +60,16 @@ public interface SyWindowType extends SyWindowReadableType
    * Find a component given a viewport position.
    *
    * @param position The position
+   * @param query    The type of position query
    *
    * @return A component, if any
+   *
+   * @see com.io7m.jsycamore.api.mouse.SyMouseAcceptingReadableType
    */
 
   Optional<SyComponentType> componentForViewportPosition(
-    PVector2I<SySpaceViewportType> position);
+    PVector2I<SySpaceViewportType> position,
+    SyComponentQuery query);
 
   /**
    * Transform the given viewport position to a window-relative position.
@@ -81,12 +86,16 @@ public interface SyWindowType extends SyWindowReadableType
    * Find the component under the given window-relative position.
    *
    * @param w_position The window-relative position
+   * @param query      The type of position query
    *
    * @return The component, if any
+   *
+   * @see com.io7m.jsycamore.api.mouse.SyMouseAcceptingReadableType
    */
 
   Optional<SyComponentType> componentForWindowPosition(
-    PVector2I<SySpaceWindowType> w_position);
+    PVector2I<SySpaceWindowType> w_position,
+    SyComponentQuery query);
 
   /**
    * Toggle the "maximized" nature of the window.

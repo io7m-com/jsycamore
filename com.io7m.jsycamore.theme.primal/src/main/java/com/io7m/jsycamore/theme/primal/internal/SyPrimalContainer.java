@@ -16,16 +16,12 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
-import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
-import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
-import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A theme component for containers.
@@ -53,16 +49,6 @@ public final class SyPrimalContainer extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-    final var rectAll =
-      new SyShapeRectangle<SySpaceComponentRelativeType>(
-        PAreasI.create(0, 0, area.sizeX(), area.sizeY()));
-
-    return new SyRenderNodeShape(
-      Optional.empty(),
-      Optional.empty(),
-      rectAll
-    );
+    return SyRenderNodeNoop.noop();
   }
 }

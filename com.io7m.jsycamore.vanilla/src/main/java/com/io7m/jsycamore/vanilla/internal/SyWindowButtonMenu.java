@@ -32,11 +32,11 @@ public final class SyWindowButtonMenu extends SyWindowButtonComponent
 {
   SyWindowButtonMenu()
   {
-    super(WINDOW_BUTTON_MENU);
+    super(WINDOW_BUTTON_MENU, List.of());
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_BUTTON_MENU, BUTTON);
   }

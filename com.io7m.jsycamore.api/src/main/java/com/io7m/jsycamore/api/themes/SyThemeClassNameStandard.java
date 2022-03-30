@@ -179,7 +179,13 @@ public enum SyThemeClassNameStandard
    * The title component for a window.
    */
 
-  WINDOW_TITLE("WindowTitle");
+  WINDOW_TITLE("WindowTitle"),
+
+  /**
+   * The title text component for a window.
+   */
+
+  WINDOW_TITLE_TEXT("WindowTitleText");
 
   private final String className;
 

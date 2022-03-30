@@ -30,7 +30,7 @@ public interface SyMeterReadableType
   extends SyComponentReadableType
 {
   @Override
-  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(METER);
   }

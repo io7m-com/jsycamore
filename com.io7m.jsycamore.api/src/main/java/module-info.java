@@ -23,11 +23,13 @@ module com.io7m.jsycamore.api
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires transitive com.io7m.jattribute.core;
+  requires transitive com.io7m.jcolorspace.core;
+  requires transitive com.io7m.jorchard.core;
+  requires transitive com.io7m.jregions.core;
+  requires transitive com.io7m.jtensors.core;
+
   requires com.io7m.jaffirm.core;
-  requires com.io7m.jattribute.core;
-  requires com.io7m.jorchard.core;
-  requires com.io7m.jregions.core;
-  requires com.io7m.jtensors.core;
   requires com.io7m.junreachable.core;
 
   exports com.io7m.jsycamore.api.colors;

@@ -20,7 +20,13 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
 import com.io7m.jsycamore.api.components.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyButtonWithTextType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * A button with a text label.
@@ -36,10 +42,14 @@ public final class SyButton
 
   /**
    * A button with a text label.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
    */
 
-  public SyButton()
+  public SyButton(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
+    super(inThemeClassesExtra);
     this.margin = new SyLayoutMargin();
     this.margin.setPaddingAll(8);
 
@@ -53,6 +63,34 @@ public final class SyButton
     this.align.childAdd(this.text);
     this.margin.childAdd(this.align);
     this.childAdd(this.margin);
+
+    this.margin.setMouseQueryAccepting(false);
+    this.align.setMouseQueryAccepting(false);
+    this.text.setMouseQueryAccepting(false);
+  }
+
+  /**
+   * A button with a text label.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param initialText         The initial text
+   */
+
+  public SyButton(
+    final List<SyThemeClassNameType> inThemeClassesExtra,
+    final String initialText)
+  {
+    this(inThemeClassesExtra);
+    this.setText(initialText);
+  }
+
+  /**
+   * A button with a text label.
+   */
+
+  public SyButton()
+  {
+    this(List.of());
   }
 
   /**
@@ -64,15 +102,15 @@ public final class SyButton
   public SyButton(
     final String initialText)
   {
-    this();
+    this(List.of());
     this.setText(initialText);
   }
 
   @Override
-  protected boolean onOtherEvent(
+  protected SyEventConsumed onOtherEvent(
     final SyEventType event)
   {
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override

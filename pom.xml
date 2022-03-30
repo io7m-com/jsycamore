@@ -28,6 +28,7 @@
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.theme.primal</module>
     <module>com.io7m.jsycamore.components.standard</module>
+    <module>com.io7m.jsycamore.theme.spi</module>
   </modules>
 
   <properties>
@@ -143,6 +144,16 @@
         <groupId>com.io7m.jattribute</groupId>
         <artifactId>com.io7m.jattribute.core</artifactId>
         <version>0.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jcolorspace</groupId>
+        <artifactId>com.io7m.jcolorspace.core</artifactId>
+        <version>0.0.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jgrapht</groupId>
+        <artifactId>jgrapht-core</artifactId>
+        <version>1.5.1</version>
       </dependency>
 
       <dependency>

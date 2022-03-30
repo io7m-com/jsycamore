@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,31 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.rendering;
-
-import com.io7m.jsycamore.api.spaces.SySpaceType;
-
-import java.util.List;
-import java.util.Objects;
-
 /**
- * A list of painted groups.
- *
- * @param groups The groups in draw order
- * @param <T>    The coordinate system space
+ * Embedded GUI library (Theme SPI [internal])
  */
 
-public record SyPaintedGroups<T extends SySpaceType>(
-  List<SyPaintedGroup<T>> groups)
-{
-  /**
-   * A list of painted groups.
-   *
-   * @param groups The groups in draw order
-   */
+@Version("1.0.0")
+package com.io7m.jsycamore.theme.spi.internal;
 
-  public SyPaintedGroups
-  {
-    Objects.requireNonNull(groups, "groups");
-  }
-}
+import org.osgi.annotation.versioning.Version;

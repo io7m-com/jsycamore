@@ -19,21 +19,33 @@ package com.io7m.jsycamore.theme.primal.internal;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
-import com.io7m.jsycamore.api.rendering.SyPaintFillType;
+import com.io7m.jsycamore.api.rendering.SyEmbossedRectangle;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_DISABLED_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_OVER_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BUTTON_PRESSED_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.EDGE;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.BUTTON_EMBOSS_THICKNESS;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.BUTTON_PRESSED;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_EAST;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_INACTIVE_EAST;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_INACTIVE_NORTH;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_INACTIVE_SOUTH;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_INACTIVE_WEST;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_NORTH;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_SOUTH;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_WEST;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_BACKGROUND;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_EDGE;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_INACTIVE;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_OVER;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.UNMATCHED;
 
 /**
  * A theme component for buttons.
@@ -53,14 +65,239 @@ public final class SyPrimalButton extends SyPrimalAbstract
     super(inTheme);
   }
 
-  private static Optional<SyPaintFillType> renderForButton(
-    final SyThemePrimal theme,
-    final SyButtonReadableType button)
+  private SyRenderNodeType renderForActiveOverButton(
+    final SyButtonReadableType button,
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
   {
+    final var values = this.theme().values();
+    final var area = rectangle.area();
+
     if (button.isPressed()) {
-      return theme.parameterForFillRGBA(BUTTON_PRESSED_FILL);
+      final var embossed =
+        SyEmbossedRectangle.emboss(
+          area,
+          values.fillFlat(EMBOSS_SOUTH),
+          values.fillFlat(EMBOSS_WEST),
+          values.fillFlat(EMBOSS_NORTH),
+          values.fillFlat(EMBOSS_EAST),
+          1,
+          values.integer(BUTTON_EMBOSS_THICKNESS)
+        );
+
+      final SyRenderNodeShape embossW =
+        new SyRenderNodeShape(
+          Optional.empty(),
+          Optional.of(embossed.fillWest()),
+          embossed.shapeWest()
+        );
+
+      final SyRenderNodeShape embossS =
+        new SyRenderNodeShape(
+          Optional.empty(),
+          Optional.of(embossed.fillSouth()),
+          embossed.shapeSouth()
+        );
+
+      final SyRenderNodeShape embossN =
+        new SyRenderNodeShape(
+          Optional.empty(),
+          Optional.of(embossed.fillNorth()),
+          embossed.shapeNorth()
+        );
+
+      final SyRenderNodeShape embossE =
+        new SyRenderNodeShape(
+          Optional.empty(),
+          Optional.of(embossed.fillEast()),
+          embossed.shapeEast()
+        );
+
+      final var mainFill =
+        new SyRenderNodeShape(
+          Optional.empty(),
+          Optional.of(values.fillFlat(BUTTON_PRESSED)),
+          rectangle
+        );
+
+      final var mainEdge =
+        new SyRenderNodeShape(
+          Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+          Optional.empty(),
+          rectangle
+        );
+
+      return SyRenderNodeComposite.composite(
+        mainFill, embossN, embossE, embossS, embossW, mainEdge
+      );
     }
-    return theme.parameterForFillRGBA(BACKGROUND_OVER_FILL);
+
+    final var embossed =
+      SyEmbossedRectangle.emboss(
+        area,
+        values.fillFlat(EMBOSS_NORTH),
+        values.fillFlat(EMBOSS_EAST),
+        values.fillFlat(EMBOSS_SOUTH),
+        values.fillFlat(EMBOSS_WEST),
+        1,
+        values.integer(BUTTON_EMBOSS_THICKNESS)
+      );
+
+    final SyRenderNodeShape embossW =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillWest()),
+        embossed.shapeWest()
+      );
+
+    final SyRenderNodeShape embossS =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillSouth()),
+        embossed.shapeSouth()
+      );
+
+    final SyRenderNodeShape embossN =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillNorth()),
+        embossed.shapeNorth()
+      );
+
+    final SyRenderNodeShape embossE =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillEast()),
+        embossed.shapeEast()
+      );
+
+    final var mainFill =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(values.fillFlat(PRIMARY_OVER)),
+        rectangle
+      );
+
+    final var mainEdge =
+      new SyRenderNodeShape(
+        Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+        Optional.empty(),
+        rectangle
+      );
+
+    return SyRenderNodeComposite.composite(
+      mainFill, embossN, embossE, embossS, embossW, mainEdge
+    );
+  }
+
+  private SyRenderNodeType renderForActiveNotOverButton(
+    final SyButtonReadableType button,
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
+  {
+    final var values = this.theme().values();
+
+    final var embossed =
+      SyEmbossedRectangle.emboss(
+        rectangle.area(),
+        values.fillFlat(EMBOSS_NORTH),
+        values.fillFlat(EMBOSS_EAST),
+        values.fillFlat(EMBOSS_SOUTH),
+        values.fillFlat(EMBOSS_WEST),
+        1,
+        values.integer(BUTTON_EMBOSS_THICKNESS)
+      );
+
+    final SyRenderNodeShape embossW =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillWest()),
+        embossed.shapeWest()
+      );
+
+    final SyRenderNodeShape embossS =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillSouth()),
+        embossed.shapeSouth()
+      );
+
+    final SyRenderNodeShape embossN =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillNorth()),
+        embossed.shapeNorth()
+      );
+
+    final SyRenderNodeShape embossE =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillEast()),
+        embossed.shapeEast()
+      );
+
+    final var mainFill =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
+        rectangle
+      );
+
+    final var mainEdge =
+      new SyRenderNodeShape(
+        Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+        Optional.empty(),
+        rectangle
+      );
+
+    return SyRenderNodeComposite.composite(
+      mainFill, embossN, embossE, embossS, embossW, mainEdge
+    );
+  }
+
+  private SyRenderNodeType renderForActiveNotOver(
+    final SyComponentReadableType component,
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
+  {
+    if (component instanceof SyButtonReadableType button) {
+      return this.renderForActiveNotOverButton(button, rectangle);
+    }
+
+    final var values = this.theme().values();
+    return new SyRenderNodeShape(
+      Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+      Optional.of(values.fillFlat(UNMATCHED)),
+      rectangle
+    );
+  }
+
+  private SyRenderNodeType renderForActiveOver(
+    final SyComponentReadableType component,
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
+  {
+    if (component instanceof SyButtonReadableType button) {
+      return this.renderForActiveOverButton(button, rectangle);
+    }
+
+    final var values = this.theme().values();
+    return new SyRenderNodeShape(
+      Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+      Optional.of(values.fillFlat(UNMATCHED)),
+      rectangle
+    );
+  }
+
+  private SyRenderNodeType renderForActive(
+    final SyComponentReadableType component,
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
+  {
+    if (component.isMouseOver()) {
+      return this.renderForActiveOver(component, rectangle);
+    }
+    return this.renderForActiveNotOver(component, rectangle);
   }
 
   @Override
@@ -71,31 +308,85 @@ public final class SyPrimalButton extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-    final var rectAll =
-      new SyShapeRectangle<SySpaceComponentRelativeType>(
-        PAreasI.cast(PAreasI.moveToOrigin(area)));
+    try {
+      final var area =
+        component.boundingArea();
+      final var rectangle =
+        new SyShapeRectangle<SySpaceComponentRelativeType>(
+          PAreasI.cast(PAreasI.moveToOrigin(area))
+        );
 
-    final Optional<SyPaintFillType> fill;
-    final var theme = this.theme();
-    if (component.isActive()) {
-      if (component.isMouseOver()) {
-        if (component instanceof SyButtonReadableType button) {
-          fill = renderForButton(theme, button);
-        } else {
-          fill = theme.parameterForFillRGBA(BACKGROUND_OVER_FILL);
-        }
-      } else {
-        fill = theme.parameterForFillRGBA(BACKGROUND_FILL);
+      if (component.isActive()) {
+        return this.renderForActive(component, rectangle);
       }
-    } else {
-      fill = theme.parameterForFillRGBA(BACKGROUND_DISABLED_FILL);
+
+      return this.renderNotActive(rectangle);
+    } catch (final SyThemeValueException e) {
+      throw new IllegalStateException(e);
     }
+  }
 
-    final var edge =
-      theme.parameterForEdgeRGBA(EDGE);
+  private SyRenderNodeType renderNotActive(
+    final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
+    throws SyThemeValueException
+  {
+    final var values = this.theme().values();
 
-    return new SyRenderNodeShape(edge, fill, rectAll);
+    final var embossed =
+      SyEmbossedRectangle.emboss(
+        rectangle.area(),
+        values.fillFlat(EMBOSS_INACTIVE_NORTH),
+        values.fillFlat(EMBOSS_INACTIVE_EAST),
+        values.fillFlat(EMBOSS_INACTIVE_SOUTH),
+        values.fillFlat(EMBOSS_INACTIVE_WEST),
+        1,
+        values.integer(BUTTON_EMBOSS_THICKNESS)
+      );
+
+    final SyRenderNodeShape embossW =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillWest()),
+        embossed.shapeWest()
+      );
+
+    final SyRenderNodeShape embossS =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillSouth()),
+        embossed.shapeSouth()
+      );
+
+    final SyRenderNodeShape embossN =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillNorth()),
+        embossed.shapeNorth()
+      );
+
+    final SyRenderNodeShape embossE =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(embossed.fillEast()),
+        embossed.shapeEast()
+      );
+
+    final var mainFill =
+      new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(values.fillFlat(PRIMARY_INACTIVE)),
+        rectangle
+      );
+
+    final var mainEdge =
+      new SyRenderNodeShape(
+        Optional.of(values.edgeFlat(PRIMARY_EDGE)),
+        Optional.empty(),
+        rectangle
+      );
+
+    return SyRenderNodeComposite.composite(
+      mainFill, embossN, embossE, embossS, embossW, mainEdge
+    );
   }
 }

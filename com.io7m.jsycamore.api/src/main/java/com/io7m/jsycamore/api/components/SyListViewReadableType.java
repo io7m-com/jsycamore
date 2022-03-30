@@ -30,7 +30,7 @@ public interface SyListViewReadableType
   extends SyContainerReadableType
 {
   @Override
-  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(LIST_VIEW);
   }

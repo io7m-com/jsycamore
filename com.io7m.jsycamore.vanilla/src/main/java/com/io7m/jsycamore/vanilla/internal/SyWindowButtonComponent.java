@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jsycamore.api.components.SyButtonType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -24,10 +25,16 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * The base type of window button components.
@@ -40,9 +47,10 @@ public abstract class SyWindowButtonComponent
   private Runnable listener;
 
   protected SyWindowButtonComponent(
-    final SyWindowDecorationComponent inSemantic)
+    final SyWindowDecorationComponent inSemantic,
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inSemantic);
+    super(inSemantic, inThemeClassesExtra);
     this.listener = () -> {
     };
   }
@@ -54,16 +62,16 @@ public abstract class SyWindowButtonComponent
   }
 
   @Override
-  protected final boolean onEvent(
+  protected final SyEventConsumed onEvent(
     final SyEventType event)
   {
     if (event instanceof SyMouseEventType mouseEvent) {
       return this.onMouseEvent(mouseEvent);
     }
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
-  private boolean onMouseEvent(
+  private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
     /*
@@ -72,11 +80,11 @@ public abstract class SyWindowButtonComponent
 
     if (event instanceof SyMouseEventOnOver) {
       this.setMouseOver(true);
-      return true;
+      return EVENT_CONSUMED;
     }
     if (event instanceof SyMouseEventOnNoLongerOver) {
       this.setMouseOver(false);
-      return true;
+      return EVENT_CONSUMED;
     }
 
     /*
@@ -88,10 +96,10 @@ public abstract class SyWindowButtonComponent
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
           this.pressed = true;
-          yield true;
+          yield EVENT_CONSUMED;
         }
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }
@@ -106,16 +114,21 @@ public abstract class SyWindowButtonComponent
         case MOUSE_BUTTON_LEFT -> {
           this.window()
             .flatMap(window -> {
-              return window.componentForViewportPosition(onHeld.mousePositionNow());
+              return window.componentForViewportPosition(
+                onHeld.mousePositionNow(), FIND_FOR_MOUSE_CURSOR);
             })
             .flatMap(component -> {
               this.setMouseOver(Objects.equals(component, this));
-              return Optional.empty();
+              return Optional.of(component);
+            })
+            .orElseGet(() -> {
+              this.setMouseOver(false);
+              return null;
             });
-          yield true;
+          yield EVENT_CONSUMED;
         }
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }
@@ -147,16 +160,16 @@ public abstract class SyWindowButtonComponent
           }
 
           this.pressed = false;
-          yield true;
+          yield EVENT_CONSUMED;
         }
 
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> {
-          yield false;
+          yield EVENT_NOT_CONSUMED;
         }
       };
     }
 
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   protected abstract void onClicked();

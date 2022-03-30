@@ -23,10 +23,11 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
 
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.TEXT_COLOR;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_FOREGROUND;
 
 /**
  * A theme component for text views.
@@ -59,13 +60,18 @@ public final class SyPrimalTextView extends SyPrimalAbstract
 
     if (component instanceof SyTextViewReadableType textView) {
       final var theme = this.theme();
-      return new SyRenderNodeText(
-        theme.parameterForFillRGBA(TEXT_COLOR).orElseThrow(),
-        PAreaSizeI.of(area.sizeX(), area.sizeY()),
-        this.font(context, component),
-        textView.text().get()
-      );
+      try {
+        return new SyRenderNodeText(
+          theme.values().fillFlat(PRIMARY_FOREGROUND),
+          PAreaSizeI.of(area.sizeX(), area.sizeY()),
+          this.font(context, component),
+          textView.text().get()
+        );
+      } catch (final SyThemeValueException e) {
+        throw new IllegalStateException(e);
+      }
     }
-    return new SyRenderNodeNoop();
+
+    return SyRenderNodeNoop.noop();
   }
 }

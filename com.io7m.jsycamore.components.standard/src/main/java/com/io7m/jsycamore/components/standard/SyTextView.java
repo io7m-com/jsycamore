@@ -20,9 +20,15 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * A simple text view.
@@ -35,19 +41,32 @@ public final class SyTextView
 
   /**
    * A simple text view.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
    */
 
-  public SyTextView()
+  public SyTextView(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
+    super(inThemeClassesExtra);
     final var attributes = SyComponentAttributes.get();
     this.text = attributes.create("");
   }
 
+  /**
+   * A simple text view.
+   */
+
+  public SyTextView()
+  {
+    this(List.of());
+  }
+
   @Override
-  protected boolean onEvent(
+  protected SyEventConsumed onEvent(
     final SyEventType event)
   {
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override

@@ -26,11 +26,10 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
 import java.util.Optional;
-
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.UNMATCHED_FILL;
 
 /**
  * A theme component for unmatched components.
@@ -64,10 +63,17 @@ public final class SyPrimalUnmatched extends SyPrimalAbstract
       new SyShapeRectangle<SySpaceComponentRelativeType>(
         PAreasI.create(0, 0, area.sizeX(), area.sizeY()));
 
-    return new SyRenderNodeShape(
-      Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
-      this.theme().parameterForFillRGBA(UNMATCHED_FILL),
-      rectAll
-    );
+    final var values =
+      this.theme().values();
+
+    try {
+      return new SyRenderNodeShape(
+        Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
+        Optional.of(values.fillFlat(SyPrimalValues.UNMATCHED)),
+        rectAll
+      );
+    } catch (final SyThemeValueException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

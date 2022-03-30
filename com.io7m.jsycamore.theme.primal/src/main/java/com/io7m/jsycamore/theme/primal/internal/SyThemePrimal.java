@@ -16,37 +16,24 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeComponentType;
-import com.io7m.jsycamore.api.themes.SyThemeParameterType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.themes.SyThemeValuesType;
 import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_VIEW;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_DISABLED_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BACKGROUND_OVER_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.BUTTON_PRESSED_FILL;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.EDGE;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.TEXT_COLOR;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.TEXT_FONT;
-import static com.io7m.jsycamore.theme.primal.SyThemePrimalFactory.UNMATCHED_FILL;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.WINDOW_TITLE_TEXT;
 
 /**
  * An instance of the Primal theme.
@@ -64,8 +51,7 @@ public final class SyThemePrimal implements SyThemeType
 
   private final SyPrimalUnmatched unmatched;
   private final EnumMap<SyThemeClassNameStandard, SyThemeComponentType> standards;
-  private final Map<String, SyThemeParameterType> parametersRead;
-  private final Map<String, SyThemeParameterType> parameters;
+  private final SyThemeValuesType values;
 
   /**
    * An instance of the Primal theme.
@@ -73,33 +59,64 @@ public final class SyThemePrimal implements SyThemeType
 
   public SyThemePrimal()
   {
-    this.unmatched = new SyPrimalUnmatched(this);
-    this.standards = new EnumMap<>(SyThemeClassNameStandard.class);
-    this.standards.put(CONTAINER, new SyPrimalContainer(this));
-    this.standards.put(BUTTON, new SyPrimalButton(this));
-    this.standards.put(TEXT_VIEW, new SyPrimalTextView(this));
+    this.values =
+      SyPrimalValues.create();
+    this.unmatched =
+      new SyPrimalUnmatched(this);
+    this.standards =
+      new EnumMap<>(SyThemeClassNameStandard.class);
 
-    this.parameters = new ConcurrentHashMap<>(8);
+    final var windowButton = new SyPrimalWindowButton(this);
+    for (final var className : SyThemeClassNameStandard.values()) {
+      switch (className) {
+        case WINDOW_BUTTON_CLOSE,
+          WINDOW_BUTTON_MAXIMIZE,
+          WINDOW_BUTTON_MENU,
+          WINDOW_RESIZE_E,
+          WINDOW_RESIZE_N,
+          WINDOW_RESIZE_NE,
+          WINDOW_RESIZE_NW,
+          WINDOW_RESIZE_S,
+          WINDOW_RESIZE_SE,
+          WINDOW_RESIZE_SW,
+          WINDOW_RESIZE_W,
+          WINDOW_TITLE -> {
+          this.standards.put(className, windowButton);
+        }
+        case WINDOW_CONTENT_AREA, WINDOW_ROOT -> {
+          this.standards.put(className, new SyPrimalWindowContentArea(this));
+        }
+        case BUTTON -> {
+          this.standards.put(BUTTON, new SyPrimalButton(this));
+        }
+        case TEXT_VIEW -> {
+          this.standards.put(TEXT_VIEW, new SyPrimalTextView(this));
+        }
+        case CONTAINER -> {
+          this.standards.put(CONTAINER, new SyPrimalContainer(this));
+        }
+        case CHECKBOX,
+          GRID_VIEW,
+          IMAGE_VIEW,
+          LIST_VIEW,
+          MENU_BAR,
+          METER,
+          SCROLLBAR,
+          TEXT_AREA,
+          TEXT_FIELD -> {
 
-    for (final var parameter : List.of(
-      BACKGROUND_DISABLED_FILL,
-      BACKGROUND_FILL,
-      BACKGROUND_OVER_FILL,
-      BUTTON_PRESSED_FILL,
-      EDGE,
-      TEXT_COLOR,
-      TEXT_FONT,
-      UNMATCHED_FILL
-    )) {
-      Preconditions.checkPreconditionV(
-        !this.parameters.containsKey(parameter.name()),
-        "Parameter name %s must not be used twice",
-        parameter.name()
-      );
-      this.parameters.put(parameter.name(), parameter);
+        }
+        case WINDOW_TITLE_TEXT -> {
+          this.standards.put(WINDOW_TITLE_TEXT, new SyPrimalTitleTextView(this));
+        }
+      }
     }
+  }
 
-    this.parametersRead = Collections.unmodifiableMap(this.parameters);
+  @Override
+  public SyThemeValuesType values()
+  {
+    return this.values;
   }
 
   @Override
@@ -119,37 +136,18 @@ public final class SyThemePrimal implements SyThemeType
         );
       }
 
-      case WINDOW_RESIZE_NE -> {
+      case WINDOW_RESIZE_NE, WINDOW_RESIZE_SE, WINDOW_RESIZE_SW, WINDOW_RESIZE_NW -> {
         yield constraints.sizeWithin(RESIZE_BOX_SIZE, RESIZE_BOX_SIZE);
       }
 
-      case WINDOW_RESIZE_NW -> {
-        yield constraints.sizeWithin(RESIZE_BOX_SIZE, RESIZE_BOX_SIZE);
-      }
-
-      case WINDOW_RESIZE_SW -> {
-        yield constraints.sizeWithin(RESIZE_BOX_SIZE, RESIZE_BOX_SIZE);
-      }
-
-      case WINDOW_RESIZE_SE -> {
-        yield constraints.sizeWithin(RESIZE_BOX_SIZE, RESIZE_BOX_SIZE);
-      }
-
-      case WINDOW_RESIZE_S -> {
+      case WINDOW_RESIZE_S, WINDOW_RESIZE_N -> {
         yield constraints.sizeWithin(
           constraints.sizeMaximumX() - RESIZE_BOX_SIZE_DOUBLE,
           RESIZE_BAR_THICKNESS
         );
       }
 
-      case WINDOW_RESIZE_N -> {
-        yield constraints.sizeWithin(
-          constraints.sizeMaximumX() - RESIZE_BOX_SIZE_DOUBLE,
-          RESIZE_BAR_THICKNESS
-        );
-      }
-
-      case WINDOW_RESIZE_W -> {
+      case WINDOW_RESIZE_W, WINDOW_RESIZE_E -> {
         var ysub = RESIZE_BOX_SIZE;
         ysub += BORDER_THICKNESS;
         ysub += RESIZE_BOX_SIZE;
@@ -158,30 +156,7 @@ public final class SyThemePrimal implements SyThemeType
         yield constraints.sizeWithin(x, y);
       }
 
-      case WINDOW_RESIZE_E -> {
-        var ysub = RESIZE_BOX_SIZE;
-        ysub += BORDER_THICKNESS;
-        ysub += RESIZE_BOX_SIZE;
-        final var x = RESIZE_BAR_THICKNESS;
-        final var y = constraints.sizeMaximumY() - ysub;
-        yield constraints.sizeWithin(x, y);
-      }
-
-      case WINDOW_BUTTON_CLOSE -> {
-        yield constraints.sizeWithin(
-          BUTTON_SIZE,
-          BUTTON_SIZE
-        );
-      }
-
-      case WINDOW_BUTTON_MENU -> {
-        yield constraints.sizeWithin(
-          BUTTON_SIZE,
-          BUTTON_SIZE
-        );
-      }
-
-      case WINDOW_BUTTON_MAXIMIZE -> {
+      case WINDOW_BUTTON_CLOSE, WINDOW_BUTTON_MAXIMIZE, WINDOW_BUTTON_MENU -> {
         yield constraints.sizeWithin(
           BUTTON_SIZE,
           BUTTON_SIZE
@@ -204,7 +179,7 @@ public final class SyThemePrimal implements SyThemeType
     final SyWindowDecorationComponent component)
   {
     return switch (component) {
-      case WINDOW_ROOT -> {
+      case WINDOW_ROOT, WINDOW_RESIZE_NW -> {
         yield PVectors2I.zero();
       }
 
@@ -212,10 +187,6 @@ public final class SyThemePrimal implements SyThemeType
         final var x = RESIZE_BOX_SIZE;
         final var y = RESIZE_BOX_SIZE + TITLE_HEIGHT;
         yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_NW -> {
-        yield PVectors2I.zero();
       }
 
       case WINDOW_RESIZE_N -> {
@@ -323,33 +294,5 @@ public final class SyThemePrimal implements SyThemeType
       }
     }
     return this.unmatched;
-  }
-
-  @Override
-  public void setParameter(
-    final SyThemeParameterType parameter)
-  {
-    Objects.requireNonNull(parameter, "parameter");
-
-    final var existing = this.parameters.get(parameter.name());
-    if (existing != null) {
-      if (!Objects.equals(existing.type(), parameter.type())) {
-        throw new IllegalArgumentException(
-          String.format(
-            "Parameter '%s' has type '%s', but an attempt was made to provide a value of type '%s'",
-            parameter.name(),
-            existing.type(),
-            parameter.type())
-        );
-      }
-    }
-
-    this.parameters.put(parameter.name(), parameter);
-  }
-
-  @Override
-  public Map<String, SyThemeParameterType> parameters()
-  {
-    return this.parametersRead;
   }
 }

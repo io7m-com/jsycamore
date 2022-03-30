@@ -16,12 +16,14 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
 
@@ -33,18 +35,19 @@ public final class SyWindowContentArea extends SyWindowComponent
 {
   SyWindowContentArea()
   {
-    super(WINDOW_CONTENT_AREA);
+    super(WINDOW_CONTENT_AREA, List.of());
+    this.setMouseQueryAccepting(false);
   }
 
   @Override
-  protected boolean onEvent(
+  protected SyEventConsumed onEvent(
     final SyEventType event)
   {
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_CONTENT_AREA, CONTAINER);
   }

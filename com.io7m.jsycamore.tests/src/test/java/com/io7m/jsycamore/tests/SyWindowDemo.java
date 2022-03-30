@@ -21,7 +21,7 @@ import com.io7m.jsycamore.api.SyScreenType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
-import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
@@ -53,6 +53,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.Executors;
 
+import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
 import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -87,6 +88,7 @@ public final class SyWindowDemo
     private final SyScreenType screen;
     private final SyWindowType window0;
     private final SyFontDirectoryType fontDirectory;
+    private final SyThemeType theme;
     private SyRendererType renderer;
 
     Canvas()
@@ -96,12 +98,13 @@ public final class SyWindowDemo
       this.fontDirectory =
         SyFontDirectoryAWT.create();
 
-      final var theme =
-        new SyThemePrimalFactory().create();
+      this.theme =
+        new SyThemePrimalFactory()
+          .create();
 
       this.screen =
         new SyScreenFactory()
-          .create(theme, PAreaSizeI.of(800, 600));
+          .create(this.theme, PAreaSizeI.of(800, 600));
 
       this.window0 = this.screen.windowCreate(640, 480);
 
@@ -200,6 +203,7 @@ public final class SyWindowDemo
       button0.setOnClickListener(() -> LOG.debug("click 0"));
       final var button1 = new SyButton("Button 1");
       button1.setOnClickListener(() -> LOG.debug("click 1"));
+      button1.setActive(INACTIVE);
       final var button2 = new SyButton("Button 2");
       button2.setOnClickListener(() -> LOG.debug("click 2"));
 

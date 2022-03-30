@@ -19,6 +19,7 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -27,6 +28,8 @@ import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 public final class SyBlob extends SyComponentAbstract
 {
@@ -57,7 +60,7 @@ public final class SyBlob extends SyComponentAbstract
 
   public SyBlob()
   {
-
+    super(List.of());
   }
 
   public SyBlob(
@@ -97,15 +100,15 @@ public final class SyBlob extends SyComponentAbstract
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  protected SyEventConsumed onEvent(
+    final SyEventType event)
   {
-    return List.of();
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override
-  protected boolean onEvent(
-    final SyEventType event)
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    return false;
+    return List.of();
   }
 }

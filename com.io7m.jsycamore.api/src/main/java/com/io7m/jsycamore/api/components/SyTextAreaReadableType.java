@@ -30,7 +30,7 @@ public interface SyTextAreaReadableType
   extends SyComponentReadableType
 {
   @Override
-  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(TEXT_AREA);
   }

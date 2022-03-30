@@ -18,10 +18,12 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin>
@@ -102,6 +104,17 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
     assertEquals(256, b.position().get().y());
     assertEquals(0, b.size().get().sizeX());
     assertEquals(0, b.size().get().sizeY());
+  }
+
+  /**
+   * A layout doesn't accept window events.
+   */
+
+  @Test
+  public void testWindowEvents()
+  {
+    final var c = this.newComponent();
+    assertEquals(EVENT_NOT_CONSUMED, c.eventSend(new SyWindowClosed()));
   }
 
   @Override

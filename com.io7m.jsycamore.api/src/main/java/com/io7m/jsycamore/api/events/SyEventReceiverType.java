@@ -27,8 +27,8 @@ public interface SyEventReceiverType
    *
    * @param event The event
    *
-   * @return {@code true} if the event was understood and consumed
+   * @return A value indicating if the event was understood and consumed
    */
 
-  boolean eventSend(SyEventType event);
+  SyEventConsumed eventSend(SyEventType event);
 }

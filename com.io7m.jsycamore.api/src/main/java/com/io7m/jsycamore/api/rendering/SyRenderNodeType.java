@@ -24,7 +24,10 @@ import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
  */
 
 public sealed interface SyRenderNodeType
-  permits SyRenderNodeNoop, SyRenderNodeShape, SyRenderNodeText
+  permits SyRenderNodeComposite,
+  SyRenderNodeNoop,
+  SyRenderNodeShape,
+  SyRenderNodeText
 {
   /**
    * @return The bounds of the render node

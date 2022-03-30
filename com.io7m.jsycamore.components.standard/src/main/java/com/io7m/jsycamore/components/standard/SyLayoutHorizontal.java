@@ -21,8 +21,10 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,11 +39,25 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
   /**
    * A simple container that distributes child objects horizontally with a
    * configurable amount of padding between the objects.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
+   */
+
+  public SyLayoutHorizontal(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
+  {
+    super(inThemeClassesExtra);
+    this.paddingBetween = SyComponentAttributes.get().create(0);
+  }
+
+  /**
+   * A simple container that distributes child objects horizontally with a
+   * configurable amount of padding between the objects.
    */
 
   public SyLayoutHorizontal()
   {
-    this.paddingBetween = SyComponentAttributes.get().create(0);
+    this(List.of());
   }
 
   /**

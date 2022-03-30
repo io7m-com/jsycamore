@@ -19,6 +19,7 @@ package com.io7m.jsycamore.vanilla.internal;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -32,6 +33,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_ROOT;
@@ -46,7 +48,7 @@ public final class SyWindowRoot extends SyWindowComponent
 
   SyWindowRoot()
   {
-    super(WINDOW_ROOT);
+    super(WINDOW_ROOT, List.of());
 
     this.windowComponents = new EnumMap<>(SyWindowDecorationComponent.class);
     for (final var semantic : SyWindowDecorationComponent.values()) {
@@ -74,13 +76,15 @@ public final class SyWindowRoot extends SyWindowComponent
       this.windowComponents.put(semantic, component);
       this.node().childAdd(component.node());
     }
+
+    this.setMouseQueryAccepting(false);
   }
 
   @Override
-  protected boolean onEvent(
+  protected SyEventConsumed onEvent(
     final SyEventType event)
   {
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 
   @Override
@@ -161,7 +165,7 @@ public final class SyWindowRoot extends SyWindowComponent
   }
 
   @Override
-  public List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_ROOT, CONTAINER);
   }

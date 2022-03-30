@@ -16,8 +16,15 @@
 
 package com.io7m.jsycamore.api.colors;
 
+import com.io7m.jcolorspace.core.ColorSpaceTagHSVType;
+import com.io7m.jcolorspace.core.ColorSpaceTagLinearRGBType;
+import com.io7m.jcolorspace.core.HSV;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
+
+import static com.io7m.jcolorspace.core.HSV.hue;
+import static com.io7m.jcolorspace.core.HSV.saturation;
+import static com.io7m.jcolorspace.core.HSV.value;
 
 /**
  * Functions for generating and processing colors.
@@ -83,6 +90,31 @@ public final class SyColors
       clamp(color.z() - 0.1, 0.0, 1.0),
       color.w()
     );
+  }
+
+  /**
+   * Produce a 10% desaturated version of the given color.
+   *
+   * @param color The color
+   *
+   * @return A darker color
+   */
+
+  public static PVector4D<SySpaceRGBAPreType> desaturated(
+    final PVector4D<SySpaceRGBAPreType> color)
+  {
+    final var hsv =
+      HSV.toHSV((PVector4D<ColorSpaceTagLinearRGBType>) (Object) color);
+
+    final var hsvMod =
+      PVector4D.<ColorSpaceTagHSVType>of(
+        hue(hsv),
+        saturation(hsv) * 0.5,
+        value(hsv),
+        hsv.w()
+      );
+
+    return (PVector4D<SySpaceRGBAPreType>) (Object) HSV.toRGB(hsvMod);
   }
 
   /**

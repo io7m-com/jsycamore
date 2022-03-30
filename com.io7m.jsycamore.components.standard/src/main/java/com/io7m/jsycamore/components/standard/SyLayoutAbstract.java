@@ -16,33 +16,34 @@
 
 package com.io7m.jsycamore.components.standard;
 
+import com.io7m.jsycamore.api.components.SyContainerType;
+import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
+
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * The abstract base class of layout containers.
  */
 
-public abstract class SyLayoutAbstract extends SyComponentAbstract
+public abstract class SyLayoutAbstract
+  extends SyComponentAbstract
+  implements SyContainerType
 {
-  protected SyLayoutAbstract()
+  protected SyLayoutAbstract(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-
+    super(inThemeClassesExtra);
+    this.setMouseQueryAccepting(false);
   }
 
   @Override
-  public final List<SyThemeClassNameType> themeClassesInPreferenceOrder()
-  {
-    return List.of(SyThemeClassNameStandard.CONTAINER);
-  }
-
-  @Override
-  protected final boolean onEvent(
+  protected final SyEventConsumed onEvent(
     final SyEventType event)
   {
-    return false;
+    return EVENT_NOT_CONSUMED;
   }
 }

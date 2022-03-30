@@ -30,7 +30,7 @@ import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 public interface SyContainerReadableType extends SyComponentReadableType
 {
   @Override
-  default List<SyThemeClassNameType> themeClassesInPreferenceOrder()
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(CONTAINER);
   }
