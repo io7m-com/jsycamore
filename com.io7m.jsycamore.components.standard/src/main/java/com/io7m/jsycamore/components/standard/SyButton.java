@@ -122,6 +122,23 @@ public final class SyButton
     this.setOnClickListener(listener);
   }
 
+  /**
+   * A button with a text label.
+   *
+   * @param initialText The initial text
+   * @param listener    A click listener
+   */
+
+  @ConvenienceConstructor
+  public SyButton(
+    final String initialText,
+    final Runnable listener)
+  {
+    this(List.of());
+    this.setText(initialText);
+    this.setOnClickListener(listener);
+  }
+
   @Override
   protected SyEventConsumed onOtherEvent(
     final SyEventType event)

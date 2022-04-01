@@ -30,6 +30,7 @@ import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jsycamore.components.standard.SyImageView;
 import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
+import com.io7m.jsycamore.components.standard.SyLayoutVertical;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
@@ -218,8 +219,12 @@ public final class SyWindowDemo
       final var button1 = new SyButton("Button 1");
       button1.setOnClickListener(() -> LOG.debug("click 1"));
       button1.setActive(INACTIVE);
-      final var button2 = new SyButton("Button 2");
-      button2.setOnClickListener(() -> LOG.debug("click 2"));
+
+      final var vz = new SyLayoutVertical();
+      vz.childAdd(new SyButton("B0", () -> LOG.debug("B0")));
+      vz.childAdd(new SyButton("B1", () -> LOG.debug("B1")));
+      vz.childAdd(new SyButton("B2", () -> LOG.debug("B2")));
+
       final var image = new SyImageView();
       image.imageURI().set(Optional.of(
         SyWindowDemo.class.getResource("/com/io7m/jsycamore/tests/fruit.jpg").toURI()
@@ -227,7 +232,7 @@ public final class SyWindowDemo
 
       horizontal.childAdd(button0);
       horizontal.childAdd(button1);
-      horizontal.childAdd(button2);
+      horizontal.childAdd(vz);
       horizontal.childAdd(image);
 
       this.window0.decorated().set(TRUE);
