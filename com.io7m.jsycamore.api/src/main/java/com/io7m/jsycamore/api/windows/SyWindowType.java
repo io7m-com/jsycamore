@@ -132,4 +132,7 @@ public interface SyWindowType extends SyWindowReadableType
    */
 
   SyComponentType contentArea();
+
+  @Override
+  AttributeType<String> title();
 }

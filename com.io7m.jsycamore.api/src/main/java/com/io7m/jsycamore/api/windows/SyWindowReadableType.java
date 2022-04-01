@@ -46,4 +46,10 @@ public interface SyWindowReadableType
    */
 
   AttributeReadableType<Boolean> decorated();
+
+  /**
+   * @return An attribute representing the window title
+   */
+
+  AttributeReadableType<String> title();
 }

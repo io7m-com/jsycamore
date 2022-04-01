@@ -52,6 +52,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 
@@ -221,6 +223,7 @@ public final class SyWindowDemo
 
       this.window0.decorated().set(TRUE);
       this.window0.contentArea().childAdd(margin);
+      this.window0.title().set("Window Title");
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {

@@ -179,6 +179,7 @@ public final class SyAWTRendererTest
     screen.windowOpen(window);
 
     window.decorated().set(true);
+    window.title().set("Window Title");
     window.layout(layoutContext);
 
     /*
@@ -189,7 +190,7 @@ public final class SyAWTRendererTest
      */
 
     this.renderer.render(this.graphics, screen, window);
-    Thread.sleep(100L);
+    Thread.sleep(500L);
     this.renderer.render(this.graphics, screen, window);
 
     this.saveImage();

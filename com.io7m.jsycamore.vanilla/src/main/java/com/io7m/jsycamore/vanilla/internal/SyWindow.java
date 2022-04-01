@@ -55,6 +55,7 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> sizeAttribute;
   private final AttributeType<Boolean> maximized;
   private final AttributeType<Boolean> decorated;
+  private final AttributeType<String> titleText;
   private PVector2I<SySpaceViewportType> position;
   private PVector2I<SySpaceViewportType> positionMaximized;
   private PAreaSizeI<SySpaceViewportType> size;
@@ -107,6 +108,8 @@ public final class SyWindow implements SyWindowType
     this.root = new SyWindowRoot();
     this.root.setWindow(Optional.of(this));
     this.setSize(inSize);
+
+    this.titleText = this.root.title().titleText();
   }
 
   @Override
@@ -176,6 +179,12 @@ public final class SyWindow implements SyWindowType
   public SyComponentType contentArea()
   {
     return this.root.contentArea();
+  }
+
+  @Override
+  public AttributeType<String> title()
+  {
+    return this.titleText;
   }
 
   @Override

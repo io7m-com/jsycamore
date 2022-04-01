@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
 import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
@@ -76,7 +77,7 @@ public final class SyWindowTitle
     this.align.setMouseQueryAccepting(false);
 
     this.text = new SyTextView(List.of(WINDOW_TITLE_TEXT));
-    this.text.setText("Window Title");
+    this.text.setText("");
     this.text.setMouseQueryAccepting(false);
 
     this.align.childAdd(this.text);
@@ -163,5 +164,10 @@ public final class SyWindowTitle
   public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_TITLE, BUTTON);
+  }
+
+  AttributeType<String> titleText()
+  {
+    return this.text.text();
   }
 }

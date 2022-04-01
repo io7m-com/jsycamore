@@ -37,6 +37,7 @@ import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_ROOT;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_TITLE;
 
 /**
  * The window root component.
@@ -162,6 +163,11 @@ public final class SyWindowRoot extends SyWindowComponent
   public SyComponentType contentArea()
   {
     return this.windowComponents.get(WINDOW_CONTENT_AREA);
+  }
+
+  SyWindowTitle title()
+  {
+    return (SyWindowTitle) this.windowComponents.get(WINDOW_TITLE);
   }
 
   @Override
