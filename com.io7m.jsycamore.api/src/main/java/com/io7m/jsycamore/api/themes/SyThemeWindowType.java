@@ -16,11 +16,12 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
-import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+
+import java.util.Map;
 
 /**
  * Theme information for windows.
@@ -28,34 +29,6 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 public interface SyThemeWindowType
 {
-  /**
-   * Obtain the desired size of a window component.
-   *
-   * @param constraints The constraints
-   * @param component   The window component
-   *
-   * @return A size value
-   */
-
-  PAreaSizeI<SySpaceParentRelativeType> sizeForWindowDecorationComponent(
-    SyConstraints constraints,
-    SyWindowDecorationComponent component);
-
-  /**
-   * Obtain the desired position of a window component.
-   *
-   * @param sizeParent The size of the parent component
-   * @param size       The size of the window component
-   * @param component  The window component
-   *
-   * @return A position value
-   */
-
-  PVector2I<SySpaceParentRelativeType> positionForWindowDecorationComponent(
-    PAreaSizeI<SySpaceParentRelativeType> sizeParent,
-    PAreaSizeI<SySpaceParentRelativeType> size,
-    SyWindowDecorationComponent component);
-
   /**
    * Obtain the Z order for a window component. Components with higher Z values
    * are rendered over the top of components with lower Z values.
@@ -67,4 +40,18 @@ public interface SyThemeWindowType
 
   int zOrderForWindowDecorationComponent(
     SyWindowDecorationComponent component);
+
+  /**
+   * Set the positions and sizes of all window components, and execute a layout
+   * pass on each of them to allow them to lay out their own descendants.
+   *
+   * @param layoutContext     The layout context
+   * @param windowConstraints The window constraints
+   * @param windowComponents  The set of window components
+   */
+
+  void layoutWindowComponents(
+    SyLayoutContextType layoutContext,
+    SyConstraints windowConstraints,
+    Map<SyWindowDecorationComponent, SyComponentType> windowComponents);
 }

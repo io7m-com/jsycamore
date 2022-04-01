@@ -21,6 +21,7 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 
 /**
  * The type of readable windows.
@@ -84,4 +85,23 @@ public interface SyWindowReadableType
    */
 
   AttributeReadableType<SyWindowCloseBehaviour> closeButtonBehaviour();
+
+  /**
+   * @return An attribute denoting the visibility of the window's close button
+   */
+
+  AttributeReadableType<SyVisibility> closeButtonVisibility();
+
+  /**
+   * @return An attribute denoting the visibility of the window's menu button
+   */
+
+  AttributeReadableType<SyVisibility> menuButtonVisibility();
+
+  /**
+   * @return An attribute denoting the visibility of the window's maximize
+   * button
+   */
+
+  AttributeReadableType<SyVisibility> maximizeButtonVisibility();
 }

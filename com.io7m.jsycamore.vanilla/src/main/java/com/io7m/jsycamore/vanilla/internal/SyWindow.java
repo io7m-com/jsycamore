@@ -30,6 +30,7 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowID;
@@ -254,6 +255,24 @@ public final class SyWindow implements SyWindowType
   public AttributeType<SyWindowCloseBehaviour> closeButtonBehaviour()
   {
     return this.closeBehaviour;
+  }
+
+  @Override
+  public AttributeType<SyVisibility> closeButtonVisibility()
+  {
+    return this.root.closeButton().visibility();
+  }
+
+  @Override
+  public AttributeType<SyVisibility> menuButtonVisibility()
+  {
+    return this.root.menuButton().visibility();
+  }
+
+  @Override
+  public AttributeType<SyVisibility> maximizeButtonVisibility()
+  {
+    return this.root.maximizeButton().visibility();
   }
 
   @Override

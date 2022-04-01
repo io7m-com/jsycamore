@@ -18,7 +18,10 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
+import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
@@ -40,6 +43,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_INVISIBLE;
 import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -160,6 +164,12 @@ public final class SyAWTRendererTest
     );
   }
 
+  /**
+   * A simple window looks correct.
+   *
+   * @throws Exception On errors
+   */
+
   @Test
   public void testWindowSimple0()
     throws Exception
@@ -181,6 +191,175 @@ public final class SyAWTRendererTest
     window.title().set("Window Title");
     window.layout(layoutContext);
 
+    this.renderAndCompare(screen, window, "testWindow0.png");
+  }
+
+  /**
+   * A simple window looks correct with different buttons works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowNoMax()
+    throws Exception
+  {
+    final var theme =
+      new SyThemePrimalFactory()
+        .create();
+    final var layoutContext =
+      new SyLayoutContext(this.fonts, theme);
+
+    final var screen =
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
+    final var window =
+      screen.windowCreate(512, 512);
+
+    screen.windowShow(window);
+
+    window.decorated().set(true);
+    window.title().set("Window Title");
+    window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.layout(layoutContext);
+
+    this.renderAndCompare(screen, window, "testWindow_NoMax.png");
+  }
+
+  /**
+   * A simple window looks correct with different buttons works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowNoMenuNoMax()
+    throws Exception
+  {
+    final var theme =
+      new SyThemePrimalFactory()
+        .create();
+    final var layoutContext =
+      new SyLayoutContext(this.fonts, theme);
+
+    final var screen =
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
+    final var window =
+      screen.windowCreate(512, 512);
+
+    screen.windowShow(window);
+
+    window.decorated().set(true);
+    window.title().set("Window Title");
+    window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.layout(layoutContext);
+
+    this.renderAndCompare(screen, window, "testWindow_NoMenuNoMax.png");
+  }
+
+  /**
+   * A simple window looks correct with different buttons works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowNoCloseNoMenuNoMax()
+    throws Exception
+  {
+    final var theme =
+      new SyThemePrimalFactory()
+        .create();
+    final var layoutContext =
+      new SyLayoutContext(this.fonts, theme);
+
+    final var screen =
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
+    final var window =
+      screen.windowCreate(512, 512);
+
+    screen.windowShow(window);
+
+    window.decorated().set(true);
+    window.title().set("Window Title");
+    window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.layout(layoutContext);
+
+    this.renderAndCompare(screen, window, "testWindow_NoCloseNoMenuNoMax.png");
+  }
+
+  /**
+   * A simple window looks correct with different buttons works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowNoCloseNoMax()
+    throws Exception
+  {
+    final var theme =
+      new SyThemePrimalFactory()
+        .create();
+    final var layoutContext =
+      new SyLayoutContext(this.fonts, theme);
+
+    final var screen =
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
+    final var window =
+      screen.windowCreate(512, 512);
+
+    screen.windowShow(window);
+
+    window.decorated().set(true);
+    window.title().set("Window Title");
+    window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.layout(layoutContext);
+
+    this.renderAndCompare(screen, window, "testWindow_NoCloseNoMax.png");
+  }
+
+  /**
+   * A simple window looks correct with different buttons works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowNoCloseNoMenu()
+    throws Exception
+  {
+    final var theme =
+      new SyThemePrimalFactory()
+        .create();
+    final var layoutContext =
+      new SyLayoutContext(this.fonts, theme);
+
+    final var screen =
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
+    final var window =
+      screen.windowCreate(512, 512);
+
+    screen.windowShow(window);
+
+    window.decorated().set(true);
+    window.title().set("Window Title");
+    window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
+    window.layout(layoutContext);
+
+    this.renderAndCompare(screen, window, "testWindow_NoCloseNoMenu.png");
+  }
+
+  private void renderAndCompare(
+    final SyScreenType screen,
+    final SyWindowType window,
+    final String imageName)
+    throws Exception
+  {
     /*
      * Render the image twice: The window will cause a few images to be loaded,
      * and those images won't be immediately available due to the image loader
@@ -193,6 +372,6 @@ public final class SyAWTRendererTest
     this.renderer.render(this.graphics, screen, window);
 
     this.saveImage();
-    this.compareImages("testWindow0.png");
+    this.compareImages(imageName);
   }
 }

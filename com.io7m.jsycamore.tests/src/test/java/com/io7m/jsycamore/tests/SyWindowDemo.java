@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
@@ -57,6 +58,7 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 
 import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
+import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_INVISIBLE;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
 import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -115,8 +117,10 @@ public final class SyWindowDemo
           PAreaSizeI.of(800, 600)
         );
 
-      this.window0 = this.screen.windowCreate(640, 480);
-      this.window1 = this.screen.windowCreate(240, 120);
+      this.window0 =
+        this.screen.windowCreate(640, 480);
+      this.window1 =
+        this.screen.windowCreate(240, 120);
 
       this.window0.closeButtonBehaviour()
         .set(HIDE_ON_CLOSE_BUTTON);
@@ -240,6 +244,10 @@ public final class SyWindowDemo
       this.window0.title().set("Window Title");
       this.window0.positionSnapping().set(16);
       this.window0.sizeSnapping().set(16);
+
+      this.window1.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
+      this.window1.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
+      this.window1.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {

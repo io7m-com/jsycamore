@@ -17,7 +17,9 @@
 package com.io7m.jsycamore.theme.primal.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeComponentType;
@@ -26,14 +28,28 @@ import com.io7m.jsycamore.api.themes.SyThemeValuesType;
 import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
-import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_VIEW;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.WINDOW_TITLE_TEXT;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_CLOSE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_MAXIMIZE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_MENU;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_E;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_N;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_NE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_NW;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_S;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_SE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_SW;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_RESIZE_W;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_TITLE;
 
 /**
  * An instance of the Primal theme.
@@ -117,6 +133,12 @@ public final class SyThemePrimal implements SyThemeType
     }
   }
 
+  private static int verticalResizeBoxSizeY(
+    final int windowSizeY)
+  {
+    return windowSizeY - (RESIZE_BOX_SIZE + BORDER_THICKNESS + RESIZE_BOX_SIZE);
+  }
+
   @Override
   public SyThemeValuesType values()
   {
@@ -124,141 +146,254 @@ public final class SyThemePrimal implements SyThemeType
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> sizeForWindowDecorationComponent(
+  public void layoutWindowComponents(
+    final SyLayoutContextType layoutContext,
     final SyConstraints constraints,
-    final SyWindowDecorationComponent component)
+    final Map<SyWindowDecorationComponent, SyComponentType> components)
   {
-    return switch (component) {
-      case WINDOW_ROOT -> {
-        yield constraints.sizeMaximum();
-      }
+    Objects.requireNonNull(layoutContext, "layoutContext");
+    Objects.requireNonNull(constraints, "windowConstraints");
+    Objects.requireNonNull(components, "windowComponents");
 
-      case WINDOW_CONTENT_AREA -> {
-        yield constraints.sizeWithin(
-          constraints.sizeMaximumX() - (RESIZE_BOX_SIZE_DOUBLE),
-          constraints.sizeMaximumY() - (RESIZE_BOX_SIZE_DOUBLE + TITLE_HEIGHT)
-        );
-      }
+    final var windowSize =
+      constraints.<SySpaceParentRelativeType>sizeMaximum();
 
-      case WINDOW_RESIZE_NE, WINDOW_RESIZE_SE, WINDOW_RESIZE_SW, WINDOW_RESIZE_NW -> {
-        yield constraints.sizeWithin(RESIZE_BOX_SIZE, RESIZE_BOX_SIZE);
-      }
+    final var windowSizeX = windowSize.sizeX();
+    final var windowSizeY = windowSize.sizeY();
 
-      case WINDOW_RESIZE_S, WINDOW_RESIZE_N -> {
-        yield constraints.sizeWithin(
-          constraints.sizeMaximumX() - RESIZE_BOX_SIZE_DOUBLE,
-          RESIZE_BAR_THICKNESS
-        );
-      }
+    /*
+     * The content area is positioned under the title bar, and is sized such
+     * that it fits between the resize bars.
+     */
 
-      case WINDOW_RESIZE_W, WINDOW_RESIZE_E -> {
-        var ysub = RESIZE_BOX_SIZE;
-        ysub += BORDER_THICKNESS;
-        ysub += RESIZE_BOX_SIZE;
-        final var x = RESIZE_BAR_THICKNESS;
-        final var y = constraints.sizeMaximumY() - ysub;
-        yield constraints.sizeWithin(x, y);
-      }
+    {
+      final var c = components.get(WINDOW_CONTENT_AREA);
 
-      case WINDOW_BUTTON_CLOSE, WINDOW_BUTTON_MAXIMIZE, WINDOW_BUTTON_MENU -> {
-        yield constraints.sizeWithin(
-          BUTTON_SIZE,
-          BUTTON_SIZE
-        );
-      }
+      final var x = RESIZE_BOX_SIZE;
+      final var y = RESIZE_BOX_SIZE + TITLE_HEIGHT;
+      final var sizeX = windowSizeX - (RESIZE_BOX_SIZE_DOUBLE);
+      final var sizeY = windowSizeY - (RESIZE_BOX_SIZE_DOUBLE + TITLE_HEIGHT);
 
-      case WINDOW_TITLE -> {
-        yield constraints.sizeWithin(
-          constraints.sizeMaximumX() - (RESIZE_BOX_SIZE_DOUBLE + (BUTTON_SIZE + BUTTON_SIZE + BUTTON_SIZE)),
-          TITLE_HEIGHT
-        );
-      }
-    };
+      final var size =
+        PAreaSizeI.<SySpaceParentRelativeType>of(sizeX, sizeY);
+
+      c.setPosition(PVector2I.of(x, y));
+      c.setSize(size);
+    }
+
+    layoutResizeButtons(constraints, components, windowSizeX, windowSizeY);
+    layoutButtons(constraints, components, windowSizeX);
   }
 
-  @Override
-  public PVector2I<SySpaceParentRelativeType> positionForWindowDecorationComponent(
-    final PAreaSizeI<SySpaceParentRelativeType> sizeParent,
-    final PAreaSizeI<SySpaceParentRelativeType> size,
-    final SyWindowDecorationComponent component)
+  private static void layoutResizeButtons(
+    final SyConstraints constraints,
+    final Map<SyWindowDecorationComponent, SyComponentType> components,
+    final int windowSizeX,
+    final int windowSizeY)
   {
-    return switch (component) {
-      case WINDOW_ROOT, WINDOW_RESIZE_NW -> {
-        yield PVectors2I.zero();
+    layoutResizeButtonsNS(constraints, components, windowSizeX, windowSizeY);
+    layoutResizeButtonsWE(constraints, components, windowSizeX, windowSizeY);
+    layoutResizeButtonsCorners(constraints, components, windowSizeX, windowSizeY);
+  }
+
+  private static void layoutResizeButtonsCorners(
+    final SyConstraints constraints,
+    final Map<SyWindowDecorationComponent, SyComponentType> components,
+    final int windowSizeX,
+    final int windowSizeY)
+  {
+    /*
+     * The NE/SE/SW/NW resize boxes are square and are positioned in the
+     * corners.
+     */
+
+    final var resizeBoxSize =
+      constraints.<SySpaceParentRelativeType>sizeWithin(
+        RESIZE_BOX_SIZE,
+        RESIZE_BOX_SIZE);
+
+    {
+      final var c = components.get(WINDOW_RESIZE_NE);
+
+      final var x = windowSizeX - (RESIZE_BOX_SIZE + BORDER_THICKNESS);
+      final var y = 0;
+
+      c.setSize(resizeBoxSize);
+      c.setPosition(PVector2I.of(x, y));
+    }
+
+    {
+      final var c = components.get(WINDOW_RESIZE_SE);
+
+      final var x = windowSizeX - (RESIZE_BOX_SIZE + BORDER_THICKNESS);
+      final var y = windowSizeY - (RESIZE_BOX_SIZE + BORDER_THICKNESS);
+
+      c.setSize(resizeBoxSize);
+      c.setPosition(PVector2I.of(x, y));
+    }
+
+    {
+      final var c = components.get(WINDOW_RESIZE_SW);
+
+      final var x = 0;
+      final var y = windowSizeY - (RESIZE_BOX_SIZE + BORDER_THICKNESS);
+
+      c.setSize(resizeBoxSize);
+      c.setPosition(PVector2I.of(x, y));
+    }
+
+    {
+      final var c = components.get(WINDOW_RESIZE_NW);
+
+      final var x = 0;
+      final var y = 0;
+
+      c.setSize(resizeBoxSize);
+      c.setPosition(PVector2I.of(x, y));
+    }
+  }
+
+  private static void layoutResizeButtonsWE(
+    final SyConstraints constraints,
+    final Map<SyWindowDecorationComponent, SyComponentType> components,
+    final int windowSizeX,
+    final int windowSizeY)
+  {
+    /*
+     * The W/E resize bars are vertical and cover the height of the window,
+     * between the corner resize boxes.
+     */
+
+    {
+      final var c = components.get(WINDOW_RESIZE_W);
+
+      final var x = 0;
+      final var y = RESIZE_BOX_SIZE;
+      final var sizeX = RESIZE_BAR_THICKNESS;
+      final int sizeY = verticalResizeBoxSizeY(windowSizeY);
+
+      final var size =
+        constraints.<SySpaceParentRelativeType>sizeWithin(sizeX, sizeY);
+
+      c.setSize(size);
+      c.setPosition(PVector2I.of(x, y));
+    }
+
+    {
+      final var c = components.get(WINDOW_RESIZE_E);
+
+      final var x = windowSizeX - (RESIZE_BAR_THICKNESS + BORDER_THICKNESS);
+      final var y = RESIZE_BOX_SIZE;
+      final var sizeX = RESIZE_BAR_THICKNESS;
+      final int sizeY = verticalResizeBoxSizeY(windowSizeY);
+
+      final var size =
+        constraints.<SySpaceParentRelativeType>sizeWithin(sizeX, sizeY);
+
+      c.setSize(size);
+      c.setPosition(PVector2I.of(x, y));
+    }
+  }
+
+  private static void layoutResizeButtonsNS(
+    final SyConstraints constraints,
+    final Map<SyWindowDecorationComponent, SyComponentType> components,
+    final int windowSizeX,
+    final int windowSizeY)
+  {
+    /*
+     * The N/S resize bars are horizontal and cover the width of the window,
+     * between the corner resize boxes.
+     */
+
+    {
+      final var c = components.get(WINDOW_RESIZE_N);
+
+      final var x = RESIZE_BOX_SIZE;
+      final var y = 0;
+      final var sizeX = windowSizeX - RESIZE_BOX_SIZE_DOUBLE;
+      final var sizeY = RESIZE_BAR_THICKNESS;
+
+      c.setSize(constraints.sizeWithin(sizeX, sizeY));
+      c.setPosition(PVector2I.of(x, y));
+    }
+
+    {
+      final var c = components.get(WINDOW_RESIZE_S);
+
+      final var x = RESIZE_BOX_SIZE;
+      final var y = windowSizeY - (RESIZE_BOX_SIZE + BORDER_THICKNESS);
+      final var sizeX = windowSizeX - RESIZE_BOX_SIZE_DOUBLE;
+      final var sizeY = RESIZE_BAR_THICKNESS;
+
+      final var size =
+        constraints.<SySpaceParentRelativeType>sizeWithin(sizeX, sizeY);
+
+      c.setSize(size);
+      c.setPosition(PVector2I.of(x, y));
+    }
+  }
+
+  private static void layoutButtons(
+    final SyConstraints constraints,
+    final Map<SyWindowDecorationComponent, SyComponentType> components,
+    final int windowSizeX)
+  {
+    /*
+     * The window controls are positioned horizontally below the N resize
+     * box.
+     *
+     * The close button is placed first, then the title, then the menu button,
+     * and then finally the maximize button.
+     */
+
+    final var buttonSize =
+      constraints.<SySpaceParentRelativeType>sizeWithin(
+        BUTTON_SIZE,
+        BUTTON_SIZE);
+
+    {
+      final var close = components.get(WINDOW_BUTTON_CLOSE);
+      final var title = components.get(WINDOW_TITLE);
+      final var menu = components.get(WINDOW_BUTTON_MENU);
+      final var max = components.get(WINDOW_BUTTON_MAXIMIZE);
+
+      final var totalSizeX = windowSizeX - RESIZE_BOX_SIZE_DOUBLE;
+
+      close.setSize(buttonSize);
+      menu.setSize(buttonSize);
+      max.setSize(buttonSize);
+
+      final var startX = RESIZE_BOX_SIZE;
+      final var y = RESIZE_BOX_SIZE;
+
+      close.setPosition(PVector2I.of(startX, y));
+
+      var titleX = startX;
+      var titleW = totalSizeX;
+      final var maxX = (startX + totalSizeX) - buttonSize.sizeX();
+      var menuX = maxX - buttonSize.sizeX();
+
+      if (close.isVisible()) {
+        titleX += buttonSize.sizeX();
+        titleW -= buttonSize.sizeX();
       }
 
-      case WINDOW_CONTENT_AREA -> {
-        final var x = RESIZE_BOX_SIZE;
-        final var y = RESIZE_BOX_SIZE + TITLE_HEIGHT;
-        yield PVector2I.of(x, y);
+      if (menu.isVisible()) {
+        titleW -= buttonSize.sizeX();
       }
 
-      case WINDOW_RESIZE_N -> {
-        final var x = RESIZE_BOX_SIZE;
-        final var y = 0;
-        yield PVector2I.of(x, y);
+      if (max.isVisible()) {
+        titleW -= buttonSize.sizeX();
+      } else {
+        menuX = maxX;
       }
 
-      case WINDOW_RESIZE_NE -> {
-        final var x = sizeParent.sizeX() - (size.sizeX() + BORDER_THICKNESS);
-        final var y = 0;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_SE -> {
-        final var x = sizeParent.sizeX() - (size.sizeX() + BORDER_THICKNESS);
-        final var y = sizeParent.sizeY() - (size.sizeY() + BORDER_THICKNESS);
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_S -> {
-        final var x = RESIZE_BOX_SIZE;
-        final var y = sizeParent.sizeY() - (size.sizeY() + BORDER_THICKNESS);
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_SW -> {
-        final var x = 0;
-        final var y = sizeParent.sizeY() - (size.sizeY() + BORDER_THICKNESS);
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_W -> {
-        final var x = 0;
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_RESIZE_E -> {
-        final var x = sizeParent.sizeX() - (size.sizeX() + BORDER_THICKNESS);
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_BUTTON_CLOSE -> {
-        final var x = RESIZE_BOX_SIZE;
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_BUTTON_MAXIMIZE -> {
-        final var x = sizeParent.sizeX() - (RESIZE_BOX_SIZE + BUTTON_SIZE);
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_BUTTON_MENU -> {
-        final var x = sizeParent.sizeX() - (RESIZE_BOX_SIZE + BUTTON_SIZE + BUTTON_SIZE);
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-
-      case WINDOW_TITLE -> {
-        final var x = RESIZE_BOX_SIZE + BUTTON_SIZE;
-        final var y = RESIZE_BOX_SIZE;
-        yield PVector2I.of(x, y);
-      }
-    };
+      title.setSize(PAreaSizeI.of(titleW, TITLE_HEIGHT));
+      title.setPosition(PVector2I.of(titleX, y));
+      menu.setPosition(PVector2I.of(menuX, y));
+      max.setPosition(PVector2I.of(maxX, y));
+    }
   }
 
   @Override

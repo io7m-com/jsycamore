@@ -31,13 +31,17 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_CLOSE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_MAXIMIZE;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_CONTENT_AREA;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_ROOT;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_TITLE;
+import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.values;
 
 /**
  * The window root component.
@@ -46,13 +50,18 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
 public final class SyWindowRoot extends SyWindowComponent
 {
   private final EnumMap<SyWindowDecorationComponent, SyWindowComponent> windowComponents;
+  private final Map<SyWindowDecorationComponent, SyComponentType> windowComponentsView;
 
   SyWindowRoot()
   {
     super(WINDOW_ROOT, List.of());
 
-    this.windowComponents = new EnumMap<>(SyWindowDecorationComponent.class);
-    for (final var semantic : SyWindowDecorationComponent.values()) {
+    this.windowComponents =
+      new EnumMap<>(SyWindowDecorationComponent.class);
+    this.windowComponentsView =
+      (Map<SyWindowDecorationComponent, SyComponentType>) (Object) this.windowComponents;
+
+    for (final var semantic : values()) {
       if (semantic == WINDOW_ROOT) {
         continue;
       }
@@ -132,25 +141,30 @@ public final class SyWindowRoot extends SyWindowComponent
         return Integer.compare(x1, x2);
       });
 
-    for (final var entry : this.windowComponents.entrySet()) {
-      final var semantic =
-        entry.getKey();
-      final var component =
-        entry.getValue();
+    this.setSize(constraints.sizeMaximum());
+    this.setPosition(PVectors2I.zero());
 
-      final var restrictedSize =
-        theme.sizeForWindowDecorationComponent(constraints, semantic);
+    /*
+     * Now position and size the components.
+     */
+
+    theme.layoutWindowComponents(
+      layoutContext,
+      constraints,
+      this.windowComponentsView
+    );
+
+    /*
+     * Now tell the components to lay out their descendants.
+     */
+
+    for (final var component : this.windowComponentsView.values()) {
+      final var size =
+        component.size().get();
       final var componentConstraints =
-        new SyConstraints(0, 0, restrictedSize.sizeX(), restrictedSize.sizeY());
-      final var componentSize =
-        component.layout(layoutContext, componentConstraints);
+        new SyConstraints(0, 0, size.sizeX(), size.sizeY());
 
-      component.position().set(
-        theme.positionForWindowDecorationComponent(
-          this.size().get(),
-          componentSize,
-          semantic)
-      );
+      component.layout(layoutContext, componentConstraints);
     }
 
     return this.size().get();
@@ -174,5 +188,32 @@ public final class SyWindowRoot extends SyWindowComponent
   public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
     return List.of(SyThemeClassNameStandard.WINDOW_ROOT, CONTAINER);
+  }
+
+  /**
+   * @return The window's close button
+   */
+
+  public SyComponentType closeButton()
+  {
+    return this.windowComponents.get(WINDOW_BUTTON_CLOSE);
+  }
+
+  /**
+   * @return The window's menu button
+   */
+
+  public SyComponentType menuButton()
+  {
+    return this.windowComponents.get(SyWindowDecorationComponent.WINDOW_BUTTON_MENU);
+  }
+
+  /**
+   * @return The window's maximize button
+   */
+
+  public SyComponentType maximizeButton()
+  {
+    return this.windowComponents.get(WINDOW_BUTTON_MAXIMIZE);
   }
 }

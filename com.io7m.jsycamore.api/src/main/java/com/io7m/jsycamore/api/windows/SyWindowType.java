@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
@@ -144,4 +145,13 @@ public interface SyWindowType extends SyWindowReadableType
 
   @Override
   AttributeType<SyWindowCloseBehaviour> closeButtonBehaviour();
+
+  @Override
+  AttributeType<SyVisibility> closeButtonVisibility();
+
+  @Override
+  AttributeType<SyVisibility> menuButtonVisibility();
+
+  @Override
+  AttributeType<SyVisibility> maximizeButtonVisibility();
 }

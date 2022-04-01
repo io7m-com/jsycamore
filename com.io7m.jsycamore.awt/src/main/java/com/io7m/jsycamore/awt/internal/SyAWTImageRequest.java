@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.awt.internal;
 
+import com.io7m.jaffirm.core.Preconditions;
+
 import java.net.URI;
 import java.util.Objects;
 
@@ -43,5 +45,14 @@ public record SyAWTImageRequest(
   public SyAWTImageRequest
   {
     Objects.requireNonNull(source, "source");
+
+    Preconditions.checkPreconditionI(
+      width,
+      s -> s > 0,
+      "Width %d must be > 0"::formatted);
+    Preconditions.checkPreconditionI(
+      height,
+      s -> s > 0,
+      "Width %d must be > 0"::formatted);
   }
 }
