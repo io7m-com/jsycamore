@@ -55,6 +55,7 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
    * configurable amount of padding between the objects.
    */
 
+  @ConvenienceConstructor
   public SyLayoutHorizontal()
   {
     this(List.of());

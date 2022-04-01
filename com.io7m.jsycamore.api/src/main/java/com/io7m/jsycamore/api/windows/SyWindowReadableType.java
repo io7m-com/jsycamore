@@ -30,6 +30,12 @@ public interface SyWindowReadableType
   extends SyBoundedReadableType<SySpaceViewportType>
 {
   /**
+   * @return The window ID
+   */
+
+  SyWindowID id();
+
+  /**
    * @return The root window component
    */
 

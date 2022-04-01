@@ -57,6 +57,7 @@ public final class SyTextView
    * A simple text view.
    */
 
+  @ConvenienceConstructor
   public SyTextView()
   {
     this(List.of());

@@ -17,14 +17,17 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.vanilla.internal.SyWindowSet;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,19 +50,22 @@ public final class SyWindowSetTest
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
+
+    Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
+
     final var wsc0 = ws0.windowOpen(w0);
     assertEquals(Optional.of(w0), wsc0.focusGained());
     assertEquals(Optional.empty(), wsc0.focusLost());
     assertEquals(List.of(w0), wsc0.newSet().windowsOpenOrdered());
-    assertEquals(Set.of(w0), wsc0.newSet().windows());
-    assertEquals(Set.of(w0), wsc0.newSet().windowsOpen());
+    assertEquals(Map.of(w0.id(), w0), wsc0.newSet().windows());
+    assertEquals(Set.of(w0.id()), wsc0.newSet().windowsOpen());
     assertTrue(wsc0.newSet().windowIsOpen(w0));
 
     final var wsc1 = wsc0.newSet().windowClose(w0);
     assertEquals(Optional.empty(), wsc1.focusGained());
     assertEquals(Optional.of(w0), wsc1.focusLost());
     assertEquals(List.of(), wsc1.newSet().windowsOpenOrdered());
-    assertEquals(Set.of(w0), wsc1.newSet().windows());
+    assertEquals(Map.of(w0.id(), w0), wsc1.newSet().windows());
     assertEquals(Set.of(), wsc1.newSet().windowsOpen());
     assertFalse(wsc1.newSet().windowIsOpen(w0));
   }
@@ -69,11 +75,14 @@ public final class SyWindowSetTest
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
+
+    Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
+
     final var wsc0 = ws0.windowClose(w0);
     assertEquals(Optional.empty(), wsc0.focusGained());
     assertEquals(Optional.of(w0), wsc0.focusLost());
     assertEquals(List.of(), wsc0.newSet().windowsOpenOrdered());
-    assertEquals(Set.of(), wsc0.newSet().windows());
+    assertEquals(Map.of(), wsc0.newSet().windows());
     assertEquals(Set.of(), wsc0.newSet().windowsOpen());
   }
 
@@ -84,6 +93,10 @@ public final class SyWindowSetTest
     final var w0 = Mockito.mock(SyWindowType.class);
     final var w1 = Mockito.mock(SyWindowType.class);
     final var w2 = Mockito.mock(SyWindowType.class);
+
+    Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
+    Mockito.when(w1.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
+    Mockito.when(w2.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
 
     final var r0 =
       ws0.windowOpen(w0)

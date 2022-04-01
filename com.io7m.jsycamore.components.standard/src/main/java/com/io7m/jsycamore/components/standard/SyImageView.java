@@ -56,6 +56,7 @@ public final class SyImageView
    * An image view.
    */
 
+  @ConvenienceConstructor
   public SyImageView()
   {
     this(List.of());

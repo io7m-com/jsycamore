@@ -62,6 +62,7 @@ public final class SyLayoutMargin extends SyLayoutAbstract
    * space.
    */
 
+  @ConvenienceConstructor
   public SyLayoutMargin()
   {
     this(List.of());

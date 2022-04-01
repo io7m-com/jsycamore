@@ -17,14 +17,19 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.jsycamore.api.windows.SyWindowID;
+import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * An immutable window set.
@@ -32,26 +37,26 @@ import java.util.Set;
 
 public final class SyWindowSet
 {
-  private final Set<SyWindowType> windows;
-  private final Set<SyWindowType> windowsOpen;
-  private final List<SyWindowType> windowsOpenOrdered;
+  private final Map<SyWindowID, SyWindowType> windows;
+  private final Set<SyWindowID> windowsOpen;
+  private final List<SyWindowID> windowsOpenOrdered;
 
   private SyWindowSet(
-    final Set<SyWindowType> inWindows,
-    final Set<SyWindowType> inWindowsOpen,
-    final List<SyWindowType> inWindowsOpenOrdered)
+    final Map<SyWindowID, SyWindowType> inWindows,
+    final Set<SyWindowID> inWindowsOpen,
+    final List<SyWindowID> inWindowsOpenOrdered)
   {
     this.windows = inWindows;
     this.windowsOpen = inWindowsOpen;
     this.windowsOpenOrdered = inWindowsOpenOrdered;
 
-    for (final SyWindowType w : this.windowsOpen) {
+    for (final SyWindowID w : this.windowsOpen) {
       Preconditions.checkPrecondition(
         this.windowsOpenOrdered.contains(w),
         "Window order list must contain all open windows");
     }
 
-    for (final SyWindowType w : this.windowsOpenOrdered) {
+    for (final SyWindowID w : this.windowsOpenOrdered) {
       Preconditions.checkPrecondition(
         this.windowsOpen.contains(w),
         "Window open set must contain all ordered windows");
@@ -66,7 +71,7 @@ public final class SyWindowSet
 
   public static SyWindowSet empty()
   {
-    return new SyWindowSet(Set.of(), Set.of(), List.of());
+    return new SyWindowSet(Map.of(), Set.of(), List.of());
   }
 
   /**
@@ -78,14 +83,15 @@ public final class SyWindowSet
     if (this.windowsOpenOrdered.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(this.windowsOpenOrdered.get(0));
+    return Optional.of(this.windowsOpenOrdered.get(0))
+      /**/.flatMap(i -> Optional.ofNullable(this.windows.get(i)));
   }
 
   /**
    * @return The set of windows
    */
 
-  public Set<SyWindowType> windows()
+  public Map<SyWindowID, SyWindowType> windows()
   {
     return this.windows;
   }
@@ -94,7 +100,7 @@ public final class SyWindowSet
    * @return The set of windows that are open
    */
 
-  public Set<SyWindowType> windowsOpen()
+  public Set<SyWindowID> windowsOpen()
   {
     return this.windowsOpen;
   }
@@ -104,6 +110,18 @@ public final class SyWindowSet
    */
 
   public List<SyWindowType> windowsOpenOrdered()
+  {
+    return this.windowIdsOpenOrdered()
+      .stream()
+      .map(this.windows::get)
+      .toList();
+  }
+
+  /**
+   * @return The set of windows that are open in depth order
+   */
+
+  public List<SyWindowID> windowIdsOpenOrdered()
   {
     return this.windowsOpenOrdered;
   }
@@ -120,20 +138,20 @@ public final class SyWindowSet
     final SyWindowType window)
   {
     final var newWindows =
-      new HashSet<>(this.windows);
+      new HashMap<>(this.windows);
     final var newWindowsOpen =
       new HashSet<>(this.windowsOpen);
     final var newWindowsOpenOrdered =
       new LinkedList<>(this.windowsOpenOrdered);
 
-    newWindows.add(window);
-    newWindowsOpen.add(window);
-    newWindowsOpenOrdered.remove(window);
-    newWindowsOpenOrdered.addFirst(window);
+    newWindows.put(window.id(), window);
+    newWindowsOpen.add(window.id());
+    newWindowsOpenOrdered.remove(window.id());
+    newWindowsOpenOrdered.addFirst(window.id());
 
     final var newWindowSet =
       new SyWindowSet(
-        Set.copyOf(newWindows),
+        Map.copyOf(newWindows),
         Set.copyOf(newWindowsOpen),
         List.copyOf(newWindowsOpenOrdered)
       );
@@ -180,12 +198,14 @@ public final class SyWindowSet
     final var newWindowsOpenOrdered =
       new LinkedList<>(this.windowsOpenOrdered);
 
-    newWindowsOpen.remove(window);
-    newWindowsOpenOrdered.remove(window);
+    newWindowsOpen.remove(window.id());
+    newWindowsOpenOrdered.remove(window.id());
 
     final Optional<SyWindowType> focusGained;
     if (!newWindowsOpenOrdered.isEmpty()) {
-      focusGained = Optional.of(newWindowsOpenOrdered.get(0));
+      focusGained =
+        Optional.of(newWindowsOpenOrdered.get(0))
+          .flatMap(i -> Optional.ofNullable(this.windows.get(i)));
     } else {
       focusGained = Optional.empty();
     }
@@ -218,8 +238,8 @@ public final class SyWindowSet
     final var newWindowsOpenOrdered =
       new LinkedList<>(this.windowsOpenOrdered);
 
-    newWindowsOpenOrdered.remove(window);
-    newWindowsOpenOrdered.addFirst(window);
+    newWindowsOpenOrdered.remove(window.id());
+    newWindowsOpenOrdered.addFirst(window.id());
 
     /*
      * If the window wasn't the window in focus, then indicate that the
@@ -259,8 +279,22 @@ public final class SyWindowSet
    */
 
   public boolean windowIsOpen(
-    final SyWindowType window)
+    final SyWindowReadableType window)
   {
-    return this.windowsOpen.contains(window);
+    return this.windowsOpen.contains(window.id());
+  }
+
+  /**
+   * @return A window ID that is not present in this set
+   */
+
+  public SyWindowID windowFreshId()
+  {
+    while (true) {
+      final var id = new SyWindowID(UUID.randomUUID());
+      if (!this.windows.containsKey(id)) {
+        return id;
+      }
+    }
   }
 }

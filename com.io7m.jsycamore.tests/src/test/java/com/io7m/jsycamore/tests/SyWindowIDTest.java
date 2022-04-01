@@ -14,45 +14,35 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.jsycamore.tests;
 
-import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.components.standard.SyTextView;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.Provide;
 
 import java.util.UUID;
 
-import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public final class SyTextViewTest extends SyComponentContract<SyTextView>
+public final class SyWindowIDTest
 {
-  @BeforeEach
-  public void textViewSetup()
+  @Provide
+  public Arbitrary<UUID> uuid()
   {
-
+    return Arbitraries.ofSuppliers(UUID::randomUUID);
   }
 
-  /**
-   * A text view doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
+  @Property
+  public void testComparison(
+    @ForAll(value = "uuid") final UUID id0,
+    @ForAll(value = "uuid") final UUID id1)
   {
-    final var c = this.newComponent();
     assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
+      id0.compareTo(id1),
+      new SyWindowID(id0).compareTo(new SyWindowID(id1))
     );
-  }
-
-  @Override
-  protected SyTextView newComponent()
-  {
-    return new SyTextView();
   }
 }

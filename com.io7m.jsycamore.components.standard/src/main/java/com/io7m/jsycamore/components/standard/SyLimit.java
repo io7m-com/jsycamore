@@ -55,6 +55,7 @@ public final class SyLimit extends SyLayoutAbstract
    * A container that limits child components to the maximum given size.
    */
 
+  @ConvenienceConstructor
   public SyLimit()
   {
     this(List.of());

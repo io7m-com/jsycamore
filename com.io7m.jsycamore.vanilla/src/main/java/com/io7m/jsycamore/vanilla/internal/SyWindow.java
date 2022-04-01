@@ -21,15 +21,16 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
+import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
@@ -56,6 +57,7 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<Boolean> maximized;
   private final AttributeType<Boolean> decorated;
   private final AttributeType<String> titleText;
+  private final SyWindowID id;
   private PVector2I<SySpaceViewportType> position;
   private PVector2I<SySpaceViewportType> positionMaximized;
   private PAreaSizeI<SySpaceViewportType> size;
@@ -64,10 +66,13 @@ public final class SyWindow implements SyWindowType
 
   SyWindow(
     final SyScreenType inScreen,
+    final SyWindowID inId,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
     this.screen =
       Objects.requireNonNull(inScreen, "inGUI");
+    this.id =
+      Objects.requireNonNull(inId, "inId");
     this.size =
       Objects.requireNonNull(inSize, "inSize");
     this.sizeMaximized =
@@ -116,12 +121,18 @@ public final class SyWindow implements SyWindowType
   public String toString()
   {
     final StringBuilder sb = new StringBuilder(128);
-    sb.append("[SyWindow 0x");
-    sb.append(Integer.toHexString(this.hashCode()));
+    sb.append("[SyWindow ");
+    sb.append(this.id.value());
     sb.append(' ');
     PAreasI.showToBuilder(this.boundingArea(), sb);
     sb.append(']');
     return sb.toString();
+  }
+
+  @Override
+  public SyWindowID id()
+  {
+    return this.id;
   }
 
   @Override

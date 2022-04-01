@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.windows;
 
-import java.util.Objects;
+package com.io7m.jsycamore.components.standard;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A window gained focus.
- *
- * @param id The window ID
+ * An annotation designating a constructor as a non-primary convenience
+ * constructor.
  */
 
-public record SyWindowFocusGained(SyWindowID id)
-  implements SyWindowEventType
+@Documented
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.CONSTRUCTOR})
+public @interface ConvenienceConstructor
 {
-  /**
-   * A window gained focus.
-   *
-   * @param id The window ID
-   */
-  public SyWindowFocusGained
-  {
-    Objects.requireNonNull(id, "id");
-  }
+
 }

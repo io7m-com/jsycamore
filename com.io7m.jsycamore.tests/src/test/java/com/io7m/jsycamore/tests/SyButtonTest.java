@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameCustom;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
+import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
@@ -32,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
@@ -242,7 +244,10 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   public void testWindowEvents()
   {
     final var c = this.newComponent();
-    assertEquals(EVENT_NOT_CONSUMED, c.eventSend(new SyWindowClosed()));
+    assertEquals(
+      EVENT_NOT_CONSUMED,
+      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
+    );
   }
 
   @Override

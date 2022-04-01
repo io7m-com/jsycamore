@@ -16,12 +16,24 @@
 
 package com.io7m.jsycamore.api.windows;
 
+import java.util.Objects;
+
 /**
  * A window lost focus.
+ *
+ * @param id The window ID
  */
 
-public record SyWindowFocusLost()
+public record SyWindowFocusLost(SyWindowID id)
   implements SyWindowEventType
 {
-
+  /**
+   * A window lost focus.
+   *
+   * @param id The window ID
+   */
+  public SyWindowFocusLost
+  {
+    Objects.requireNonNull(id, "id");
+  }
 }

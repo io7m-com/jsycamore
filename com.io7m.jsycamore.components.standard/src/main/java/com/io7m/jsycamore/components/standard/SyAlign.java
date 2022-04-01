@@ -62,6 +62,7 @@ public final class SyAlign extends SyLayoutAbstract
    * vertical alignment.
    */
 
+  @ConvenienceConstructor
   public SyAlign()
   {
     this(List.of());

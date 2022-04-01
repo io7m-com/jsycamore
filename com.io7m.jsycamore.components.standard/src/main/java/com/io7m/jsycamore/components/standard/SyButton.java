@@ -75,6 +75,7 @@ public final class SyButton
    * @param initialText         The initial text
    */
 
+  @ConvenienceConstructor
   public SyButton(
     final List<SyThemeClassNameType> inThemeClassesExtra,
     final String initialText)
@@ -87,6 +88,7 @@ public final class SyButton
    * A button with a text label.
    */
 
+  @ConvenienceConstructor
   public SyButton()
   {
     this(List.of());
@@ -98,11 +100,26 @@ public final class SyButton
    * @param initialText The initial text
    */
 
+  @ConvenienceConstructor
   public SyButton(
     final String initialText)
   {
     this(List.of());
     this.setText(initialText);
+  }
+
+  /**
+   * A button with a text label.
+   *
+   * @param listener A click listener
+   */
+
+  @ConvenienceConstructor
+  public SyButton(
+    final Runnable listener)
+  {
+    this();
+    this.setOnClickListener(listener);
   }
 
   @Override

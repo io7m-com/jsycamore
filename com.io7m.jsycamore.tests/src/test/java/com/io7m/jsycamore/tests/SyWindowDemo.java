@@ -87,11 +87,12 @@ public final class SyWindowDemo
 
   private static final class Canvas extends JPanel
   {
-    private final SyScreenType screen;
-    private final SyWindowType window0;
     private final SyFontDirectoryType fontDirectory;
-    private final SyThemeType theme;
     private final SyRendererType renderer;
+    private final SyScreenType screen;
+    private final SyThemeType theme;
+    private final SyWindowType window0;
+    private final SyWindowType window1;
 
     Canvas()
       throws Exception
@@ -106,10 +107,14 @@ public final class SyWindowDemo
           .create();
 
       this.screen =
-        new SyScreenFactory()
-          .create(this.theme, PAreaSizeI.of(800, 600));
+        new SyScreenFactory().create(
+          this.theme,
+          this.fontDirectory,
+          PAreaSizeI.of(800, 600)
+        );
 
       this.window0 = this.screen.windowCreate(640, 480);
+      this.window1 = this.screen.windowCreate(240, 120);
 
       this.renderer = new SyAWTRenderer(this.fontDirectory);
       // this.renderer = new SyBoundsOnlyRenderer();
@@ -225,7 +230,12 @@ public final class SyWindowDemo
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {
-          this.screen.windowOpen(this.window0);
+          if (!this.screen.windowIsOpen(this.window0)) {
+            this.screen.windowOpen(this.window0);
+          }
+          if (!this.screen.windowIsOpen(this.window1)) {
+            this.screen.windowOpen(this.window1);
+          }
         });
       }, 0L, 2L, SECONDS);
     }
@@ -244,10 +254,12 @@ public final class SyWindowDemo
           this.screen.theme()
         );
 
-      this.screen.windowsOpenOrderedNow().forEach(window -> {
+      final var windows = this.screen.windowsOpenOrderedNow();
+      for (int index = windows.size() - 1; index >= 0; --index) {
+        final var window = windows.get(index);
         window.layout(layoutContext);
         this.renderer.render(g2, this.screen, window);
-      });
+      }
     }
   }
 }

@@ -17,10 +17,10 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
-import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jsycamore.components.standard.SyAlign;
+import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
+import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.components.standard.SyImageView;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 

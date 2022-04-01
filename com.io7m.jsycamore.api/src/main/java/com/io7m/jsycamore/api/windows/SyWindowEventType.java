@@ -24,7 +24,10 @@ import com.io7m.jsycamore.api.events.SyEventType;
 
 public sealed interface SyWindowEventType
   extends SyEventType
-  permits SyWindowClosed, SyWindowFocusGained, SyWindowFocusLost
+  permits SyWindowClosed,
+  SyWindowCreated,
+  SyWindowFocusGained,
+  SyWindowFocusLost
 {
 
 }

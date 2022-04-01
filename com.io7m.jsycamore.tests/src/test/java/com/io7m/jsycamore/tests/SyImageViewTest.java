@@ -18,9 +18,12 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
+import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.components.standard.SyImageView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +44,10 @@ public final class SyImageViewTest extends SyComponentContract<SyImageView>
   public void testWindowEvents()
   {
     final var c = this.newComponent();
-    assertEquals(EVENT_NOT_CONSUMED, c.eventSend(new SyWindowClosed()));
+    assertEquals(
+      EVENT_NOT_CONSUMED,
+      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
+    );
   }
 
   @Override

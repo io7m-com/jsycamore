@@ -16,12 +16,24 @@
 
 package com.io7m.jsycamore.api.windows;
 
+import java.util.Objects;
+
 /**
  * A window has been closed.
+ *
+ * @param id The window ID
  */
 
-public record SyWindowClosed()
+public record SyWindowClosed(SyWindowID id)
   implements SyWindowEventType
 {
-
+  /**
+   * A window has been closed.
+   *
+   * @param id The window ID
+   */
+  public SyWindowClosed
+  {
+    Objects.requireNonNull(id, "id");
+  }
 }

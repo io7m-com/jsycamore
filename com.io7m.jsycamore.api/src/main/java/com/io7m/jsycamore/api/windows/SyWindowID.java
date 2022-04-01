@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,23 +17,32 @@
 package com.io7m.jsycamore.api.windows;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
- * A window gained focus.
+ * A window ID.
  *
- * @param id The window ID
+ * @param value The window ID value
  */
 
-public record SyWindowFocusGained(SyWindowID id)
-  implements SyWindowEventType
+public record SyWindowID(UUID value)
+  implements Comparable<SyWindowID>
 {
   /**
-   * A window gained focus.
+   * A window ID.
    *
-   * @param id The window ID
+   * @param value The window ID value
    */
-  public SyWindowFocusGained
+
+  public SyWindowID
   {
-    Objects.requireNonNull(id, "id");
+    Objects.requireNonNull(value, "value");
+  }
+
+  @Override
+  public int compareTo(
+    final SyWindowID other)
+  {
+    return this.value.compareTo(other.value);
   }
 }

@@ -58,7 +58,7 @@ public abstract class SyComponentContract<T extends SyComponentType>
         .create();
     this.screen =
       new SyScreenFactory()
-        .create(this.theme, PAreaSizeI.of(1024, 1024));
+        .create(this.theme, this.fonts, PAreaSizeI.of(1024, 1024));
     this.window =
       this.screen.windowCreate(512, 512);
     this.window.decorated()

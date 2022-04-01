@@ -20,10 +20,12 @@ import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.sized.SySizedType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Flow.Publisher;
 
 /**
  * The type of user interfaces.
@@ -31,7 +33,8 @@ import java.util.Optional;
 
 public interface SyScreenType
   extends SyScreenMouseEventsType,
-  SySizedType<SySpaceViewportType>
+  SySizedType<SySpaceViewportType>,
+  AutoCloseable
 {
   /**
    * Create a new window.
@@ -118,4 +121,21 @@ public interface SyScreenType
    */
 
   Optional<SyComponentType> componentOver();
+
+  /**
+   * @return The stream of window events for the screen
+   */
+
+  Publisher<SyWindowEventType> windowEvents();
+
+  /**
+   * Update the screen, executing a layout pass and updating any animating
+   * elements.
+   */
+
+  void update();
+
+  @Override
+  void close()
+    throws RuntimeException;
 }

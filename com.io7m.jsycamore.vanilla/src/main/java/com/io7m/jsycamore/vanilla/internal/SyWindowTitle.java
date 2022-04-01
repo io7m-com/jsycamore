@@ -17,8 +17,6 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
-import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
@@ -32,6 +30,8 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyAlign;
+import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
+import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;

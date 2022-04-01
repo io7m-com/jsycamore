@@ -19,20 +19,20 @@ package com.io7m.jsycamore.api.windows;
 import java.util.Objects;
 
 /**
- * A window gained focus.
+ * A window has been created.
  *
  * @param id The window ID
  */
 
-public record SyWindowFocusGained(SyWindowID id)
+public record SyWindowCreated(SyWindowID id)
   implements SyWindowEventType
 {
   /**
-   * A window gained focus.
+   * A window has been created.
    *
    * @param id The window ID
    */
-  public SyWindowFocusGained
+  public SyWindowCreated
   {
     Objects.requireNonNull(id, "id");
   }

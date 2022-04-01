@@ -39,7 +39,6 @@ import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -172,7 +171,7 @@ public final class SyAWTRendererTest
       new SyLayoutContext(this.fonts, theme);
 
     final var screen =
-      this.screens.create(theme, PAreaSizeI.of(512, 512));
+      this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
     final var window =
       screen.windowCreate(512, 512);
 

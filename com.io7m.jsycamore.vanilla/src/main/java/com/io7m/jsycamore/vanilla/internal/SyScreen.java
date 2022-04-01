@@ -19,17 +19,21 @@ package com.io7m.jsycamore.vanilla.internal;
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowCreated;
+import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowFocusGained;
 import com.io7m.jsycamore.api.windows.SyWindowFocusLost;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -39,6 +43,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
 
@@ -48,27 +55,35 @@ import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_
 
 public final class SyScreen implements SyScreenType
 {
-  private final SyThemeType theme;
-  private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
-  private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
-  private SyWindowSet windows;
+  private final SyFontDirectoryType fonts;
   private Optional<SyComponentType> componentOver;
+  private SyWindowSet windows;
+  private final AtomicBoolean closed;
+  private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
+  private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
+  private final SubmissionPublisher<SyWindowEventType> windowEvents;
+  private final SyLayoutContextType layoutContext;
+  private final SyThemeType theme;
 
   /**
    * A screen.
    *
    * @param inTheme The theme
+   * @param inFonts The font directory
    * @param inSize  The screen size
    */
 
   public SyScreen(
     final SyThemeType inTheme,
+    final SyFontDirectoryType inFonts,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
     final var attributes = SyWindowAttributes.get();
 
     this.theme =
       Objects.requireNonNull(inTheme, "theme");
+    this.fonts =
+      Objects.requireNonNull(inFonts, "inFonts");
     this.viewportSize =
       attributes.create(
         Objects.requireNonNull(inSize, "viewportSize"));
@@ -79,6 +94,12 @@ public final class SyScreen implements SyScreenType
       Optional.empty();
     this.windows =
       SyWindowSet.empty();
+    this.windowEvents =
+      new SubmissionPublisher<>();
+    this.closed =
+      new AtomicBoolean(false);
+    this.layoutContext =
+      new SyLayoutContext(this.fonts, this.theme);
   }
 
   @Override
@@ -94,11 +115,36 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
+  public Flow.Publisher<SyWindowEventType> windowEvents()
+  {
+    return this.windowEvents;
+  }
+
+  @Override
+  public void update()
+  {
+    this.windows.windows()
+      .values()
+      .forEach(window -> window.layout(this.layoutContext));
+  }
+
+  @Override
+  public void close()
+    throws RuntimeException
+  {
+    if (this.closed.compareAndSet(false, true)) {
+      this.windowEvents.close();
+    }
+  }
+
+  @Override
   public SyWindowType windowCreate(
     final int sizeX,
     final int sizeY)
   {
-    final var window = new SyWindow(this, PAreaSizeI.of(sizeX, sizeY));
+    final var freshId = this.windows.windowFreshId();
+    final var window = new SyWindow(this, freshId, PAreaSizeI.of(sizeX, sizeY));
+    this.windowEvents.submit(new SyWindowCreated(freshId));
     this.processWindowChange(this.windows.windowOpen(window));
     return window;
   }
@@ -285,10 +331,20 @@ public final class SyScreen implements SyScreenType
     final SyWindowSetChanged change)
   {
     this.windows = change.newSet();
+
     change.focusLost()
-      .ifPresent(w -> w.eventSend(new SyWindowFocusLost()));
+      .ifPresent(w -> {
+        final var event = new SyWindowFocusLost(w.id());
+        w.eventSend(event);
+        this.windowEvents.submit(event);
+      });
+
     change.focusGained()
-      .ifPresent(w -> w.eventSend(new SyWindowFocusGained()));
+      .ifPresent(w -> {
+        final var event = new SyWindowFocusGained(w.id());
+        w.eventSend(event);
+        this.windowEvents.submit(event);
+      });
   }
 
   @Override
