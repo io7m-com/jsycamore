@@ -61,6 +61,20 @@ public final class SyLimit extends SyLayoutAbstract
     this(List.of());
   }
 
+  /**
+   * A container that limits child components to the maximum given size.
+   *
+   * @param size The size limit
+   */
+
+  @ConvenienceConstructor
+  public SyLimit(
+    final PAreaSizeI<SySpaceParentRelativeType> size)
+  {
+    this(List.of());
+    this.limitSize().set(size);
+  }
+
   @Override
   public PAreaSizeI<SySpaceParentRelativeType> layout(
     final SyLayoutContextType layoutContext,

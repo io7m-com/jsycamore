@@ -70,8 +70,8 @@ public abstract class SyWindowButtonWithIcon extends SyWindowButtonComponent
     this.margin.childAdd(this.align);
     this.childAdd(this.margin);
 
-    this.margin.setMouseQueryAccepting(false);
     this.align.setMouseQueryAccepting(false);
     this.image.setMouseQueryAccepting(false);
+    this.margin.setMouseQueryAccepting(false);
   }
 }

@@ -69,4 +69,13 @@ public final class SyLimitTest extends SyComponentContract<SyLimit>
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
   }
+
+  @Test
+  public void testLimitConvenience0()
+  {
+    final var a = new SyLimit(PAreaSizeI.of(16, 16));
+    final var size = a.limitSize().get();
+    assertEquals(16, size.sizeX());
+    assertEquals(16, size.sizeY());
+  }
 }
