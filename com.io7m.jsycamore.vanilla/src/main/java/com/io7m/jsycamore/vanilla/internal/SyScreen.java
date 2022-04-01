@@ -19,7 +19,7 @@ package com.io7m.jsycamore.vanilla.internal;
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;

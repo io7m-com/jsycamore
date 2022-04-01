@@ -32,15 +32,17 @@ module com.io7m.jsycamore.api
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;
 
+  exports com.io7m.jsycamore.api.bounded;
   exports com.io7m.jsycamore.api.colors;
   exports com.io7m.jsycamore.api.components;
   exports com.io7m.jsycamore.api.events;
   exports com.io7m.jsycamore.api.layout;
   exports com.io7m.jsycamore.api.mouse;
   exports com.io7m.jsycamore.api.rendering;
+  exports com.io7m.jsycamore.api.screens;
+  exports com.io7m.jsycamore.api.sized;
   exports com.io7m.jsycamore.api.spaces;
   exports com.io7m.jsycamore.api.text;
   exports com.io7m.jsycamore.api.themes;
   exports com.io7m.jsycamore.api.windows;
-  exports com.io7m.jsycamore.api;
 }

@@ -14,33 +14,44 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api;
+package com.io7m.jsycamore.api.bounded;
 
-import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
+import com.io7m.jsycamore.api.sized.SySizedReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 /**
- * Writable access to information about objects that have sizes.
+ * Read only access to information about objects that have bounds.
  *
  * @param <T> The coordinate space
  */
 
-public interface SySizedType<T extends SySpaceType>
+public interface SyBoundedReadableType<T extends SySpaceType>
   extends SySizedReadableType<T>
 {
-  @Override
-  AttributeType<PAreaSizeI<T>> size();
-
   /**
-   * Set the size of the object.
-   *
-   * @param newSize The new size
+   * @return The readable area representing the object's position and bounds
    */
 
-  default void setSize(
-    final PAreaSizeI<T> newSize)
+  default PAreaI<T> boundingArea()
   {
-    this.size().set(newSize);
+    final var position =
+      this.position().get();
+    final var size =
+      this.size().get();
+    return PAreasI.create(
+      position.x(),
+      position.y(),
+      size.sizeX(),
+      size.sizeY());
   }
+
+  /**
+   * @return The position of the top-left corner of the object
+   */
+
+  AttributeReadableType<PVector2I<T>> position();
 }

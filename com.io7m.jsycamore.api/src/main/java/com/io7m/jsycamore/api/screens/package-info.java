@@ -14,33 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api;
-
-import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jsycamore.api.spaces.SySpaceType;
-import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
-
 /**
- * Writable access to information about objects that have bounds.
- *
- * @param <T> The coordinate space
+ * {@code jsycamore} API specification (Screens).
  */
 
-public interface SyBoundedType<T extends SySpaceType>
-  extends SyBoundedReadableType<T>, SySizedType<T>
-{
-  @Override
-  AttributeType<PVector2I<T>> position();
+@Export
+@Version("1.0.0")
+package com.io7m.jsycamore.api.screens;
 
-  /**
-   * Set the position of the object.
-   *
-   * @param newPosition The new position
-   */
-
-  default void setPosition(
-    final PVector2I<T> newPosition)
-  {
-    this.position().set(newPosition);
-  }
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

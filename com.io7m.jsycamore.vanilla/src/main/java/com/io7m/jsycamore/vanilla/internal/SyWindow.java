@@ -21,7 +21,7 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;

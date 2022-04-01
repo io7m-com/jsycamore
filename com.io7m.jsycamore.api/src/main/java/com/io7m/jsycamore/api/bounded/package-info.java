@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,30 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
-package com.io7m.jsycamore.awt.internal;
-
-import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.windows.SyWindowType;
-
-import java.awt.Graphics2D;
-
 /**
- * The type of renderers.
+ * {@code jsycamore} API specification (Bounded types).
  */
 
-public interface SyRendererType
-{
-  /**
-   * Render a window.
-   *
-   * @param g      The graphics context
-   * @param screen The screen
-   * @param window The window
-   */
+@Export
+@Version("1.0.0")
+package com.io7m.jsycamore.api.bounded;
 
-  void render(
-    Graphics2D g,
-    SyScreenType screen,
-    SyWindowType window);
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

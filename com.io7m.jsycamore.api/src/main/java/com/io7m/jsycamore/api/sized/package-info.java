@@ -14,23 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api;
-
-import com.io7m.jattribute.core.AttributeReadableType;
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.spaces.SySpaceType;
-
 /**
- * Read only access to information about objects that have sizes.
- *
- * @param <T> The coordinate space
+ * {@code jsycamore} API specification (Sized types).
  */
 
-public interface SySizedReadableType<T extends SySpaceType>
-{
-  /**
-   * @return The object's size
-   */
+@Export
+@Version("1.0.0")
+package com.io7m.jsycamore.api.sized;
 
-  AttributeReadableType<PAreaSizeI<T>> size();
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

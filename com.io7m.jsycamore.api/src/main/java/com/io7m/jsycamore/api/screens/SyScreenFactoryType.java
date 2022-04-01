@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api;
+package com.io7m.jsycamore.api.screens;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;

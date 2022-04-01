@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
@@ -52,8 +52,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 

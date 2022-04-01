@@ -18,7 +18,7 @@ package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
-import com.io7m.jsycamore.api.SyBoundedReadableType;
+import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 

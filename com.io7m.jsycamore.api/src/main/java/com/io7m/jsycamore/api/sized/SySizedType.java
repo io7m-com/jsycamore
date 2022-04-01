@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,30 +14,33 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+package com.io7m.jsycamore.api.sized;
 
-package com.io7m.jsycamore.awt.internal;
-
-import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.windows.SyWindowType;
-
-import java.awt.Graphics2D;
+import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.spaces.SySpaceType;
 
 /**
- * The type of renderers.
+ * Writable access to information about objects that have sizes.
+ *
+ * @param <T> The coordinate space
  */
 
-public interface SyRendererType
+public interface SySizedType<T extends SySpaceType>
+  extends SySizedReadableType<T>
 {
+  @Override
+  AttributeType<PAreaSizeI<T>> size();
+
   /**
-   * Render a window.
+   * Set the size of the object.
    *
-   * @param g      The graphics context
-   * @param screen The screen
-   * @param window The window
+   * @param newSize The new size
    */
 
-  void render(
-    Graphics2D g,
-    SyScreenType screen,
-    SyWindowType window);
+  default void setSize(
+    final PAreaSizeI<T> newSize)
+  {
+    this.size().set(newSize);
+  }
 }

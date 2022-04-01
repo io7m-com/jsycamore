@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.SyScreenType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;

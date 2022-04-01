@@ -14,39 +14,34 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.vanilla;
+package com.io7m.jsycamore.api.bounded;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.screens.SyScreenFactoryType;
-import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.vanilla.internal.SyScreen;
-
-import java.util.Objects;
+import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.sized.SySizedType;
+import com.io7m.jsycamore.api.spaces.SySpaceType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 /**
- * A factory of screens.
+ * Writable access to information about objects that have bounds.
+ *
+ * @param <T> The coordinate space
  */
 
-public final class SyScreenFactory implements SyScreenFactoryType
+public interface SyBoundedType<T extends SySpaceType>
+  extends SyBoundedReadableType<T>, SySizedType<T>
 {
+  @Override
+  AttributeType<PVector2I<T>> position();
+
   /**
-   * A factory of screens.
+   * Set the position of the object.
+   *
+   * @param newPosition The new position
    */
 
-  public SyScreenFactory()
+  default void setPosition(
+    final PVector2I<T> newPosition)
   {
-
-  }
-
-  @Override
-  public SyScreenType create(
-    final SyThemeType theme,
-    final PAreaSizeI<SySpaceViewportType> size)
-  {
-    Objects.requireNonNull(theme, "theme");
-    Objects.requireNonNull(size, "size");
-    return new SyScreen(theme, size);
+    this.position().set(newPosition);
   }
 }
