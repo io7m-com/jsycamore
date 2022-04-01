@@ -14,24 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
-
 /**
- * A specification of visibility for a component.
+ * {@code jsycamore} API specification [Visibility].
  */
 
-public enum SyVisibility
-{
-  /**
-   * The component is invisible. Accordingly, all children of the component are
-   * invisible too.
-   */
+@Export
+@Version("1.0.0")
+package com.io7m.jsycamore.api.visibility;
 
-  VISIBILITY_INVISIBLE,
-
-  /**
-   * The component is visible (assuming that its parent is also visible).
-   */
-
-  VISIBILITY_VISIBLE
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

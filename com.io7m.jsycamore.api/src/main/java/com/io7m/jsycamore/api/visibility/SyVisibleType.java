@@ -14,24 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.windows;
+package com.io7m.jsycamore.api.visibility;
 
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jattribute.core.AttributeType;
 
 /**
- * The type of events relating to windows.
+ * Write access to objects that can be visible or invisible.
  */
 
-public sealed interface SyWindowEventType
-  extends SyEventType
-  permits SyWindowClosed,
-  SyWindowCreated,
-  SyWindowFocusGained,
-  SyWindowFocusLost
+public interface SyVisibleType extends SyVisibleReadableType
 {
+  @Override
+  AttributeType<SyVisibility> visibility();
+
   /**
-   * @return The window to which this event refers
+   * Set the visibility of the object.
+   *
+   * @param visible The visibility
    */
 
-  SyWindowID id();
+  default void setVisible(
+    final SyVisibility visible)
+  {
+    this.visibility().set(visible);
+  }
 }

@@ -27,8 +27,10 @@ import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -40,6 +42,7 @@ import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.CLOSE_ON_CLOSE_BUTTON;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -58,6 +61,9 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<Boolean> decorated;
   private final AttributeType<String> titleText;
   private final SyWindowID id;
+  private final AttributeType<SyWindowCloseBehaviour> closeBehaviour;
+  private final AttributeType<Integer> positionSnapping;
+  private final AttributeType<Integer> sizeSnapping;
   private PVector2I<SySpaceViewportType> position;
   private PVector2I<SySpaceViewportType> positionMaximized;
   private PAreaSizeI<SySpaceViewportType> size;
@@ -93,6 +99,12 @@ public final class SyWindow implements SyWindowType
       attributes.create(FALSE);
     this.decorated =
       attributes.create(TRUE);
+    this.closeBehaviour =
+      attributes.create(CLOSE_ON_CLOSE_BUTTON);
+    this.positionSnapping =
+      attributes.create(0);
+    this.sizeSnapping =
+      attributes.create(0);
 
     this.positionAttribute =
       this.maximized.map(isMaximized -> {
@@ -114,7 +126,9 @@ public final class SyWindow implements SyWindowType
     this.root.setWindow(Optional.of(this));
     this.setSize(inSize);
 
-    this.titleText = this.root.title().titleText();
+    this.titleText =
+      this.root.title()
+        .titleText();
   }
 
   @Override
@@ -154,10 +168,36 @@ public final class SyWindow implements SyWindowType
     Objects.requireNonNull(newPosition, "position");
 
     if (this.maximized.get()) {
-      this.positionMaximized = newPosition;
+      this.positionMaximized = this.snapPosition(newPosition);
     } else {
-      this.position = newPosition;
+      this.position = this.snapPosition(newPosition);
     }
+  }
+
+  private <T extends SySpaceType> PVector2I<T> snapPosition(
+    final PVector2I<T> newPosition)
+  {
+    final var snapping = this.positionSnapping.get().intValue();
+    if (snapping > 0) {
+      return PVector2I.of(
+        (newPosition.x() / snapping) * snapping,
+        (newPosition.y() / snapping) * snapping
+      );
+    }
+    return newPosition;
+  }
+
+  private <T extends SySpaceType> PAreaSizeI<T> snapSize(
+    final PAreaSizeI<T> newSize)
+  {
+    final var snapping = this.sizeSnapping.get().intValue();
+    if (snapping > 0) {
+      return PAreaSizeI.of(
+        (newSize.sizeX() / snapping) * snapping,
+        (newSize.sizeY() / snapping) * snapping
+      );
+    }
+    return newSize;
   }
 
   @Override
@@ -167,10 +207,10 @@ public final class SyWindow implements SyWindowType
     Objects.requireNonNull(newSize, "size");
 
     final var clampedSize =
-      PAreaSizeI.<SySpaceViewportType>of(
+      this.snapSize(PAreaSizeI.<SySpaceViewportType>of(
         Math.max(0, newSize.sizeX()),
         Math.max(0, newSize.sizeY())
-      );
+      ));
 
     if (this.maximized.get()) {
       this.sizeMaximized = clampedSize;
@@ -196,6 +236,24 @@ public final class SyWindow implements SyWindowType
   public AttributeType<String> title()
   {
     return this.titleText;
+  }
+
+  @Override
+  public AttributeType<Integer> positionSnapping()
+  {
+    return this.positionSnapping;
+  }
+
+  @Override
+  public AttributeType<Integer> sizeSnapping()
+  {
+    return this.sizeSnapping;
+  }
+
+  @Override
+  public AttributeType<SyWindowCloseBehaviour> closeButtonBehaviour()
+  {
+    return this.closeBehaviour;
   }
 
   @Override

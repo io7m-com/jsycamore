@@ -21,6 +21,7 @@ import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
 import com.io7m.jsycamore.api.mouse.SyMouseAcceptingReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
+import com.io7m.jsycamore.api.visibility.SyVisibleReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 
 import java.util.Optional;

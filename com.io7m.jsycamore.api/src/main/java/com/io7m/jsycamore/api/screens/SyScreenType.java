@@ -54,14 +54,12 @@ public interface SyScreenType
    * nearest to furthest
    */
 
-  List<SyWindowType> windowsOpenOrderedNow();
+  List<SyWindowType> windowsVisibleOrdered();
 
   /**
    * @param window A window
    *
    * @return {@code true} iff {@code w} is currently isFocused
-   *
-   * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
    */
 
   boolean windowIsFocused(SyWindowType window);
@@ -70,23 +68,29 @@ public interface SyScreenType
    * @param window A window
    *
    * @return {@code true} iff {@code w} is currently open
-   *
-   * @throws IllegalArgumentException Iff {@code w} does not belong to this GUI
    */
 
-  boolean windowIsOpen(SyWindowType window);
+  boolean windowIsVisible(SyWindowType window);
 
   /**
-   * Open the window. The window, once opened, has focus. If the window is
-   * already open, the window gains focus.
+   * Make the window visible. The window, once visible, has focus. If the window
+   * is already visible, the window gains focus.
    *
    * @param window A window
    */
 
-  void windowOpen(SyWindowType window);
+  void windowShow(SyWindowType window);
 
   /**
-   * Close the window. If the window is already closed, this has no effect.
+   * Hide the window. If the window is already invisible, this has no effect.
+   *
+   * @param window A window
+   */
+
+  void windowHide(SyWindowType window);
+
+  /**
+   * Close/destroy the window.
    *
    * @param window A window
    */

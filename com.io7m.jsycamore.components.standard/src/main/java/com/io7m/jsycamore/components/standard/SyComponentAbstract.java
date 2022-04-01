@@ -25,12 +25,12 @@ import com.io7m.jsycamore.api.components.SyActive;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
-import com.io7m.jsycamore.api.components.SyVisibility;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
@@ -43,9 +43,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
-import static com.io7m.jsycamore.api.components.SyVisibility.VISIBILITY_VISIBLE;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
+import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_VISIBLE;
 
 /**
  * A convenient abstract implementation of a component, to make it easier to

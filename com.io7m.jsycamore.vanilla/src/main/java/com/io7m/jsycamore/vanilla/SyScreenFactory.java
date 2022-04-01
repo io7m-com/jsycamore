@@ -19,9 +19,9 @@ package com.io7m.jsycamore.vanilla;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.screens.SyScreenFactoryType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.vanilla.internal.SyScreen;
 
 import java.util.Objects;

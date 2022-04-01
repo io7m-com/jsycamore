@@ -135,4 +135,13 @@ public interface SyWindowType extends SyWindowReadableType
 
   @Override
   AttributeType<String> title();
+
+  @Override
+  AttributeType<Integer> positionSnapping();
+
+  @Override
+  AttributeType<Integer> sizeSnapping();
+
+  @Override
+  AttributeType<SyWindowCloseBehaviour> closeButtonBehaviour();
 }

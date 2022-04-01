@@ -14,28 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
-
-import com.io7m.jattribute.core.AttributeType;
+package com.io7m.jsycamore.api.visibility;
 
 /**
- * Write access to objects that can be visible or invisible.
+ * A specification of visibility for a component.
  */
 
-public interface SyVisibleType extends SyVisibleReadableType
+public enum SyVisibility
 {
-  @Override
-  AttributeType<SyVisibility> visibility();
-
   /**
-   * Set the visibility of the object.
-   *
-   * @param visible The visibility
+   * The component is invisible. Accordingly, all children of the component are
+   * invisible too.
    */
 
-  default void setVisible(
-    final SyVisibility visible)
-  {
-    this.visibility().set(visible);
-  }
+  VISIBILITY_INVISIBLE,
+
+  /**
+   * The component is visible (assuming that its parent is also visible).
+   */
+
+  VISIBILITY_VISIBLE
 }

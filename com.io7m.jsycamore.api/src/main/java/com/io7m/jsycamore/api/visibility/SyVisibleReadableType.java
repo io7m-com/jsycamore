@@ -14,38 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.vanilla.internal;
+package com.io7m.jsycamore.api.visibility;
 
-import com.io7m.jsycamore.api.windows.SyWindowType;
-
-import java.util.Optional;
-import java.util.function.Function;
+import com.io7m.jattribute.core.AttributeReadableType;
 
 /**
- * An event indicating that the window set changed.
- *
- * @param newSet      The new window set
- * @param focusGained The window that gained focus
- * @param focusLost   The window that lost focus
+ * Read-only access to objects that can be visible or invisible.
  */
 
-public record SyWindowSetChanged(
-  SyWindowSet newSet,
-  Optional<SyWindowType> focusLost,
-  Optional<SyWindowType> focusGained)
+public interface SyVisibleReadableType
 {
   /**
-   * Apply a function to the current window set, yielding a new window set
-   * change.
+   * Determine whether this component is visible or not based on the visibility
+   * of its ancestors.
    *
-   * @param f A function
-   *
-   * @return The window set change
+   * @return {@code true} iff this component is visible
    */
 
-  public SyWindowSetChanged then(
-    final Function<SyWindowSet, SyWindowSetChanged> f)
-  {
-    return f.apply(this.newSet);
-  }
+  boolean isVisible();
+
+  /**
+   * @return This component's visibility
+   */
+
+  AttributeReadableType<SyVisibility> visibility();
 }

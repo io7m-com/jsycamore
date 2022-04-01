@@ -175,7 +175,7 @@ public final class SyAWTRendererTest
     final var window =
       screen.windowCreate(512, 512);
 
-    screen.windowOpen(window);
+    screen.windowShow(window);
 
     window.decorated().set(true);
     window.title().set("Window Title");

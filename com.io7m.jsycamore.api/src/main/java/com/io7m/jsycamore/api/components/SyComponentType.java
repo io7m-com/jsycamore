@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseAcceptingType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeableType;
+import com.io7m.jsycamore.api.visibility.SyVisibleType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,28 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
 
-import com.io7m.jattribute.core.AttributeReadableType;
+package com.io7m.jsycamore.api.windows;
+
+import com.io7m.jsycamore.api.screens.SyScreenType;
 
 /**
- * Read-only access to objects that can be visible or invisible.
+ * The behaviour that will occur when a window's "Close" button is pressed.
  */
 
-public interface SyVisibleReadableType
+public enum SyWindowCloseBehaviour
 {
   /**
-   * Determine whether this component is visible or not based on the visibility
-   * of its ancestors.
-   *
-   * @return {@code true} iff this component is visible
+   * The window will be hidden, as per {@link SyScreenType#windowHide(SyWindowType)}.
    */
 
-  boolean isVisible();
+  HIDE_ON_CLOSE_BUTTON,
 
   /**
-   * @return This component's visibility
+   * The window will be closed, as per {@link SyScreenType#windowClose(SyWindowType)}
+   * (SyWindowType)}.
    */
 
-  AttributeReadableType<SyVisibility> visibility();
+  CLOSE_ON_CLOSE_BUTTON
 }

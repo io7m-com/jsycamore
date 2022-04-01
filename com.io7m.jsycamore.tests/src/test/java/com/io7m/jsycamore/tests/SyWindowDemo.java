@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
@@ -56,6 +57,7 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 
 import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
+import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
 import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -115,6 +117,11 @@ public final class SyWindowDemo
 
       this.window0 = this.screen.windowCreate(640, 480);
       this.window1 = this.screen.windowCreate(240, 120);
+
+      this.window0.closeButtonBehaviour()
+        .set(HIDE_ON_CLOSE_BUTTON);
+      this.window1.closeButtonBehaviour()
+        .set(HIDE_ON_CLOSE_BUTTON);
 
       this.renderer = new SyAWTRenderer(this.fontDirectory);
       // this.renderer = new SyBoundsOnlyRenderer();
@@ -227,14 +234,16 @@ public final class SyWindowDemo
       this.window0.decorated().set(TRUE);
       this.window0.contentArea().childAdd(margin);
       this.window0.title().set("Window Title");
+      this.window0.positionSnapping().set(16);
+      this.window0.sizeSnapping().set(16);
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {
-          if (!this.screen.windowIsOpen(this.window0)) {
-            this.screen.windowOpen(this.window0);
+          if (!this.screen.windowIsVisible(this.window0)) {
+            this.screen.windowShow(this.window0);
           }
-          if (!this.screen.windowIsOpen(this.window1)) {
-            this.screen.windowOpen(this.window1);
+          if (!this.screen.windowIsVisible(this.window1)) {
+            this.screen.windowShow(this.window1);
           }
         });
       }, 0L, 2L, SECONDS);
@@ -248,13 +257,22 @@ public final class SyWindowDemo
       g2.setColor(Color.GRAY);
       g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+      g2.setPaint(new Color(144, 144, 144));
+
+      for (int x = 0; x < this.getWidth(); x += 32) {
+        g2.drawLine(x, 0, x, this.getHeight());
+      }
+      for (int y = 0; y < this.getHeight(); y += 32) {
+        g2.drawLine(0, y, this.getWidth(), y);
+      }
+
       final var layoutContext =
         new SyLayoutContext(
           this.fontDirectory,
           this.screen.theme()
         );
 
-      final var windows = this.screen.windowsOpenOrderedNow();
+      final var windows = this.screen.windowsVisibleOrdered();
       for (int index = windows.size() - 1; index >= 0; --index) {
         final var window = windows.get(index);
         window.layout(layoutContext);

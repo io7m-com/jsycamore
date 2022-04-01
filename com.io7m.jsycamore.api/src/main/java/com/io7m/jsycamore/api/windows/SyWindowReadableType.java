@@ -58,4 +58,30 @@ public interface SyWindowReadableType
    */
 
   AttributeReadableType<String> title();
+
+  /**
+   * An attribute that, when set to a non-zero value, specifies a snapping value
+   * for position values. For a non-zero snapping value {@code n}, the resulting
+   * position values will be {@code k * n} for some non-negative {@code k}.
+   *
+   * @return The position snapping value
+   */
+
+  AttributeReadableType<Integer> positionSnapping();
+
+  /**
+   * An attribute that, when set to a non-zero value, specifies a snapping value
+   * for size values. For a non-zero snapping value {@code n}, the resulting
+   * size values will be {@code k * n} for some non-negative {@code k}.
+   *
+   * @return The size snapping value
+   */
+
+  AttributeReadableType<Integer> sizeSnapping();
+
+  /**
+   * @return A property denoting the window close button behaviour
+   */
+
+  AttributeReadableType<SyWindowCloseBehaviour> closeButtonBehaviour();
 }

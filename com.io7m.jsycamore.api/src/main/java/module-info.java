@@ -44,5 +44,6 @@ module com.io7m.jsycamore.api
   exports com.io7m.jsycamore.api.spaces;
   exports com.io7m.jsycamore.api.text;
   exports com.io7m.jsycamore.api.themes;
+  exports com.io7m.jsycamore.api.visibility;
   exports com.io7m.jsycamore.api.windows;
 }

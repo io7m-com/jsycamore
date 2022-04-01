@@ -48,6 +48,15 @@ public final class SyWindowButtonClose extends SyWindowButtonWithIcon
   @Override
   protected void onClicked()
   {
-    this.window().ifPresent(w -> w.screen().windowClose(w));
+    this.window().ifPresent(w -> {
+      switch (w.closeButtonBehaviour().get()) {
+        case HIDE_ON_CLOSE_BUTTON -> {
+          w.screen().windowHide(w);
+        }
+        case CLOSE_ON_CLOSE_BUTTON -> {
+          w.screen().windowClose(w);
+        }
+      }
+    });
   }
 }

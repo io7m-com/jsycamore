@@ -32,10 +32,9 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowCreated;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
-import com.io7m.jsycamore.api.windows.SyWindowFocusGained;
-import com.io7m.jsycamore.api.windows.SyWindowFocusLost;
+import com.io7m.jsycamore.api.windows.SyWindowSet;
+import com.io7m.jsycamore.api.windows.SyWindowSetChanged;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
@@ -56,14 +55,14 @@ import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_
 public final class SyScreen implements SyScreenType
 {
   private final SyFontDirectoryType fonts;
-  private Optional<SyComponentType> componentOver;
-  private SyWindowSet windows;
   private final AtomicBoolean closed;
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
   private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
   private final SubmissionPublisher<SyWindowEventType> windowEvents;
   private final SyLayoutContextType layoutContext;
   private final SyThemeType theme;
+  private Optional<SyComponentType> componentOver;
+  private SyWindowSet windows;
 
   /**
    * A screen.
@@ -144,15 +143,15 @@ public final class SyScreen implements SyScreenType
   {
     final var freshId = this.windows.windowFreshId();
     final var window = new SyWindow(this, freshId, PAreaSizeI.of(sizeX, sizeY));
-    this.windowEvents.submit(new SyWindowCreated(freshId));
-    this.processWindowChange(this.windows.windowOpen(window));
+    this.processWindowChange(this.windows.windowCreate(window));
+    this.processWindowChange(this.windows.windowShow(window));
     return window;
   }
 
   @Override
-  public List<SyWindowType> windowsOpenOrderedNow()
+  public List<SyWindowType> windowsVisibleOrdered()
   {
-    return this.windows.windowsOpenOrdered();
+    return this.windows.windowsVisibleOrdered();
   }
 
   @Override
@@ -250,7 +249,7 @@ public final class SyScreen implements SyScreenType
     Objects.requireNonNull(query, "query");
 
     final var windowIterator =
-      this.windows.windowsOpenOrdered().iterator();
+      this.windows.windowsVisibleOrdered().iterator();
 
     while (windowIterator.hasNext()) {
       final var window = windowIterator.next();
@@ -332,19 +331,19 @@ public final class SyScreen implements SyScreenType
   {
     this.windows = change.newSet();
 
-    change.focusLost()
-      .ifPresent(w -> {
-        final var event = new SyWindowFocusLost(w.id());
-        w.eventSend(event);
-        this.windowEvents.submit(event);
-      });
+    final var windowMap = this.windows.windows();
+    for (final var event : change.changes()) {
+      final var window = windowMap.get(event.id());
+      this.publishWindowEvent(window, event);
+    }
+  }
 
-    change.focusGained()
-      .ifPresent(w -> {
-        final var event = new SyWindowFocusGained(w.id());
-        w.eventSend(event);
-        this.windowEvents.submit(event);
-      });
+  private void publishWindowEvent(
+    final SyWindowType window,
+    final SyWindowEventType event)
+  {
+    window.eventSend(event);
+    this.windowEvents.submit(event);
   }
 
   @Override
@@ -356,19 +355,27 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
-  public boolean windowIsOpen(
+  public boolean windowIsVisible(
     final SyWindowType window)
   {
     Objects.requireNonNull(window, "window");
-    return this.windows.windowIsOpen(window);
+    return this.windows.windowIsVisible(window);
   }
 
   @Override
-  public void windowOpen(
+  public void windowShow(
     final SyWindowType window)
   {
     Objects.requireNonNull(window, "window");
-    this.processWindowChange(this.windows.windowOpen(window));
+    this.processWindowChange(this.windows.windowShow(window));
+  }
+
+  @Override
+  public void windowHide(
+    final SyWindowType window)
+  {
+    Objects.requireNonNull(window, "window");
+    this.processWindowChange(this.windows.windowHide(window));
   }
 
   @Override

@@ -17,9 +17,13 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.windows.SyWindowClosed;
+import com.io7m.jsycamore.api.windows.SyWindowCreated;
+import com.io7m.jsycamore.api.windows.SyWindowFocusGained;
+import com.io7m.jsycamore.api.windows.SyWindowFocusLost;
 import com.io7m.jsycamore.api.windows.SyWindowID;
+import com.io7m.jsycamore.api.windows.SyWindowSet;
 import com.io7m.jsycamore.api.windows.SyWindowType;
-import com.io7m.jsycamore.vanilla.internal.SyWindowSet;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -31,44 +35,77 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class SyWindowSetTest
 {
+  /**
+   * The empty window set is empty.
+   */
+
   @Test
   public void testEmpty()
   {
     final var ws = SyWindowSet.empty();
     assertEquals(0, ws.windows().size());
-    assertEquals(0, ws.windowsOpen().size());
-    assertEquals(0, ws.windowsOpenOrdered().size());
+    assertEquals(0, ws.windowsVisible().size());
+    assertEquals(0, ws.windowsVisibleOrdered().size());
     assertEquals(Optional.empty(), ws.windowFocused());
   }
 
+  /**
+   * Creating and closing windows publishes the expected events.
+   */
+
   @Test
-  public void testWindowOpenedClosed()
+  public void testWindowCreatedClosed()
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
 
     Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
 
-    final var wsc0 = ws0.windowOpen(w0);
-    assertEquals(Optional.of(w0), wsc0.focusGained());
-    assertEquals(Optional.empty(), wsc0.focusLost());
-    assertEquals(List.of(w0), wsc0.newSet().windowsOpenOrdered());
+    final var wsc0 = ws0.windowCreate(w0);
+    assertEquals(new SyWindowCreated(w0.id()), wsc0.changes().get(0));
+    assertEquals(1, wsc0.changes().size());
+    assertEquals(List.of(), wsc0.newSet().windowsVisibleOrdered());
     assertEquals(Map.of(w0.id(), w0), wsc0.newSet().windows());
-    assertEquals(Set.of(w0.id()), wsc0.newSet().windowsOpen());
-    assertTrue(wsc0.newSet().windowIsOpen(w0));
+    assertEquals(Set.of(), wsc0.newSet().windowsVisible());
+    assertFalse(wsc0.newSet().windowIsVisible(w0));
 
     final var wsc1 = wsc0.newSet().windowClose(w0);
-    assertEquals(Optional.empty(), wsc1.focusGained());
-    assertEquals(Optional.of(w0), wsc1.focusLost());
-    assertEquals(List.of(), wsc1.newSet().windowsOpenOrdered());
+    assertEquals(new SyWindowFocusLost(w0.id()), wsc1.changes().get(0));
+    assertEquals(new SyWindowClosed(w0.id()), wsc1.changes().get(1));
+    assertEquals(2, wsc1.changes().size());
+    assertEquals(List.of(), wsc1.newSet().windowsVisibleOrdered());
     assertEquals(Map.of(w0.id(), w0), wsc1.newSet().windows());
-    assertEquals(Set.of(), wsc1.newSet().windowsOpen());
-    assertFalse(wsc1.newSet().windowIsOpen(w0));
+    assertEquals(Set.of(), wsc1.newSet().windowsVisible());
+    assertFalse(wsc1.newSet().windowIsVisible(w0));
   }
+
+  /**
+   * Creating a window twice, fails.
+   */
+
+  @Test
+  public void testWindowCreatedTwice()
+  {
+    final var ws0 = SyWindowSet.empty();
+    final var w0 = Mockito.mock(SyWindowType.class);
+
+    Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
+
+    final var wsc0 = ws0.windowCreate(w0);
+
+    assertThrows(IllegalStateException.class, () -> {
+      wsc0.newSet().windowCreate(w0);
+    });
+  }
+
+  /**
+   * Trying to close an unrecognized window fails.
+   */
 
   @Test
   public void testWindowClosedUnknown()
@@ -77,17 +114,15 @@ public final class SyWindowSetTest
     final var w0 = Mockito.mock(SyWindowType.class);
 
     Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
-
-    final var wsc0 = ws0.windowClose(w0);
-    assertEquals(Optional.empty(), wsc0.focusGained());
-    assertEquals(Optional.of(w0), wsc0.focusLost());
-    assertEquals(List.of(), wsc0.newSet().windowsOpenOrdered());
-    assertEquals(Map.of(), wsc0.newSet().windows());
-    assertEquals(Set.of(), wsc0.newSet().windowsOpen());
+    assertThrows(IllegalStateException.class, () -> ws0.windowClose(w0));
   }
 
+  /**
+   * Creating multiple windows publishes the expected events.
+   */
+
   @Test
-  public void testWindowOpenedMultipleFocus()
+  public void testWindowCreatedMultipleFocus()
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
@@ -99,42 +134,47 @@ public final class SyWindowSetTest
     Mockito.when(w2.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
 
     final var r0 =
-      ws0.windowOpen(w0)
-        .then(s -> s.windowOpen(w0))
-        .then(s -> s.windowOpen(w1))
-        .then(s -> s.windowOpen(w2));
+      ws0.windowCreate(w0)
+        .then(s -> s.windowShow(w0))
+        .then(s -> s.windowCreate(w1))
+        .then(s -> s.windowShow(w1))
+        .then(s -> s.windowCreate(w2))
+        .then(s -> s.windowShow(w2));
 
-    assertTrue(r0.newSet().windowIsOpen(w0));
-    assertTrue(r0.newSet().windowIsOpen(w1));
-    assertTrue(r0.newSet().windowIsOpen(w2));
+    assertTrue(r0.newSet().windowIsVisible(w0));
+    assertTrue(r0.newSet().windowIsVisible(w1));
+    assertTrue(r0.newSet().windowIsVisible(w2));
     assertEquals(Optional.of(w2), r0.newSet().windowFocused());
 
     final var r1 =
       r0.then(s -> s.windowFocus(w0));
 
     assertEquals(Optional.of(w0), r1.newSet().windowFocused());
-    assertEquals(Optional.of(w0), r1.focusGained());
-    assertEquals(Optional.of(w2), r1.focusLost());
+    assertEquals(new SyWindowFocusGained(w0.id()), r1.changes().get(0));
+    assertEquals(new SyWindowFocusLost(w2.id()), r1.changes().get(1));
+    assertEquals(2, r1.changes().size());
 
     final var r2 =
       r1.then(s -> s.windowFocus(w1));
 
     assertEquals(Optional.of(w1), r2.newSet().windowFocused());
-    assertEquals(Optional.of(w1), r2.focusGained());
-    assertEquals(Optional.of(w0), r2.focusLost());
+    assertEquals(new SyWindowFocusGained(w1.id()), r2.changes().get(0));
+    assertEquals(new SyWindowFocusLost(w0.id()), r2.changes().get(1));
+    assertEquals(2, r2.changes().size());
 
     final var r3 =
       r2.then(s -> s.windowFocus(w1));
 
     assertEquals(Optional.of(w1), r3.newSet().windowFocused());
-    assertEquals(Optional.empty(), r3.focusGained());
-    assertEquals(Optional.empty(), r3.focusLost());
+    assertEquals(0, r3.changes().size());
 
     final var r4 =
       r3.then(s -> s.windowClose(w1));
 
     assertEquals(Optional.of(w0), r4.newSet().windowFocused());
-    assertEquals(Optional.of(w0), r4.focusGained());
-    assertEquals(Optional.of(w1), r4.focusLost());
+    assertEquals(new SyWindowFocusLost(w1.id()), r4.changes().get(0));
+    assertEquals(new SyWindowClosed(w1.id()), r4.changes().get(1));
+    assertEquals(new SyWindowFocusGained(w0.id()), r4.changes().get(2));
+    assertEquals(3, r4.changes().size());
   }
 }

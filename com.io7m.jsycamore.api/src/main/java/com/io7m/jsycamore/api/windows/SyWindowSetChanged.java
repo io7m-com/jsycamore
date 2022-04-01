@@ -16,22 +16,46 @@
 
 package com.io7m.jsycamore.api.windows;
 
-import com.io7m.jsycamore.api.events.SyEventType;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
- * The type of events relating to windows.
+ * An event indicating that the window set changed.
+ *
+ * @param newSet  The new window set
+ * @param changes The set of changes
  */
 
-public sealed interface SyWindowEventType
-  extends SyEventType
-  permits SyWindowClosed,
-  SyWindowCreated,
-  SyWindowFocusGained,
-  SyWindowFocusLost
+public record SyWindowSetChanged(
+  SyWindowSet newSet,
+  List<SyWindowEventType> changes)
 {
   /**
-   * @return The window to which this event refers
+   * An event indicating that the window set changed.
+   *
+   * @param newSet  The new window set
+   * @param changes The set of changes
    */
 
-  SyWindowID id();
+  public SyWindowSetChanged
+  {
+    Objects.requireNonNull(newSet, "newSet");
+    Objects.requireNonNull(changes, "changes");
+  }
+
+  /**
+   * Apply a function to the current window set, yielding a new window set
+   * change.
+   *
+   * @param f A function
+   *
+   * @return The window set change
+   */
+
+  public SyWindowSetChanged then(
+    final Function<SyWindowSet, SyWindowSetChanged> f)
+  {
+    return f.apply(this.newSet);
+  }
 }
