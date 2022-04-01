@@ -69,6 +69,16 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
     c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_LEFT, c));
     assertFalse(c.isPressed());
     assertEquals(1, this.clicks);
+
+    c.setOnClickListener(() -> { });
+
+    c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_LEFT, c));
+    assertTrue(c.isPressed());
+    assertEquals(1, this.clicks);
+
+    c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_LEFT, c));
+    assertFalse(c.isPressed());
+    assertEquals(1, this.clicks);
   }
 
   /**
