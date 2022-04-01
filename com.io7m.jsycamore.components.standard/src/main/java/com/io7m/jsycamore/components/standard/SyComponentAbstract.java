@@ -21,7 +21,7 @@ import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.components.SyActive;
+import com.io7m.jsycamore.api.active.SyActive;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
@@ -42,7 +42,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
+import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_VISIBLE;

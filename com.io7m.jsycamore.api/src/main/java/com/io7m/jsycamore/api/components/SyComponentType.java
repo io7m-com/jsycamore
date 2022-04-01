@@ -18,6 +18,7 @@ package com.io7m.jsycamore.api.components;
 
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.active.SyActiveType;
 import com.io7m.jsycamore.api.bounded.SyBoundedType;
 import com.io7m.jsycamore.api.events.SyEventReceiverType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;

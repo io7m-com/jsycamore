@@ -32,6 +32,7 @@ module com.io7m.jsycamore.api
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;
 
+  exports com.io7m.jsycamore.api.active;
   exports com.io7m.jsycamore.api.bounded;
   exports com.io7m.jsycamore.api.colors;
   exports com.io7m.jsycamore.api.components;

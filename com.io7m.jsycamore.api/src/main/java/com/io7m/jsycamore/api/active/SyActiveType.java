@@ -14,7 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
+package com.io7m.jsycamore.api.active;
 
 import com.io7m.jattribute.core.AttributeType;
 

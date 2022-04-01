@@ -14,24 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
-
 /**
- * A specification of activity for a component.
+ * {@code jsycamore} API specification [Active].
  */
 
-public enum SyActive
-{
-  /**
-   * The component is inactive. Accordingly, all children of the component are
-   * inactive too.
-   */
+@Export
+@Version("1.0.0")
+package com.io7m.jsycamore.api.active;
 
-  INACTIVE,
-
-  /**
-   * The component is active (assuming that its parent is also active).
-   */
-
-  ACTIVE
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

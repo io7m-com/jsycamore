@@ -30,8 +30,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static com.io7m.jsycamore.api.components.SyActive.ACTIVE;
-import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
+import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
+import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
 import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_INVISIBLE;
 import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_VISIBLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;

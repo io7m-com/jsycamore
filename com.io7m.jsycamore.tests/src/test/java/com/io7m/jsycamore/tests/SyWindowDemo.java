@@ -22,7 +22,6 @@ import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
@@ -56,7 +55,7 @@ import java.awt.event.MouseEvent;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 
-import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
+import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
 import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
