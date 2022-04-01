@@ -23,15 +23,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static com.io7m.jsycamore.api.components.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
-import static com.io7m.jsycamore.api.components.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
-import static com.io7m.jsycamore.api.components.SyAlignmentHorizontal.ALIGN_HORIZONTAL_RIGHT;
-import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTICAL_BOTTOM;
-import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
-import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTICAL_TOP;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_RIGHT;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_BOTTOM;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_TOP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public final class SyAlignTest
+public final class SyAlignTest extends SyComponentContract<SyAlign>
 {
   private SyLayoutContextType layoutContext;
 
@@ -302,5 +302,11 @@ public final class SyAlignTest
     assertEquals(32, size.sizeY());
     assertEquals(128 - 32, c.position().get().x());
     assertEquals(128 - 32, c.position().get().y());
+  }
+
+  @Override
+  protected SyAlign newComponent()
+  {
+    return new SyAlign();
   }
 }

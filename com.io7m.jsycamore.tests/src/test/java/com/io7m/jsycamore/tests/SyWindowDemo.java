@@ -27,6 +27,7 @@ import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.awt.internal.SyRendererType;
 import com.io7m.jsycamore.components.standard.SyButton;
+import com.io7m.jsycamore.components.standard.SyImageView;
 import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
@@ -51,6 +52,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 
 import static com.io7m.jsycamore.api.components.SyActive.INACTIVE;
@@ -89,9 +91,10 @@ public final class SyWindowDemo
     private final SyWindowType window0;
     private final SyFontDirectoryType fontDirectory;
     private final SyThemeType theme;
-    private SyRendererType renderer;
+    private final SyRendererType renderer;
 
     Canvas()
+      throws Exception
     {
       this.setFocusable(true);
 
@@ -206,10 +209,15 @@ public final class SyWindowDemo
       button1.setActive(INACTIVE);
       final var button2 = new SyButton("Button 2");
       button2.setOnClickListener(() -> LOG.debug("click 2"));
+      final var image = new SyImageView();
+      image.imageURI().set(Optional.of(
+        SyWindowDemo.class.getResource("/com/io7m/jsycamore/tests/fruit.jpg").toURI()
+      ));
 
       horizontal.childAdd(button0);
       horizontal.childAdd(button1);
       horizontal.childAdd(button2);
+      horizontal.childAdd(image);
 
       this.window0.decorated().set(TRUE);
       this.window0.contentArea().childAdd(margin);

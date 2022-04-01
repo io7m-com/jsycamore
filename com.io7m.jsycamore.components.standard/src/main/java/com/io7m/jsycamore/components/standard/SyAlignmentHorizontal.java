@@ -15,29 +15,29 @@
  */
 
 
-package com.io7m.jsycamore.api.components;
+package com.io7m.jsycamore.components.standard;
 
 /**
- * A specification of vertical alignment.
+ * A specification of horizontal alignment.
  */
 
-public enum SyAlignmentVertical
+public enum SyAlignmentHorizontal
 {
   /**
-   * Align something to the topmost (smallest Y) position.
+   * Align something to the leftmost (smallest X) position.
    */
 
-  ALIGN_VERTICAL_TOP,
+  ALIGN_HORIZONTAL_LEFT,
 
   /**
-   * Align something to the center of the Y axis.
+   * Align something to the center of the X axis.
    */
 
-  ALIGN_VERTICAL_CENTER,
+  ALIGN_HORIZONTAL_CENTER,
 
   /**
-   * Align something to the bottommost (largest Y) position.
+   * Align something to the rightmost (largest X) position.
    */
 
-  ALIGN_VERTICAL_BOTTOM
+  ALIGN_HORIZONTAL_RIGHT
 }

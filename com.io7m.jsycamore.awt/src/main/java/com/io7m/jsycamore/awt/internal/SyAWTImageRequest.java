@@ -14,26 +14,34 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+package com.io7m.jsycamore.awt.internal;
 
-package com.io7m.jsycamore.api.components;
-
-import com.io7m.jattribute.core.AttributeReadableType;
+import java.net.URI;
+import java.util.Objects;
 
 /**
- * Read-only access to containers that align their contents.
+ * A request to load an image.
+ *
+ * @param source The source URI
+ * @param width  The image width
+ * @param height The image height
  */
 
-public interface SyAlignReadableType extends SyContainerReadableType
+public record SyAWTImageRequest(
+  URI source,
+  int width,
+  int height)
 {
   /**
-   * @return The horizontal alignment
+   * A request to load an image.
+   *
+   * @param source The source URI
+   * @param width  The image width
+   * @param height The image height
    */
 
-  AttributeReadableType<SyAlignmentHorizontal> alignmentHorizontal();
-
-  /**
-   * @return The vertical alignment
-   */
-
-  AttributeReadableType<SyAlignmentVertical> alignmentVertical();
+  public SyAWTImageRequest
+  {
+    Objects.requireNonNull(source, "source");
+  }
 }

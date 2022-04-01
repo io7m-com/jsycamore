@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 
 public sealed interface SyRenderNodeType
   permits SyRenderNodeComposite,
+  SyRenderNodeImage,
   SyRenderNodeNoop,
   SyRenderNodeShape,
   SyRenderNodeText

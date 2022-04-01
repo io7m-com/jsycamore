@@ -27,6 +27,7 @@ import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +37,12 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -123,7 +127,22 @@ public final class SyAWTRendererTest
 
     final var pixelsR = (int[]) grabR.getPixels();
     final var pixelsE = (int[]) grabE.getPixels();
-    assertArrayEquals(pixelsE, pixelsR, "Images do not match");
+
+    try {
+      assertArrayEquals(pixelsE, pixelsR, "Images do not match");
+    } catch (final AssertionFailedError e) {
+      final var fileExp =
+        Files.createTempFile("image-expected-", ".png");
+      final var fileRec =
+        Files.createTempFile("image-received-", ".png");
+
+      Files.copy(this.imageReceivedFile, fileRec, REPLACE_EXISTING);
+      ImageIO.write(imageExpected, "PNG", fileExp.toFile());
+
+      LOG.info("expected: {}", fileExp);
+      LOG.info("received: {}", fileRec);
+      throw e;
+    }
   }
 
   private void saveImage()
@@ -162,6 +181,15 @@ public final class SyAWTRendererTest
     window.decorated().set(true);
     window.layout(layoutContext);
 
+    /*
+     * Render the image twice: The window will cause a few images to be loaded,
+     * and those images won't be immediately available due to the image loader
+     * cache. After waiting 100ms, they'll almost certainly be ready the second
+     * time around.
+     */
+
+    this.renderer.render(this.graphics, screen, window);
+    Thread.sleep(100L);
     this.renderer.render(this.graphics, screen, window);
 
     this.saveImage();

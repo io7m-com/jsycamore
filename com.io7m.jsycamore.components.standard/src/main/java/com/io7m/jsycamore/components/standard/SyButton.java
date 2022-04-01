@@ -17,8 +17,6 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
-import com.io7m.jsycamore.api.components.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyButtonWithTextType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
@@ -60,6 +58,7 @@ public final class SyButton
       .set(SyAlignmentVertical.ALIGN_VERTICAL_CENTER);
 
     this.text = new SyTextView();
+
     this.align.childAdd(this.text);
     this.margin.childAdd(this.align);
     this.childAdd(this.margin);

@@ -28,11 +28,11 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
  * A window menu button.
  */
 
-public final class SyWindowButtonMenu extends SyWindowButtonComponent
+public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
 {
   SyWindowButtonMenu()
   {
-    super(WINDOW_BUTTON_MENU, List.of());
+    super(WINDOW_BUTTON_MENU, "jsycamore:icon:window_menu");
   }
 
   @Override

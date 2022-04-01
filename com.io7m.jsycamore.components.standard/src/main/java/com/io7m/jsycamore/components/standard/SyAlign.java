@@ -20,9 +20,6 @@ package com.io7m.jsycamore.components.standard;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.components.SyAlignType;
-import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
-import com.io7m.jsycamore.api.components.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -31,15 +28,15 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 
-import static com.io7m.jsycamore.api.components.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
-import static com.io7m.jsycamore.api.components.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
 
 /**
  * A container that aligns child components to the given horizontal and vertical
  * alignment.
  */
 
-public final class SyAlign extends SyLayoutAbstract implements SyAlignType
+public final class SyAlign extends SyLayoutAbstract
 {
   private final AttributeType<SyAlignmentHorizontal> alignH;
   private final AttributeType<SyAlignmentVertical> alignV;
@@ -153,13 +150,19 @@ public final class SyAlign extends SyLayoutAbstract implements SyAlignType
     return newSize;
   }
 
-  @Override
+  /**
+   * @return An attribute representing the horizontal alignment
+   */
+
   public AttributeType<SyAlignmentHorizontal> alignmentHorizontal()
   {
     return this.alignH;
   }
 
-  @Override
+  /**
+   * @return An attribute representing the vertical alignment
+   */
+
   public AttributeType<SyAlignmentVertical> alignmentVertical()
   {
     return this.alignV;

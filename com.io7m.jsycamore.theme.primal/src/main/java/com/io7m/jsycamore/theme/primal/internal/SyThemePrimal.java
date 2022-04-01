@@ -95,9 +95,11 @@ public final class SyThemePrimal implements SyThemeType
         case CONTAINER -> {
           this.standards.put(CONTAINER, new SyPrimalContainer(this));
         }
+        case WINDOW_BUTTON_CLOSE_ICON, IMAGE_VIEW -> {
+          this.standards.put(className, new SyPrimalImageView(this));
+        }
         case CHECKBOX,
           GRID_VIEW,
-          IMAGE_VIEW,
           LIST_VIEW,
           MENU_BAR,
           METER,
@@ -107,7 +109,9 @@ public final class SyThemePrimal implements SyThemeType
 
         }
         case WINDOW_TITLE_TEXT -> {
-          this.standards.put(WINDOW_TITLE_TEXT, new SyPrimalTitleTextView(this));
+          this.standards.put(
+            WINDOW_TITLE_TEXT,
+            new SyPrimalTitleTextView(this));
         }
       }
     }

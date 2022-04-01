@@ -29,11 +29,15 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
  */
 
 public final class SyWindowButtonMaximize
-  extends SyWindowButtonComponent
+  extends SyWindowButtonWithIcon
 {
-  SyWindowButtonMaximize()
+  /**
+   * A window maximize button.
+   */
+
+  public SyWindowButtonMaximize()
   {
-    super(WINDOW_BUTTON_MAXIMIZE, List.of());
+    super(WINDOW_BUTTON_MAXIMIZE, "jsycamore:icon:window_maximize");
   }
 
   @Override

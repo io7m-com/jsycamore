@@ -15,29 +15,35 @@
  */
 
 
-package com.io7m.jsycamore.api.components;
+package com.io7m.jsycamore.api.rendering;
+
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+
+import java.net.URI;
+import java.util.Objects;
 
 /**
- * A specification of horizontal alignment.
+ * A render node consisting of an image.
+ *
+ * @param image The image
+ * @param size  The image size
  */
 
-public enum SyAlignmentHorizontal
+public record SyRenderNodeImage(
+  URI image,
+  PAreaSizeI<SySpaceComponentRelativeType> size)
+  implements SyRenderNodeType
 {
   /**
-   * Align something to the leftmost (smallest X) position.
+   * A render node consisting of an image.
+   *
+   * @param image The image
+   * @param size  The image size
    */
 
-  ALIGN_HORIZONTAL_LEFT,
-
-  /**
-   * Align something to the center of the X axis.
-   */
-
-  ALIGN_HORIZONTAL_CENTER,
-
-  /**
-   * Align something to the rightmost (largest X) position.
-   */
-
-  ALIGN_HORIZONTAL_RIGHT
+  public SyRenderNodeImage
+  {
+    Objects.requireNonNull(image, "image");
+  }
 }

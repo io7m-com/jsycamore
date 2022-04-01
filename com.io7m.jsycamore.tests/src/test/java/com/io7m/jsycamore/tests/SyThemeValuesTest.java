@@ -49,6 +49,12 @@ public final class SyThemeValuesTest
     PVector4D.of(1.0, 1.0, 1.0, 1.0);
   private static final PVector4D<SySpaceRGBAPreType> HALF =
     PVector4D.of(0.5, 0.5, 0.5, 0.5);
+  private static final SyFontDescription FONT_0 =
+    new SyFontDescription("Dialog", REGULAR, 10);
+  private static final SyFontDescription FONT_1 =
+    new SyFontDescription("Dialog", REGULAR, 12);
+  private static final SyFontDescription FONT_2 =
+    new SyFontDescription("Dialog", REGULAR, 14);
 
   @Test
   public void testEmpty()
@@ -374,13 +380,6 @@ public final class SyThemeValuesTest
 
     assertInstanceOf(SyConstantDoubleType.class, attributes.values().get("a"));
   }
-
-  private static final SyFontDescription FONT_0 =
-    new SyFontDescription("Dialog", REGULAR, 10);
-  private static final SyFontDescription FONT_1 =
-    new SyFontDescription("Dialog", REGULAR, 12);
-  private static final SyFontDescription FONT_2 =
-    new SyFontDescription("Dialog", REGULAR, 14);
 
   @Test
   public void testNodeExistsConstantFont()

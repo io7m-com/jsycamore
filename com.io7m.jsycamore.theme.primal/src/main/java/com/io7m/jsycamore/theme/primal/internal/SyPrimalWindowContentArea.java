@@ -16,12 +16,19 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
-import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
+import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
+import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
+import java.util.Optional;
+
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_BACKGROUND;
 
 /**
  * A theme component for window content areas.
@@ -48,6 +55,20 @@ public final class SyPrimalWindowContentArea extends SyPrimalAbstract
   {
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
-    return SyRenderNodeNoop.noop();
+
+    final var rectangle =
+      new SyShapeRectangle<SySpaceComponentRelativeType>(
+        PAreasI.cast(PAreasI.moveToOrigin(component.boundingArea()))
+      );
+
+    try {
+      return new SyRenderNodeShape(
+        Optional.empty(),
+        Optional.of(this.theme().values().fillFlat(PRIMARY_BACKGROUND)),
+        rectangle
+      );
+    } catch (final SyThemeValueException e) {
+      throw new IllegalStateException(e);
+    }
   }
 }

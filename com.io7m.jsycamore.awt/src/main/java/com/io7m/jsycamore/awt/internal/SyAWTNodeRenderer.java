@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.rendering.SyPaintFillType;
 import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeImage;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
@@ -49,13 +50,15 @@ import java.util.Optional;
 
 public final class SyAWTNodeRenderer
 {
+  private final SyAWTImageLoader imageLoader;
+
   /**
    * An AWT node renderer.
    */
 
   public SyAWTNodeRenderer()
   {
-
+    this.imageLoader = new SyAWTImageLoader();
   }
 
   private static void renderShapeRectangle(
@@ -223,12 +226,31 @@ public final class SyAWTNodeRenderer
       renderNodeText(graphics2D, text);
       return;
     }
+    if (renderNode instanceof SyRenderNodeImage image) {
+      this.renderNodeImage(graphics2D, image);
+      return;
+    }
     if (renderNode instanceof SyRenderNodeComposite composite) {
       for (final var node : composite.nodes()) {
         this.renderNode(graphics2D, node);
       }
       return;
     }
+  }
+
+  private void renderNodeImage(
+    final Graphics2D g,
+    final SyRenderNodeImage image)
+  {
+    final var request =
+      new SyAWTImageRequest(
+        image.image(),
+        image.size().sizeX(),
+        image.size().sizeY()
+      );
+
+    final var imageData = this.imageLoader.load(request);
+    g.drawImage(imageData, 0, 0, null);
   }
 
   private static void renderNodeText(

@@ -16,8 +16,8 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jsycamore.api.components.SyAlignmentHorizontal;
-import com.io7m.jsycamore.api.components.SyAlignmentVertical;
+import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
+import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;

@@ -16,6 +16,11 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jattribute.core.AttributeType;
+
+import java.net.URI;
+import java.util.Optional;
+
 /**
  * Write access to image views.
  */
@@ -23,5 +28,10 @@ package com.io7m.jsycamore.api.components;
 public interface SyImageViewType
   extends SyImageViewReadableType, SyComponentType
 {
+  /**
+   * @return The image URI
+   */
 
+  @Override
+  AttributeType<Optional<URI>> imageURI();
 }

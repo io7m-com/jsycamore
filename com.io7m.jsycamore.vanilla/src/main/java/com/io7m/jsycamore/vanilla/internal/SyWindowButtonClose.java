@@ -28,7 +28,7 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
  * A window close button.
  */
 
-public final class SyWindowButtonClose extends SyWindowButtonComponent
+public final class SyWindowButtonClose extends SyWindowButtonWithIcon
 {
   /**
    * A window close button.
@@ -36,7 +36,7 @@ public final class SyWindowButtonClose extends SyWindowButtonComponent
 
   public SyWindowButtonClose()
   {
-    super(WINDOW_BUTTON_CLOSE, List.of());
+    super(WINDOW_BUTTON_CLOSE, "jsycamore:icon:window_close");
   }
 
   @Override

@@ -79,8 +79,14 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
 
     final var childNodes =
       this.node().children();
+
+    final var childrenVisible =
+      childNodes.stream()
+        .filter(n -> n.value().isVisible())
+        .toList();
+
     final var childCount =
-      childNodes.size();
+      childrenVisible.size();
 
     if (childCount > 0) {
       final var regionSize =
@@ -101,7 +107,7 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
           spaceR = paddingHalf;
         }
 
-        final var child = childNodes.get(index).value();
+        final var child = childrenVisible.get(index).value();
         final var shrunkSize = regionSize - (spaceL + spaceR);
         child.layout(layoutContext, new SyConstraints(
           0,

@@ -14,19 +14,30 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
 
-import com.io7m.jattribute.core.AttributeType;
+package com.io7m.jsycamore.components.standard;
 
 /**
- * Write access to containers that align their contents.
+ * A specification of vertical alignment.
  */
 
-public interface SyAlignType extends SyAlignReadableType, SyContainerType
+public enum SyAlignmentVertical
 {
-  @Override
-  AttributeType<SyAlignmentHorizontal> alignmentHorizontal();
+  /**
+   * Align something to the topmost (smallest Y) position.
+   */
 
-  @Override
-  AttributeType<SyAlignmentVertical> alignmentVertical();
+  ALIGN_VERTICAL_TOP,
+
+  /**
+   * Align something to the center of the Y axis.
+   */
+
+  ALIGN_VERTICAL_CENTER,
+
+  /**
+   * Align something to the bottommost (largest Y) position.
+   */
+
+  ALIGN_VERTICAL_BOTTOM
 }

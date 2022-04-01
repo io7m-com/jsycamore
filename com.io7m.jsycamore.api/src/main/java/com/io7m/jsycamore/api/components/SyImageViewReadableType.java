@@ -16,9 +16,12 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.IMAGE_VIEW;
 
@@ -34,4 +37,10 @@ public interface SyImageViewReadableType
   {
     return List.of(IMAGE_VIEW);
   }
+
+  /**
+   * @return The image URI
+   */
+
+  AttributeReadableType<Optional<URI>> imageURI();
 }

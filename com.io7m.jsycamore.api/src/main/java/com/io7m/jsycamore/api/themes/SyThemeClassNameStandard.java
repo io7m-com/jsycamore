@@ -104,6 +104,12 @@ public enum SyThemeClassNameStandard
   WINDOW_BUTTON_CLOSE("WindowButtonClose"),
 
   /**
+   * The close button icon for a window.
+   */
+
+  WINDOW_BUTTON_CLOSE_ICON("WindowButtonCloseIcon"),
+
+  /**
    * The maximize button for a window.
    */
 

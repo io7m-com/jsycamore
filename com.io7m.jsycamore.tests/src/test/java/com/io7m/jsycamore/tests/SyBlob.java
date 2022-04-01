@@ -33,8 +33,22 @@ import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 public final class SyBlob extends SyComponentAbstract
 {
-  private int preferredSizeX = 0;
-  private int preferredSizeY = 0;
+  private int preferredSizeX;
+  private int preferredSizeY;
+
+  public SyBlob()
+  {
+    super(List.of());
+  }
+
+  public SyBlob(
+    final int x,
+    final int y)
+  {
+    this();
+    this.setPreferredSizeX(x);
+    this.setPreferredSizeY(y);
+  }
 
   public int preferredSizeX()
   {
@@ -56,20 +70,6 @@ public final class SyBlob extends SyComponentAbstract
     final int inPreferredSizeY)
   {
     this.preferredSizeY = inPreferredSizeY;
-  }
-
-  public SyBlob()
-  {
-    super(List.of());
-  }
-
-  public SyBlob(
-    final int x,
-    final int y)
-  {
-    this();
-    this.setPreferredSizeX(x);
-    this.setPreferredSizeY(y);
   }
 
   @Override
