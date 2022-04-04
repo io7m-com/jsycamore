@@ -40,6 +40,10 @@
       <groupId>com.io7m.jregions</groupId>
       <artifactId>com.io7m.jregions.core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.io7m.junreachable</groupId>
+      <artifactId>com.io7m.junreachable.core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>

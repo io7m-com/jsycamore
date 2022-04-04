@@ -30,6 +30,7 @@
     <module>com.io7m.jsycamore.theme.primal</module>
     <module>com.io7m.jsycamore.theme.spi</module>
     <module>com.io7m.jsycamore.vanilla</module>
+    <module>com.io7m.jsycamore.font.york</module>
   </modules>
 
   <properties>

@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -60,6 +61,7 @@ public final class SyAWTNodeRenderer
   private final SyAWTImageLoader imageLoader;
   private final SyFontDirectoryType<SyFontAWT> fontDirectory;
   private boolean debugBounds;
+  private boolean textAntialias;
 
   /**
    * An AWT node renderer.
@@ -224,7 +226,7 @@ public final class SyAWTNodeRenderer
     return toColor4(flat.color());
   }
 
-  private static void renderNodeText(
+  private void renderNodeText(
     final Graphics2D g,
     final SyFontDirectoryType<SyFontAWT> fonts,
     final SyRenderNodeText textNode)
@@ -247,6 +249,18 @@ public final class SyAWTNodeRenderer
       final var width = font.textWidth(text);
       final var x = (sizeX / 2) - (width / 2);
       final var y = font.textHeight() - (font.textDescent());
+
+      if (this.textAntialias) {
+        g.setRenderingHint(
+          RenderingHints.KEY_TEXT_ANTIALIASING,
+          RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
+      } else {
+        g.setRenderingHint(
+          RenderingHints.KEY_TEXT_ANTIALIASING,
+          RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
+        );
+      }
 
       g.setFont(font.font());
       g.setPaint(fillToPaint(area, textNode.fillPaint()));
@@ -282,6 +296,18 @@ public final class SyAWTNodeRenderer
     final boolean enabled)
   {
     this.debugBounds = enabled;
+  }
+
+  /**
+   * Enable/disable debug bounds rendering.
+   *
+   * @param enabled {@code true} if text should be antialiased
+   */
+
+  public void setTextAntialiasing(
+    final boolean enabled)
+  {
+    this.textAntialias = enabled;
   }
 
   /**

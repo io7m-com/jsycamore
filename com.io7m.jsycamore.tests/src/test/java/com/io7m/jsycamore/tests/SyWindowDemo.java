@@ -20,7 +20,9 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontStyle;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
@@ -93,7 +95,7 @@ public final class SyWindowDemo
   private static final class Canvas extends JPanel
   {
     private final SyFontDirectoryType<SyFontAWT> fontDirectory;
-    private final SyRendererType renderer;
+    private final SyAWTRenderer renderer;
     private final SyScreenType screen;
     private final SyThemeType theme;
     private final SyWindowType window0;
@@ -114,6 +116,20 @@ public final class SyWindowDemo
         new SyThemePrimalFactory()
           .create();
 
+      this.theme.values()
+        .setFont("text_font", new SyFontDescription(
+          "York Sans",
+          SyFontStyle.REGULAR,
+          12
+        ));
+
+      this.theme.values()
+        .setFont("window_title_text_font", new SyFontDescription(
+          "York Sans",
+          SyFontStyle.REGULAR,
+          12
+        ));
+
       this.screen =
         new SyScreenFactory().create(
           this.theme,
@@ -132,7 +148,8 @@ public final class SyWindowDemo
         .set(HIDE_ON_CLOSE_BUTTON);
 
       this.renderer = new SyAWTRenderer(this.fontDirectory, this.imageLoader);
-      // this.renderer = new SyBoundsOnlyRenderer();
+      this.renderer.nodeRenderer()
+        .setTextAntialiasing(false);
 
       final var executor =
         Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -255,6 +272,7 @@ public final class SyWindowDemo
         this.window1.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
         this.window1.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
         this.window1.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+        this.window1.title().set("ひらがな");
       }
 
       executor.scheduleAtFixedRate(() -> {

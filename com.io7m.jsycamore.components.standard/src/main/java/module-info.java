@@ -33,4 +33,5 @@ module com.io7m.jsycamore.components.standard
   requires org.slf4j;
 
   exports com.io7m.jsycamore.components.standard;
+  exports com.io7m.jsycamore.components.standard.forms;
 }

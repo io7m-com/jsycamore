@@ -53,6 +53,15 @@ public final class SyAWTRenderer implements SyRendererType
       new ThemeContext(inFonts);
   }
 
+  /**
+   * @return The AWT node renderer
+   */
+
+  public SyAWTNodeRenderer nodeRenderer()
+  {
+    return this.nodeRenderer;
+  }
+
   @Override
   public void render(
     final Graphics2D g,

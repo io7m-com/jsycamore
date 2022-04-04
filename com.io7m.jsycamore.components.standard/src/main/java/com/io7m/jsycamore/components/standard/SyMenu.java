@@ -154,6 +154,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
   {
     final var v =
       this.addMenuItem(new SyMenuItemAtom(this, text, action));
+
     this.align.childAdd(v);
     return v;
   }
