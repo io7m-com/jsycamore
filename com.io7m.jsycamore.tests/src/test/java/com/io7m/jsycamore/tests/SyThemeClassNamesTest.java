@@ -31,6 +31,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class SyThemeClassNamesTest
 {
+  private static DynamicTest validClassNameOf(
+    final String text)
+  {
+    return DynamicTest.dynamicTest("testValid_" + text, () -> {
+      assertEquals(text, new SyThemeClassNameCustom(text).className());
+      assertEquals(text, new SyThemeClassNameCustom(text).toString());
+    });
+  }
+
+  private static DynamicTest invalidClassNameOf(
+    final String text)
+  {
+    return DynamicTest.dynamicTest("testInvalid_" + text, () -> {
+      assertThrows(IllegalArgumentException.class, () -> {
+        new SyThemeClassNameCustom(text);
+      });
+    });
+  }
+
   @Test
   public void testClassNamesStandard()
   {
@@ -56,24 +75,5 @@ public final class SyThemeClassNamesTest
   {
     return Stream.of("Aa", "B", "C90")
       .map(SyThemeClassNamesTest::validClassNameOf);
-  }
-
-  private static DynamicTest validClassNameOf(
-    final String text)
-  {
-    return DynamicTest.dynamicTest("testValid_" + text, () -> {
-      assertEquals(text, new SyThemeClassNameCustom(text).className());
-      assertEquals(text, new SyThemeClassNameCustom(text).toString());
-    });
-  }
-
-  private static DynamicTest invalidClassNameOf(
-    final String text)
-  {
-    return DynamicTest.dynamicTest("testInvalid_" + text, () -> {
-      assertThrows(IllegalArgumentException.class, () -> {
-        new SyThemeClassNameCustom(text);
-      });
-    });
   }
 }

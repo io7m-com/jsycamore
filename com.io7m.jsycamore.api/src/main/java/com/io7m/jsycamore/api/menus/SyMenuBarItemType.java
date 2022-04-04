@@ -14,37 +14,44 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.vanilla.internal;
 
-import com.io7m.jattribute.core.Attributes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.io7m.jsycamore.api.menus;
+
+import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_BAR_ITEM;
 
 /**
- * A factory of attributes.
+ * The type of items within menu bars.
  */
 
-public final class SyWindowAttributes
+public interface SyMenuBarItemType extends SyComponentType, SyMenuHostType
 {
-  private static final Logger LOG =
-    LoggerFactory.getLogger(SyWindowAttributes.class);
-
-  private static final Attributes ATTRIBUTES =
-    Attributes.create(ex -> {
-      LOG.error("subscriber raised exception: ", ex);
-    });
-
-  private SyWindowAttributes()
+  @Override
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-
+    return List.of(MENU_BAR_ITEM);
   }
 
   /**
-   * @return The attribute factory
+   * @return An indication of whether this item is selected
    */
 
-  public static Attributes get()
-  {
-    return ATTRIBUTES;
-  }
+  SyMenuSelected selected();
+
+  /**
+   * @return The menu bar item name
+   */
+
+  AttributeType<String> name();
+
+  /**
+   * @return The menu that will be opened by this item
+   */
+
+  SyMenuType menu();
 }

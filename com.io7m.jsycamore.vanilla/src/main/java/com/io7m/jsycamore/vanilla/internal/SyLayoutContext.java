@@ -19,6 +19,7 @@ package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 
 import java.util.Objects;
@@ -29,7 +30,7 @@ import java.util.Objects;
 
 public final class SyLayoutContext implements SyLayoutContextType
 {
-  private final SyFontDirectoryType fonts;
+  private final SyFontDirectoryType<? extends SyFontType> fonts;
   private final SyThemeType themeCurrent;
 
   /**
@@ -40,7 +41,7 @@ public final class SyLayoutContext implements SyLayoutContextType
    */
 
   public SyLayoutContext(
-    final SyFontDirectoryType inFonts,
+    final SyFontDirectoryType<? extends SyFontType> inFonts,
     final SyThemeType inThemeCurrent)
   {
     this.fonts =
@@ -56,7 +57,7 @@ public final class SyLayoutContext implements SyLayoutContextType
   }
 
   @Override
-  public SyFontDirectoryType fonts()
+  public SyFontDirectoryType<? extends SyFontType> fonts()
   {
     return this.fonts;
   }

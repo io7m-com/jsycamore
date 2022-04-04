@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.components.standard.SyLimit;
@@ -53,7 +52,8 @@ public final class SyLimitTest extends SyComponentContract<SyLimit>
     assertEquals(0, c.position().get().y());
 
     final var a = new SyLimit();
-    a.limitSize().set(PAreaSizeI.of(16, 16));
+    a.limitSizeX().set(16);
+    a.limitSizeY().set(16);
     a.childAdd(c);
 
     assertEquals(0, c.position().get().x());
@@ -68,14 +68,5 @@ public final class SyLimitTest extends SyComponentContract<SyLimit>
     assertEquals(16, size.sizeY());
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
-  }
-
-  @Test
-  public void testLimitConvenience0()
-  {
-    final var a = new SyLimit(PAreaSizeI.of(16, 16));
-    final var size = a.limitSize().get();
-    assertEquals(16, size.sizeX());
-    assertEquals(16, size.sizeY());
   }
 }

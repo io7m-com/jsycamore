@@ -17,6 +17,9 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -35,6 +38,17 @@ public interface SyTextViewReadableType
   {
     return List.of(TEXT_VIEW);
   }
+
+  /**
+   * Determine the minimum size required to display the contained text fully.
+   *
+   * @param layoutContext The layout context
+   *
+   * @return The minimum size
+   */
+
+  PAreaSizeI<SySpaceParentRelativeType> minimumSizeRequired(
+    SyLayoutContextType layoutContext);
 
   /**
    * @return The current text

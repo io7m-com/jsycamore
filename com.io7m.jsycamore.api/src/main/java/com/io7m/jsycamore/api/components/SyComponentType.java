@@ -33,6 +33,7 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * The type of components.
@@ -125,5 +126,32 @@ public interface SyComponentType
     final SyComponentType component)
   {
     this.node().childRemove(component.node());
+  }
+
+  /**
+   * Find an ancestor component matching the given predicate.
+   *
+   * @param predicate The predicate
+   *
+   * @return The ancestor component, if any
+   */
+
+  default Optional<SyComponentType> ancestorMatching(
+    final Predicate<SyComponentType> predicate)
+  {
+    Objects.requireNonNull(predicate, "predicate");
+
+    var parentOpt =
+      this.node().parent();
+
+    while (parentOpt.isPresent()) {
+      final var parent = parentOpt.get();
+      if (predicate.test(parent.value())) {
+        return Optional.of(parent.value());
+      }
+      parentOpt = parent.parent();
+    }
+
+    return Optional.empty();
   }
 }

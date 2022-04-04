@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jattribute.core.AttributeType;
+
 /**
  * Write access to containers.
  */
@@ -23,5 +25,9 @@ package com.io7m.jsycamore.api.components;
 public interface SyContainerType
   extends SyContainerReadableType, SyComponentType
 {
+  @Override
+  AttributeType<Integer> limitSizeX();
 
+  @Override
+  AttributeType<Integer> limitSizeY();
 }

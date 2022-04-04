@@ -33,15 +33,19 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
 import com.io7m.junreachable.UnreachableCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.Polygon;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -50,15 +54,28 @@ import java.util.Optional;
 
 public final class SyAWTNodeRenderer
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(SyAWTNodeRenderer.class);
+
   private final SyAWTImageLoader imageLoader;
+  private final SyFontDirectoryType<SyFontAWT> fontDirectory;
+  private boolean debugBounds;
 
   /**
    * An AWT node renderer.
+   *
+   * @param inFontDirectory The font directory
+   * @param inImageLoader   The image loader
    */
 
-  public SyAWTNodeRenderer()
+  public SyAWTNodeRenderer(
+    final SyAWTImageLoader inImageLoader,
+    final SyFontDirectoryType<SyFontAWT> inFontDirectory)
   {
-    this.imageLoader = new SyAWTImageLoader();
+    this.imageLoader =
+      Objects.requireNonNull(inImageLoader, "imageLoader");
+    this.fontDirectory =
+      Objects.requireNonNull(inFontDirectory, "fontDirectory");
   }
 
   private static void renderShapeRectangle(
@@ -207,6 +224,66 @@ public final class SyAWTNodeRenderer
     return toColor4(flat.color());
   }
 
+  private static void renderNodeText(
+    final Graphics2D g,
+    final SyFontDirectoryType<SyFontAWT> fonts,
+    final SyRenderNodeText textNode)
+  {
+    final var text = textNode.text();
+    if (text.isEmpty()) {
+      return;
+    }
+
+    final var size = textNode.size();
+    final var sizeX = size.sizeX();
+    final var sizeY = size.sizeY();
+    final var area =
+      PAreasI.<SySpaceType>create(0, 0, sizeX, sizeY);
+
+    try {
+      final var font =
+        fonts.get(textNode.font().description());
+
+      final var width = font.textWidth(text);
+      final var x = (sizeX / 2) - (width / 2);
+      final var y = font.textHeight() - (font.textDescent());
+
+      g.setFont(font.font());
+      g.setPaint(fillToPaint(area, textNode.fillPaint()));
+      g.drawString(text, x, y);
+    } catch (final SyFontException e) {
+      LOG.error("error rendering text: ", e);
+      g.setPaint(Color.RED);
+      g.fillRect(0, 0, sizeX, sizeY);
+    }
+  }
+
+  private static void renderNodeShape(
+    final Graphics2D g,
+    final SyRenderNodeShape shape)
+  {
+    if (shape.shape() instanceof SyShapeRectangle<SySpaceComponentRelativeType> rectangle) {
+      renderShapeRectangle(g, shape.edgePaint(), shape.fillPaint(), rectangle);
+      return;
+    }
+    if (shape.shape() instanceof SyShapePolygon<SySpaceComponentRelativeType> polygon) {
+      renderShapePolygon(g, shape.edgePaint(), shape.fillPaint(), polygon);
+      return;
+    }
+  }
+
+  /**
+   * Enable/disable debug bounds rendering.
+   *
+   * @param enabled {@code true} if bounds should be rendered
+   */
+
+  public void setDebugBoundsRendering(
+    final boolean enabled)
+  {
+    this.debugBounds = enabled;
+  }
+
   /**
    * Render the given node.
    *
@@ -218,23 +295,35 @@ public final class SyAWTNodeRenderer
     final Graphics2D graphics2D,
     final SyRenderNodeType renderNode)
   {
-    if (renderNode instanceof SyRenderNodeShape shape) {
-      renderNodeShape(graphics2D, shape);
-      return;
-    }
-    if (renderNode instanceof SyRenderNodeText text) {
-      renderNodeText(graphics2D, text);
-      return;
-    }
-    if (renderNode instanceof SyRenderNodeImage image) {
-      this.renderNodeImage(graphics2D, image);
-      return;
-    }
-    if (renderNode instanceof SyRenderNodeComposite composite) {
-      for (final var node : composite.nodes()) {
-        this.renderNode(graphics2D, node);
+    try {
+      if (renderNode instanceof SyRenderNodeShape shape) {
+        renderNodeShape(graphics2D, shape);
+        return;
       }
-      return;
+      if (renderNode instanceof SyRenderNodeText text) {
+        renderNodeText(graphics2D, this.fontDirectory, text);
+        return;
+      }
+      if (renderNode instanceof SyRenderNodeImage image) {
+        this.renderNodeImage(graphics2D, image);
+        return;
+      }
+      if (renderNode instanceof SyRenderNodeComposite composite) {
+        for (final var node : composite.nodes()) {
+          this.renderNode(graphics2D, node);
+        }
+        return;
+      }
+    } finally {
+      if (this.debugBounds) {
+        graphics2D.setPaint(Color.RED);
+        graphics2D.drawRect(
+          0,
+          0,
+          renderNode.size().sizeX(),
+          renderNode.size().sizeY()
+        );
+      }
     }
   }
 
@@ -251,52 +340,5 @@ public final class SyAWTNodeRenderer
 
     final var imageData = this.imageLoader.load(request);
     g.drawImage(imageData, 0, 0, null);
-  }
-
-  private static void renderNodeText(
-    final Graphics2D g,
-    final SyRenderNodeText textNode)
-  {
-    final var text = textNode.text();
-    if (text.isEmpty()) {
-      return;
-    }
-
-    final var size = textNode.size();
-    final var sizeX = size.sizeX();
-    final var sizeY = size.sizeY();
-    final var area =
-      PAreasI.<SySpaceType>create(0, 0, sizeX, sizeY);
-
-    final var font =
-      Font.decode(textNode.font().description().identifier());
-
-    final var metrics =
-      g.getFontMetrics(font);
-    final var width =
-      metrics.stringWidth(text);
-    final var lineMetrics =
-      metrics.getLineMetrics(text, g);
-
-    final var x = (sizeX / 2) - (width / 2);
-    final var y = lineMetrics.getHeight() - (lineMetrics.getDescent() / 2.0f);
-
-    g.setFont(font);
-    g.setPaint(fillToPaint(area, textNode.fillPaint()));
-    g.drawString(text, x, y);
-  }
-
-  private static void renderNodeShape(
-    final Graphics2D g,
-    final SyRenderNodeShape shape)
-  {
-    if (shape.shape() instanceof SyShapeRectangle<SySpaceComponentRelativeType> rectangle) {
-      renderShapeRectangle(g, shape.edgePaint(), shape.fillPaint(), rectangle);
-      return;
-    }
-    if (shape.shape() instanceof SyShapePolygon<SySpaceComponentRelativeType> polygon) {
-      renderShapePolygon(g, shape.edgePaint(), shape.fillPaint(), polygon);
-      return;
-    }
   }
 }

@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.theme.primal.internal;
 
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeComponentType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
@@ -77,7 +78,7 @@ public abstract class SyPrimalAbstract implements SyThemeComponentType
     try {
       return context.fonts()
         .get(this.theme.values().font(SyPrimalValues.TEXT_FONT));
-    } catch (final SyThemeValueException e) {
+    } catch (final SyThemeValueException | SyFontException e) {
       throw new IllegalStateException(e);
     }
   }

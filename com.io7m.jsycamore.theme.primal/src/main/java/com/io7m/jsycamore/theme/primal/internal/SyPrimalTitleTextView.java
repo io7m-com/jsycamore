@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyTextViewReadableType;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
+import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
@@ -59,7 +60,7 @@ public final class SyPrimalTitleTextView extends SyPrimalAbstract
     try {
       return context.fonts()
         .get(this.theme().values().font(SyPrimalValues.WINDOW_TITLE_TEXT_FONT));
-    } catch (final SyThemeValueException e) {
+    } catch (final SyThemeValueException | SyFontException e) {
       throw new IllegalStateException(e);
     }
   }

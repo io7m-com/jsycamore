@@ -14,14 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
+package com.io7m.jsycamore.api.menus;
+
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_BAR;
 
 /**
- * Write access to menu bars.
+ * Read-only access to menu bars.
  */
 
-public interface SyMenuBarType
-  extends SyMenuBarReadableType, SyComponentType
+public interface SyMenuBarReadableType
+  extends SyComponentReadableType
 {
-
+  @Override
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
+  {
+    return List.of(MENU_BAR);
+  }
 }

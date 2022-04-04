@@ -17,8 +17,8 @@
 package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 
 import java.awt.Color;

@@ -68,6 +68,54 @@ public enum SyThemeClassNameStandard
   MENU_BAR("MenuBar"),
 
   /**
+   * A menu bar item.
+   */
+
+  MENU_BAR_ITEM("MenuBarItem"),
+
+  /**
+   * The text in a menu bar item.
+   */
+
+  MENU_BAR_ITEM_TEXT("MenuBarItemText"),
+
+  /**
+   * A menu item class.
+   */
+
+  MENU_ITEM("MenuItem"),
+
+  /**
+   * A menu item class.
+   */
+
+  MENU_ITEM_ATOM("MenuItemAtom"),
+
+  /**
+   * A menu item class.
+   */
+
+  MENU_ITEM_SEPARATOR("MenuItemSeparator"),
+
+  /**
+   * A menu item class.
+   */
+
+  MENU_ITEM_SUBMENU("MenuItemSubmenu"),
+
+  /**
+   * A menu class.
+   */
+
+  MENU("Menu"),
+
+  /**
+   * A menu item text class.
+   */
+
+  MENU_ITEM_TEXT("MenuItemText"),
+
+  /**
    * A generic meter class.
    */
 

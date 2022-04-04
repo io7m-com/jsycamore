@@ -19,16 +19,19 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.events.SyEventConsumer;
+import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.menus.SyMenuClosed;
+import com.io7m.jsycamore.api.menus.SyMenuOpened;
 import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
+import com.io7m.jsycamore.api.windows.SyWindowBecameInvisible;
+import com.io7m.jsycamore.api.windows.SyWindowBecameVisible;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowCreated;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
-import com.io7m.jsycamore.api.windows.SyWindowFocusGained;
-import com.io7m.jsycamore.api.windows.SyWindowFocusLost;
 import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
+import com.io7m.jsycamore.components.standard.SyButton;
+import com.io7m.jsycamore.components.standard.SyMenu;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -45,9 +48,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
-import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.*;
+import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.CLOSE_ON_CLOSE_BUTTON;
+import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,7 +65,7 @@ public final class SyScreenTest
 
   private SyScreenFactory screens;
   private SyScreenType screen;
-  private List<SyWindowEventType> events;
+  private List<SyEventType> events;
   private CountDownLatch eventsLatch;
 
   @BeforeEach
@@ -71,7 +76,7 @@ public final class SyScreenTest
     this.screen =
       this.screens.create(
         new SyThemePrimalFactory().create(),
-        SyFontDirectoryAWT.create(),
+        SyFontDirectoryAWT.createFromServiceLoader(),
         PAreaSizeI.of(800, 600)
       );
 
@@ -79,7 +84,7 @@ public final class SyScreenTest
     this.events = Collections.synchronizedList(new ArrayList<>());
 
     SyEventConsumer.subscribe(
-      this.screen.windowEvents(),
+      this.screen.events(),
       event -> {
         LOG.debug("event: {}", event);
         this.events.add(event);
@@ -120,11 +125,10 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowCreated(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowCreated(w1.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w1.id()), this.eventNext());
     assertEquals(0, this.events.size());
   }
 
@@ -157,13 +161,10 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowCreated(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w1.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowCreated(w1.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w1.id()), this.eventNext());
     assertEquals(0, this.events.size());
   }
 
@@ -192,13 +193,10 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowCreated(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w1.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowCreated(w1.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w1.id()), this.eventNext());
     assertEquals(0, this.events.size());
   }
 
@@ -232,13 +230,11 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowCreated(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w1.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowCreated(w1.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w1.id()), this.eventNext());
+    assertEquals(new SyWindowBecameInvisible(w1.id()), this.eventNext());
     assertEquals(0, this.events.size());
   }
 
@@ -336,9 +332,9 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameInvisible(w0.id()), this.eventNext());
     assertEquals(0, this.events.size());
   }
 
@@ -366,10 +362,149 @@ public final class SyScreenTest
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
-    assertEquals(new SyWindowCreated(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusGained(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowFocusLost(w0.id()), this.events.remove(0));
-    assertEquals(new SyWindowClosed(w0.id()), this.events.remove(0));
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
     assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Opening a menu works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testMenuOpen()
+    throws Exception
+  {
+    final var clicks = new AtomicInteger(0);
+
+    final var menu = new SyMenu();
+    menu.addAtom("Item 0", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 2", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 3", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.position().set(PVector2I.of(0, 0));
+
+    final var button = new SyButton("Open", () -> {
+      this.screen.menuOpen(menu);
+    });
+
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    w0.decorated().set(false);
+    w0.contentArea().childAdd(button);
+
+    this.screen.update();
+
+    // Click the button
+    this.screen.mouseMoved(PVector2I.of(0, 0));
+    this.screen.mouseDown(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+
+    // Click the menu item
+    this.screen.mouseDown(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+
+    assertEquals(1, clicks.get());
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyMenuOpened(menu), this.eventNext());
+    assertEquals(new SyMenuClosed(menu), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Opening a menu and then clicking outside of the menu closes the menu.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testMenuClickElsewhere()
+    throws Exception
+  {
+    final var clicks = new AtomicInteger(0);
+
+    final var menu = new SyMenu();
+    menu.addAtom("Item 0", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 2", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 3", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.position().set(PVector2I.of(0, 0));
+
+    final var button = new SyButton("Open", () -> {
+      this.screen.menuOpen(menu);
+    });
+
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    w0.decorated().set(false);
+    w0.contentArea().childAdd(button);
+
+    this.screen.update();
+
+    // Click the button
+    this.screen.mouseMoved(PVector2I.of(0, 0));
+    this.screen.mouseDown(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+
+    // Click outside the menu.
+    this.screen.mouseDown(PVector2I.of(799, 599), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(799, 599), MOUSE_BUTTON_LEFT);
+
+    assertEquals(0, clicks.get());
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyMenuOpened(menu), this.eventNext());
+    assertEquals(new SyMenuClosed(menu), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Closing a menu that isn't open does nothing.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testMenuCloseNoop()
+    throws Exception
+  {
+    this.screen.menuClose();
+    this.screen.update();
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(0, this.events.size());
+  }
+
+  private SyEventType eventNext()
+  {
+    return this.events.remove(0);
   }
 }

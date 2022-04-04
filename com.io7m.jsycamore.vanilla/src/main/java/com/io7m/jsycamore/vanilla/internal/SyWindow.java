@@ -31,12 +31,15 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
+import com.io7m.jsycamore.api.windows.SyWindowLayer;
 import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
+import com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
@@ -65,8 +68,10 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<SyWindowCloseBehaviour> closeBehaviour;
   private final AttributeType<Integer> positionSnapping;
   private final AttributeType<Integer> sizeSnapping;
+  private final SyWindowLayer category;
   private PVector2I<SySpaceViewportType> position;
   private PVector2I<SySpaceViewportType> positionMaximized;
+  private final SyWindowDeletionPolicy deletionPolicy;
   private PAreaSizeI<SySpaceViewportType> size;
   private PAreaSizeI<SySpaceViewportType> sizeMaximized;
   private SyConstraints constraints;
@@ -74,12 +79,18 @@ public final class SyWindow implements SyWindowType
   SyWindow(
     final SyScreenType inScreen,
     final SyWindowID inId,
+    final SyWindowLayer inCategory,
+    final SyWindowDeletionPolicy inDeletionPolicy,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
     this.screen =
       Objects.requireNonNull(inScreen, "inGUI");
     this.id =
       Objects.requireNonNull(inId, "inId");
+    this.category =
+      Objects.requireNonNull(inCategory, "inCategory");
+    this.deletionPolicy =
+      Objects.requireNonNull(inDeletionPolicy, "inDeletionPolicy");
     this.size =
       Objects.requireNonNull(inSize, "inSize");
     this.sizeMaximized =
@@ -95,7 +106,7 @@ public final class SyWindow implements SyWindowType
     this.viewportAccumulator =
       SyWindowViewportAccumulator.create();
 
-    final var attributes = SyWindowAttributes.get();
+    final var attributes = SyComponentAttributes.get();
     this.maximized =
       attributes.create(FALSE);
     this.decorated =
@@ -138,6 +149,10 @@ public final class SyWindow implements SyWindowType
     final StringBuilder sb = new StringBuilder(128);
     sb.append("[SyWindow ");
     sb.append(this.id.value());
+    sb.append(' ');
+    sb.append('[');
+    sb.append(this.titleText.get());
+    sb.append(']');
     sb.append(' ');
     PAreasI.showToBuilder(this.boundingArea(), sb);
     sb.append(']');
@@ -273,6 +288,18 @@ public final class SyWindow implements SyWindowType
   public AttributeType<SyVisibility> maximizeButtonVisibility()
   {
     return this.root.maximizeButton().visibility();
+  }
+
+  @Override
+  public SyWindowLayer layer()
+  {
+    return this.category;
+  }
+
+  @Override
+  public SyWindowDeletionPolicy deletionPolicy()
+  {
+    return this.deletionPolicy;
   }
 
   @Override

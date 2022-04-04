@@ -89,6 +89,10 @@ public final class SyPrimalValues
   /**
    * A value name.
    */
+  public static final String PRIMARY_FOREGROUND_INACTIVE = "primary_foreground_inactive";
+  /**
+   * A value name.
+   */
   public static final String PRIMARY_INACTIVE = "primary_inactive";
   /**
    * A value name.
@@ -138,19 +142,26 @@ public final class SyPrimalValues
       builder.createConstantFont(
         TEXT_FONT,
         "The primary text font.",
-        new SyFontDescription("Dialog", REGULAR, 12)
+        new SyFontDescription("DejaVu Sans", REGULAR, 11)
       );
 
       builder.createConstantFont(
         WINDOW_TITLE_TEXT_FONT,
         "The window title text font.",
-        new SyFontDescription("Dialog", BOLD, 10)
+        new SyFontDescription("DejaVu Sans", BOLD, 10)
       );
 
       builder.createConstantColor4D(
         PRIMARY_FOREGROUND,
         "The foreground color for components.",
         SyColors.whiteOpaque()
+      );
+
+      builder.createFunctionColor4D(
+        PRIMARY_FOREGROUND_INACTIVE,
+        "The foreground color for inactive components.",
+        PRIMARY_FOREGROUND,
+        color -> darker(darker(color))
       );
 
       builder.createFunctionColor4D(

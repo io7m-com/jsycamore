@@ -27,14 +27,17 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import java.util.List;
 import java.util.Objects;
 
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+
 /**
- * A simple container that distributes child objects horizontally with a
+ * A simple container that evenly distributes child objects horizontally with a
  * configurable amount of padding between the objects.
  */
 
 public final class SyLayoutHorizontal extends SyLayoutAbstract
 {
   private final AttributeType<Integer> paddingBetween;
+  private final AttributeType<SyAlignmentVertical> alignVertical;
 
   /**
    * A simple container that distributes child objects horizontally with a
@@ -47,7 +50,9 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
     super(inThemeClassesExtra);
-    this.paddingBetween = SyComponentAttributes.get().create(0);
+    final var attributes = SyComponentAttributes.get();
+    this.paddingBetween = attributes.create(0);
+    this.alignVertical = attributes.create(ALIGN_VERTICAL_CENTER);
   }
 
   /**
@@ -90,8 +95,11 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
       childrenVisible.size();
 
     if (childCount > 0) {
+      final var containerSizeX = constraints.sizeMaximumX();
+      final var containerSizeY = constraints.sizeMaximumY();
+
       final var regionSize =
-        constraints.sizeMaximumX() / childCount;
+        containerSizeX / childCount;
       final var paddingHalf =
         this.paddingBetween.get() / 2;
 
@@ -110,15 +118,19 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
 
         final var child = childrenVisible.get(index).value();
         final var shrunkSize = regionSize - (spaceL + spaceR);
+
         child.layout(layoutContext, new SyConstraints(
           0,
           constraints.sizeMinimumY(),
           shrunkSize,
-          constraints.sizeMaximumY()
+          containerSizeY
         ));
 
+        final var childSizeY = child.size().get().sizeY();
+        final var offsetY = (containerSizeY / 2) - (childSizeY / 2);
+
         offsetX += spaceL;
-        child.position().set(PVector2I.of(offsetX, 0));
+        child.position().set(PVector2I.of(offsetX, offsetY));
         offsetX += shrunkSize;
         offsetX += spaceR;
       }

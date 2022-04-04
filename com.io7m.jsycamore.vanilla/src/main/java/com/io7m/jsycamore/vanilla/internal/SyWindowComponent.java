@@ -36,6 +36,7 @@ import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
+import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public abstract class SyWindowComponent implements SyComponentType
       Objects.requireNonNull(inThemeClassesExtra, "themeClassesExtra");
 
     final var attributes =
-      SyWindowAttributes.get();
+      SyComponentAttributes.get();
 
     this.visibility =
       attributes.create(VISIBILITY_VISIBLE);

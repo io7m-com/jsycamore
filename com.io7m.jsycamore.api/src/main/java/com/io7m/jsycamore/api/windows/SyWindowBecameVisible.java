@@ -19,20 +19,20 @@ package com.io7m.jsycamore.api.windows;
 import java.util.Objects;
 
 /**
- * A window lost focus.
+ * A window has been made visible.
  *
  * @param id The window ID
  */
 
-public record SyWindowFocusLost(SyWindowID id)
+public record SyWindowBecameVisible(SyWindowID id)
   implements SyWindowEventType
 {
   /**
-   * A window lost focus.
+   * A window has been made visible.
    *
    * @param id The window ID
    */
-  public SyWindowFocusLost
+  public SyWindowBecameVisible
   {
     Objects.requireNonNull(id, "id");
   }

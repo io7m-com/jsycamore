@@ -14,6 +14,7 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.jsycamore.api.text.SyFontServiceType;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.api.themes.SyThemeFactoryType;
 
@@ -34,7 +35,7 @@ module com.io7m.jsycamore.theme.primal
   requires com.io7m.jregions.core;
   requires com.io7m.junreachable.core;
 
-  provides SyThemeFactoryType with SyThemePrimalFactory;
+  uses SyFontServiceType;
 
   exports com.io7m.jsycamore.theme.primal;
 }

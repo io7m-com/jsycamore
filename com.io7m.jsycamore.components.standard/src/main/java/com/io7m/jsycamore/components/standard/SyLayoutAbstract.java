@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.components.standard;
 
+import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyContainerType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
@@ -33,11 +34,18 @@ public abstract class SyLayoutAbstract
   extends SyComponentAbstract
   implements SyContainerType
 {
+  private final AttributeType<Integer> limitSizeX;
+  private final AttributeType<Integer> limitSizeY;
+
   protected SyLayoutAbstract(
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
     super(inThemeClassesExtra);
     this.setMouseQueryAccepting(false);
+
+    final var attributes = SyComponentAttributes.get();
+    this.limitSizeX = attributes.create(Integer.MAX_VALUE);
+    this.limitSizeY = attributes.create(Integer.MAX_VALUE);
   }
 
   @Override
@@ -45,5 +53,17 @@ public abstract class SyLayoutAbstract
     final SyEventType event)
   {
     return EVENT_NOT_CONSUMED;
+  }
+
+  @Override
+  public final AttributeType<Integer> limitSizeX()
+  {
+    return this.limitSizeX;
+  }
+
+  @Override
+  public final AttributeType<Integer> limitSizeY()
+  {
+    return this.limitSizeY;
   }
 }

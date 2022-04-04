@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.api.windows;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -56,6 +57,24 @@ public record SyWindowSetChanged(
   public SyWindowSetChanged then(
     final Function<SyWindowSet, SyWindowSetChanged> f)
   {
-    return f.apply(this.newSet);
+    final var next = f.apply(this.newSet);
+
+    final var events =
+      new ArrayList<SyWindowEventType>(
+        this.changes.size() + next.changes.size()
+      );
+
+    events.addAll(this.changes);
+    events.addAll(next.changes);
+    return new SyWindowSetChanged(next.newSet, events);
+  }
+
+  /**
+   * @return This window set without the list of associated changes
+   */
+
+  public SyWindowSetChanged withoutChanges()
+  {
+    return new SyWindowSetChanged(this.newSet, List.of());
   }
 }

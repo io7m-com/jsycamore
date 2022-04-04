@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -34,4 +35,16 @@ public interface SyContainerReadableType extends SyComponentReadableType
   {
     return List.of(CONTAINER);
   }
+
+  /**
+   * @return The size limit on the X axis
+   */
+
+  AttributeReadableType<Integer> limitSizeX();
+
+  /**
+   * @return The size limit on the Y axis
+   */
+
+  AttributeReadableType<Integer> limitSizeY();
 }

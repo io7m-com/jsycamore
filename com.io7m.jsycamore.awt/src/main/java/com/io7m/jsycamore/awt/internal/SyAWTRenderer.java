@@ -17,8 +17,8 @@
 package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -33,22 +33,24 @@ import java.util.Objects;
 
 public final class SyAWTRenderer implements SyRendererType
 {
-  private final SyFontDirectoryType fonts;
   private final ThemeContext themeContext;
   private final SyAWTNodeRenderer nodeRenderer;
 
   /**
    * An AWT renderer.
    *
-   * @param inFonts A font directory
+   * @param inFonts       A font directory
+   * @param inImageLoader An image loader
    */
 
   public SyAWTRenderer(
-    final SyFontDirectoryType inFonts)
+    final SyFontDirectoryType<SyFontAWT> inFonts,
+    final SyAWTImageLoader inImageLoader)
   {
-    this.fonts = Objects.requireNonNull(inFonts, "fonts");
-    this.themeContext = new ThemeContext(this.fonts);
-    this.nodeRenderer = new SyAWTNodeRenderer();
+    this.nodeRenderer =
+      new SyAWTNodeRenderer(inImageLoader, inFonts);
+    this.themeContext =
+      new ThemeContext(inFonts);
   }
 
   @Override
@@ -116,16 +118,16 @@ public final class SyAWTRenderer implements SyRendererType
 
   private static final class ThemeContext implements SyThemeContextType
   {
-    private SyFontDirectoryType fonts;
+    private final SyFontDirectoryType<SyFontAWT> fonts;
 
     ThemeContext(
-      final SyFontDirectoryType inFonts)
+      final SyFontDirectoryType<SyFontAWT> inFonts)
     {
       this.fonts = Objects.requireNonNull(inFonts, "fonts");
     }
 
     @Override
-    public SyFontDirectoryType fonts()
+    public SyFontDirectoryType<SyFontAWT> fonts()
     {
       return this.fonts;
     }

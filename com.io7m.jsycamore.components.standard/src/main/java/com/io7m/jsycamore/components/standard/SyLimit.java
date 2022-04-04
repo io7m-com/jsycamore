@@ -17,7 +17,6 @@
 
 package com.io7m.jsycamore.components.standard;
 
-import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
@@ -33,8 +32,6 @@ import java.util.List;
 
 public final class SyLimit extends SyLayoutAbstract
 {
-  private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> limitSize;
-
   /**
    * A container that limits child components to the maximum given size.
    *
@@ -45,10 +42,8 @@ public final class SyLimit extends SyLayoutAbstract
     final List<SyThemeClassNameType> themeClassesExtra)
   {
     super(themeClassesExtra);
+
     final var attributes = SyComponentAttributes.get();
-    this.limitSize = attributes.create(PAreaSizeI.of(
-      Integer.MAX_VALUE,
-      Integer.MAX_VALUE));
   }
 
   /**
@@ -61,31 +56,22 @@ public final class SyLimit extends SyLayoutAbstract
     this(List.of());
   }
 
-  /**
-   * A container that limits child components to the maximum given size.
-   *
-   * @param size The size limit
-   */
-
-  @ConvenienceConstructor
-  public SyLimit(
-    final PAreaSizeI<SySpaceParentRelativeType> size)
-  {
-    this(List.of());
-    this.limitSize().set(size);
-  }
-
   @Override
   public PAreaSizeI<SySpaceParentRelativeType> layout(
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    final var limitX =
+      this.limitSizeX().get().intValue();
+    final var limitY =
+      this.limitSizeY().get().intValue();
+
     final var limitedConstraints =
       new SyConstraints(
         constraints.sizeMinimumX(),
         constraints.sizeMinimumY(),
-        Math.min(constraints.sizeMaximumX(), this.limitSize.get().sizeX()),
-        Math.min(constraints.sizeMaximumY(), this.limitSize.get().sizeY())
+        Math.min(constraints.sizeMaximumX(), limitX),
+        Math.min(constraints.sizeMaximumY(), limitY)
       );
 
     final var childNodes = this.node().children();
@@ -99,14 +85,5 @@ public final class SyLimit extends SyLayoutAbstract
       limitedConstraints.sizeMaximum();
     this.setSize(newSize);
     return newSize;
-  }
-
-  /**
-   * @return An attribute representing the maximum size limit
-   */
-
-  public AttributeType<PAreaSizeI<SySpaceParentRelativeType>> limitSize()
-  {
-    return this.limitSize;
   }
 }

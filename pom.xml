@@ -19,16 +19,17 @@
   <packaging>pom</packaging>
   <name>com.io7m.jsycamore</name>
   <description>Embedded GUI library</description>
-  <url>http://github.com/io7m/jsycamore</url>
+  <url>https://github.com/io7m/jsycamore</url>
 
   <modules>
     <module>com.io7m.jsycamore.api</module>
-    <module>com.io7m.jsycamore.tests</module>
-    <module>com.io7m.jsycamore.vanilla</module>
     <module>com.io7m.jsycamore.awt</module>
-    <module>com.io7m.jsycamore.theme.primal</module>
     <module>com.io7m.jsycamore.components.standard</module>
+    <module>com.io7m.jsycamore.font.dejavu</module>
+    <module>com.io7m.jsycamore.tests</module>
+    <module>com.io7m.jsycamore.theme.primal</module>
     <module>com.io7m.jsycamore.theme.spi</module>
+    <module>com.io7m.jsycamore.vanilla</module>
   </modules>
 
   <properties>
@@ -43,7 +44,7 @@
   <licenses>
     <license>
       <name>ISC License</name>
-      <url>http://io7m.com/license/isc.txt</url>
+      <url>https://io7m.com/license/isc.txt</url>
     </license>
   </licenses>
 
@@ -58,12 +59,12 @@
       <id>io7m</id>
       <name>io7m</name>
       <email>code@io7m.com</email>
-      <url>http://io7m.com</url>
+      <url>https://io7m.com</url>
     </developer>
   </developers>
 
   <issueManagement>
-    <url>http://github.com/io7m/jsycamore/issues</url>
+    <url>https://github.com/io7m/jsycamore/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 

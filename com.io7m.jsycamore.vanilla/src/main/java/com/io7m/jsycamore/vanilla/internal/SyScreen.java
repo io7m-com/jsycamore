@@ -17,11 +17,20 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.menus.SyMenuClosed;
+import com.io7m.jsycamore.api.menus.SyMenuHostType;
+import com.io7m.jsycamore.api.menus.SyMenuItemType;
+import com.io7m.jsycamore.api.menus.SyMenuOpened;
+import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -31,13 +40,21 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowSet;
 import com.io7m.jsycamore.api.windows.SyWindowSetChanged;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.components.standard.SyComponentAttributes;
+import com.io7m.jsycamore.components.standard.SyLayoutManual;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +64,10 @@ import java.util.concurrent.SubmissionPublisher;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
+import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_NORMAL;
+import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_OVERLAY;
+import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_BE_DELETED;
+import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_NOT_BE_DELETED;
 
 /**
  * A screen.
@@ -54,15 +75,22 @@ import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_
 
 public final class SyScreen implements SyScreenType
 {
-  private final SyFontDirectoryType fonts;
-  private final AtomicBoolean closed;
-  private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
-  private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
-  private final SubmissionPublisher<SyWindowEventType> windowEvents;
-  private final SyLayoutContextType layoutContext;
-  private final SyThemeType theme;
+  private static final Logger LOG =
+    LoggerFactory.getLogger(SyScreen.class);
+
+  private final SyLayoutManual windowMenuOverlayLayout;
+  private MenuTreeOpen menuTreeCurrentlyOpen;
   private Optional<SyComponentType> componentOver;
   private SyWindowSet windows;
+  private final AtomicBoolean closed;
+  private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
+  private final AttributeType<PVector2I<SySpaceViewportType>> mousePosition;
+  private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
+  private final SubmissionPublisher<SyEventType> events;
+  private final SyFontDirectoryType<? extends SyFontType> fonts;
+  private final SyLayoutContextType layoutContext;
+  private final SyThemeType theme;
+  private final SyWindow windowMenuOverlay;
 
   /**
    * A screen.
@@ -74,10 +102,10 @@ public final class SyScreen implements SyScreenType
 
   public SyScreen(
     final SyThemeType inTheme,
-    final SyFontDirectoryType inFonts,
+    final SyFontDirectoryType<? extends SyFontType> inFonts,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
-    final var attributes = SyWindowAttributes.get();
+    final var attributes = SyComponentAttributes.get();
 
     this.theme =
       Objects.requireNonNull(inTheme, "theme");
@@ -86,15 +114,40 @@ public final class SyScreen implements SyScreenType
     this.viewportSize =
       attributes.create(
         Objects.requireNonNull(inSize, "viewportSize"));
+    this.mousePosition =
+      attributes.create(PVectors2I.zero());
 
     this.mouseButtonStates =
       new EnumMap<>(SyMouseButton.class);
     this.componentOver =
       Optional.empty();
+
+    this.windowMenuOverlayLayout =
+      new SyLayoutManual();
+
+    this.windows = SyWindowSet.empty();
+    this.windowMenuOverlay =
+      new SyWindow(
+        this,
+        this.windows.windowFreshId(),
+        WINDOW_LAYER_OVERLAY,
+        WINDOW_MAY_NOT_BE_DELETED,
+        inSize
+      );
+    this.windowMenuOverlay.title()
+      .set("Menu Overlay");
+    this.windowMenuOverlay.decorated()
+      .set(false);
+    this.windowMenuOverlay.contentArea()
+      .childAdd(this.windowMenuOverlayLayout);
+
     this.windows =
-      SyWindowSet.empty();
-    this.windowEvents =
-      new SubmissionPublisher<>();
+      this.windows.windowCreate(this.windowMenuOverlay)
+        .then(k -> k.windowShow(this.windowMenuOverlay))
+        .newSet();
+
+    this.events =
+      new SubmissionPublisher<>(Runnable::run, Flow.defaultBufferSize());
     this.closed =
       new AtomicBoolean(false);
     this.layoutContext =
@@ -114,9 +167,9 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
-  public Flow.Publisher<SyWindowEventType> windowEvents()
+  public Flow.Publisher<SyEventType> events()
   {
-    return this.windowEvents;
+    return this.events;
   }
 
   @Override
@@ -128,11 +181,98 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
+  public AttributeReadableType<PVector2I<SySpaceViewportType>> mousePosition()
+  {
+    return this.mousePosition;
+  }
+
+  private static final class MenuTreeOpen
+  {
+    private final List<SyMenuType> menusOpen;
+
+    private MenuTreeOpen(
+      final List<SyMenuType> inMenusOpen)
+    {
+      this.menusOpen =
+        Objects.requireNonNull(inMenusOpen, "menusOpen");
+    }
+  }
+
+  @Override
+  public void menuOpen(
+    final SyMenuType menu)
+  {
+    Objects.requireNonNull(menu, "menu");
+
+    if (this.menuTreeCurrentlyOpen != null) {
+      this.menuClose();
+    }
+
+    final var screenSize =
+      this.viewportSize.get();
+
+    final var screenConstraints =
+      new SyConstraints(
+        0,
+        0,
+        screenSize.sizeX(),
+        screenSize.sizeY()
+      );
+
+    /*
+     * Capture the list of menus that need to be opened. Organize the
+     * list such that the root menu is opened first, followed by each of
+     * the child submenus.
+     */
+
+    final var menusToOpen = new ArrayList<SyMenuType>(4);
+    var currentMenu = menu;
+    while (currentMenu != null) {
+      menusToOpen.add(currentMenu);
+      currentMenu = currentMenu.menuNode()
+        .parent()
+        .map(JOTreeNodeReadableType::value)
+        .orElse(null);
+    }
+    Collections.reverse(menusToOpen);
+
+    /*
+     * Open each menu as a series of windows.
+     */
+
+    for (final var menuToOpen : menusToOpen) {
+      menuToOpen.layout(this.layoutContext, screenConstraints);
+      this.windowMenuOverlayLayout.childAdd(menuToOpen);
+      menuToOpen.expanded().set(true);
+      this.events.submit(new SyMenuOpened(menu));
+    }
+
+    this.menuTreeCurrentlyOpen = new MenuTreeOpen(menusToOpen);
+  }
+
+  @Override
+  public void menuClose()
+  {
+    try {
+      final var menusOpenNow = this.menuTreeCurrentlyOpen;
+      if (menusOpenNow != null) {
+        for (final var menuOpenNow : menusOpenNow.menusOpen) {
+          menuOpenNow.node().detach();
+          this.events.submit(new SyMenuClosed(menuOpenNow));
+          menuOpenNow.expanded().set(false);
+        }
+      }
+    } finally {
+      this.menuTreeCurrentlyOpen = null;
+    }
+  }
+
+  @Override
   public void close()
     throws RuntimeException
   {
     if (this.closed.compareAndSet(false, true)) {
-      this.windowEvents.close();
+      this.events.close();
     }
   }
 
@@ -141,8 +281,15 @@ public final class SyScreen implements SyScreenType
     final int sizeX,
     final int sizeY)
   {
-    final var freshId = this.windows.windowFreshId();
-    final var window = new SyWindow(this, freshId, PAreaSizeI.of(sizeX, sizeY));
+    final var window =
+      new SyWindow(
+        this,
+        this.windows.windowFreshId(),
+        WINDOW_LAYER_NORMAL,
+        WINDOW_MAY_BE_DELETED,
+        PAreaSizeI.of(sizeX, sizeY)
+      );
+
     this.processWindowChange(this.windows.windowCreate(window));
     this.processWindowChange(this.windows.windowShow(window));
     return window;
@@ -159,6 +306,8 @@ public final class SyScreen implements SyScreenType
     final PVector2I<SySpaceViewportType> position)
   {
     Objects.requireNonNull(position, "Position");
+
+    this.mousePosition.set(position);
 
     /*
      * If the mouse button is down, the selected component is delivered a
@@ -280,6 +429,7 @@ public final class SyScreen implements SyScreenType
       this.componentForPosition(position, FIND_FOR_MOUSE_CURSOR);
 
     if (componentOpt.isEmpty()) {
+      this.onClickedNothing();
       return Optional.empty();
     }
 
@@ -319,11 +469,75 @@ public final class SyScreen implements SyScreenType
         component.eventSend(
           new SyMouseEventOnPressed(position, button, component));
 
+        this.onClickedSomething(component);
         yield state.componentClickedLast;
       }
 
       case MOUSE_STATE_DOWN -> Optional.empty();
     };
+  }
+
+  private void onClickedSomething(
+    final SyComponentType component)
+  {
+    /*
+     * If a menu is open, then we need to make some checks to determine if
+     * the menu should be closed.
+     */
+
+    if (this.menuTreeCurrentlyOpen != null) {
+
+      /*
+       * The user clicked on a menu item, or something that hosts a menu
+       * such as a menu bar item. This should not cause the menu to be closed;
+       * it's up to those components to explicitly decide whether to
+       * close the menu.
+       */
+
+      if (component instanceof SyMenuItemType menuItem) {
+        return;
+      }
+      if (component instanceof SyMenuHostType menuHost) {
+        return;
+      }
+
+      /*
+       * The user may have clicked on something that lives inside a menu
+       * item. This should not cause the menu to be closed.
+       */
+
+      final var menuAncestor =
+        component.ancestorMatchingReadable(c -> c instanceof SyMenuItemType);
+
+      if (menuAncestor.isPresent()) {
+        return;
+      }
+
+      /*
+       * The user may have clicked on a descendant of a menu host.
+       * This should not cause the menu to be closed.
+       */
+
+      final var menuHostAncestor =
+        component.ancestorMatchingReadable(c -> c instanceof SyMenuHostType);
+
+      if (menuHostAncestor.isPresent()) {
+        return;
+      }
+
+      /*
+       * The user clicked on something else. Close the menu!
+       */
+
+      this.menuClose();
+    }
+  }
+
+  private void onClickedNothing()
+  {
+    if (this.menuTreeCurrentlyOpen != null) {
+      this.menuClose();
+    }
   }
 
   private void processWindowChange(
@@ -334,7 +548,9 @@ public final class SyScreen implements SyScreenType
     final var windowMap = this.windows.windows();
     for (final var event : change.changes()) {
       final var window = windowMap.get(event.id());
-      this.publishWindowEvent(window, event);
+      if (window != null) {
+        this.publishWindowEvent(window, event);
+      }
     }
   }
 
@@ -343,7 +559,7 @@ public final class SyScreen implements SyScreenType
     final SyWindowEventType event)
   {
     window.eventSend(event);
-    this.windowEvents.submit(event);
+    this.events.submit(event);
   }
 
   @Override
@@ -351,7 +567,8 @@ public final class SyScreen implements SyScreenType
     final SyWindowType window)
   {
     Objects.requireNonNull(window, "window");
-    return Objects.equals(this.windows.windowFocused(), Optional.of(window));
+    return Objects.equals(
+      this.windows.windowFocused(window.layer()), Optional.of(window));
   }
 
   @Override
@@ -400,6 +617,12 @@ public final class SyScreen implements SyScreenType
   {
     Objects.requireNonNull(window, "window");
     window.setMaximizeToggle(this.viewportSize.get());
+  }
+
+  @Override
+  public SyWindowType windowMenu()
+  {
+    return this.windowMenuOverlay;
   }
 
   private MouseState mouseGetState(

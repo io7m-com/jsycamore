@@ -37,4 +37,7 @@
   <suppress files="SyThemeValues.java"
             checks="NPathComplexity"/>
 
+  <suppress files="SyThemePrimal.java"
+            checks="CyclomaticComplexity"/>
+
 </suppressions>

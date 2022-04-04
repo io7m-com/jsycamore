@@ -75,19 +75,29 @@ public final class SyTextView
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    final var requiredSize =
+      this.minimumSizeRequired(layoutContext);
+    final var newSize =
+      constraints.<SySpaceParentRelativeType>sizeWithin(
+        requiredSize.sizeX(), requiredSize.sizeY());
+
+    this.setSize(newSize);
+    return newSize;
+  }
+
+  @Override
+  public PAreaSizeI<SySpaceParentRelativeType> minimumSizeRequired(
+    final SyLayoutContextType layoutContext)
+  {
     final var font =
       layoutContext.themeCurrent()
         .findForComponent(this)
         .font(layoutContext, this);
 
     final var textNow = this.text.get();
-    final var width = font.textWidth(textNow);
-    final var height = font.textHeight();
-
-    final var newSize =
-      constraints.<SySpaceParentRelativeType>sizeWithin(width, height);
-    this.setSize(newSize);
-    return newSize;
+    final var sizeX = font.textWidth(textNow);
+    final var sizeY = font.textHeight();
+    return PAreaSizeI.of(sizeX, sizeY);
   }
 
   @Override

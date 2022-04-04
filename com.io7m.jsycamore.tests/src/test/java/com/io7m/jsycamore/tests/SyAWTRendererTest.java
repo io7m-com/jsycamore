@@ -20,9 +20,10 @@ package com.io7m.jsycamore.tests;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
-import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
+import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
@@ -39,7 +40,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -59,8 +59,9 @@ public final class SyAWTRendererTest
   private BufferedImage imageReceived;
   private Graphics2D graphics;
   private Path imageReceivedFile;
-  private SyFontDirectoryType fonts;
+  private SyFontDirectoryType<SyFontAWT> fonts;
   private SyScreenFactory screens;
+  private SyAWTImageLoader imageLoader;
 
   @BeforeEach
   public void setup()
@@ -77,8 +78,10 @@ public final class SyAWTRendererTest
     this.graphics.setPaint(Color.BLACK);
     this.graphics.fillRect(0, 0, 512, 512);
 
-    this.fonts = SyFontDirectoryAWT.create();
-    this.renderer = new SyAWTRenderer(this.fonts);
+    this.fonts = SyFontDirectoryAWT.createFromServiceLoader();
+    this.imageLoader = new SyAWTImageLoader();
+
+    this.renderer = new SyAWTRenderer(this.fonts, this.imageLoader);
     this.screens = new SyScreenFactory();
   }
 
@@ -155,12 +158,6 @@ public final class SyAWTRendererTest
       this.imageReceived,
       "PNG",
       this.imageReceivedFile.toFile()
-    );
-
-    ImageIO.write(
-      this.imageReceived,
-      "PNG",
-      new File("/tmp/out.png")
     );
   }
 

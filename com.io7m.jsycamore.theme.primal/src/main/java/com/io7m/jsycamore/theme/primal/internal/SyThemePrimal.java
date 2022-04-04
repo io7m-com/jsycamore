@@ -114,10 +114,39 @@ public final class SyThemePrimal implements SyThemeType
         case WINDOW_BUTTON_CLOSE_ICON, IMAGE_VIEW -> {
           this.standards.put(className, new SyPrimalImageView(this));
         }
+        case MENU_BAR -> {
+          this.standards.put(className, new SyPrimalMenuBar(this));
+        }
+        case MENU_BAR_ITEM -> {
+          this.standards.put(className, new SyPrimalMenuBarItem(this));
+        }
+        case MENU_BAR_ITEM_TEXT -> {
+          this.standards.put(className, new SyPrimalMenuBarItemTextView(this));
+        }
+        case MENU_ITEM_TEXT -> {
+          this.standards.put(className, new SyPrimalMenuItemTextView(this));
+        }
+        case MENU_ITEM -> {
+          this.standards.put(className, new SyPrimalMenuItem(this));
+        }
+
+        case MENU_ITEM_ATOM -> {
+
+        }
+        case MENU_ITEM_SEPARATOR -> {
+          this.standards.put(className, new SyPrimalMenuItemSeparator(this));
+        }
+        case MENU_ITEM_SUBMENU -> {
+
+        }
+
+        case MENU -> {
+          this.standards.put(className, new SyPrimalMenu(this));
+        }
+
         case CHECKBOX,
           GRID_VIEW,
           LIST_VIEW,
-          MENU_BAR,
           METER,
           SCROLLBAR,
           TEXT_AREA,

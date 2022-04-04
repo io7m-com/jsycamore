@@ -16,12 +16,15 @@
 
 package com.io7m.jsycamore.api.screens;
 
+import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.sized.SySizedType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +117,12 @@ public interface SyScreenType
   void windowMaximize(SyWindowType window);
 
   /**
+   * @return A reference to the window used for menus
+   */
+
+  SyWindowType windowMenu();
+
+  /**
    * @return The current theme used by the screen
    */
 
@@ -127,10 +136,10 @@ public interface SyScreenType
   Optional<SyComponentType> componentOver();
 
   /**
-   * @return The stream of window events for the screen
+   * @return The stream of events for the screen
    */
 
-  Publisher<SyWindowEventType> windowEvents();
+  Publisher<SyEventType> events();
 
   /**
    * Update the screen, executing a layout pass and updating any animating
@@ -138,6 +147,31 @@ public interface SyScreenType
    */
 
   void update();
+
+  /**
+   * @return An attribute that exposes the most recently published mouse
+   * position
+   */
+
+  AttributeReadableType<PVector2I<SySpaceViewportType>> mousePosition();
+
+  /**
+   * Open a global menu. If a menu is already open, it is closed as if {@link
+   * #menuClose()} had been called, and then the given menu is opened instead.
+   * The menu will be positioned onscreen according to the value of {@link
+   * SyMenuType#expandPosition()} at the time of this call.
+   *
+   * @param menu The menu
+   */
+
+  void menuOpen(SyMenuType menu);
+
+  /**
+   * Close any menu that may be open. If no menu is open, the operation is a
+   * no-op.
+   */
+
+  void menuClose();
 
   @Override
   void close()

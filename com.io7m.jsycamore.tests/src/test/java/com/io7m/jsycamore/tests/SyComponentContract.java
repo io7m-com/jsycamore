@@ -17,9 +17,9 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -52,7 +52,7 @@ public abstract class SyComponentContract<T extends SyComponentType>
   public void componentSetup()
   {
     this.fonts =
-      SyFontDirectoryAWT.create();
+      SyFontDirectoryAWT.createFromServiceLoader();
     this.theme =
       new SyThemePrimalFactory()
         .create();

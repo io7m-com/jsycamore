@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,24 +14,38 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
 
+package com.io7m.jsycamore.api.menus;
+
+import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
 
-import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_BAR;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_SUBMENU;
 
 /**
- * Read-only access to menu bars.
+ * A menu item that opens a submenu.
  */
 
-public interface SyMenuBarReadableType
-  extends SyComponentReadableType
+public non-sealed interface SyMenuItemSubmenuType extends SyMenuItemType
 {
   @Override
   default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    return List.of(MENU_BAR);
+    return List.of(MENU_ITEM_SUBMENU, MENU_ITEM);
   }
+
+  /**
+   * @return The submenu that will be opened
+   */
+
+  SyMenuType submenu();
+
+  /**
+   * @return The menu item text
+   */
+
+  AttributeType<String> text();
 }

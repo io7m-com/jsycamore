@@ -17,14 +17,15 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
+import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.awt.internal.SyRendererType;
 import com.io7m.jsycamore.components.standard.SyButton;
@@ -91,12 +92,13 @@ public final class SyWindowDemo
 
   private static final class Canvas extends JPanel
   {
-    private final SyFontDirectoryType fontDirectory;
+    private final SyFontDirectoryType<SyFontAWT> fontDirectory;
     private final SyRendererType renderer;
     private final SyScreenType screen;
     private final SyThemeType theme;
     private final SyWindowType window0;
     private final SyWindowType window1;
+    private final SyAWTImageLoader imageLoader;
 
     Canvas()
       throws Exception
@@ -104,7 +106,9 @@ public final class SyWindowDemo
       this.setFocusable(true);
 
       this.fontDirectory =
-        SyFontDirectoryAWT.create();
+        SyFontDirectoryAWT.createFromServiceLoader();
+      this.imageLoader =
+        new SyAWTImageLoader();
 
       this.theme =
         new SyThemePrimalFactory()
@@ -114,7 +118,7 @@ public final class SyWindowDemo
         new SyScreenFactory().create(
           this.theme,
           this.fontDirectory,
-          PAreaSizeI.of(800, 600)
+          PAreaSizeI.of(1024, 768)
         );
 
       this.window0 =
@@ -127,7 +131,7 @@ public final class SyWindowDemo
       this.window1.closeButtonBehaviour()
         .set(HIDE_ON_CLOSE_BUTTON);
 
-      this.renderer = new SyAWTRenderer(this.fontDirectory);
+      this.renderer = new SyAWTRenderer(this.fontDirectory, this.imageLoader);
       // this.renderer = new SyBoundsOnlyRenderer();
 
       final var executor =
@@ -211,43 +215,47 @@ public final class SyWindowDemo
         }
       });
 
-      final var margin = new SyLayoutMargin();
-      margin.setPaddingAll(8);
+      {
+        final var margin = new SyLayoutMargin();
+        margin.setPaddingAll(8);
 
-      final var horizontal = new SyLayoutHorizontal();
-      horizontal.paddingBetween().set(8);
-      margin.childAdd(horizontal);
+        final var horizontal = new SyLayoutHorizontal();
+        horizontal.paddingBetween().set(8);
+        margin.childAdd(horizontal);
 
-      final var button0 = new SyButton("Button 0");
-      button0.setOnClickListener(() -> LOG.debug("click 0"));
-      final var button1 = new SyButton("Button 1");
-      button1.setOnClickListener(() -> LOG.debug("click 1"));
-      button1.setActive(INACTIVE);
+        final var button0 = new SyButton("Button 0");
+        button0.setOnClickListener(() -> LOG.debug("click 0"));
+        final var button1 = new SyButton("Button 1");
+        button1.setOnClickListener(() -> LOG.debug("click 1"));
+        button1.setActive(INACTIVE);
 
-      final var vz = new SyLayoutVertical();
-      vz.childAdd(new SyButton("B0", () -> LOG.debug("B0")));
-      vz.childAdd(new SyButton("B1", () -> LOG.debug("B1")));
-      vz.childAdd(new SyButton("B2", () -> LOG.debug("B2")));
+        final var vz = new SyLayoutVertical();
+        vz.childAdd(new SyButton("B0", () -> LOG.debug("B0")));
+        vz.childAdd(new SyButton("B1", () -> LOG.debug("B1")));
+        vz.childAdd(new SyButton("B2", () -> LOG.debug("B2")));
 
-      final var image = new SyImageView();
-      image.imageURI().set(Optional.of(
-        SyWindowDemo.class.getResource("/com/io7m/jsycamore/tests/fruit.jpg").toURI()
-      ));
+        final var image = new SyImageView();
+        image.imageURI().set(Optional.of(
+          SyWindowDemo.class.getResource("/com/io7m/jsycamore/tests/fruit.jpg").toURI()
+        ));
 
-      horizontal.childAdd(button0);
-      horizontal.childAdd(button1);
-      horizontal.childAdd(vz);
-      horizontal.childAdd(image);
+        horizontal.childAdd(button0);
+        horizontal.childAdd(button1);
+        horizontal.childAdd(vz);
+        horizontal.childAdd(image);
 
-      this.window0.decorated().set(TRUE);
-      this.window0.contentArea().childAdd(margin);
-      this.window0.title().set("Window Title");
-      this.window0.positionSnapping().set(16);
-      this.window0.sizeSnapping().set(16);
+        this.window0.decorated().set(TRUE);
+        this.window0.contentArea().childAdd(margin);
+        this.window0.title().set("Window Title");
+        this.window0.positionSnapping().set(16);
+        this.window0.sizeSnapping().set(16);
+      }
 
-      this.window1.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
-      this.window1.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
-      this.window1.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+      {
+        this.window1.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
+        this.window1.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
+        this.window1.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
+      }
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(() -> {

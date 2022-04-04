@@ -27,6 +27,8 @@ import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -195,6 +197,18 @@ public abstract class SyComponentAbstract implements SyComponentType
     SyEventConsumed consumed = EVENT_CONSUMED;
     if (this.isActive()) {
       consumed = this.onEvent(event);
+    }
+
+    /*
+     * Track "over" state.
+     */
+
+    if (event instanceof SyMouseEventOnOver) {
+      this.setMouseOver(true);
+    }
+
+    if (event instanceof SyMouseEventOnNoLongerOver) {
+      this.setMouseOver(false);
     }
 
     /*

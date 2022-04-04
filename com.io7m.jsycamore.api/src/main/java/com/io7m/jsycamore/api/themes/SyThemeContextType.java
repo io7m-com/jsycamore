@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.api.themes;
 
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
 
 /**
  * The context of a theme operation.
@@ -28,5 +29,5 @@ public interface SyThemeContextType
    * @return A reference to the font directory
    */
 
-  SyFontDirectoryType fonts();
+  SyFontDirectoryType<? extends SyFontType> fonts();
 }

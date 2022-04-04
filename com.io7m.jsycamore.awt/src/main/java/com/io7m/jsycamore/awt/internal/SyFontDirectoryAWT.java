@@ -16,106 +16,130 @@
 
 package com.io7m.jsycamore.awt.internal;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
-import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.text.SyFontException;
+import com.io7m.jsycamore.api.text.SyFontServiceType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Font;
-import java.awt.FontMetrics;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
-import java.util.WeakHashMap;
+import java.util.ServiceLoader;
+import java.util.concurrent.CompletionException;
 
 /**
  * A font directory that loads fonts using AWT.
  */
 
-public final class SyFontDirectoryAWT implements SyFontDirectoryType
+public final class SyFontDirectoryAWT implements SyFontDirectoryType<SyFontAWT>
 {
-  private final WeakHashMap<String, SyFontAWT> fontCache;
-  private final Graphics2D graphics;
+  private static final Logger LOG =
+    LoggerFactory.getLogger(SyFontDirectoryAWT.class);
 
-  private SyFontDirectoryAWT()
+  private final Graphics2D graphics;
+  private final List<SyFontServiceType> fonts;
+  private final LoadingCache<SyFontDescription, SyFontAWT> fontCache;
+
+  private SyFontDirectoryAWT(
+    final List<SyFontServiceType> inFonts)
   {
+    this.fonts = Objects.requireNonNull(inFonts, "fonts");
+
     final BufferedImage image =
       new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR_PRE);
     this.graphics = image.createGraphics();
-    this.fontCache = new WeakHashMap<>(8);
+
+    this.fontCache =
+      Caffeine.newBuilder()
+        .maximumSize(32L)
+        .build(key -> createFont(key, this.fonts, this.graphics));
   }
 
-  private SyFontAWT decodeFont(
-    final SyFontDescription font)
+  private static SyFontAWT createFont(
+    final SyFontDescription request,
+    final List<SyFontServiceType> fonts,
+    final Graphics2D graphics)
+    throws SyFontException
   {
-    Objects.requireNonNull(font, "Font name");
-    return this.fontCache.computeIfAbsent(
-      font.identifier(),
-      name -> new SyFontAWT(this.graphics, Font.decode(name), font)
-    );
+    try {
+      for (final var service : fonts) {
+        if (Objects.equals(service.family(), request.family())) {
+          if (service.style() == request.style()) {
+            try (var stream = service.openStream()) {
+              final var loadedFonts =
+                Font.createFonts(stream);
+              final var derivedFont =
+                loadedFonts[0].deriveFont((float) request.size());
+
+              LOG.debug("loaded font: {}", request.identifier());
+              final var fontMetrics =
+                graphics.getFontMetrics(derivedFont);
+              return new SyFontAWT(fontMetrics, derivedFont, request);
+            }
+          }
+        }
+      }
+    } catch (final IOException | FontFormatException e) {
+      throw new SyFontException(e.getMessage(), e);
+    }
+
+    throw new SyFontException("No such font: " + request.identifier());
   }
 
   /**
    * Create a new font directory.
    *
+   * @param fonts The available font services
+   *
    * @return The directory
    */
 
-  public static SyFontDirectoryType create()
+  public static SyFontDirectoryType<SyFontAWT> create(
+    final List<SyFontServiceType> fonts)
   {
-    return new SyFontDirectoryAWT();
+    return new SyFontDirectoryAWT(fonts);
   }
 
-  @Override
-  public SyFontType get(
-    final SyFontDescription description)
+  /**
+   * Create a new font directory, loading font services from {@link
+   * ServiceLoader}.
+   *
+   * @return The directory
+   */
+
+  public static SyFontDirectoryType<SyFontAWT> createFromServiceLoader()
   {
-    return this.decodeFont(
-      Objects.requireNonNull(description, "description")
+    return create(
+      ServiceLoader.load(SyFontServiceType.class)
+        .stream()
+        .map(ServiceLoader.Provider::get)
+        .toList()
     );
   }
 
-  private static final class SyFontAWT implements SyFontType
+  @Override
+  public SyFontAWT get(
+    final SyFontDescription description)
+    throws SyFontException
   {
-    private final Font font;
-    private final FontMetrics metrics;
-    private final SyFontDescription description;
-
-    SyFontAWT(
-      final Graphics2D graphics,
-      final Font inFont,
-      final SyFontDescription inFontDescription)
-    {
-      this.font =
-        Objects.requireNonNull(inFont, "font");
-      this.metrics =
-        graphics.getFontMetrics(this.font);
-      this.description =
-        Objects.requireNonNull(inFontDescription, "description");
-    }
-
-    @Override
-    public int textHeight()
-    {
-      return this.metrics.getHeight();
-    }
-
-    @Override
-    public int textWidth(
-      final String text)
-    {
-      return this.metrics.stringWidth(text);
-    }
-
-    @Override
-    public int textDescent()
-    {
-      return this.metrics.getDescent();
-    }
-
-    @Override
-    public SyFontDescription description()
-    {
-      return this.description;
+    try {
+      return this.fontCache.get(
+        Objects.requireNonNull(description, "description")
+      );
+    } catch (final CompletionException e) {
+      final var cause = e.getCause();
+      if (cause instanceof SyFontException fontException) {
+        throw fontException;
+      }
+      throw new SyFontException(cause.getMessage(), cause);
     }
   }
 }

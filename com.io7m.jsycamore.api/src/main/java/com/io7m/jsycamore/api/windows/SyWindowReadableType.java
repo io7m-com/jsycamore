@@ -104,4 +104,16 @@ public interface SyWindowReadableType
    */
 
   AttributeReadableType<SyVisibility> maximizeButtonVisibility();
+
+  /**
+   * @return The window layer
+   */
+
+  SyWindowLayer layer();
+
+  /**
+   * @return The window deletion policy
+   */
+
+  SyWindowDeletionPolicy deletionPolicy();
 }

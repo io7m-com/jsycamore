@@ -18,9 +18,11 @@ package com.io7m.jsycamore.api.text;
 
 /**
  * A directory of fonts.
+ *
+ * @param <T> The precise type of returned fonts
  */
 
-public interface SyFontDirectoryType
+public interface SyFontDirectoryType<T extends SyFontType>
 {
   /**
    * Open a font.
@@ -28,7 +30,10 @@ public interface SyFontDirectoryType
    * @param description The font description
    *
    * @return A font
+   *
+   * @throws SyFontException If the font could not be loaded
    */
 
-  SyFontType get(SyFontDescription description);
+  T get(SyFontDescription description)
+    throws SyFontException;
 }

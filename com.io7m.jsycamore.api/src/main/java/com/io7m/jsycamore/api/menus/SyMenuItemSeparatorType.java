@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.windows;
 
-import java.util.Objects;
+package com.io7m.jsycamore.api.menus;
+
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_SEPARATOR;
 
 /**
- * A window gained focus.
- *
- * @param id The window ID
+ * A menu item separator. This is a non-interactive horizontal line.
  */
 
-public record SyWindowFocusGained(SyWindowID id)
-  implements SyWindowEventType
+public non-sealed interface SyMenuItemSeparatorType extends SyMenuItemType
 {
-  /**
-   * A window gained focus.
-   *
-   * @param id The window ID
-   */
-  public SyWindowFocusGained
+  @Override
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    Objects.requireNonNull(id, "id");
+    return List.of(MENU_ITEM_SEPARATOR, MENU_ITEM);
   }
 }

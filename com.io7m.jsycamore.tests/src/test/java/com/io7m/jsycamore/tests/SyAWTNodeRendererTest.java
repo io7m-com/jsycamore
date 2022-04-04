@@ -23,7 +23,11 @@ import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
+import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTNodeRenderer;
+import com.io7m.jsycamore.awt.internal.SyFontAWT;
+import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +56,8 @@ public final class SyAWTNodeRendererTest
   private BufferedImage imageReceived;
   private Graphics2D graphics;
   private Path imageReceivedFile;
+  private SyAWTImageLoader imageLoader;
+  private SyFontDirectoryType<SyFontAWT> fonts;
 
   @BeforeEach
   public void setup()
@@ -63,11 +69,15 @@ public final class SyAWTNodeRendererTest
       new BufferedImage(128, 128, TYPE_4BYTE_ABGR_PRE);
     this.imageReceivedFile =
       this.directory.resolve("received.png");
+    this.imageLoader =
+      new SyAWTImageLoader();
+    this.fonts =
+      SyFontDirectoryAWT.createFromServiceLoader();
 
     this.graphics = this.imageReceived.createGraphics();
     this.graphics.setPaint(Color.BLACK);
     this.graphics.fillRect(0, 0, 128, 128);
-    this.nodeRenderer = new SyAWTNodeRenderer();
+    this.nodeRenderer = new SyAWTNodeRenderer(this.imageLoader, this.fonts);
   }
 
   @AfterEach

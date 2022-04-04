@@ -64,9 +64,9 @@ public record SyConstraints(
   private static int clamp(
     final int min,
     final int max,
-    final int x)
+    final int v)
   {
-    return Math.max(min, Math.min(max, x));
+    return Math.max(min, Math.min(max, v));
   }
 
   /**
