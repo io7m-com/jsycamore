@@ -20,17 +20,23 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
@@ -42,11 +48,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class SyComponentContract<T extends SyComponentType>
 {
+  private static final PVector2I<SySpaceViewportType> Z_VIEWPORT =
+    PVectors2I.zero();
+
   protected SyLayoutContextType layoutContext;
   private SyThemeType theme;
   private SyScreenType screen;
   private SyWindowType window;
-  private SyFontDirectoryType fonts;
+  private SyFontDirectoryType<? extends SyFontType> fonts;
 
   protected abstract T newComponent();
 
@@ -152,9 +161,45 @@ public abstract class SyComponentContract<T extends SyComponentType>
         ));
 
     final var rSize = c.size().get();
-    assertTrue(rSize.sizeX() <= 64,
-               () -> "%d <= 64".formatted(rSize.sizeX()));
-    assertTrue(rSize.sizeY() <= 32,
-               () -> "%d <= 32".formatted(rSize.sizeY()));
+    assertTrue(
+      rSize.sizeX() <= 64,
+      () -> "%d <= 64".formatted(rSize.sizeX()));
+    assertTrue(
+      rSize.sizeY() <= 32,
+      () -> "%d <= 32".formatted(rSize.sizeY()));
+  }
+
+  /**
+   * Components accepting mouse focus track the "over" status.
+   */
+
+  @Test
+  public final void testComponentMouseOverOK()
+  {
+    final var c = this.newComponent();
+
+    if (c.isMouseQueryAccepting()) {
+      c.eventSend(new SyMouseEventOnOver(Z_VIEWPORT, c));
+      assertTrue(c.isMouseOver());
+    }
+  }
+
+  /**
+   * Components can be attached to windows.
+   */
+
+  @Test
+  public final void testComponentWindowOK()
+  {
+    final var c = this.newComponent();
+
+    assertTrue(c.window().isEmpty());
+    assertTrue(c.windowReadable().isEmpty());
+
+    this.window.contentArea()
+      .childAdd(c);
+
+    assertEquals(Optional.of(this.window), c.window());
+    assertEquals(Optional.of(this.window), c.windowReadable());
   }
 }

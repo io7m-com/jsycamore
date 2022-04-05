@@ -21,8 +21,6 @@ import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
@@ -99,16 +97,6 @@ public final class SyWindowTitle
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
-    if (event instanceof SyMouseEventOnOver) {
-      this.setMouseOver(true);
-      return EVENT_CONSUMED;
-    }
-
-    if (event instanceof SyMouseEventOnNoLongerOver) {
-      this.setMouseOver(false);
-      return EVENT_CONSUMED;
-    }
-
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {

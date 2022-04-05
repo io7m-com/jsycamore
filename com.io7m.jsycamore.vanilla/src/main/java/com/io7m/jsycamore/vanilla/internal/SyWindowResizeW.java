@@ -21,8 +21,6 @@ import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
@@ -69,16 +67,6 @@ public final class SyWindowResizeW
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
-    if (event instanceof SyMouseEventOnOver) {
-      this.setMouseOver(true);
-      return EVENT_CONSUMED;
-    }
-
-    if (event instanceof SyMouseEventOnNoLongerOver) {
-      this.setMouseOver(false);
-      return EVENT_CONSUMED;
-    }
-
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
@@ -106,27 +94,32 @@ public final class SyWindowResizeW
     }
 
     if (event instanceof SyMouseEventOnHeld onHeld) {
-      final var deltaX =
-        onHeld.mousePositionNow().x() - onHeld.mousePositionFirst().x();
+      return switch (onHeld.button()) {
+        case MOUSE_BUTTON_LEFT -> {
+          final var deltaX =
+            onHeld.mousePositionNow().x() - onHeld.mousePositionFirst().x();
 
-      final var newPosition =
-        PVector2I.<SySpaceViewportType>of(
-          this.windowStartPosition.x() + deltaX,
-          this.windowStartPosition.y()
-        );
+          final var newPosition =
+            PVector2I.<SySpaceViewportType>of(
+              this.windowStartPosition.x() + deltaX,
+              this.windowStartPosition.y()
+            );
 
-      final var newSize =
-        PAreaSizeI.<SySpaceViewportType>of(
-          this.windowStartSize.sizeX() - deltaX,
-          this.windowStartSize.sizeY()
-        );
+          final var newSize =
+            PAreaSizeI.<SySpaceViewportType>of(
+              this.windowStartSize.sizeX() - deltaX,
+              this.windowStartSize.sizeY()
+            );
 
-      final var window =
-        this.window().orElseThrow(UnreachableCodeException::new);
+          final var window =
+            this.window().orElseThrow(UnreachableCodeException::new);
 
-      window.setSize(newSize);
-      window.setPosition(newPosition);
-      return EVENT_CONSUMED;
+          window.setSize(newSize);
+          window.setPosition(newPosition);
+          yield EVENT_CONSUMED;
+        }
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
+      };
     }
 
     return EVENT_NOT_CONSUMED;

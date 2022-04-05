@@ -20,8 +20,6 @@ import com.io7m.jsycamore.api.components.SyButtonType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
@@ -74,19 +72,6 @@ public abstract class SyWindowButtonComponent
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
-    /*
-     * Track "over" state. The cursor must be over a button to click it.
-     */
-
-    if (event instanceof SyMouseEventOnOver) {
-      this.setMouseOver(true);
-      return EVENT_CONSUMED;
-    }
-    if (event instanceof SyMouseEventOnNoLongerOver) {
-      this.setMouseOver(false);
-      return EVENT_CONSUMED;
-    }
-
     /*
      * If the mouse is pressed, start tracking the "pressed" state.
      */

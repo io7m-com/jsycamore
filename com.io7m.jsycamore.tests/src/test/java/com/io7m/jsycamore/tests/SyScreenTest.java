@@ -22,13 +22,16 @@ import com.io7m.jsycamore.api.events.SyEventConsumer;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.menus.SyMenuClosed;
 import com.io7m.jsycamore.api.menus.SyMenuOpened;
+import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.windows.SyWindowBecameInvisible;
 import com.io7m.jsycamore.api.windows.SyWindowBecameVisible;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowCreated;
 import com.io7m.jsycamore.api.windows.SyWindowID;
+import com.io7m.jsycamore.api.windows.SyWindowMaximized;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.api.windows.SyWindowUnmaximized;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jsycamore.components.standard.SyMenu;
@@ -50,6 +53,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.CLOSE_ON_CLOSE_BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
@@ -77,7 +81,7 @@ public final class SyScreenTest
       this.screens.create(
         new SyThemePrimalFactory().create(),
         SyFontDirectoryAWT.createFromServiceLoader(),
-        PAreaSizeI.of(800, 600)
+        PAreaSizeI.of(1024, 1024)
       );
 
     this.eventsLatch = new CountDownLatch(1);
@@ -364,6 +368,95 @@ public final class SyScreenTest
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
     assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
     assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowClosed(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Window maximizing via the maximize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowMaximize()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    this.screen.update();
+    this.screen.mouseDown(PVector2I.of(220, 20), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(220, 20), MOUSE_BUTTON_LEFT);
+    this.screen.update();
+    this.screen.mouseDown(PVector2I.of(1024 - 16, 20), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(1024 - 16, 20), MOUSE_BUTTON_LEFT);
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyWindowMaximized(w0.id()), this.eventNext());
+    assertEquals(new SyWindowUnmaximized(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * The window menu button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowMenu()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    this.screen.update();
+    this.screen.mouseDown(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
+    this.screen.update();
+    this.screen.mouseDown(PVector2I.of(64, 64), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(64, 64), MOUSE_BUTTON_LEFT);
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(SyMenuOpened.class, this.eventNext().getClass());
+    assertEquals(SyMenuClosed.class, this.eventNext().getClass());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * The window menu button can close the window.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowMenuClose()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    this.screen.update();
+    this.screen.mouseDown(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
+    this.screen.mouseDown(PVector2I.of(205, 25), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(205, 25), MOUSE_BUTTON_LEFT);
+    this.screen.update();
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(SyMenuOpened.class, this.eventNext().getClass());
+    assertEquals(new SyWindowClosed(w0.id()), this.eventNext());
+    assertEquals(SyMenuClosed.class, this.eventNext().getClass());
     assertEquals(0, this.events.size());
   }
 
@@ -501,6 +594,456 @@ public final class SyScreenTest
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
     assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the north resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeN()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(512, 384));
+    this.screen.mouseDown(PVector2I.of(512, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 320));
+    this.screen.mouseUp(PVector2I.of(512, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 320), w0.size().get());
+    assertEquals(PVector2I.of(384, 320), w0.position().get());
+
+    this.screen.mouseMoved(PVector2I.of(512, 320));
+    this.screen.mouseDown(PVector2I.of(512, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 384));
+    this.screen.mouseUp(PVector2I.of(512, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the NW resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeNW()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(384, 384));
+    this.screen.mouseDown(PVector2I.of(384, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(320, 320));
+    this.screen.mouseUp(PVector2I.of(320, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 320), w0.size().get());
+    assertEquals(PVector2I.of(320, 320), w0.position().get());
+
+    this.screen.mouseMoved(PVector2I.of(320, 320));
+    this.screen.mouseDown(PVector2I.of(320, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(384, 384));
+    this.screen.mouseUp(PVector2I.of(384, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the NE resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeNE()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 384));
+    this.screen.mouseDown(PVector2I.of(640 - 1, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 320));
+    this.screen.mouseUp(PVector2I.of(704 - 1, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 320), w0.size().get());
+    assertEquals(PVector2I.of(384, 320), w0.position().get());
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 320));
+    this.screen.mouseDown(PVector2I.of(704 - 1, 320), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 384));
+    this.screen.mouseUp(PVector2I.of(640 - 1, 384), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the S resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeS()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(512, 640 - 1));
+    this.screen.mouseDown(PVector2I.of(512, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 704 - 1));
+    this.screen.mouseUp(PVector2I.of(512, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 320), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(512, 704 - 1));
+    this.screen.mouseDown(PVector2I.of(512, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 640 - 1));
+    this.screen.mouseUp(PVector2I.of(512, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the SW resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeSW()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(384, 640 - 1));
+    this.screen.mouseDown(PVector2I.of(384, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(320, 704 - 1));
+    this.screen.mouseUp(PVector2I.of(320, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 320), w0.size().get());
+    assertEquals(PVector2I.of(320, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(320, 704 - 1));
+    this.screen.mouseDown(PVector2I.of(320, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(384, 640 - 1));
+    this.screen.mouseUp(PVector2I.of(384, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the SE resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeSE()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 640 - 1));
+    this.screen.mouseDown(PVector2I.of(640 - 1, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 704 - 1));
+    this.screen.mouseUp(PVector2I.of(704 - 1, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 320), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 704 - 1));
+    this.screen.mouseDown(PVector2I.of(704 - 1, 704 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 640 - 1));
+    this.screen.mouseUp(PVector2I.of(640 - 1, 640 - 1), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+    this.screen.update();
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the W resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeW()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(384, 512));
+    this.screen.mouseDown(PVector2I.of(384, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(320, 512));
+    this.screen.mouseUp(PVector2I.of(320, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 256), w0.size().get());
+    assertEquals(PVector2I.of(320, 384), w0.position().get());
+
+    this.screen.mouseMoved(PVector2I.of(320, 512));
+    this.screen.mouseDown(PVector2I.of(320, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(384, 512));
+    this.screen.mouseUp(PVector2I.of(384, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(256, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Resizing a window via the E resize button works.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeE()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 512));
+    this.screen.mouseDown(PVector2I.of(640 - 1, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 512));
+    this.screen.mouseUp(PVector2I.of(704 - 1, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.mouseMoved(PVector2I.of(704 - 1, 512));
+    this.screen.mouseDown(PVector2I.of(704 - 1, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(640 - 1, 512));
+    this.screen.mouseUp(PVector2I.of(640 - 1, 512), MOUSE_BUTTON_LEFT);
+    this.screen.mouseMoved(PVector2I.of(512, 0));
+    assertEquals(PAreaSizeI.of(320, 256), w0.size().get());
+    assertEquals(PVector2I.of(384, 384), w0.position().get());
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * The resize buttons ignore anything but the left mouse button.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowResizeButtonsNotLeft()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    w0.setPosition(PVector2I.of(384, 384));
+    this.screen.update();
+
+    // North
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(512, 384), button);
+      this.screen.mouseMoved(PVector2I.of(512, 320));
+      this.screen.mouseUp(PVector2I.of(512, 320), button);
+    }
+
+    // South
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(512, 640 - 1), button);
+      this.screen.mouseMoved(PVector2I.of(512, 640 - 1));
+      this.screen.mouseUp(PVector2I.of(512, 640 - 1), button);
+    }
+
+    // West
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(384, 512), button);
+      this.screen.mouseMoved(PVector2I.of(384, 512));
+      this.screen.mouseUp(PVector2I.of(384, 512), button);
+    }
+
+    // East
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(640 - 1, 512), button);
+      this.screen.mouseMoved(PVector2I.of(640 - 1, 512));
+      this.screen.mouseUp(PVector2I.of(640 - 1, 512), button);
+    }
+
+    // North West
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(384, 384), button);
+      this.screen.mouseMoved(PVector2I.of(384, 384));
+      this.screen.mouseUp(PVector2I.of(384, 384), button);
+    }
+
+    // North East
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(384, 640 - 1), button);
+      this.screen.mouseMoved(PVector2I.of(384, 640 - 1));
+      this.screen.mouseUp(PVector2I.of(384, 640 - 1), button);
+    }
+
+    // South East
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(640 - 1, 640 - 1), button);
+      this.screen.mouseMoved(PVector2I.of(640 - 1, 640 - 1));
+      this.screen.mouseUp(PVector2I.of(640 - 1, 640 - 1), button);
+    }
+
+    // South West
+    for (final var button : SyMouseButton.values()) {
+      if (button == MOUSE_BUTTON_LEFT) {
+        continue;
+      }
+      this.screen.mouseDown(PVector2I.of(640 - 1, 384), button);
+      this.screen.mouseMoved(PVector2I.of(640 - 1, 384));
+      this.screen.mouseUp(PVector2I.of(640 - 1, 384), button);
+    }
+
+    this.screen.close();
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  /**
+   * The window components ignore window events.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testWindowComponentsIgnoreWindowEvents()
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    var root = w0.contentArea().node();
+    while (root.parent().isPresent()) {
+      root = root.parent().get();
+    }
+
+    final var finalRoot = root;
+    root.forEachDepthFirst(Void.class, (input, depth, node) -> {
+      final var component =
+        finalRoot.value();
+      final var result =
+        component.eventSend(new SyWindowClosed(w0.id()));
+      assertEquals(EVENT_NOT_CONSUMED, result);
+    });
   }
 
   private SyEventType eventNext()

@@ -31,11 +31,11 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
-import com.io7m.jsycamore.api.windows.SyWindowLayer;
 import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowID;
+import com.io7m.jsycamore.api.windows.SyWindowLayer;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
@@ -69,13 +69,13 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<Integer> positionSnapping;
   private final AttributeType<Integer> sizeSnapping;
   private final SyWindowLayer category;
+  private final SyWindowDeletionPolicy deletionPolicy;
+  private final AttributeReadableType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
   private PVector2I<SySpaceViewportType> position;
   private PVector2I<SySpaceViewportType> positionMaximized;
-  private final SyWindowDeletionPolicy deletionPolicy;
   private PAreaSizeI<SySpaceViewportType> size;
   private PAreaSizeI<SySpaceViewportType> sizeMaximized;
   private SyConstraints constraints;
-  private final AttributeReadableType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
 
   SyWindow(
     final SyScreenType inScreen,

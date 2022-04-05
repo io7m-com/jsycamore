@@ -21,8 +21,6 @@ import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
@@ -67,16 +65,6 @@ public final class SyWindowResizeS
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
-    if (event instanceof SyMouseEventOnOver) {
-      this.setMouseOver(true);
-      return EVENT_CONSUMED;
-    }
-
-    if (event instanceof SyMouseEventOnNoLongerOver) {
-      this.setMouseOver(false);
-      return EVENT_CONSUMED;
-    }
-
     if (event instanceof SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
@@ -103,20 +91,25 @@ public final class SyWindowResizeS
     }
 
     if (event instanceof SyMouseEventOnHeld onHeld) {
-      final var deltaY =
-        onHeld.mousePositionNow().y() - onHeld.mousePositionFirst().y();
+      return switch (onHeld.button()) {
+        case MOUSE_BUTTON_LEFT -> {
+          final var deltaY =
+            onHeld.mousePositionNow().y() - onHeld.mousePositionFirst().y();
 
-      final var newSize =
-        PAreaSizeI.<SySpaceViewportType>of(
-          this.windowStartSize.sizeX(),
-          this.windowStartSize.sizeY() + deltaY
-        );
+          final var newSize =
+            PAreaSizeI.<SySpaceViewportType>of(
+              this.windowStartSize.sizeX(),
+              this.windowStartSize.sizeY() + deltaY
+            );
 
-      final var window =
-        this.window().orElseThrow(UnreachableCodeException::new);
+          final var window =
+            this.window().orElseThrow(UnreachableCodeException::new);
 
-      window.setSize(newSize);
-      return EVENT_CONSUMED;
+          window.setSize(newSize);
+          yield EVENT_CONSUMED;
+        }
+        case MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE -> EVENT_NOT_CONSUMED;
+      };
     }
 
     return EVENT_NOT_CONSUMED;

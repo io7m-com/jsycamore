@@ -14,25 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+package com.io7m.jsycamore.api.windows;
+
+import java.util.Objects;
+
 /**
- * Embedded GUI library (Standard components)
+ * A window has been maximized.
+ *
+ * @param id The window ID
  */
 
-module com.io7m.jsycamore.components.standard
+public record SyWindowMaximized(SyWindowID id)
+  implements SyWindowEventType
 {
-  requires static org.osgi.annotation.versioning;
-  requires static org.osgi.annotation.bundle;
+  /**
+   * A window has been maximized.
+   *
+   * @param id The window ID
+   */
 
-  requires transitive com.io7m.jattribute.core;
-  requires transitive com.io7m.jorchard.core;
-  requires transitive com.io7m.jregions.core;
-  requires transitive com.io7m.jsycamore.api;
-  requires transitive com.io7m.jtensors.core;
-
-  requires com.io7m.jaffirm.core;
-  requires com.io7m.junreachable.core;
-  requires org.slf4j;
-
-  exports com.io7m.jsycamore.components.standard;
-  exports com.io7m.jsycamore.components.standard.forms;
+  public SyWindowMaximized
+  {
+    Objects.requireNonNull(id, "id");
+  }
 }

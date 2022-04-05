@@ -134,7 +134,7 @@ public final class SyWindowDemo
         new SyScreenFactory().create(
           this.theme,
           this.fontDirectory,
-          PAreaSizeI.of(1024, 768)
+          PAreaSizeI.of(800, 600)
         );
 
       this.window0 =

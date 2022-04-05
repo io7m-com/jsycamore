@@ -42,10 +42,11 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
+import com.io7m.jsycamore.api.windows.SyWindowMaximized;
 import com.io7m.jsycamore.api.windows.SyWindowSet;
 import com.io7m.jsycamore.api.windows.SyWindowSetChanged;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.api.windows.SyWindowUnmaximized;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jsycamore.components.standard.SyLayoutManual;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -64,10 +65,10 @@ import java.util.concurrent.SubmissionPublisher;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
-import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_NORMAL;
-import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_OVERLAY;
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_BE_DELETED;
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_NOT_BE_DELETED;
+import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_NORMAL;
+import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_OVERLAY;
 
 /**
  * A screen.
@@ -418,6 +419,8 @@ public final class SyScreen implements SyScreenType
     Objects.requireNonNull(position, "Position");
     Objects.requireNonNull(button, "Button");
 
+    this.mousePosition.set(position);
+
     /*
      * Find out which component the mouse cursor is over, if any.
      */
@@ -546,17 +549,10 @@ public final class SyScreen implements SyScreenType
     for (final var event : change.changes()) {
       final var window = windowMap.get(event.id());
       if (window != null) {
-        this.publishWindowEvent(window, event);
+        window.eventSend(event);
       }
+      this.events.submit(event);
     }
-  }
-
-  private void publishWindowEvent(
-    final SyWindowType window,
-    final SyWindowEventType event)
-  {
-    window.eventSend(event);
-    this.events.submit(event);
   }
 
   @Override
@@ -614,6 +610,12 @@ public final class SyScreen implements SyScreenType
   {
     Objects.requireNonNull(window, "window");
     window.setMaximizeToggle(this.viewportSize.get());
+
+    if (window.maximized().get()) {
+      this.events.submit(new SyWindowMaximized(window.id()));
+    } else {
+      this.events.submit(new SyWindowUnmaximized(window.id()));
+    }
   }
 
   @Override
@@ -641,6 +643,8 @@ public final class SyScreen implements SyScreenType
   {
     Objects.requireNonNull(position, "Position");
     Objects.requireNonNull(button, "Button");
+
+    this.mousePosition.set(position);
 
     final var state = this.mouseGetState(button);
 

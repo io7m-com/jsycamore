@@ -27,7 +27,9 @@ public sealed interface SyWindowEventType
   permits SyWindowBecameInvisible,
   SyWindowBecameVisible,
   SyWindowClosed,
-  SyWindowCreated
+  SyWindowCreated,
+  SyWindowMaximized,
+  SyWindowUnmaximized
 {
   /**
    * @return The window to which this event refers

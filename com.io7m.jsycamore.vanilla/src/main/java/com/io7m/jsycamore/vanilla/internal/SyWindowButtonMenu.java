@@ -46,16 +46,20 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
 
   private void windowClose()
   {
-    this.window().ifPresent(w -> {
-      switch (w.closeButtonBehaviour().get()) {
-        case HIDE_ON_CLOSE_BUTTON -> {
-          w.screen().windowHide(w);
-        }
-        case CLOSE_ON_CLOSE_BUTTON -> {
-          w.screen().windowClose(w);
-        }
+    final var windowOpt = this.window();
+    if (windowOpt.isEmpty()) {
+      return;
+    }
+
+    final var window = windowOpt.get();
+    switch (window.closeButtonBehaviour().get()) {
+      case HIDE_ON_CLOSE_BUTTON -> {
+        window.screen().windowHide(window);
       }
-    });
+      case CLOSE_ON_CLOSE_BUTTON -> {
+        window.screen().windowClose(window);
+      }
+    }
   }
 
   private void windowMaximize()

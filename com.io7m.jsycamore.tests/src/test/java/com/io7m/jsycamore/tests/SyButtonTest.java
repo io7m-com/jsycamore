@@ -88,6 +88,35 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   }
 
   /**
+   * Pressing a button works.
+   */
+
+  @Test
+  public void testButtonPressReleaseConvenience()
+  {
+    final var c = new SyButton(() -> this.clicks++);
+
+    c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_LEFT, c));
+    assertTrue(c.isPressed());
+    assertEquals(0, this.clicks);
+
+    c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_LEFT, c));
+    assertFalse(c.isPressed());
+    assertEquals(1, this.clicks);
+
+    c.setOnClickListener(() -> {
+    });
+
+    c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_LEFT, c));
+    assertTrue(c.isPressed());
+    assertEquals(1, this.clicks);
+
+    c.eventSend(new SyMouseEventOnReleased(Z, MOUSE_BUTTON_LEFT, c));
+    assertFalse(c.isPressed());
+    assertEquals(1, this.clicks);
+  }
+
+  /**
    * Pressing a button using the wrong mouse button does nothing.
    */
 

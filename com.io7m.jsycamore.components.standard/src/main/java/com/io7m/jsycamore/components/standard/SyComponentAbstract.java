@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.components.standard;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNode;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
@@ -42,6 +43,7 @@ import org.osgi.annotation.versioning.ProviderType;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
@@ -66,12 +68,26 @@ public abstract class SyComponentAbstract implements SyComponentType
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> sizeUpperLimit;
   private volatile boolean mouseOver;
   private volatile boolean mouseAcceptQuery = true;
+  private Optional<SyWindowType> window;
+
+  /**
+   * A convenient abstract implementation of a component, to make it easier to
+   * implement new components.
+   *
+   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param inNodeDetachCheck   A function that returns {@code true} if this
+   *                            component should be allowed to be detached from
+   *                            the parent component
+   */
 
   protected SyComponentAbstract(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final List<SyThemeClassNameType> inThemeClassesExtra,
+    final BooleanSupplier inNodeDetachCheck)
   {
     this.themeClassesExtra =
       Objects.requireNonNull(inThemeClassesExtra, "themeClassesExtra");
+
+    Objects.requireNonNull(inNodeDetachCheck, "nodeDetachCheck");
 
     final var attributes =
       SyComponentAttributes.get();
@@ -87,7 +103,34 @@ public abstract class SyComponentAbstract implements SyComponentType
     this.position =
       attributes.create(PVector2I.of(0, 0));
     this.node =
-      JOTreeNode.create(this);
+      JOTreeNode.createWithDetachCheck(this, inNodeDetachCheck);
+    this.window =
+      Optional.empty();
+  }
+
+  /**
+   * Set the window that owns the component. This method is only intended to be
+   * called for the root component that is attached directly to a window.
+   *
+   * @param newWindow The new window
+   */
+
+  public final void setWindow(
+    final Optional<SyWindowType> newWindow)
+  {
+    Objects.requireNonNull(newWindow, "newWindow");
+    Preconditions.checkPreconditionV(
+      this.node.parent().isEmpty(),
+      "Nodes attached to windows must not have parents."
+    );
+    this.window = Objects.requireNonNull(newWindow, "newWindow");
+  }
+
+  @ConvenienceConstructor
+  protected SyComponentAbstract(
+    final List<SyThemeClassNameType> inThemeClassesExtra)
+  {
+    this(inThemeClassesExtra, () -> true);
   }
 
   @SuppressWarnings("unchecked")
@@ -166,7 +209,7 @@ public abstract class SyComponentAbstract implements SyComponentType
     final var parentOpt =
       this.node.parent();
     if (parentOpt.isEmpty()) {
-      return Optional.empty();
+      return this.window;
     }
     return parentOpt.get().value().window();
   }

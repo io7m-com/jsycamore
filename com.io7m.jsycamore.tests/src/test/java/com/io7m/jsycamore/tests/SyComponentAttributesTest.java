@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,25 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Embedded GUI library (Standard components)
- */
 
-module com.io7m.jsycamore.components.standard
+package com.io7m.jsycamore.tests;
+
+import com.io7m.jsycamore.components.standard.SyComponentAttributes;
+import org.junit.jupiter.api.Test;
+
+public final class SyComponentAttributesTest
 {
-  requires static org.osgi.annotation.versioning;
-  requires static org.osgi.annotation.bundle;
+  @Test
+  public void testAttributeError()
+  {
+    final var a =
+      SyComponentAttributes.get()
+        .create(23);
 
-  requires transitive com.io7m.jattribute.core;
-  requires transitive com.io7m.jorchard.core;
-  requires transitive com.io7m.jregions.core;
-  requires transitive com.io7m.jsycamore.api;
-  requires transitive com.io7m.jtensors.core;
-
-  requires com.io7m.jaffirm.core;
-  requires com.io7m.junreachable.core;
-  requires org.slf4j;
-
-  exports com.io7m.jsycamore.components.standard;
-  exports com.io7m.jsycamore.components.standard.forms;
+    a.subscribe((oldValue, newValue) -> {
+      throw new IllegalStateException();
+    });
+  }
 }
