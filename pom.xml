@@ -26,20 +26,21 @@
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.components.standard</module>
     <module>com.io7m.jsycamore.font.dejavu</module>
+    <module>com.io7m.jsycamore.font.york</module>
+    <module>com.io7m.jsycamore.generation</module>
     <module>com.io7m.jsycamore.tests</module>
     <module>com.io7m.jsycamore.theme.primal</module>
     <module>com.io7m.jsycamore.theme.spi</module>
     <module>com.io7m.jsycamore.vanilla</module>
-    <module>com.io7m.jsycamore.font.york</module>
   </modules>
 
   <properties>
     <io7m.api.previousVersion>0.1.0</io7m.api.previousVersion>
-    <junit.version>5.8.2</junit.version>
     <io7m.org.immutables.value.version>2.8.3</io7m.org.immutables.value.version>
     <javafx.version>18-ea+1</javafx.version>
-    <mockito.version>4.4.0</mockito.version>
     <jqwik.version>1.6.4</jqwik.version>
+    <junit.version>5.8.2</junit.version>
+    <mockito.version>4.4.0</mockito.version>
   </properties>
 
   <licenses>

@@ -37,6 +37,7 @@ module com.io7m.jsycamore.api
   exports com.io7m.jsycamore.api.colors;
   exports com.io7m.jsycamore.api.components;
   exports com.io7m.jsycamore.api.events;
+  exports com.io7m.jsycamore.api.keyboard;
   exports com.io7m.jsycamore.api.layout;
   exports com.io7m.jsycamore.api.menus;
   exports com.io7m.jsycamore.api.mouse;

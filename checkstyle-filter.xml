@@ -40,4 +40,9 @@
   <suppress files="SyThemePrimal.java"
             checks="CyclomaticComplexity"/>
 
+  <suppress files="SyAWTKeyCodeMapping.java"
+            checks="CyclomaticComplexity"/>
+  <suppress files="SyAWTKeyCodeMapping.java"
+            checks="JavaNCSS"/>
+
 </suppressions>
