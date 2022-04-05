@@ -28,12 +28,13 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
-import com.io7m.jsycamore.components.standard.SyLimit;
-import com.io7m.jsycamore.components.standard.SyPackHorizontal;
 import com.io7m.jsycamore.components.standard.SySpace;
 import com.io7m.jsycamore.components.standard.SyTextView;
+import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
+import com.io7m.jsycamore.components.standard.forms.SyFormRow;
 
 import java.net.URI;
 import java.util.List;
@@ -43,6 +44,8 @@ import java.util.Optional;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_TEXT;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
 import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
 
 /**
@@ -56,54 +59,63 @@ public final class SyMenuItemAtom
   private final SyMenuType menu;
   private final SyTextView text;
   private final Runnable action;
-  private final SyPackHorizontal layout;
   private final SyImageView icon;
-  private final SyLimit iconLimit;
   private final SySpace space;
+  private final SyFormRow row;
+  private final SyFormColumnsConfiguration columns;
+  private final SyAlign textAlign;
+  private final SyAlign iconAlign;
 
   /**
    * A menu atom item.
    *
-   * @param inMenu   The owning menu
-   * @param inText   The item text
-   * @param inAction The menu action
+   * @param inMenu    The owning menu
+   * @param inColumns The row columns
+   * @param inText    The item text
+   * @param inAction  The menu action
    */
 
   public SyMenuItemAtom(
     final SyMenuType inMenu,
+    final SyFormColumnsConfiguration inColumns,
     final String inText,
     final Runnable inAction)
   {
     super(List.of());
 
-    this.space = new SySpace();
-    this.space.preferredSize().set(PAreaSizeI.of(0, 0));
-
+    this.columns =
+      Objects.requireNonNull(inColumns, "inColumns");
     this.menu =
       Objects.requireNonNull(inMenu, "inMenu");
     this.action =
       Objects.requireNonNull(inAction, "action");
 
-    this.layout = new SyPackHorizontal();
-    this.layout.paddingBetween().set(8);
-    this.layout.alignVertical().set(ALIGN_VERTICAL_CENTER);
+    this.space = new SySpace();
+
+    this.row = new SyFormRow(this.columns);
 
     this.icon = new SyImageView();
     this.icon.setMouseQueryAccepting(false);
+    this.icon.sizeUpperLimit().set(PAreaSizeI.of(16, 16));
 
-    this.iconLimit = new SyLimit();
-    this.iconLimit.limitSizeX().set(16);
-    this.iconLimit.limitSizeY().set(16);
-    this.iconLimit.childAdd(this.icon);
+    this.iconAlign = new SyAlign();
+    this.iconAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
+    this.iconAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
+    this.iconAlign.childAdd(this.icon);
 
     this.text = new SyTextView(List.of(MENU_ITEM_TEXT));
     this.text.text().set(inText);
 
-    this.layout.childAdd(this.space);
-    this.layout.childAdd(this.iconLimit);
-    this.layout.childAdd(this.text);
+    this.textAlign = new SyAlign();
+    this.textAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
+    this.textAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
+    this.textAlign.childAdd(this.text);
 
-    this.childAdd(this.layout);
+    this.row.childAdd(this.iconAlign);
+    this.row.childAdd(this.textAlign);
+    this.row.childAdd(this.space);
+
+    this.childAdd(this.row);
   }
 
   @Override
@@ -116,17 +128,18 @@ public final class SyMenuItemAtom
      */
 
     final var textSize =
-      this.text.layout(layoutContext, constraints);
+      this.text.minimumSizeRequired(layoutContext);
 
     /*
      * Then, set this layout to the height of the text plus a margin.
      */
 
     final var sizeLimitY = textSize.sizeY() + 8;
-    this.layout.limitSizeY().set(sizeLimitY);
+    this.row.sizeUpperLimit().set(PAreaSizeI.of(Integer.MAX_VALUE, sizeLimitY));
+    this.columns.evaluateSizes(constraints.sizeMaximumX());
 
     final var newSize =
-      this.layout.layout(
+      this.row.layout(
         layoutContext,
         new SyConstraints(
           constraints.sizeMinimumX(),

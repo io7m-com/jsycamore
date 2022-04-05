@@ -18,6 +18,9 @@ package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.components.standard.SyMenu;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 
@@ -30,9 +33,36 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
 
 public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
 {
+  private final SyMenu menu;
+
   SyWindowButtonMenu()
   {
     super(WINDOW_BUTTON_MENU, "jsycamore:icon:window_menu");
+
+    this.menu = new SyMenu();
+    this.menu.addAtom("Close", this::windowClose);
+    this.menu.addAtom("Maximize", this::windowMaximize);
+  }
+
+  private void windowClose()
+  {
+    this.window().ifPresent(w -> {
+      switch (w.closeButtonBehaviour().get()) {
+        case HIDE_ON_CLOSE_BUTTON -> {
+          w.screen().windowHide(w);
+        }
+        case CLOSE_ON_CLOSE_BUTTON -> {
+          w.screen().windowClose(w);
+        }
+      }
+    });
+  }
+
+  private void windowMaximize()
+  {
+    this.window().ifPresent(w -> {
+      w.screen().windowMaximize(w);
+    });
   }
 
   @Override
@@ -44,6 +74,12 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
   @Override
   protected void onClicked()
   {
-
+    this.window()
+      .map(SyWindowType::screen)
+      .ifPresent(s -> {
+        final var position = s.mousePosition().get();
+        this.menu.setPosition(PVector2I.of(position.x(), position.y()));
+        s.menuOpen(this.menu);
+      });
   }
 }

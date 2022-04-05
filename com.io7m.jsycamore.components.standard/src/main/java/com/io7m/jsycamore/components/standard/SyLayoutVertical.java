@@ -27,6 +27,8 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.min;
+
 /**
  * A simple container that distributes child objects vertically with a
  * configurable amount of padding between the objects.
@@ -89,9 +91,16 @@ public final class SyLayoutVertical extends SyLayoutAbstract
     final var childCount =
       childrenVisible.size();
 
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+    final var containerSizeX =
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
+    final var containerSizeY =
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
+
     if (childCount > 0) {
       final var regionSize =
-        constraints.sizeMaximumY() / childCount;
+        containerSizeY / childCount;
       final var paddingHalf =
         this.paddingBetween.get() / 2;
 
@@ -113,7 +122,7 @@ public final class SyLayoutVertical extends SyLayoutAbstract
         child.layout(layoutContext, new SyConstraints(
           constraints.sizeMinimumX(),
           0,
-          constraints.sizeMaximumX(),
+          containerSizeX,
           shrunkSize
         ));
 
@@ -124,7 +133,9 @@ public final class SyLayoutVertical extends SyLayoutAbstract
       }
     }
 
-    this.setSize(constraints.sizeMaximum());
-    return constraints.sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      PAreaSizeI.of(containerSizeX, containerSizeY);
+    this.setSize(newSize);
+    return newSize;
   }
 }

@@ -28,7 +28,6 @@ import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.awt.internal.SyRendererType;
-import com.io7m.jsycamore.components.standard.SyLimit;
 import com.io7m.jsycamore.components.standard.SyMenu;
 import com.io7m.jsycamore.components.standard.SyMenuBar;
 import com.io7m.jsycamore.components.standard.SyPackVertical;
@@ -260,13 +259,10 @@ public final class SyMenuBarDemo
         final var menuBar = new SyMenuBar();
         menuBar.addMenu("File", file);
         menuBar.addMenu("Edit", edit);
-
-        final var limit = new SyLimit();
-        limit.limitSizeY().set(24);
-        limit.childAdd(menuBar);
+        menuBar.sizeUpperLimit().set(PAreaSizeI.of(Integer.MAX_VALUE, 24));
 
         final var layout = new SyPackVertical();
-        layout.childAdd(limit);
+        layout.childAdd(menuBar);
 
         this.window0.contentArea().childAdd(layout);
       }

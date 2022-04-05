@@ -24,9 +24,12 @@ import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.ConvenienceConstructor;
 import com.io7m.jsycamore.components.standard.SyLayoutAbstract;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 import java.util.Objects;
+
+import static java.lang.Math.min;
 
 /**
  * A row within a form.
@@ -75,8 +78,15 @@ public final class SyFormRow extends SyLayoutAbstract
 
     this.configuration.evaluateSizes(constraints.sizeMaximumX());
 
-    int index = 0;
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+    final var containerSizeX =
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
+    final var containerSizeY =
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
 
+    int index = 0;
+    var offsetX = 0;
     final var childNodes = this.node().children();
     for (final var childNode : childNodes) {
       final var size = this.configuration.sizeFor(index);
@@ -86,14 +96,20 @@ public final class SyFormRow extends SyLayoutAbstract
           size,
           constraints.sizeMinimumY(),
           size,
-          constraints.sizeMaximumY()
+          containerSizeY
         );
 
-      childNode.value().layout(layoutContext, childConstraints);
+      final var child = childNode.value();
+      child.layout(layoutContext, childConstraints);
+      child.setPosition(PVector2I.of(offsetX, 0));
+
+      offsetX += size;
       ++index;
     }
 
-    this.setSize(constraints.sizeMaximum());
-    return constraints.sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      PAreaSizeI.of(containerSizeX, containerSizeY);
+    this.setSize(newSize);
+    return newSize;
   }
 }

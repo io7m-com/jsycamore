@@ -20,6 +20,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
 
 import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Math.min;
 
 /**
  * A set of size constraints.
@@ -66,7 +67,7 @@ public record SyConstraints(
     final int max,
     final int v)
   {
-    return Math.max(min, Math.min(max, v));
+    return Math.max(min, min(max, v));
   }
 
   /**
@@ -113,6 +114,28 @@ public record SyConstraints(
   }
 
   /**
+   * Produce an area size based on the given size values, clamped such that they
+   * will fit within these constraints, ignoring the minimum constraint but
+   * obeying the maximum constraint.
+   *
+   * @param <T>   The coordinate space type
+   * @param sizeX The size on the X axis
+   * @param sizeY The size on the Y axis
+   *
+   * @return A clamped area size
+   */
+
+  public <T extends SySpaceType> PAreaSizeI<T> sizeNotExceeding(
+    final int sizeX,
+    final int sizeY)
+  {
+    return PAreaSizeI.of(
+      min(this.sizeMaximumX, sizeX),
+      min(this.sizeMaximumY, sizeY)
+    );
+  }
+
+  /**
    * @param size The area size
    *
    * @return {@code true} if the given size fits within these constraints
@@ -128,5 +151,19 @@ public record SyConstraints(
       size.sizeY() >= this.sizeMinimumY
         && size.sizeY() <= this.sizeMaximumY;
     return xOk && yOk;
+  }
+
+  /**
+   * @return These constraints without the minimum sizes
+   */
+
+  public SyConstraints withoutMinimum()
+  {
+    return new SyConstraints(
+      0,
+      0,
+      this.sizeMaximumX,
+      this.sizeMaximumY
+    );
   }
 }

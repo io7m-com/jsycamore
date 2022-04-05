@@ -77,4 +77,26 @@ public final class SyConstraintsTest
     assertTrue(cs.isSatisfiedBy(s0));
     assertTrue(cs.isSatisfiedBy(s1));
   }
+
+  /**
+   * Removing the minimum sizes works.
+   */
+
+  @Property
+  public void testWithoutMinimum(
+    @ForAll @IntRange(min = 0, max = 100000) final int a,
+    @ForAll @IntRange(min = 0, max = 100000) final int b,
+    @ForAll @IntRange(min = 0, max = 100000) final int c,
+    @ForAll @IntRange(min = 0, max = 100000) final int d)
+  {
+    final var nums = new int[]{a, b, c, d};
+    Arrays.sort(nums);
+
+    final var cs = new SyConstraints(nums[0], nums[1], nums[2], nums[3]);
+    final var ws = cs.withoutMinimum();
+    assertEquals(0, ws.sizeMinimumX());
+    assertEquals(0, ws.sizeMinimumY());
+    assertEquals(nums[2], ws.sizeMaximumX());
+    assertEquals(nums[3], ws.sizeMaximumY());
+  }
 }

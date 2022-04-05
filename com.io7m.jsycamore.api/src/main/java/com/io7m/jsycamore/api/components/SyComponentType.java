@@ -35,6 +35,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static java.lang.Math.min;
+
 /**
  * The type of components.
  */
@@ -78,13 +80,26 @@ public interface SyComponentType
     Objects.requireNonNull(layoutContext, "layoutContext");
     Objects.requireNonNull(constraints, "constraints");
 
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+
+    final var limitedConstraints =
+      new SyConstraints(
+        constraints.sizeMinimumX(),
+        constraints.sizeMinimumY(),
+        min(constraints.sizeMaximumX(), sizeLimit.sizeX()),
+        min(constraints.sizeMaximumY(), sizeLimit.sizeY())
+      );
+
     final var childNodes = this.node().children();
     for (final var childNode : childNodes) {
-      childNode.value().layout(layoutContext, constraints);
+      childNode.value().layout(layoutContext, limitedConstraints);
     }
 
-    this.setSize(constraints.sizeMaximum());
-    return constraints.sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      limitedConstraints.sizeMaximum();
+    this.setSize(newSize);
+    return newSize;
   }
 
   /**

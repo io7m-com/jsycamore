@@ -25,6 +25,8 @@ import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
 
+import static java.lang.Math.min;
+
 /**
  * A layout that respects manually configured positions and sizes.
  */
@@ -58,6 +60,13 @@ public final class SyLayoutManual extends SyLayoutAbstract
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+    final var containerSizeX =
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
+    final var containerSizeY =
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
+
     final var childNodes = this.node().children();
     for (final var childNode : childNodes) {
       final var child = childNode.value();
@@ -72,8 +81,8 @@ public final class SyLayoutManual extends SyLayoutAbstract
       child.layout(layoutContext, childConstraints);
     }
 
-    final var newSize =
-      constraints.<SySpaceParentRelativeType>sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      PAreaSizeI.of(containerSizeX, containerSizeY);
     this.setSize(newSize);
     return newSize;
   }

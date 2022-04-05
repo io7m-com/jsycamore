@@ -29,6 +29,12 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 public interface SySizedReadableType<T extends SySpaceType>
 {
   /**
+   * @return The desired upper limit on the maximum size of the object
+   */
+
+  AttributeReadableType<PAreaSizeI<T>> sizeUpperLimit();
+
+  /**
    * @return The object's size
    */
 

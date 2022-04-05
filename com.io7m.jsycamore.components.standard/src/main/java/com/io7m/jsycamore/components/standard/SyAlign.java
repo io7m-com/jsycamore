@@ -30,6 +30,7 @@ import java.util.List;
 
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
 import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static java.lang.Math.min;
 
 /**
  * A container that aligns child components to the given horizontal and vertical
@@ -76,23 +77,29 @@ public final class SyAlign extends SyLayoutAbstract
     final var alignHNow = this.alignH.get();
     final var alignVNow = this.alignV.get();
 
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+
     final var containerArea =
-      PAreasI.create(
+      PAreasI.<SySpaceParentRelativeType>create(
         0,
         0,
-        constraints.sizeMaximumX(),
-        constraints.sizeMaximumY()
+        min(constraints.sizeMaximumX(), sizeLimit.sizeX()),
+        min(constraints.sizeMaximumY(), sizeLimit.sizeY())
       );
+
+    final var childConstraints =
+      constraints.withoutMinimum();
 
     final var childNodes = this.node().children();
     for (final var childNode : childNodes) {
       final var component =
         childNode.value();
       final var initial =
-        component.layout(layoutContext, constraints);
+        component.layout(layoutContext, childConstraints);
 
       var alignedArea =
-        PAreasI.create(
+        PAreasI.<SySpaceParentRelativeType>create(
           0,
           0,
           initial.sizeX(),
@@ -127,8 +134,8 @@ public final class SyAlign extends SyLayoutAbstract
 
       final var alignedConstraints =
         new SyConstraints(
-          constraints.sizeMinimumX(),
-          constraints.sizeMinimumY(),
+          0,
+          0,
           alignedArea.sizeX(),
           alignedArea.sizeY()
         );
@@ -142,11 +149,7 @@ public final class SyAlign extends SyLayoutAbstract
       );
     }
 
-    final var newSize =
-      PAreaSizeI.<SySpaceParentRelativeType>of(
-        constraints.sizeMaximumX(),
-        constraints.sizeMaximumY());
-
+    final var newSize = PAreasI.size(containerArea);
     this.setSize(newSize);
     return newSize;
   }

@@ -30,6 +30,9 @@ public interface SySizedType<T extends SySpaceType>
   extends SySizedReadableType<T>
 {
   @Override
+  AttributeType<PAreaSizeI<T>> sizeUpperLimit();
+
+  @Override
   AttributeType<PAreaSizeI<T>> size();
 
   /**
@@ -42,5 +45,17 @@ public interface SySizedType<T extends SySpaceType>
     final PAreaSizeI<T> newSize)
   {
     this.size().set(newSize);
+  }
+
+  /**
+   * Set the desired upper limit on the size of the object.
+   *
+   * @param newSize The new size
+   */
+
+  default void setSizeUpperLimit(
+    final PAreaSizeI<T> newSize)
+  {
+    this.sizeUpperLimit().set(newSize);
   }
 }

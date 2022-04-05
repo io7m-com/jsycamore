@@ -28,6 +28,8 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.min;
+
 /**
  * A vertical form layout consisting of rows of columns.
  */
@@ -94,14 +96,12 @@ public final class SyForm extends SyLayoutAbstract
         .filter(n -> n.value().isVisible())
         .toList();
 
-    final var limitX =
-      this.limitSizeX().get().intValue();
-    final var limitY =
-      this.limitSizeY().get().intValue();
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
     final var containerSizeX =
-      Math.min(constraints.sizeMaximumX(), limitX);
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
     final var containerSizeY =
-      Math.min(constraints.sizeMaximumY(), limitY);
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
 
     var maximumX = 0;
     var offsetY = 0;

@@ -77,9 +77,15 @@ public final class SyTextView
   {
     final var requiredSize =
       this.minimumSizeRequired(layoutContext);
+
+    final var limitSize =
+      this.sizeUpperLimit().get();
+
     final var newSize =
-      constraints.<SySpaceParentRelativeType>sizeWithin(
-        requiredSize.sizeX(), requiredSize.sizeY());
+      constraints.<SySpaceParentRelativeType>sizeNotExceeding(
+        Math.min(requiredSize.sizeX(), limitSize.sizeX()),
+        Math.min(requiredSize.sizeY(), limitSize.sizeY())
+      );
 
     this.setSize(newSize);
     return newSize;

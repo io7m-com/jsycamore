@@ -106,7 +106,7 @@ public final class SyMenuDemo
   private static final class Canvas extends JPanel
   {
     private final SyFontDirectoryType<SyFontAWT> fontDirectory;
-    private final SyRendererType renderer;
+    private final SyAWTRenderer renderer;
     private final SyScreenType screen;
     private final SyThemeType theme;
     private final SyWindowType window0;
@@ -140,7 +140,8 @@ public final class SyMenuDemo
         .set(HIDE_ON_CLOSE_BUTTON);
 
       this.renderer = new SyAWTRenderer(this.fontDirectory, this.imageLoader);
-      // this.renderer = new SyBoundsOnlyRenderer();
+      this.renderer.nodeRenderer()
+        .setDebugBoundsRendering(false);
 
       final var executor =
         Executors.newSingleThreadScheduledExecutor(runnable -> {

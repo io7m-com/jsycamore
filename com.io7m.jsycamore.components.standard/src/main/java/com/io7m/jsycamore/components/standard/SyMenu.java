@@ -34,6 +34,7 @@ import com.io7m.jsycamore.api.menus.SyMenuReadableType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
 import com.io7m.jsycamore.components.standard.internal.SyMenuItemAtom;
 import com.io7m.jsycamore.components.standard.internal.SyMenuItemSeparator;
 import com.io7m.jsycamore.components.standard.internal.SyMenuItemSubmenu;
@@ -44,6 +45,8 @@ import java.util.Objects;
 
 import static com.io7m.jsycamore.api.components.SyResizeBehaviour.FILL_SPACE;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
+import static com.io7m.jsycamore.components.standard.forms.SyFormColumnSizeType.exact;
+import static com.io7m.jsycamore.components.standard.forms.SyFormColumnSizeType.flexible;
 
 /**
  * A menu.
@@ -54,6 +57,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
   private final SyPackVertical align;
   private final AttributeType<Boolean> expanded;
   private final JOTreeNodeType<SyMenuType> menuNode;
+  private final SyFormColumnsConfiguration columns;
   private List<SyMenuItemType> items;
 
   /**
@@ -68,6 +72,12 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     super(themeClasses);
 
     this.items = List.of();
+    this.columns =
+      SyFormColumnsConfiguration.columns(
+        exact(24),
+        flexible(),
+        exact(12)
+      );
 
     final var attributes = SyComponentAttributes.get();
     this.expanded = attributes.create(false);
@@ -153,7 +163,9 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     final Runnable action)
   {
     final var v =
-      this.addMenuItem(new SyMenuItemAtom(this, text, action));
+      this.addMenuItem(
+        new SyMenuItemAtom(this, this.columns, text, action)
+      );
 
     this.align.childAdd(v);
     return v;
@@ -167,7 +179,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     this.menuNode.childAdd(menu.menuNode());
 
     final var v =
-      this.addMenuItem(new SyMenuItemSubmenu(this, menu, text));
+      this.addMenuItem(new SyMenuItemSubmenu(this, this.columns, menu, text));
     this.align.childAdd(v);
     return v;
   }

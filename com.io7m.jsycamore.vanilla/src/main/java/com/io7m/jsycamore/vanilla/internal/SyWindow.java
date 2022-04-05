@@ -75,6 +75,7 @@ public final class SyWindow implements SyWindowType
   private PAreaSizeI<SySpaceViewportType> size;
   private PAreaSizeI<SySpaceViewportType> sizeMaximized;
   private SyConstraints constraints;
+  private final AttributeReadableType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
 
   SyWindow(
     final SyScreenType inScreen,
@@ -117,6 +118,8 @@ public final class SyWindow implements SyWindowType
       attributes.create(0);
     this.sizeSnapping =
       attributes.create(0);
+    this.sizeUpperLimit =
+      attributes.create(PAreaSizeI.of(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
     this.positionAttribute =
       this.maximized.map(isMaximized -> {
@@ -403,6 +406,12 @@ public final class SyWindow implements SyWindowType
   public AttributeReadableType<PVector2I<SySpaceViewportType>> position()
   {
     return this.positionAttribute;
+  }
+
+  @Override
+  public AttributeReadableType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit()
+  {
+    return this.sizeUpperLimit;
   }
 
   @Override

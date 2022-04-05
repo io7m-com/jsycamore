@@ -58,9 +58,21 @@ public final class SyPrimalImageView extends SyPrimalAbstract
 
     if (Objects.equals(uri.getScheme(), "jsycamore")) {
       return switch (uri.getSchemeSpecificPart()) {
-        case "icon:window_close" -> iconOf(size, "window_close.png");
-        case "icon:window_maximize" -> iconOf(size, "window_maximize.png");
-        case "icon:window_menu" -> iconOf(size, "window_menu.png");
+        case "icon:window_close" -> {
+          yield iconOf(size, "window_close.png");
+        }
+        case "icon:window_maximize" -> {
+          yield iconOf(size, "window_maximize.png");
+        }
+        case "icon:window_menu" -> {
+          yield iconOf(size, "window_menu.png");
+        }
+        case "icon:menu_submenu" -> {
+          yield iconOf(size, "menu_submenu.png");
+        }
+        case "icon:menu_submenu_selected" -> {
+          yield iconOf(size, "menu_submenu_selected.png");
+        }
         default -> SyRenderNodeNoop.noop();
       };
     }

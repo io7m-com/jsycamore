@@ -27,6 +27,8 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.min;
+
 /**
  * A trivial container that pads each edge with a configurable amount of empty
  * space.
@@ -132,12 +134,19 @@ public final class SyLayoutMargin extends SyLayoutAbstract
     final var pT = this.paddingTop.get();
     final var pB = this.paddingBottom.get();
 
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+    final var containerSizeX =
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
+    final var containerSizeY =
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
+
     final var newConstraints =
       new SyConstraints(
         0,
         0,
-        constraints.sizeMaximumX() - (pL + pR),
-        constraints.sizeMaximumY() - (pT + pB)
+        containerSizeX - (pL + pR),
+        containerSizeY - (pT + pB)
       );
 
     for (final var childNode : this.node().children()) {
@@ -146,7 +155,9 @@ public final class SyLayoutMargin extends SyLayoutAbstract
       child.setPosition(PVector2I.of(pL, pT));
     }
 
-    this.setSize(constraints.sizeMaximum());
-    return constraints.sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      PAreaSizeI.of(containerSizeX, containerSizeY);
+    this.setSize(newSize);
+    return newSize;
   }
 }

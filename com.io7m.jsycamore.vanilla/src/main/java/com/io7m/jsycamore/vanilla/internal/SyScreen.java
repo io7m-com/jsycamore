@@ -79,9 +79,6 @@ public final class SyScreen implements SyScreenType
     LoggerFactory.getLogger(SyScreen.class);
 
   private final SyLayoutManual windowMenuOverlayLayout;
-  private MenuTreeOpen menuTreeCurrentlyOpen;
-  private Optional<SyComponentType> componentOver;
-  private SyWindowSet windows;
   private final AtomicBoolean closed;
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
   private final AttributeType<PVector2I<SySpaceViewportType>> mousePosition;
@@ -91,6 +88,10 @@ public final class SyScreen implements SyScreenType
   private final SyLayoutContextType layoutContext;
   private final SyThemeType theme;
   private final SyWindow windowMenuOverlay;
+  private final AttributeType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
+  private MenuTreeOpen menuTreeCurrentlyOpen;
+  private Optional<SyComponentType> componentOver;
+  private SyWindowSet windows;
 
   /**
    * A screen.
@@ -116,6 +117,8 @@ public final class SyScreen implements SyScreenType
         Objects.requireNonNull(inSize, "viewportSize"));
     this.mousePosition =
       attributes.create(PVectors2I.zero());
+    this.sizeUpperLimit =
+      attributes.create(PAreaSizeI.of(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
     this.mouseButtonStates =
       new EnumMap<>(SyMouseButton.class);
@@ -155,6 +158,12 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
+  public AttributeType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit()
+  {
+    return this.sizeUpperLimit;
+  }
+
+  @Override
   public SyThemeType theme()
   {
     return this.theme;
@@ -184,18 +193,6 @@ public final class SyScreen implements SyScreenType
   public AttributeReadableType<PVector2I<SySpaceViewportType>> mousePosition()
   {
     return this.mousePosition;
-  }
-
-  private static final class MenuTreeOpen
-  {
-    private final List<SyMenuType> menusOpen;
-
-    private MenuTreeOpen(
-      final List<SyMenuType> inMenusOpen)
-    {
-      this.menusOpen =
-        Objects.requireNonNull(inMenusOpen, "menusOpen");
-    }
   }
 
   @Override
@@ -707,6 +704,18 @@ public final class SyScreen implements SyScreenType
   {
     MOUSE_STATE_UP,
     MOUSE_STATE_DOWN
+  }
+
+  private static final class MenuTreeOpen
+  {
+    private final List<SyMenuType> menusOpen;
+
+    private MenuTreeOpen(
+      final List<SyMenuType> inMenusOpen)
+    {
+      this.menusOpen =
+        Objects.requireNonNull(inMenusOpen, "menusOpen");
+    }
   }
 
   private static final class MouseState

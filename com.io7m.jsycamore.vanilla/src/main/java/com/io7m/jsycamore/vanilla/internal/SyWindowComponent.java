@@ -62,6 +62,7 @@ public abstract class SyWindowComponent implements SyComponentType
   private final AttributeType<PVector2I<SySpaceParentRelativeType>> position;
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> size;
   private final List<SyThemeClassNameType> themeClassesExtra;
+  private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> sizeUpperLimit;
   private Optional<SyWindowType> window;
   private volatile boolean mouseOver;
   private volatile boolean mouseAcceptQuery = true;
@@ -84,6 +85,8 @@ public abstract class SyWindowComponent implements SyComponentType
       attributes.create(ACTIVE);
     this.size =
       attributes.create(PAreaSizeI.of(0, 0));
+    this.sizeUpperLimit =
+      attributes.create(PAreaSizeI.of(Integer.MAX_VALUE, Integer.MAX_VALUE));
     this.position =
       attributes.create(PVector2I.of(0, 0));
     this.window =
@@ -111,6 +114,12 @@ public abstract class SyWindowComponent implements SyComponentType
       return targetY >= viewportMinY && targetY <= viewportMaxY;
     }
     return false;
+  }
+
+  @Override
+  public final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> sizeUpperLimit()
+  {
+    return this.sizeUpperLimit;
   }
 
   @Override

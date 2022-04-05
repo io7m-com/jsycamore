@@ -18,8 +18,10 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -88,6 +90,10 @@ public abstract class SyComponentContract<T extends SyComponentType>
     return this.window;
   }
 
+  /**
+   * Component activity works.
+   */
+
   @Test
   public final void testComponentActiveOK()
   {
@@ -104,6 +110,10 @@ public abstract class SyComponentContract<T extends SyComponentType>
     assertTrue(c.isActive());
   }
 
+  /**
+   * Component visibility works.
+   */
+
   @Test
   public final void testComponentVisibleOK()
   {
@@ -118,5 +128,33 @@ public abstract class SyComponentContract<T extends SyComponentType>
     c.setVisible(VISIBILITY_VISIBLE);
     assertEquals(VISIBILITY_VISIBLE, c.visibility().get());
     assertTrue(c.isVisible());
+  }
+
+  /**
+   * Components respect size limits.
+   */
+
+  @Test
+  public final void testComponentSizeLimitOK()
+  {
+    final var c = this.newComponent();
+
+    c.sizeUpperLimit().set(PAreaSizeI.of(64, 32));
+
+    final var size =
+      c.layout(
+        this.layoutContext,
+        new SyConstraints(
+          0,
+          0,
+          128,
+          128
+        ));
+
+    final var rSize = c.size().get();
+    assertTrue(rSize.sizeX() <= 64,
+               () -> "%d <= 64".formatted(rSize.sizeX()));
+    assertTrue(rSize.sizeY() <= 32,
+               () -> "%d <= 32".formatted(rSize.sizeY()));
   }
 }

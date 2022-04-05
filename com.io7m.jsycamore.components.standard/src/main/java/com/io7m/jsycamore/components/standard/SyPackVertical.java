@@ -30,6 +30,7 @@ import java.util.Objects;
 
 import static com.io7m.jsycamore.api.components.SyResizeBehaviour.PRESERVE;
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
+import static java.lang.Math.min;
 
 /**
  * A simple container that packs child objects vertically with a configurable
@@ -128,14 +129,12 @@ public final class SyPackVertical extends SyLayoutAbstract
         .filter(n -> n.value().isVisible())
         .toList();
 
-    final var limitX =
-      this.limitSizeX().get().intValue();
-    final var limitY =
-      this.limitSizeY().get().intValue();
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
     final var containerSizeX =
-      Math.min(constraints.sizeMaximumX(), limitX);
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
     final var containerSizeY =
-      Math.min(constraints.sizeMaximumY(), limitY);
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
 
     var maximumX = 0;
     var offsetY = 0;

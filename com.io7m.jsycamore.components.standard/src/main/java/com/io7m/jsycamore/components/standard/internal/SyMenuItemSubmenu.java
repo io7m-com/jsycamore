@@ -29,20 +29,24 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
-import com.io7m.jsycamore.components.standard.SyLimit;
-import com.io7m.jsycamore.components.standard.SyPackHorizontal;
-import com.io7m.jsycamore.components.standard.SySpace;
 import com.io7m.jsycamore.components.standard.SyTextView;
+import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
+import com.io7m.jsycamore.components.standard.forms.SyFormRow;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_TEXT;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
 import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
 
 /**
@@ -52,24 +56,29 @@ import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_V
 public final class SyMenuItemSubmenu
   extends SyComponentAbstract implements SyMenuItemSubmenuType
 {
+  private final SyAlign iconAlign;
+  private final SyAlign iconSubmenuAlign;
+  private final SyAlign textAlign;
+  private final SyFormColumnsConfiguration columns;
+  private final SyFormRow row;
   private final SyImageView icon;
-  private final SyLimit iconLimit;
+  private final SyImageView iconSubmenu;
   private final SyMenuType menuOpen;
   private final SyMenuType menuOwner;
-  private final SyPackHorizontal layout;
-  private final SySpace space;
   private final SyTextView text;
 
   /**
    * A menu item that opens a submenu.
    *
    * @param inMenuOwner The owning menu
+   * @param inColumns   The columns configuration
    * @param inMenuOpen  The menu the submenu will open
    * @param inText      The menu item text
    */
 
   public SyMenuItemSubmenu(
     final SyMenuType inMenuOwner,
+    final SyFormColumnsConfiguration inColumns,
     final SyMenuType inMenuOpen,
     final String inText)
   {
@@ -77,32 +86,46 @@ public final class SyMenuItemSubmenu
 
     this.menuOwner =
       Objects.requireNonNull(inMenuOwner, "inMenuOwner");
+    this.columns =
+      Objects.requireNonNull(inColumns, "inColumns");
     this.menuOpen =
       Objects.requireNonNull(inMenuOpen, "inMenuOpen");
 
-    this.space = new SySpace();
-    this.space.preferredSize().set(PAreaSizeI.of(0, 0));
+    this.row = new SyFormRow(this.columns);
 
-    this.layout = new SyPackHorizontal();
-    this.layout.paddingBetween().set(8);
-    this.layout.alignVertical().set(ALIGN_VERTICAL_CENTER);
+    this.iconSubmenu = new SyImageView();
+    this.iconSubmenu.setMouseQueryAccepting(false);
+    this.iconSubmenu.sizeUpperLimit().set(PAreaSizeI.of(8, 8));
+    this.iconSubmenu.imageURI()
+      .set(Optional.of(URI.create("jsycamore:icon:menu_submenu")));
+
+    this.iconSubmenuAlign = new SyAlign();
+    this.iconSubmenuAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
+    this.iconSubmenuAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
+    this.iconSubmenuAlign.childAdd(this.iconSubmenu);
 
     this.icon = new SyImageView();
     this.icon.setMouseQueryAccepting(false);
+    this.icon.sizeUpperLimit().set(PAreaSizeI.of(16, 16));
 
-    this.iconLimit = new SyLimit();
-    this.iconLimit.limitSizeX().set(16);
-    this.iconLimit.limitSizeY().set(16);
-    this.iconLimit.childAdd(this.icon);
+    this.iconAlign = new SyAlign();
+    this.iconAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
+    this.iconAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
+    this.iconAlign.childAdd(this.icon);
 
     this.text = new SyTextView(List.of(MENU_ITEM_TEXT));
     this.text.text().set(inText);
 
-    this.layout.childAdd(this.space);
-    this.layout.childAdd(this.iconLimit);
-    this.layout.childAdd(this.text);
+    this.textAlign = new SyAlign();
+    this.textAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
+    this.textAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
+    this.textAlign.childAdd(this.text);
 
-    this.childAdd(this.layout);
+    this.row.childAdd(this.iconAlign);
+    this.row.childAdd(this.textAlign);
+    this.row.childAdd(this.iconSubmenuAlign);
+
+    this.childAdd(this.row);
   }
 
   @Override
@@ -115,17 +138,18 @@ public final class SyMenuItemSubmenu
      */
 
     final var textSize =
-      this.text.layout(layoutContext, constraints);
+      this.text.minimumSizeRequired(layoutContext);
 
     /*
      * Then, set this layout to the height of the text plus a margin.
      */
 
     final var sizeLimitY = textSize.sizeY() + 8;
-    this.layout.limitSizeY().set(sizeLimitY);
+    this.row.sizeUpperLimit().set(PAreaSizeI.of(Integer.MAX_VALUE, sizeLimitY));
+    this.columns.evaluateSizes(constraints.sizeMaximumX());
 
     final var newSize =
-      this.layout.layout(
+      this.row.layout(
         layoutContext,
         new SyConstraints(
           constraints.sizeMinimumX(),

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static java.lang.Math.min;
 
 /**
  * A simple container that evenly distributes child objects horizontally with a
@@ -94,10 +95,14 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
     final var childCount =
       childrenVisible.size();
 
-    if (childCount > 0) {
-      final var containerSizeX = constraints.sizeMaximumX();
-      final var containerSizeY = constraints.sizeMaximumY();
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+    final var containerSizeX =
+      min(constraints.sizeMaximumX(), sizeLimit.sizeX());
+    final var containerSizeY =
+      min(constraints.sizeMaximumY(), sizeLimit.sizeY());
 
+    if (childCount > 0) {
       final var regionSize =
         containerSizeX / childCount;
       final var paddingHalf =
@@ -136,7 +141,9 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
       }
     }
 
-    this.setSize(constraints.sizeMaximum());
-    return constraints.sizeMaximum();
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      PAreaSizeI.of(containerSizeX, containerSizeY);
+    this.setSize(newSize);
+    return newSize;
   }
 }

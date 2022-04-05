@@ -17,13 +17,8 @@
 
 package com.io7m.jsycamore.components.standard;
 
-import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.layout.SyLayoutContextType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -37,8 +32,6 @@ import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
 
 public final class SySpace extends SyComponentAbstract
 {
-  private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> preferredSize;
-
   /**
    * An empty space element.
    *
@@ -50,10 +43,6 @@ public final class SySpace extends SyComponentAbstract
   {
     super(inThemeClassesExtra);
     this.setMouseQueryAccepting(false);
-
-    this.preferredSize =
-      SyComponentAttributes.get()
-        .create(PAreaSizeI.of(0, 0));
   }
 
   /**
@@ -64,31 +53,6 @@ public final class SySpace extends SyComponentAbstract
   public SySpace()
   {
     this(List.of());
-  }
-
-  /**
-   * @return The preferred size of the spacer element
-   */
-
-  public AttributeType<PAreaSizeI<SySpaceParentRelativeType>> preferredSize()
-  {
-    return this.preferredSize;
-  }
-
-  @Override
-  public PAreaSizeI<SySpaceParentRelativeType> layout(
-    final SyLayoutContextType layoutContext,
-    final SyConstraints constraints)
-  {
-    final var prefSize =
-      this.preferredSize.get();
-    final var newSize =
-      constraints.<SySpaceParentRelativeType>sizeWithin(
-        prefSize.sizeX(),
-        prefSize.sizeY()
-      );
-    this.setSize(newSize);
-    return newSize;
   }
 
   @Override
