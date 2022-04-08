@@ -194,8 +194,7 @@ public final class SyScreen implements SyScreenType
   @Override
   public void update()
   {
-    this.windows.windows()
-      .values()
+    this.windowsVisibleOrdered()
       .forEach(window -> window.layout(this.layoutContext));
   }
 
