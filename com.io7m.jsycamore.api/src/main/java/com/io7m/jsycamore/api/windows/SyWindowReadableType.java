@@ -109,7 +109,7 @@ public interface SyWindowReadableType
    * @return The window layer
    */
 
-  SyWindowLayer layer();
+  int layer();
 
   /**
    * @return The window deletion policy

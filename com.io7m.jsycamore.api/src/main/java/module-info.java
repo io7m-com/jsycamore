@@ -22,6 +22,7 @@ module com.io7m.jsycamore.api
 {
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
+  requires static com.io7m.jcip.annotations;
 
   requires transitive com.io7m.jattribute.core;
   requires transitive com.io7m.jcolorspace.core;

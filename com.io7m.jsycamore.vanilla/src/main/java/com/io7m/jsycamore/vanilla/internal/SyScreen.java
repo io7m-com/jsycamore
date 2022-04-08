@@ -44,6 +44,7 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowLayers;
 import com.io7m.jsycamore.api.windows.SyWindowMaximized;
 import com.io7m.jsycamore.api.windows.SyWindowSet;
 import com.io7m.jsycamore.api.windows.SyWindowSetChanged;
@@ -70,8 +71,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.io7m.jsycamore.api.components.SyComponentQuery.FIND_FOR_MOUSE_CURSOR;
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_BE_DELETED;
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_NOT_BE_DELETED;
-import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_NORMAL;
-import static com.io7m.jsycamore.api.windows.SyWindowLayer.WINDOW_LAYER_OVERLAY;
 
 /**
  * A screen.
@@ -144,7 +143,7 @@ public final class SyScreen implements SyScreenType
       new SyWindow(
         this,
         this.windows.windowFreshId(),
-        WINDOW_LAYER_OVERLAY,
+        SyWindowLayers.layerForMenus(),
         WINDOW_MAY_NOT_BE_DELETED,
         inSize
       );
@@ -285,15 +284,16 @@ public final class SyScreen implements SyScreenType
   }
 
   @Override
-  public SyWindowType windowCreate(
+  public SyWindowType windowCreateOnLayer(
     final int sizeX,
-    final int sizeY)
+    final int sizeY,
+    final int layer)
   {
     final var window =
       new SyWindow(
         this,
         this.windows.windowFreshId(),
-        WINDOW_LAYER_NORMAL,
+        layer,
         WINDOW_MAY_BE_DELETED,
         PAreaSizeI.of(sizeX, sizeY)
       );
@@ -334,14 +334,17 @@ public final class SyScreen implements SyScreenType
         final var state = entry.getValue();
 
         if (state.state == MouseButtonState.MOUSE_STATE_DOWN) {
-          state.componentClickedLast.ifPresent(component -> {
-            component.eventSend(new SyMouseEventOnHeld(
-              state.positionClickedLast,
-              position,
-              entry.getKey(),
-              component
-            ));
-          });
+          if (state.componentClickedLast.isPresent()) {
+            final var lastClicked =
+              state.componentClickedLast.get();
+            final var consumed =
+              lastClicked.eventSend(new SyMouseEventOnHeld(
+                state.positionClickedLast,
+                position,
+                entry.getKey(),
+                lastClicked
+              ));
+          }
         }
       }
 
@@ -483,7 +486,7 @@ public final class SyScreen implements SyScreenType
         yield state.componentClickedLast;
       }
 
-      case MOUSE_STATE_DOWN -> Optional.empty();
+      case MOUSE_STATE_DOWN -> componentOpt;
     };
   }
 

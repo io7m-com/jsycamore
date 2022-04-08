@@ -18,32 +18,49 @@
 package com.io7m.jsycamore.api.windows;
 
 /**
- * A window layer.
+ * Conventional values for window layers.
  */
 
-public enum SyWindowLayer
+public final class SyWindowLayers
 {
-  /**
-   * The window is an "underlay" window and will always be rendered underneath
-   * windows with categories {@link #WINDOW_LAYER_NORMAL} and {@link
-   * #WINDOW_LAYER_OVERLAY}.
-   */
+  private SyWindowLayers()
+  {
 
-  WINDOW_LAYER_UNDERLAY,
+  }
 
   /**
-   * The window is a normal window and will always be rendered underneath
-   * windows with layer {@link #WINDOW_LAYER_OVERLAY} and over the top of
-   * windows with layer {@link #WINDOW_LAYER_UNDERLAY}.
+   * @return The layer identifier used for normal windows
    */
 
-  WINDOW_LAYER_NORMAL,
+  public static int layerForNormalWindows()
+  {
+    return 0;
+  }
 
   /**
-   * The window is an "overlay" window and will always be rendered over the top
-   * of windows with categories {@link #WINDOW_LAYER_NORMAL} and {@link
-   * #WINDOW_LAYER_UNDERLAY}.
+   * @return The layer identifier used for menus
    */
 
-  WINDOW_LAYER_OVERLAY
+  public static int layerForMenus()
+  {
+    return layerHighest();
+  }
+
+  /**
+   * @return The lowest (furthest away from the viewer) layer
+   */
+
+  public static int layerLowest()
+  {
+    return Integer.MIN_VALUE;
+  }
+
+  /**
+   * @return The highest (closest to the viewer) layer
+   */
+
+  public static int layerHighest()
+  {
+    return Integer.MAX_VALUE;
+  }
 }

@@ -35,7 +35,6 @@ import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.api.windows.SyWindowLayer;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulator;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
@@ -68,7 +67,7 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<SyWindowCloseBehaviour> closeBehaviour;
   private final AttributeType<Integer> positionSnapping;
   private final AttributeType<Integer> sizeSnapping;
-  private final SyWindowLayer category;
+  private final int layer;
   private final SyWindowDeletionPolicy deletionPolicy;
   private final AttributeReadableType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
   private PVector2I<SySpaceViewportType> position;
@@ -80,7 +79,7 @@ public final class SyWindow implements SyWindowType
   SyWindow(
     final SyScreenType inScreen,
     final SyWindowID inId,
-    final SyWindowLayer inCategory,
+    final int inLayer,
     final SyWindowDeletionPolicy inDeletionPolicy,
     final PAreaSizeI<SySpaceViewportType> inSize)
   {
@@ -88,14 +87,14 @@ public final class SyWindow implements SyWindowType
       Objects.requireNonNull(inScreen, "inGUI");
     this.id =
       Objects.requireNonNull(inId, "inId");
-    this.category =
-      Objects.requireNonNull(inCategory, "inCategory");
     this.deletionPolicy =
       Objects.requireNonNull(inDeletionPolicy, "inDeletionPolicy");
     this.size =
       Objects.requireNonNull(inSize, "inSize");
     this.sizeMaximized =
       Objects.requireNonNull(inSize, "inSize");
+    this.layer =
+      inLayer;
 
     this.position =
       PVectors2I.zero();
@@ -294,9 +293,9 @@ public final class SyWindow implements SyWindowType
   }
 
   @Override
-  public SyWindowLayer layer()
+  public int layer()
   {
-    return this.category;
+    return this.layer;
   }
 
   @Override

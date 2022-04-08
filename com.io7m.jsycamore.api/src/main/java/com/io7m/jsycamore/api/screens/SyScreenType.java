@@ -23,6 +23,7 @@ import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.sized.SySizedType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowLayers;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
@@ -49,9 +50,31 @@ public interface SyScreenType
    * @return A new window
    */
 
-  SyWindowType windowCreate(
+  default SyWindowType windowCreate(
+    final int sizeX,
+    final int sizeY)
+  {
+    return this.windowCreateOnLayer(
+      sizeX,
+      sizeY,
+      SyWindowLayers.layerForNormalWindows()
+    );
+  }
+
+  /**
+   * Create a new window.
+   *
+   * @param sizeX The window width
+   * @param sizeY The window height
+   * @param layer The window layer
+   *
+   * @return A new window
+   */
+
+  SyWindowType windowCreateOnLayer(
     int sizeX,
-    int sizeY);
+    int sizeY,
+    int layer);
 
   /**
    * @return A read-only list of the currently open windows in order from

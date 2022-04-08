@@ -17,74 +17,52 @@
 package com.io7m.jsycamore.api.windows;
 
 import com.io7m.jaffirm.core.Preconditions;
+import net.jcip.annotations.Immutable;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An immutable window set.
  */
 
+@Immutable
 public final class SyWindowSet
 {
   private final Map<SyWindowID, SyWindowType> windows;
-  private final List<SyWindowType> windowsVisibleOrderedUnderlays;
-  private final List<SyWindowType> windowsVisibleOrderedNormals;
-  private final List<SyWindowType> windowsVisibleOrderedOverlays;
+  private final TreeMap<Integer, LinkedList<SyWindowType>> windowsVisibleOrdered;
+  private final Set<Integer> windowLayersHidden;
 
   private SyWindowSet(
     final Map<SyWindowID, SyWindowType> inWindows,
-    final List<SyWindowType> inWindowsVisibleUnderlays,
-    final List<SyWindowType> inWindowsVisibleNormals,
-    final List<SyWindowType> inWindowsVisibleOverlays)
+    final TreeMap<Integer, LinkedList<SyWindowType>> inWindowsVisibleOrdered,
+    final Set<Integer> inWindowLayersVisible)
   {
-    this.windows =
-      Map.copyOf(inWindows);
-    this.windowsVisibleOrderedUnderlays =
-      List.copyOf(inWindowsVisibleUnderlays);
-    this.windowsVisibleOrderedNormals =
-      List.copyOf(inWindowsVisibleNormals);
-    this.windowsVisibleOrderedOverlays =
-      List.copyOf(inWindowsVisibleOverlays);
+    this.windows = Map.copyOf(inWindows);
+    this.windowsVisibleOrdered = inWindowsVisibleOrdered;
+    this.windowLayersHidden = Set.copyOf(inWindowLayersVisible);
 
-    this.windowsVisibleOrderedUnderlays.stream()
-      .map(SyWindowReadableType::id)
-      .forEach(id -> {
+    this.windowsVisibleOrdered.forEach((layer, layerWindows) -> {
+      layerWindows.forEach(window -> {
+        final var windowId = window.id();
         Preconditions.checkPreconditionV(
-          this.windows.containsKey(id),
+          this.windows.containsKey(windowId),
           "Window ID %s not in window map",
-          id.value()
+          windowId.value()
         );
       });
-
-    this.windowsVisibleOrderedNormals.stream()
-      .map(SyWindowReadableType::id)
-      .forEach(id -> {
-        Preconditions.checkPreconditionV(
-          this.windows.containsKey(id),
-          "Window ID %s not in window map",
-          id.value()
-        );
-      });
-
-    this.windowsVisibleOrderedOverlays.stream()
-      .map(SyWindowReadableType::id)
-      .forEach(id -> {
-        Preconditions.checkPreconditionV(
-          this.windows.containsKey(id),
-          "Window ID %s not in window map",
-          id.value()
-        );
-      });
+    });
   }
 
   /**
@@ -95,12 +73,7 @@ public final class SyWindowSet
 
   public static SyWindowSet empty()
   {
-    return new SyWindowSet(
-      Map.of(),
-      List.of(),
-      List.of(),
-      List.of()
-    );
+    return new SyWindowSet(Map.of(), new TreeMap<>(), Set.of());
   }
 
   /**
@@ -110,22 +83,11 @@ public final class SyWindowSet
    */
 
   public Optional<SyWindowType> windowFocused(
-    final SyWindowLayer layer)
+    final int layer)
   {
-    return switch (layer) {
-      case WINDOW_LAYER_NORMAL -> {
-        yield this.windowsVisibleOrderedNormals.stream()
-          .findFirst();
-      }
-      case WINDOW_LAYER_OVERLAY -> {
-        yield this.windowsVisibleOrderedOverlays.stream()
-          .findFirst();
-      }
-      case WINDOW_LAYER_UNDERLAY -> {
-        yield this.windowsVisibleOrderedUnderlays.stream()
-          .findFirst();
-      }
-    };
+    final var visible =
+      this.windowsVisibleOrdered.get(layer);
+    return visible.stream().findFirst();
   }
 
   /**
@@ -143,36 +105,31 @@ public final class SyWindowSet
 
   public Set<SyWindowID> windowsVisible()
   {
-    final var underlays =
-      this.windowsVisibleOrderedUnderlays.stream()
-        .map(SyWindowReadableType::id);
-    final var normals =
-      this.windowsVisibleOrderedNormals.stream()
-        .map(SyWindowReadableType::id);
-    final var overlays =
-      this.windowsVisibleOrderedOverlays.stream()
-        .map(SyWindowReadableType::id);
-
-    return Stream.concat(overlays, Stream.concat(normals, underlays))
+    return this.windowsVisibleOrdered.keySet()
+      .stream()
+      .filter(layer -> !this.windowLayersHidden.contains(layer))
+      .map(this.windowsVisibleOrdered::get)
+      .flatMap(Collection::stream)
+      .map(SyWindowReadableType::id)
       .collect(Collectors.toUnmodifiableSet());
   }
 
   /**
+   * Calculate the complete set of visible windows and return them in depth
+   * order: Windows nearer to the viewer are closer to the start of the list.
+   *
    * @return The set of windows that are visible in depth order
    */
 
   public List<SyWindowType> windowsVisibleOrdered()
   {
-    final var visible = new ArrayList<SyWindowType>(
-      this.windowsVisibleOrderedOverlays.size()
-        + this.windowsVisibleOrderedNormals.size()
-        + this.windowsVisibleOrderedUnderlays.size()
-    );
-
-    visible.addAll(this.windowsVisibleOrderedOverlays);
-    visible.addAll(this.windowsVisibleOrderedNormals);
-    visible.addAll(this.windowsVisibleOrderedUnderlays);
-    return visible;
+    return this.windowsVisibleOrdered.keySet()
+      .stream()
+      .sorted(Comparator.reverseOrder())
+      .filter(layer -> !this.windowLayersHidden.contains(layer))
+      .map(this.windowsVisibleOrdered::get)
+      .flatMap(Collection::stream)
+      .toList();
   }
 
   /**
@@ -202,10 +159,8 @@ public final class SyWindowSet
     return new SyWindowSetChanged(
       new SyWindowSet(
         newWindows,
-        this.windowsVisibleOrderedUnderlays,
-        this.windowsVisibleOrderedNormals,
-        this.windowsVisibleOrderedOverlays
-      ),
+        this.windowsVisibleOrdered,
+        this.windowLayersHidden),
       List.of(new SyWindowCreated(windowId))
     );
   }
@@ -226,79 +181,27 @@ public final class SyWindowSet
 
     this.checkKnownWindow(window);
 
-    return switch (window.layer()) {
-      case WINDOW_LAYER_UNDERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedUnderlays);
+    final var newMap =
+      new TreeMap<>(this.windowsVisibleOrdered);
+    final var layerBoxed =
+      Integer.valueOf(window.layer());
+    final var newVisible =
+      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
 
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of();
-        } else {
-          changes = List.of(new SyWindowBecameVisible(window.id()));
-        }
-        newVisible.addFirst(window);
+    final var removed = newVisible.remove(window);
+    final List<SyWindowEventType> changes;
+    if (removed) {
+      changes = List.of();
+    } else {
+      changes = List.of(new SyWindowBecameVisible(window.id()));
+    }
+    newVisible.addFirst(window);
+    newMap.put(layerBoxed, newVisible);
 
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            newVisible,
-            this.windowsVisibleOrderedNormals,
-            this.windowsVisibleOrderedOverlays
-          ),
-          changes
-        );
-      }
-
-      case WINDOW_LAYER_NORMAL -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedNormals);
-
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of();
-        } else {
-          changes = List.of(new SyWindowBecameVisible(window.id()));
-        }
-        newVisible.addFirst(window);
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            newVisible,
-            this.windowsVisibleOrderedOverlays
-          ),
-          changes
-        );
-      }
-
-      case WINDOW_LAYER_OVERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedOverlays);
-
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of();
-        } else {
-          changes = List.of(new SyWindowBecameVisible(window.id()));
-        }
-        newVisible.addFirst(window);
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            this.windowsVisibleOrderedNormals,
-            newVisible
-          ),
-          changes
-        );
-      }
-    };
+    return new SyWindowSetChanged(
+      new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
+      changes
+    );
   }
 
   private void checkKnownWindow(
@@ -327,76 +230,26 @@ public final class SyWindowSet
 
     this.checkKnownWindow(window);
 
-    return switch (window.layer()) {
-      case WINDOW_LAYER_NORMAL -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedNormals);
+    final var newMap =
+      new TreeMap<>(this.windowsVisibleOrdered);
+    final var layerBoxed =
+      Integer.valueOf(window.layer());
+    final var newVisible =
+      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
 
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of(new SyWindowBecameInvisible(window.id()));
-        } else {
-          changes = List.of();
-        }
+    final var removed = newVisible.remove(window);
+    final List<SyWindowEventType> changes;
+    if (removed) {
+      changes = List.of(new SyWindowBecameInvisible(window.id()));
+    } else {
+      changes = List.of();
+    }
+    newMap.put(layerBoxed, newVisible);
 
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            newVisible,
-            this.windowsVisibleOrderedOverlays
-          ),
-          changes
-        );
-      }
-
-      case WINDOW_LAYER_OVERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedOverlays);
-
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of(new SyWindowBecameInvisible(window.id()));
-        } else {
-          changes = List.of();
-        }
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            this.windowsVisibleOrderedNormals,
-            newVisible
-          ),
-          changes
-        );
-      }
-
-      case WINDOW_LAYER_UNDERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedUnderlays);
-
-        final var removed = newVisible.remove(window);
-        final List<SyWindowEventType> changes;
-        if (removed) {
-          changes = List.of(new SyWindowBecameInvisible(window.id()));
-        } else {
-          changes = List.of();
-        }
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            newVisible,
-            this.windowsVisibleOrderedNormals,
-            this.windowsVisibleOrderedOverlays
-          ),
-          changes
-        );
-      }
-    };
+    return new SyWindowSetChanged(
+      new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
+      changes
+    );
   }
 
   /**
@@ -425,64 +278,28 @@ public final class SyWindowSet
       }
     }
 
-    return switch (window.layer()) {
-      case WINDOW_LAYER_UNDERLAY -> {
-        final var newVisible =
-          new ArrayList<>(this.windowsVisibleOrderedUnderlays);
-        newVisible.remove(window);
+    final var newWindows =
+      new HashMap<>(this.windows);
+    final var newMap =
+      new TreeMap<>(this.windowsVisibleOrdered);
 
-        final var newWindows = new HashMap<>(this.windows);
-        newWindows.remove(window.id());
+    final var layerBoxed =
+      Integer.valueOf(window.layer());
+    final var newVisible =
+      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
 
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            newWindows,
-            newVisible,
-            this.windowsVisibleOrderedNormals,
-            this.windowsVisibleOrderedOverlays
-          ),
-          List.of(new SyWindowClosed(window.id()))
-        );
-      }
+    newVisible.remove(window);
 
-      case WINDOW_LAYER_NORMAL -> {
-        final var newVisible =
-          new ArrayList<>(this.windowsVisibleOrderedNormals);
-        newVisible.remove(window);
+    final List<SyWindowEventType> changes =
+      List.of(new SyWindowClosed(window.id()));
 
-        final var newWindows = new HashMap<>(this.windows);
-        newWindows.remove(window.id());
+    newMap.put(layerBoxed, newVisible);
+    newWindows.remove(window.id());
 
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            newWindows,
-            this.windowsVisibleOrderedUnderlays,
-            newVisible,
-            this.windowsVisibleOrderedOverlays
-          ),
-          List.of(new SyWindowClosed(window.id()))
-        );
-      }
-
-      case WINDOW_LAYER_OVERLAY -> {
-        final var newVisible =
-          new ArrayList<>(this.windowsVisibleOrderedOverlays);
-        newVisible.remove(window);
-
-        final var newWindows = new HashMap<>(this.windows);
-        newWindows.remove(window.id());
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            newWindows,
-            this.windowsVisibleOrderedUnderlays,
-            this.windowsVisibleOrderedNormals,
-            newVisible
-          ),
-          List.of(new SyWindowClosed(window.id()))
-        );
-      }
-    };
+    return new SyWindowSetChanged(
+      new SyWindowSet(newWindows, newMap, this.windowLayersHidden),
+      changes
+    );
   }
 
   /**
@@ -500,61 +317,25 @@ public final class SyWindowSet
 
     this.checkKnownWindow(window);
 
-    return switch (window.layer()) {
-      case WINDOW_LAYER_UNDERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedUnderlays);
+    final var newMap =
+      new TreeMap<>(this.windowsVisibleOrdered);
 
-        newVisible.remove(window);
-        newVisible.addFirst(window);
+    final var layerBoxed =
+      Integer.valueOf(window.layer());
 
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            newVisible,
-            this.windowsVisibleOrderedNormals,
-            this.windowsVisibleOrderedOverlays
-          ),
-          List.of()
-        );
-      }
+    final var existingVisible =
+      newMap.getOrDefault(layerBoxed, new LinkedList<>());
+    final var newVisible =
+      new LinkedList<>(existingVisible);
 
-      case WINDOW_LAYER_NORMAL -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedNormals);
+    newVisible.remove(window);
+    newVisible.addFirst(window);
+    newMap.put(layerBoxed, newVisible);
 
-        newVisible.remove(window);
-        newVisible.addFirst(window);
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            newVisible,
-            this.windowsVisibleOrderedOverlays
-          ),
-          List.of()
-        );
-      }
-
-      case WINDOW_LAYER_OVERLAY -> {
-        final var newVisible =
-          new LinkedList<>(this.windowsVisibleOrderedOverlays);
-
-        newVisible.remove(window);
-        newVisible.addFirst(window);
-
-        yield new SyWindowSetChanged(
-          new SyWindowSet(
-            this.windows,
-            this.windowsVisibleOrderedUnderlays,
-            this.windowsVisibleOrderedNormals,
-            newVisible
-          ),
-          List.of()
-        );
-      }
-    };
+    return new SyWindowSetChanged(
+      new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
+      List.of()
+    );
   }
 
   /**
@@ -568,24 +349,79 @@ public final class SyWindowSet
   {
     Objects.requireNonNull(window, "window");
 
-    if (this.windows.containsKey(window.id())) {
-      return switch (window.layer()) {
-        case WINDOW_LAYER_UNDERLAY -> {
-          yield this.windowsVisibleOrderedUnderlays.stream()
-            .anyMatch(w -> Objects.equals(w.id(), window.id()));
-        }
-        case WINDOW_LAYER_NORMAL -> {
-          yield this.windowsVisibleOrderedNormals.stream()
-            .anyMatch(w -> Objects.equals(w.id(), window.id()));
-        }
-        case WINDOW_LAYER_OVERLAY -> {
-          yield this.windowsVisibleOrderedOverlays.stream()
-            .anyMatch(w -> Objects.equals(w.id(), window.id()));
-        }
-      };
+    final var layerBoxed = Integer.valueOf(window.layer());
+    if (this.windowLayersHidden.contains(layerBoxed)) {
+      return false;
+    }
+
+    final var layer =
+      this.windowsVisibleOrdered.get(layerBoxed);
+
+    if (layer != null) {
+      return layer.contains(window);
     }
 
     return false;
+  }
+
+  /**
+   * Hide the given window layer.
+   *
+   * @param layer The window layer
+   *
+   * @return This set with the given window layer hidden
+   */
+
+  public SyWindowSetChanged windowLayerHide(
+    final int layer)
+  {
+    final var layerBoxed = Integer.valueOf(layer);
+    final var newHidden = new HashSet<>(this.windowLayersHidden);
+    newHidden.add(layerBoxed);
+
+    return new SyWindowSetChanged(
+      new SyWindowSet(
+        this.windows,
+        this.windowsVisibleOrdered,
+        newHidden),
+      List.of()
+    );
+  }
+
+  /**
+   * Show the given window layer.
+   *
+   * @param layer The window layer
+   *
+   * @return This set with the given window layer made visible
+   */
+
+  public SyWindowSetChanged windowLayerShow(
+    final int layer)
+  {
+    final var layerBoxed = Integer.valueOf(layer);
+    final var newHidden = new HashSet<>(this.windowLayersHidden);
+    newHidden.remove(layerBoxed);
+
+    return new SyWindowSetChanged(
+      new SyWindowSet(
+        this.windows,
+        this.windowsVisibleOrdered,
+        newHidden),
+      List.of()
+    );
+  }
+
+  /**
+   * @param layer The window layer
+   *
+   * @return {@code true} if the given window layer is visible
+   */
+
+  public boolean windowLayerIsShown(
+    final int layer)
+  {
+    return !this.windowLayersHidden.contains(Integer.valueOf(layer));
   }
 
   /**

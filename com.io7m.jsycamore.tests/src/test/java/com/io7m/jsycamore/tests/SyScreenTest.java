@@ -18,12 +18,14 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventConsumer;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.menus.SyMenuClosed;
 import com.io7m.jsycamore.api.menus.SyMenuOpened;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.windows.SyWindowBecameInvisible;
 import com.io7m.jsycamore.api.windows.SyWindowBecameVisible;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
@@ -41,10 +43,16 @@ import com.io7m.jsycamore.components.standard.SyMenu;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.constraints.IntRange;
+import net.jqwik.api.lifecycle.AfterProperty;
+import net.jqwik.api.lifecycle.BeforeProperty;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -83,15 +92,16 @@ public final class SyScreenTest
 
   private static boolean shouldDumpImages()
   {
-    return Objects.equals(
+    final var property =
       System.getProperty(
-      "com.io7m.jsycamore.tests.dumpImages",
-      "false"),
-      "true"
-    );
+        "com.io7m.jsycamore.tests.dumpImages",
+        "false"
+      );
+    return Objects.equals(property, "true");
   }
 
   @BeforeEach
+  @BeforeProperty
   public void setup()
   {
     this.screens =
@@ -120,6 +130,7 @@ public final class SyScreenTest
   }
 
   @AfterEach
+  @AfterProperty
   public void tearDown()
   {
     this.screen.close();
@@ -598,7 +609,8 @@ public final class SyScreenTest
   }
 
   /**
-   * Opening a menu and then clicking something that isn't the menu closes the menu.
+   * Opening a menu and then clicking something that isn't the menu closes the
+   * menu.
    *
    * @throws Exception On errors
    */
@@ -1162,6 +1174,150 @@ public final class SyScreenTest
         component.eventSend(new SyWindowClosed(w0.id()));
       assertEquals(EVENT_NOT_CONSUMED, result);
     });
+  }
+
+  /**
+   * Mouse move events outside an open window are not consumed.
+   *
+   * @throws Exception On errors
+   */
+
+  @Property
+  public void testMouseEventsOutsideMoved(
+    @ForAll @IntRange(min = -1024) final int x,
+    @ForAll @IntRange(max = 1024) final int y)
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    final var windowX = 384;
+    final var windowY = 384;
+    final var windowXMax = 384 + 256;
+    final var windowYMax = 384 + 256;
+
+    try {
+      w0.contentArea().childAdd(new SyButton());
+      w0.setPosition(PVector2I.of(windowX, windowY));
+      this.screen.update();
+
+      final var position =
+        PVector2I.<SySpaceViewportType>of(x, y);
+      final var insideWindow =
+        x > windowX && x < windowXMax && y > windowY && y < windowYMax;
+
+      final var result =
+        this.screen.mouseMoved(position);
+
+      if (insideWindow) {
+        assertTrue(result.isPresent());
+      } else {
+        assertEquals(Optional.empty(), result);
+      }
+
+    } catch (final AssertionFailedError e) {
+      this.dumpScreen();
+      throw e;
+    } finally {
+      this.screen.windowClose(w0);
+    }
+  }
+
+  /**
+   * Mouse click events outside an open window are not consumed.
+   *
+   * @throws Exception On errors
+   */
+
+  @Property
+  public void testMouseEventsOutsideDown(
+    @ForAll @IntRange(min = -1024) final int x,
+    @ForAll @IntRange(max = 1024) final int y)
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    final var windowX = 384;
+    final var windowY = 384;
+    final var windowXMax = 384 + 256;
+    final var windowYMax = 384 + 256;
+
+    try {
+      w0.contentArea().childAdd(new SyButton());
+      w0.setPosition(PVector2I.of(windowX, windowY));
+      this.screen.update();
+
+      final var position =
+        PVector2I.<SySpaceViewportType>of(x, y);
+      final var insideWindow =
+        x > windowX && x < windowXMax && y > windowY && y < windowYMax;
+
+      final var result =
+        this.screen.mouseDown(position, MOUSE_BUTTON_LEFT);
+
+      if (insideWindow) {
+        assertTrue(result.isPresent());
+      } else {
+        assertEquals(Optional.empty(), result);
+      }
+
+    } catch (final AssertionFailedError e) {
+      this.dumpScreen();
+      throw e;
+    } finally {
+      this.screen.windowClose(w0);
+    }
+  }
+
+  /**
+   * Mouse release events outside an open window are not consumed.
+   *
+   * @throws Exception On errors
+   */
+
+  @Property
+  public void testMouseEventsOutsideUp(
+    @ForAll @IntRange(min = -1024) final int x,
+    @ForAll @IntRange(max = 1024) final int y)
+    throws Exception
+  {
+    final var w0 =
+      this.screen.windowCreate(256, 256);
+
+    final var windowX = 384;
+    final var windowY = 384;
+    final var windowXMax = 384 + 256;
+    final var windowYMax = 384 + 256;
+
+    try {
+      w0.contentArea().childAdd(new SyButton());
+      w0.setPosition(PVector2I.of(windowX, windowY));
+      this.screen.update();
+
+      final var position =
+        PVector2I.<SySpaceViewportType>of(x, y);
+
+      final var outsideWindow =
+        x < windowX || x > windowXMax || y < windowY || y > windowYMax;
+
+      this.screen.mouseDown(position, MOUSE_BUTTON_LEFT);
+
+      final var result =
+        this.screen.mouseUp(position, MOUSE_BUTTON_LEFT);
+
+      if (outsideWindow) {
+        assertEquals(Optional.empty(), result);
+      } else {
+        assertTrue(result.isPresent());
+      }
+
+    } catch (final AssertionFailedError e) {
+      this.dumpScreen();
+      throw e;
+    } finally {
+      this.screen.windowClose(w0);
+    }
   }
 
   private SyEventType eventNext()
