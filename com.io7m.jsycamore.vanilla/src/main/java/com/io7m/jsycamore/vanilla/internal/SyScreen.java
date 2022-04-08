@@ -25,6 +25,8 @@ import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyCode;
+import com.io7m.jsycamore.api.keyboard.SyKeyModifier;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuClosed;
 import com.io7m.jsycamore.api.menus.SyMenuHostType;
@@ -57,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -90,6 +93,8 @@ public final class SyScreen implements SyScreenType
   private final SyThemeType theme;
   private final SyWindow windowMenuOverlay;
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> sizeUpperLimit;
+  private final EnumSet<SyKeyCode> keyStates;
+  private final EnumSet<SyKeyModifier> keyModifierStates;
   private MenuTreeOpen menuTreeCurrentlyOpen;
   private Optional<SyComponentType> componentOver;
   private SyWindowSet windows;
@@ -120,6 +125,11 @@ public final class SyScreen implements SyScreenType
       attributes.create(PVectors2I.zero());
     this.sizeUpperLimit =
       attributes.create(PAreaSizeI.of(Integer.MAX_VALUE, Integer.MAX_VALUE));
+
+    this.keyStates =
+      EnumSet.noneOf(SyKeyCode.class);
+    this.keyModifierStates =
+      EnumSet.noneOf(SyKeyModifier.class);
 
     this.mouseButtonStates =
       new EnumMap<>(SyMouseButton.class);
@@ -702,6 +712,46 @@ public final class SyScreen implements SyScreenType
   public AttributeType<PAreaSizeI<SySpaceViewportType>> size()
   {
     return this.viewportSize;
+  }
+
+  @Override
+  public void keyPressed(
+    final SyKeyCode keyCode)
+  {
+    Objects.requireNonNull(keyCode, "keyCode");
+
+    final var wasPressed = this.keyStates.contains(keyCode);
+    this.keyStates.add(keyCode);
+  }
+
+  @Override
+  public void keyReleased(
+    final SyKeyCode keyCode)
+  {
+    Objects.requireNonNull(keyCode, "keyCode");
+
+    final var wasPressed = this.keyStates.contains(keyCode);
+    this.keyStates.remove(keyCode);
+  }
+
+  @Override
+  public void keyModifierPressed(
+    final SyKeyModifier keyModifier)
+  {
+    Objects.requireNonNull(keyModifier, "keyModifier");
+
+    final var wasPressed = this.keyModifierStates.contains(keyModifier);
+    this.keyModifierStates.add(keyModifier);
+  }
+
+  @Override
+  public void keyModifierReleased(
+    final SyKeyModifier keyModifier)
+  {
+    Objects.requireNonNull(keyModifier, "keyModifier");
+
+    final var wasPressed = this.keyModifierStates.contains(keyModifier);
+    this.keyModifierStates.remove(keyModifier);
   }
 
   private enum MouseButtonState

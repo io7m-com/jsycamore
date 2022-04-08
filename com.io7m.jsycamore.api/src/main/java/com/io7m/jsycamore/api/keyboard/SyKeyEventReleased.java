@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.events;
+package com.io7m.jsycamore.api.keyboard;
 
-import com.io7m.jsycamore.api.menus.SyMenuEventType;
-import com.io7m.jsycamore.api.mouse.SyMouseEventType;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
+import java.util.Objects;
 
 /**
- * The base type of events used by the UI.
+ * A key was released.
+ *
+ * @param keyCode The keycode
  */
 
-public sealed interface SyEventType
-  permits com.io7m.jsycamore.api.keyboard.SyKeyEventType,
-  SyMenuEventType,
-  SyMouseEventType,
-  SyWindowEventType
+public record SyKeyEventReleased(SyKeyCode keyCode)
+  implements SyKeyEventType
 {
+  /**
+   * A key was released.
+   *
+   * @param keyCode The keycode
+   */
 
+  public SyKeyEventReleased
+  {
+    Objects.requireNonNull(keyCode, "keyCode");
+  }
 }

@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.text.SyFontStyle;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
+import com.io7m.jsycamore.awt.internal.SyAWTKeyCodeAdapter;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
@@ -200,21 +201,7 @@ public final class SyWindowDemo
         }
       };
 
-      final var keyAdapter = new KeyAdapter()
-      {
-        @Override
-        public void keyPressed(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-      };
-
+      final var keyAdapter = new SyAWTKeyCodeAdapter(this.screen);
       this.addMouseMotionListener(mouseAdapter);
       this.addMouseListener(mouseAdapter);
       this.addKeyListener(keyAdapter);

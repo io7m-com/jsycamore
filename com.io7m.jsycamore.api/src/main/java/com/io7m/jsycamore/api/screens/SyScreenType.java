@@ -36,6 +36,7 @@ import java.util.concurrent.Flow.Publisher;
 
 public interface SyScreenType
   extends SyScreenMouseEventsType,
+  SyScreenKeyEventsType,
   SySizedType<SySpaceViewportType>,
   AutoCloseable
 {
