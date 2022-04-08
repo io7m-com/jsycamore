@@ -32,8 +32,11 @@ import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowMaximized;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowUnmaximized;
+import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
+import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.components.standard.SyButton;
+import com.io7m.jsycamore.components.standard.SyLayoutVertical;
 import com.io7m.jsycamore.components.standard.SyMenu;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
@@ -45,9 +48,14 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +65,7 @@ import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.CLOSE_ON_CLOSE_BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
+import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -71,6 +80,16 @@ public final class SyScreenTest
   private SyScreenType screen;
   private List<SyEventType> events;
   private CountDownLatch eventsLatch;
+
+  private static boolean shouldDumpImages()
+  {
+    return Objects.equals(
+      System.getProperty(
+      "com.io7m.jsycamore.tests.dumpImages",
+      "false"),
+      "true"
+    );
+  }
 
   @BeforeEach
   public void setup()
@@ -576,6 +595,105 @@ public final class SyScreenTest
     assertEquals(new SyMenuOpened(menu), this.eventNext());
     assertEquals(new SyMenuClosed(menu), this.eventNext());
     assertEquals(0, this.events.size());
+  }
+
+  /**
+   * Opening a menu and then clicking something that isn't the menu closes the menu.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public void testMenuClickNotMenu()
+    throws Exception
+  {
+    final var clicks =
+      new AtomicInteger(0);
+    final var clicksOther =
+      new AtomicInteger(0);
+
+    final var menu = new SyMenu();
+    menu.addAtom("Item 0", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 2", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.addAtom("Item 3", () -> {
+      LOG.debug("click");
+      clicks.incrementAndGet();
+    });
+    menu.position().set(PVector2I.of(0, 0));
+
+    final var button = new SyButton("Open", () -> {
+      this.screen.menuOpen(menu);
+    });
+    final var otherButton =
+      new SyButton("Otherwise", clicksOther::incrementAndGet);
+
+    final var vertical = new SyLayoutVertical();
+    vertical.childAdd(button);
+    vertical.childAdd(otherButton);
+
+    final var w0 =
+      this.screen.windowCreate(240, 120);
+
+    w0.decorated().set(false);
+    w0.contentArea().childAdd(vertical);
+    this.screen.update();
+
+    this.dumpScreen();
+
+    // Click the button
+    this.screen.mouseMoved(PVector2I.of(0, 0));
+    this.screen.mouseDown(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(0, 0), MOUSE_BUTTON_LEFT);
+    this.screen.update();
+
+    // Click the other button
+    this.screen.mouseDown(PVector2I.of(16, 80), MOUSE_BUTTON_LEFT);
+    this.screen.mouseUp(PVector2I.of(16, 80), MOUSE_BUTTON_LEFT);
+    assertEquals(1, clicksOther.get());
+    assertEquals(0, clicks.get());
+    this.screen.close();
+
+    this.eventsLatch.await(3L, TimeUnit.SECONDS);
+    assertEquals(new SyWindowCreated(w0.id()), this.eventNext());
+    assertEquals(new SyWindowBecameVisible(w0.id()), this.eventNext());
+    assertEquals(new SyMenuOpened(menu), this.eventNext());
+    assertEquals(new SyMenuClosed(menu), this.eventNext());
+    assertEquals(0, this.events.size());
+  }
+
+  private void dumpScreen()
+  {
+    if (shouldDumpImages()) {
+      final var size =
+        this.screen.size().get();
+      final var image =
+        new BufferedImage(size.sizeX(), size.sizeY(), TYPE_4BYTE_ABGR_PRE);
+
+      final var imageLoader =
+        new SyAWTImageLoader();
+      final var fonts =
+        SyFontDirectoryAWT.createFromServiceLoader();
+      final var renderer =
+        new SyAWTRenderer(fonts, imageLoader);
+      final var graphics =
+        image.createGraphics();
+
+      for (final var w : this.screen.windowsVisibleOrdered()) {
+        renderer.render(graphics, this.screen, w);
+      }
+
+      try {
+        ImageIO.write(image, "PNG", new File("/tmp/screen.png"));
+      } catch (final IOException e) {
+        throw new IllegalStateException(e);
+      }
+    }
   }
 
   /**

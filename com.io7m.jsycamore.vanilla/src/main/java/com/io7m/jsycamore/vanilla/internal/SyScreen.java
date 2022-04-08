@@ -504,10 +504,10 @@ public final class SyScreen implements SyScreenType
        * close the menu.
        */
 
-      if (component instanceof SyMenuItemType menuItem) {
+      if (component instanceof SyMenuItemType) {
         return;
       }
-      if (component instanceof SyMenuHostType menuHost) {
+      if (component instanceof SyMenuHostType) {
         return;
       }
 
