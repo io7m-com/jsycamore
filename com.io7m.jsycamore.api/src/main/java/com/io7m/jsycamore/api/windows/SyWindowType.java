@@ -21,6 +21,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
@@ -65,7 +66,7 @@ public interface SyWindowType extends SyWindowReadableType
    *
    * @return A component, if any
    *
-   * @see com.io7m.jsycamore.api.mouse.SyMouseAcceptingReadableType
+   * @see SyMouseFocusAcceptingReadableType
    */
 
   Optional<SyComponentType> componentForViewportPosition(
@@ -91,7 +92,7 @@ public interface SyWindowType extends SyWindowReadableType
    *
    * @return The component, if any
    *
-   * @see com.io7m.jsycamore.api.mouse.SyMouseAcceptingReadableType
+   * @see SyMouseFocusAcceptingReadableType
    */
 
   Optional<SyComponentType> componentForWindowPosition(

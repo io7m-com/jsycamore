@@ -14,25 +14,22 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.jsycamore.api.mouse;
 
-import com.io7m.jsycamore.api.components.SyComponentQuery;
-
 /**
- * The type of components that can accept mouse queries.
+ * The type of components that can accept mouse focus/queries.
  */
 
-public interface SyMouseAcceptingReadableType
+public interface SyMouseFocusAcceptingType
+  extends SyMouseFocusAcceptingReadableType
 {
   /**
-   * A component that is <i>mouse query accepting</i> can be returned from a
-   * component query of type {@link SyComponentQuery#FIND_FOR_MOUSE_CURSOR}.
-   * Intuitively, only components that are <i>mouse query accepting</i> will be
-   * considered when tracking which component is under the mouse cursor.
+   * Enable/disable mouse query acceptance.
    *
-   * @return {@code true} if this component accepts mouse queries
+   * @param accepting {@code true} if mouse queries are accepted
+   *
+   * @see #isMouseQueryAccepting()
    */
 
-  boolean isMouseQueryAccepting();
+  void setMouseQueryAccepting(boolean accepting);
 }

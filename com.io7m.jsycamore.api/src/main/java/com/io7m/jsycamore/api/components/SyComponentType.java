@@ -22,7 +22,7 @@ import com.io7m.jsycamore.api.active.SyActiveType;
 import com.io7m.jsycamore.api.bounded.SyBoundedType;
 import com.io7m.jsycamore.api.events.SyEventReceiverType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
-import com.io7m.jsycamore.api.mouse.SyMouseAcceptingType;
+import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeableType;
@@ -46,7 +46,7 @@ public interface SyComponentType
   SyVisibleType,
   SyActiveType,
   SyEventReceiverType,
-  SyMouseAcceptingType,
+  SyMouseFocusAcceptingType,
   SyBoundedType<SySpaceParentRelativeType>,
   SyThemeableType
 {
