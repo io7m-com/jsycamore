@@ -2,7 +2,7 @@ jsycamore
 ===
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.jsycamore/com.io7m.jsycamore.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.jsycamore%22)
-[![Maven Central (snapshot)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.io7m.jsycamore/com.io7m.jsycamore.svg?style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/io7m/jsycamore/)
+[![Maven Central (snapshot)](https://img.shields.io/nexus/s/https/s01.oss.sonatype.org/com.io7m.jsycamore/com.io7m.jsycamore.svg?style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/jsycamore/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m/jsycamore.svg?style=flat-square)](https://codecov.io/gh/io7m/jsycamore)
 
 ![jsycamore](./src/site/resources/jsycamore.jpg?raw=true)
