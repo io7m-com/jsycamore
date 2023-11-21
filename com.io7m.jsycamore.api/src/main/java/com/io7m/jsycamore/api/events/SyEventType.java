@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.api.events;
 
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.menus.SyMenuEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
 import com.io7m.jsycamore.api.windows.SyWindowEventType;
@@ -25,7 +26,7 @@ import com.io7m.jsycamore.api.windows.SyWindowEventType;
  */
 
 public sealed interface SyEventType
-  permits com.io7m.jsycamore.api.keyboard.SyKeyEventType,
+  permits SyKeyEventType,
   SyMenuEventType,
   SyMouseEventType,
   SyWindowEventType

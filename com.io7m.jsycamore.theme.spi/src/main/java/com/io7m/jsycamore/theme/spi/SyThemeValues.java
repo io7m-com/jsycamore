@@ -447,47 +447,43 @@ public final class SyThemeValues implements SyThemeValuesType
     while (iterator.hasNext()) {
       final var node = iterator.next();
 
-      if (node instanceof SyValueFunctionInteger functionNode) {
-        functionNode.evaluate(
-          Optional.ofNullable(this.nodes.get(functionNode.source()))
-            .orElseThrow(UnreachableCodeException::new)
-        );
-        continue;
+      switch (node) {
+        case final SyValueFunctionInteger functionNode -> {
+          functionNode.evaluate(
+            Optional.ofNullable(this.nodes.get(functionNode.source()))
+              .orElseThrow(UnreachableCodeException::new)
+          );
+          continue;
+        }
+        case final SyValueFunctionDouble functionNode -> {
+          functionNode.evaluate(
+            Optional.ofNullable(this.nodes.get(functionNode.source()))
+              .orElseThrow(UnreachableCodeException::new)
+          );
+          continue;
+        }
+        case final SyValueFunctionFont functionNode -> {
+          functionNode.evaluate(
+            Optional.ofNullable(this.nodes.get(functionNode.source()))
+              .orElseThrow(UnreachableCodeException::new)
+          );
+          continue;
+        }
+        case final SyValueFunctionColor4D functionNode -> {
+          functionNode.evaluate(
+            Optional.ofNullable(this.nodes.get(functionNode.source()))
+              .orElseThrow(UnreachableCodeException::new)
+          );
+          continue;
+        }
+        case final SyConstantType syConstantType -> {
+          continue;
+        }
       }
-
-      if (node instanceof SyValueFunctionDouble functionNode) {
-        functionNode.evaluate(
-          Optional.ofNullable(this.nodes.get(functionNode.source()))
-            .orElseThrow(UnreachableCodeException::new)
-        );
-        continue;
-      }
-
-      if (node instanceof SyValueFunctionFont functionNode) {
-        functionNode.evaluate(
-          Optional.ofNullable(this.nodes.get(functionNode.source()))
-            .orElseThrow(UnreachableCodeException::new)
-        );
-        continue;
-      }
-
-      if (node instanceof SyValueFunctionColor4D functionNode) {
-        functionNode.evaluate(
-          Optional.ofNullable(this.nodes.get(functionNode.source()))
-            .orElseThrow(UnreachableCodeException::new)
-        );
-        continue;
-      }
-
-      if (node instanceof SyConstantType) {
-        continue;
-      }
-
-      throw new UnreachableCodeException();
     }
   }
 
-  private static record ValueEdge(
+  private record ValueEdge(
     SyValueNodeType source,
     SyValueNodeType target)
   {

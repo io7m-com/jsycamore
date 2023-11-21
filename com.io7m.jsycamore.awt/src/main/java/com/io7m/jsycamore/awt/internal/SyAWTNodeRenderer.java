@@ -25,9 +25,11 @@ import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeImage;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
+import com.io7m.jsycamore.api.rendering.SyShapeComposite;
 import com.io7m.jsycamore.api.rendering.SyShapePolygon;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
@@ -36,7 +38,7 @@ import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
-import com.io7m.junreachable.UnreachableCodeException;
+import com.io7m.junreachable.UnimplementedCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,15 +150,14 @@ public final class SyAWTNodeRenderer
     final PAreaI<T> boundingArea,
     final SyPaintFillType fillPaint)
   {
-    if (fillPaint instanceof SyPaintFlat flat) {
-      return fillToPaintFlat(flat);
-    }
-
-    if (fillPaint instanceof SyPaintGradientLinear linear) {
-      return fillToPaintGradientLinear(boundingArea, linear);
-    }
-
-    throw new UnreachableCodeException();
+    return switch (fillPaint) {
+      case final SyPaintFlat flat -> {
+        yield fillToPaintFlat(flat);
+      }
+      case final SyPaintGradientLinear linear -> {
+        yield fillToPaintGradientLinear(boundingArea, linear);
+      }
+    };
   }
 
   private static Color toColor4(
@@ -213,11 +214,14 @@ public final class SyAWTNodeRenderer
     final PAreaI<T> boundingArea,
     final SyPaintEdgeType edgePaint)
   {
-    if (edgePaint instanceof SyPaintFlat flat) {
-      return edgeToPaintFlat(flat);
-    }
-
-    throw new UnreachableCodeException();
+    return switch (edgePaint) {
+      case final SyPaintFlat flat -> {
+        yield edgeToPaintFlat(flat);
+      }
+      case final SyPaintGradientLinear linear -> {
+        throw new UnimplementedCodeException();
+      }
+    };
   }
 
   private static Paint edgeToPaintFlat(
@@ -276,13 +280,16 @@ public final class SyAWTNodeRenderer
     final Graphics2D g,
     final SyRenderNodeShape shape)
   {
-    if (shape.shape() instanceof SyShapeRectangle<SySpaceComponentRelativeType> rectangle) {
-      renderShapeRectangle(g, shape.edgePaint(), shape.fillPaint(), rectangle);
-      return;
-    }
-    if (shape.shape() instanceof SyShapePolygon<SySpaceComponentRelativeType> polygon) {
-      renderShapePolygon(g, shape.edgePaint(), shape.fillPaint(), polygon);
-      return;
+    switch (shape.shape()) {
+      case final SyShapeRectangle<SySpaceComponentRelativeType> r -> {
+        renderShapeRectangle(g, shape.edgePaint(), shape.fillPaint(), r);
+      }
+      case final SyShapePolygon<SySpaceComponentRelativeType> p -> {
+        renderShapePolygon(g, shape.edgePaint(), shape.fillPaint(), p);
+      }
+      case final SyShapeComposite<?> c -> {
+
+      }
     }
   }
 
@@ -322,23 +329,24 @@ public final class SyAWTNodeRenderer
     final SyRenderNodeType renderNode)
   {
     try {
-      if (renderNode instanceof SyRenderNodeShape shape) {
-        renderNodeShape(graphics2D, shape);
-        return;
-      }
-      if (renderNode instanceof SyRenderNodeText text) {
-        renderNodeText(graphics2D, this.fontDirectory, text);
-        return;
-      }
-      if (renderNode instanceof SyRenderNodeImage image) {
-        this.renderNodeImage(graphics2D, image);
-        return;
-      }
-      if (renderNode instanceof SyRenderNodeComposite composite) {
-        for (final var node : composite.nodes()) {
-          this.renderNode(graphics2D, node);
+      switch (renderNode) {
+        case final SyRenderNodeShape shape -> {
+          renderNodeShape(graphics2D, shape);
         }
-        return;
+        case final SyRenderNodeText text -> {
+          this.renderNodeText(graphics2D, this.fontDirectory, text);
+        }
+        case final SyRenderNodeImage image -> {
+          this.renderNodeImage(graphics2D, image);
+        }
+        case final SyRenderNodeComposite composite -> {
+          for (final var node : composite.nodes()) {
+            this.renderNode(graphics2D, node);
+          }
+        }
+        case final SyRenderNodeNoop noOp -> {
+
+        }
       }
     } finally {
       if (this.debugBounds) {
