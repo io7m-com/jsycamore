@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+  "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+  <suppress files="SyConstraints.java"
+            checks="HiddenField"/>
+
+  <suppress files="SyWindowResizeNE.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeSE.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeNW.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeS.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeN.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeW.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeSW.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowResizeE.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowTitle.java"
+            checks="NPathComplexity"/>
+  <suppress files="SyWindowRoot.java"
+            checks="CyclomaticComplexity"/>
+  <suppress files="SyWindowButtonComponent.java"
+            checks="NPathComplexity"/>
+
+  <suppress files="SyButtonAbstract.java"
+            checks="NPathComplexity"/>
+
+  <suppress files="SyThemeValues.java"
+            checks="NPathComplexity"/>
+
+  <suppress files="SyThemePrimal.java"
+            checks="CyclomaticComplexity"/>
+
+  <suppress files="SyAWTKeyCodeMapping.java"
+            checks="CyclomaticComplexity"/>
+  <suppress files="SyAWTKeyCodeMapping.java"
+            checks="JavaNCSS"/>
+
+</suppressions>

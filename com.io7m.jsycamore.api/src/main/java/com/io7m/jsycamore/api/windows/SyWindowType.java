@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,11 +16,17 @@
 
 package com.io7m.jsycamore.api.windows;
 
-
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.components.SyWindowViewportAccumulatorType;
+import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentQuery;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.themes.SyTheme;
+import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
 
@@ -28,54 +34,125 @@ import java.util.Optional;
  * The type of windows.
  */
 
-public interface SyWindowType extends SyWindowEventsType,
-  SyWindowThemeEventsType,
-  SyWindowReadableType
+public interface SyWindowType extends SyWindowReadableType
 {
   /**
-   * Set whether or not the window should have a close box.
-   *
-   * @param c {@code true} iff the window should have a close box
+   * @return The screen to which this window belongs.
    */
 
-  void setCloseable(boolean c);
+  SyScreenType screen();
 
   /**
-   * Set whether or not the window should have a maximize box.
+   * Execute a layout pass on the window.
    *
-   * @param c {@code true} iff the window should have a maximize box
+   * @param layoutContext The layout context
    */
 
-  void setMaximizable(boolean c);
+  void layout(SyLayoutContextType layoutContext);
 
   /**
-   * @return Writable access to the content pane
+   * Send an event to the window.
+   *
+   * @param event The event
    */
+
+  void eventSend(SyWindowEventType event);
+
+  /**
+   * Find a component given a viewport position.
+   *
+   * @param position The position
+   * @param query    The type of position query
+   *
+   * @return A component, if any
+   *
+   * @see SyMouseFocusAcceptingReadableType
+   */
+
+  Optional<SyComponentType> componentForViewportPosition(
+    PVector2I<SySpaceViewportType> position,
+    SyComponentQuery query);
+
+  /**
+   * Transform the given viewport position to a window-relative position.
+   *
+   * @param viewportPosition The viewport position
+   *
+   * @return A window-relative position
+   */
+
+  PVector2I<SySpaceWindowType> transformViewportRelative(
+    PVector2I<SySpaceViewportType> viewportPosition);
+
+  /**
+   * Find the component under the given window-relative position.
+   *
+   * @param w_position The window-relative position
+   * @param query      The type of position query
+   *
+   * @return The component, if any
+   *
+   * @see SyMouseFocusAcceptingReadableType
+   */
+
+  Optional<SyComponentType> componentForWindowPosition(
+    PVector2I<SySpaceWindowType> w_position,
+    SyComponentQuery query);
+
+  /**
+   * Toggle the "maximized" nature of the window.
+   *
+   * @param viewportSize The size of the maximized window
+   */
+
+  void setMaximizeToggle(
+    PAreaSizeI<SySpaceViewportType> viewportSize);
 
   @Override
-  SyWindowContentPaneType contentPane();
+  AttributeType<Boolean> decorated();
 
   /**
-   * Set the window's position and bounds.
+   * Set the window position.
    *
-   * @param box The box representing the new position and bounds
+   * @param newPosition The new position
    */
 
-  void setBox(PAreaI<SySpaceViewportType> box);
+  void setPosition(
+    PVector2I<SySpaceViewportType> newPosition);
 
   /**
-   * Set the theme for the window. If an empty value is specified, the window will be reset to
-   * whatever is the default theme for the owning {@link com.io7m.jsycamore.api.SyGUIType}.
+   * Set the window size.
    *
-   * @param theme The theme, or an empty value to reset to the GUI default
+   * @param newSize The new size
    */
 
-  void setTheme(Optional<SyTheme> theme);
+  void setSize(
+    PAreaSizeI<SySpaceViewportType> newSize);
 
   /**
-   * @return A viewport accumulator for the window
+   * @return The content area component
    */
 
-  SyWindowViewportAccumulatorType viewportAccumulator();
+  SyComponentType contentArea();
 
+  @Override
+  AttributeType<String> title();
+
+  @Override
+  AttributeType<Integer> positionSnapping();
+
+  @Override
+  AttributeType<Integer> sizeSnapping();
+
+  @Override
+  AttributeType<SyWindowCloseBehaviour> closeButtonBehaviour();
+
+  @Override
+  AttributeType<SyVisibility> closeButtonVisibility();
+
+  @Override
+  AttributeType<SyVisibility> menuButtonVisibility();
+
+  @Override
+  AttributeType<SyVisibility> maximizeButtonVisibility();
 }

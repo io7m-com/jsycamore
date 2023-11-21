@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,121 +17,156 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jorchard.core.JOTreeNodeType;
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.SyParentResizeBehavior;
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.active.SyActiveType;
+import com.io7m.jsycamore.api.bounded.SyBoundedType;
+import com.io7m.jsycamore.api.events.SyEventReceiverType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.themes.SyThemeableType;
+import com.io7m.jsycamore.api.visibility.SyVisibleType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Predicate;
+
+import static java.lang.Math.min;
 
 /**
  * The type of components.
  */
 
-public interface SyComponentType extends SyComponentParentEventsType,
-  SyComponentMouseEventsType,
-  SyComponentReadableType,
-  SyComponentThemeEventsType,
-  SyMouseListenerType<SyComponentType>,
-  SyResizeListenerType,
-  SyThemeListenerType<SyComponentType>
+public interface SyComponentType
+  extends SyComponentReadableType,
+  SyVisibleType,
+  SyActiveType,
+  SyEventReceiverType,
+  SyMouseFocusAcceptingType,
+  SyBoundedType<SySpaceParentRelativeType>,
+  SyThemeableType
 {
   /**
-   * Set the parent resize behavior with regards to width.
-   *
-   * @param b The resize behavior
-   *
-   * @see #resizeBehaviorWidth()
-   */
-
-  void setResizeBehaviorWidth(SyParentResizeBehavior b);
-
-  /**
-   * Set the parent resize behavior with regards to height.
-   *
-   * @param b The resize behavior
-   *
-   * @see #resizeBehaviorHeight()
-   */
-
-  void setResizeBehaviorHeight(SyParentResizeBehavior b);
-
-  /**
-   * Set the component's position and bounds.
-   *
-   * @param box The box representing the new position and bounds
-   */
-
-  void setBox(PAreaI<SySpaceParentRelativeType> box);
-
-  /**
-   * @return The window to which the most distant ancestor of this component is attached
-   */
-
-  Optional<SyWindowType> window();
-
-  /**
-   * @return The component tree node to which this component is attached
+   * @return The tree node for this component
    */
 
   JOTreeNodeType<SyComponentType> node();
 
   /**
-   * Determine the topmost component at the given window-relative position.
+   * @return The window to which the component is attached, if any
+   */
+
+  Optional<SyWindowType> window();
+
+  /**
+   * Specify a size for this component in response to a set of size constraints.
+   * This default implementation simply sets the size of the component to the
+   * maximum size allowed by the constraints.
    *
-   * @param w_position A window-relative position
-   * @param context    An accumulator for calculating positions and viewports
+   * @param layoutContext The current layout context
+   * @param constraints   The size constraints
+   *
+   * @return A size for this component
+   */
+
+  default PAreaSizeI<SySpaceParentRelativeType> layout(
+    final SyLayoutContextType layoutContext,
+    final SyConstraints constraints)
+  {
+    Objects.requireNonNull(layoutContext, "layoutContext");
+    Objects.requireNonNull(constraints, "constraints");
+
+    final var sizeLimit =
+      this.sizeUpperLimit().get();
+
+    final var limitedConstraints =
+      new SyConstraints(
+        constraints.sizeMinimumX(),
+        constraints.sizeMinimumY(),
+        min(constraints.sizeMaximumX(), sizeLimit.sizeX()),
+        min(constraints.sizeMaximumY(), sizeLimit.sizeY())
+      );
+
+    final var childNodes = this.node().children();
+    for (final var childNode : childNodes) {
+      childNode.value().layout(layoutContext, limitedConstraints);
+    }
+
+    final PAreaSizeI<SySpaceParentRelativeType> newSize =
+      limitedConstraints.sizeMaximum();
+    this.setSize(newSize);
+    return newSize;
+  }
+
+  /**
+   * Find the component under the given window-relative position. The method can
+   * return this component if applicable, but should return a child component if
+   * one overlaps the given position.
+   *
+   * @param windowPosition The window position
+   * @param context        The viewport accumulator
+   * @param query          The type of query
    *
    * @return The component, if any
    */
 
   Optional<SyComponentType> componentForWindowRelative(
-    PVector2I<SySpaceWindowRelativeType> w_position,
-    SyWindowViewportAccumulatorType context);
+    PVector2I<SySpaceWindowType> windowPosition,
+    SyWindowViewportAccumulatorType context,
+    SyComponentQuery query);
 
   /**
-   * Match on the type of component.
+   * A convenience function to add a component as a child of this component.
    *
-   * @param context   A context value passed through to the given functions
-   * @param on_button A function evaluated if this component is a button
-   * @param on_panel  A function evaluated if this component is a panel
-   * @param on_label  A function evaluated if this component is a label
-   * @param on_image  A function evaluated if this component is an image
-   * @param on_meter  A function evaluated if this component is a meter
-   * @param <A>       The type of opaque context values
-   * @param <B>       The type of returned values
-   *
-   * @return The value returned by whichever one of the given functions is evaluated
+   * @param component The child component
    */
 
-  <A, B> B matchComponent(
-    A context,
-    BiFunction<A, SyButtonType, B> on_button,
-    BiFunction<A, SyPanelType, B> on_panel,
-    BiFunction<A, SyLabelType, B> on_label,
-    BiFunction<A, SyImageType, B> on_image,
-    BiFunction<A, SyMeterType, B> on_meter);
+  default void childAdd(
+    final SyComponentType component)
+  {
+    this.node().childAdd(component.node());
+  }
 
   /**
-   * Set this component as active/inactive.
+   * A convenience function to remove a component from this component.
    *
-   * @param e The activity specification
-   *
-   * @see SyComponentReadableType#isActive()
+   * @param component The child component
    */
 
-  void setActive(SyActive e);
+  default void childRemove(
+    final SyComponentType component)
+  {
+    this.node().childRemove(component.node());
+  }
 
   /**
-   * Set this component's visibility.
+   * Find an ancestor component matching the given predicate.
    *
-   * @param v The component's visibility
+   * @param predicate The predicate
    *
-   * @see SyComponentReadableType#isVisible()
+   * @return The ancestor component, if any
    */
 
-  void setVisibility(SyVisibility v);
+  default Optional<SyComponentType> ancestorMatching(
+    final Predicate<SyComponentType> predicate)
+  {
+    Objects.requireNonNull(predicate, "predicate");
+
+    var parentOpt =
+      this.node().parent();
+
+    while (parentOpt.isPresent()) {
+      final var parent = parentOpt.get();
+      if (predicate.test(parent.value())) {
+        return Optional.of(parent.value());
+      }
+      parentOpt = parent.parent();
+    }
+
+    return Optional.empty();
+  }
 }

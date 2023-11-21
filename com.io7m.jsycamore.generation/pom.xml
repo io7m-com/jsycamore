@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.io7m.jsycamore</groupId>
+    <artifactId>com.io7m.jsycamore</artifactId>
+    <version>0.1.0</version>
+  </parent>
+  <artifactId>com.io7m.jsycamore.generation</artifactId>
+
+  <packaging>jar</packaging>
+  <name>com.io7m.jsycamore.generation</name>
+  <description>Embedded GUI library (Code generation)</description>
+  <url>https://www.io7m.com/software/jsycamore/</url>
+
+  <dependencies>
+  </dependencies>
+
+</project>

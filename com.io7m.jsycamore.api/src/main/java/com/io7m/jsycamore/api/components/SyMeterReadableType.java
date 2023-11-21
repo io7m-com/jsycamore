@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,46 +16,22 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jsycamore.api.themes.SyOrientation;
-import com.io7m.jsycamore.api.themes.SyThemeMeter;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.METER;
 
 /**
- * The type of readable meters.
+ * Read-only access to meters.
  */
 
-public interface SyMeterReadableType extends SyComponentReadableType
+public interface SyMeterReadableType
+  extends SyComponentReadableType
 {
-  /**
-   * @return The meter's orientation
-   */
-
-  SyOrientation orientation();
-
-  /**
-   * @return The theme for the meter
-   */
-
-  Optional<SyThemeMeter> theme();
-
-  /**
-   * @return The current meter value, in the range `[0.0, 1.0]`
-   */
-
-  double value();
-
   @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label,
-    final BiFunction<A, SyImageReadableType, B> on_image,
-    final BiFunction<A, SyMeterReadableType, B> on_meter)
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    return Objects.requireNonNull(on_meter, "Receiver").apply(context, this);
+    return List.of(METER);
   }
 }

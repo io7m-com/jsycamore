@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,63 +16,26 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 /**
- * The type of themes.
+ * A theme instance.
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface SyThemeType
+public interface SyThemeType extends SyThemeWindowType
 {
   /**
-   * @return The theme used for windows
+   * Find a theme component for the given component.
+   *
+   * @param component The component
+   *
+   * @return A theme component
    */
 
-  @Value.Parameter
-  SyThemeWindow windowTheme();
+  SyThemeComponentType findForComponent(
+    SyThemeableReadableType component);
 
   /**
-   * @return The theme used for repeating buttons
+   * @return The theme values
    */
 
-  @Value.Parameter
-  SyThemeButtonRepeating buttonRepeatingTheme();
-
-  /**
-   * @return The theme used for checkbox buttons
-   */
-
-  @Value.Parameter
-  SyThemeButtonCheckbox buttonCheckboxTheme();
-
-  /**
-   * @return The theme used for meters
-   */
-
-  @Value.Parameter
-  SyThemeMeter meterTheme();
-
-  /**
-   * @return The theme used for panels
-   */
-
-  @Value.Parameter
-  SyThemePanel panelTheme();
-
-  /**
-   * @return The theme used for labels
-   */
-
-  @Value.Parameter
-  SyThemeLabel labelTheme();
-
-  /**
-   * @return The theme used for images
-   */
-
-  @Value.Parameter
-  SyThemeImage imageTheme();
+  SyThemeValuesType values();
 }

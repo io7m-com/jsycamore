@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,102 +16,104 @@
 
 package com.io7m.jsycamore.api.windows;
 
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.SyGUIElementType;
-import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
+import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
-import com.io7m.jsycamore.api.themes.SyTheme;
-import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
-
-import java.util.Optional;
+import com.io7m.jsycamore.api.visibility.SyVisibility;
 
 /**
- * A read-only interface to windows.
+ * The type of readable windows.
  */
 
-public interface SyWindowReadableType extends SyGUIElementType
+public interface SyWindowReadableType
+  extends SyBoundedReadableType<SySpaceViewportType>
 {
   /**
-   * @return {@code true} iff the window should have a close box
+   * @return The window ID
    */
 
-  boolean isCloseable();
+  SyWindowID id();
 
   /**
-   * @return {@code true} iff the window should have a maximize box
+   * @return The root window component
    */
 
-  boolean isMaximizable();
+  JOTreeNodeReadableType<SyComponentReadableType> rootNodeReadable();
 
   /**
-   * @return The readable box representing the window's position and bounds
+   * @return An attribute indicating if the window is maximized
    */
 
-  PAreaI<SySpaceViewportType> box();
+  AttributeReadableType<Boolean> maximized();
 
   /**
-   * @return Read-only access to the content pane
+   * @return An attribute indicating if the window is decorated
    */
 
-  SyWindowContentPaneReadableType contentPane();
+  AttributeReadableType<Boolean> decorated();
 
   /**
-   * @return The current theme
+   * @return An attribute representing the window title
    */
 
-  SyTheme theme();
+  AttributeReadableType<String> title();
 
   /**
-   * @return The window frame
-   */
-
-  SyWindowFrameType frame();
-
-  /**
-   * @return The window title bar
-   */
-
-  SyWindowTitleBarType titleBar();
-
-  /**
-   * @return {@code true} iff the window currently has focus
-   */
-
-  boolean isFocused();
-
-  /**
-   * @return {@code true} iff the window is currently open
-   */
-
-  boolean isOpen();
-
-  /**
-   * Transform a viewport-relative position to window-relative form.
+   * An attribute that, when set to a non-zero value, specifies a snapping value
+   * for position values. For a non-zero snapping value {@code n}, the resulting
+   * position values will be {@code k * n} for some non-negative {@code k}.
    *
-   * @param v_position A viewport-relative position
-   *
-   * @return A position in window-relative form
+   * @return The position snapping value
    */
 
-  PVector2I<SySpaceWindowRelativeType> transformViewportRelative(
-    PVector2I<SySpaceViewportType> v_position);
+  AttributeReadableType<Integer> positionSnapping();
 
   /**
-   * @param w_position A window-relative position
+   * An attribute that, when set to a non-zero value, specifies a snapping value
+   * for size values. For a non-zero snapping value {@code n}, the resulting
+   * size values will be {@code k * n} for some non-negative {@code k}.
    *
-   * @return The topmost component that contains {@code w_position}
+   * @return The size snapping value
    */
 
-  Optional<SyComponentType> componentForWindowPosition(
-    PVector2I<SySpaceWindowRelativeType> w_position);
+  AttributeReadableType<Integer> sizeSnapping();
 
   /**
-   * @param position A viewport-relative position
-   *
-   * @return The topmost component that contains {@code position}
+   * @return A property denoting the window close button behaviour
    */
 
-  Optional<SyComponentType> componentForViewportPosition(
-    PVector2I<SySpaceViewportType> position);
+  AttributeReadableType<SyWindowCloseBehaviour> closeButtonBehaviour();
+
+  /**
+   * @return An attribute denoting the visibility of the window's close button
+   */
+
+  AttributeReadableType<SyVisibility> closeButtonVisibility();
+
+  /**
+   * @return An attribute denoting the visibility of the window's menu button
+   */
+
+  AttributeReadableType<SyVisibility> menuButtonVisibility();
+
+  /**
+   * @return An attribute denoting the visibility of the window's maximize
+   * button
+   */
+
+  AttributeReadableType<SyVisibility> maximizeButtonVisibility();
+
+  /**
+   * @return The window layer
+   */
+
+  int layer();
+
+  /**
+   * @return The window deletion policy
+   */
+
+  SyWindowDeletionPolicy deletionPolicy();
 }

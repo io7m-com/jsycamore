@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,91 +17,31 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
-import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jsycamore.api.SyParentResizeBehavior;
-import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jsycamore.api.active.SyActiveReadableType;
+import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
+import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.spaces.SySpaceWindowRelativeType;
+import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
+import com.io7m.jsycamore.api.visibility.SyVisibleReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 /**
  * The type of readable components.
  */
 
 public interface SyComponentReadableType
+  extends SyActiveReadableType,
+  SyVisibleReadableType,
+  SyMouseFocusAcceptingReadableType,
+  SyBoundedReadableType<SySpaceParentRelativeType>,
+  SyThemeableReadableType
 {
-  /**
-   * Components may be active or inactive. A component that is inactive will not receive input
-   * events, and will typically be rendered as "greyed" out by renderers.
-   *
-   * @return {@code true} iff this component is active
-   */
-
-  boolean isActive();
-
-  /**
-   * @return This component's activity
-   *
-   * @see SyComponentType#setActive(SyActive)
-   */
-
-  SyActive activity();
-
-  /**
-   * Determine whether this component is visible or not based on the visibility of its ancestors.
-   *
-   * @return {@code true} iff this component is visible
-   */
-
-  boolean isVisible();
-
-  /**
-   * @return This component's visibility
-   *
-   * @see SyComponentType#setVisibility(SyVisibility)
-   */
-
-  SyVisibility visibility();
-
-  /**
-   * @return This component's width resize behavior.
-   */
-
-  SyParentResizeBehavior resizeBehaviorWidth();
-
-  /**
-   * @return This component's height resize behavior.
-   */
-
-  SyParentResizeBehavior resizeBehaviorHeight();
-
-  /**
-   * @return The readable box representing the component's position and bounds
-   */
-
-  PAreaI<SySpaceParentRelativeType> box();
-
-  /**
-   * @return The window-relative position of the component
-   */
-
-  PVector2I<SySpaceWindowRelativeType> positionWindowRelative();
-
-  /**
-   * Transform a window-relative position to component-relative form.
-   *
-   * @param w_position A window-relative position
-   *
-   * @return A component-relative position
-   */
-
-  PVector2I<SySpaceComponentRelativeType> transformWindowRelative(
-    PVector2I<SySpaceWindowRelativeType> w_position);
-
   /**
    * @return The window to which this component belongs
    */
@@ -109,44 +49,139 @@ public interface SyComponentReadableType
   Optional<SyWindowReadableType> windowReadable();
 
   /**
-   * Match on the type of component.
-   *
-   * @param context   A context value passed through to the given functions
-   * @param on_button A function evaluated if this component is a button
-   * @param on_panel  A function evaluated if this component is a panel
-   * @param on_label  A function evaluated if this component is a label
-   * @param on_image  A function evaluated if this component is an image
-   * @param on_meter  A function evaluated if this component is a meter
-   * @param <A>       The type of opaque context values
-   * @param <B>       The type of returned values
-   *
-   * @return The value returned by whichever one of the given functions is evaluated
-   */
-
-  <A, B> B matchComponentReadable(
-    A context,
-    BiFunction<A, SyButtonReadableType, B> on_button,
-    BiFunction<A, SyPanelReadableType, B> on_panel,
-    BiFunction<A, SyLabelReadableType, B> on_label,
-    BiFunction<A, SyImageReadableType, B> on_image,
-    BiFunction<A, SyMeterReadableType, B> on_meter);
-
-  /**
-   * Determine the topmost component at the given window-relative position.
-   *
-   * @param w_position A window-relative position
-   * @param context    An accumulator for calculating positions and viewports
-   *
-   * @return The component, if any
-   */
-
-  Optional<SyComponentReadableType> componentReadableForWindowRelative(
-    PVector2I<SySpaceWindowRelativeType> w_position,
-    SyWindowViewportAccumulatorType context);
-
-  /**
-   * @return The component tree node to which this component is attached
+   * @return The tree node for this component
    */
 
   JOTreeNodeReadableType<SyComponentReadableType> nodeReadable();
+
+  @Override
+  default boolean isVisible()
+  {
+    /*
+     * If a component is set to invisible, it is unconditionally invisible.
+     * Otherwise, it is visible if its parent is visible. If there is no
+     * parent, the component is visible.
+     */
+
+    return switch (this.visibility().get()) {
+      case VISIBILITY_INVISIBLE -> false;
+      case VISIBILITY_VISIBLE -> {
+        final var parentOpt = this.nodeReadable().parentReadable();
+        if (parentOpt.isPresent()) {
+          final var parent = parentOpt.get().value();
+          yield parent.isVisible();
+        }
+        yield true;
+      }
+    };
+  }
+
+  @Override
+  default boolean isActive()
+  {
+    /*
+     * If a component is set to inactive, it is unconditionally inactive.
+     * Otherwise, it is active if its parent is active. If there is no
+     * parent, the component is active.
+     */
+
+    return switch (this.activity().get()) {
+      case INACTIVE -> false;
+      case ACTIVE -> {
+        final var parentOpt = this.nodeReadable().parentReadable();
+        if (parentOpt.isPresent()) {
+          final var parent = parentOpt.get().value();
+          yield parent.isActive();
+        }
+        yield true;
+      }
+    };
+  }
+
+  /**
+   * A convenience method to return the number of children of this component.
+   *
+   * @return The number of children
+   */
+
+  default int childCount()
+  {
+    return this.nodeReadable().childrenReadable().size();
+  }
+
+  /**
+   * Find an ancestor component matching the given predicate.
+   *
+   * @param predicate The predicate
+   *
+   * @return The ancestor component, if any
+   */
+
+  default Optional<SyComponentReadableType> ancestorMatchingReadable(
+    final Predicate<SyComponentReadableType> predicate)
+  {
+    Objects.requireNonNull(predicate, "predicate");
+
+    var parentOpt =
+      this.nodeReadable().parentReadable();
+
+    while (parentOpt.isPresent()) {
+      final var parent = parentOpt.get();
+      if (predicate.test(parent.value())) {
+        return Optional.of(parent.value());
+      }
+      parentOpt = parent.parentReadable();
+    }
+
+    return Optional.empty();
+  }
+
+  /**
+   * Determine the viewport position of the given parent-relative position
+   * relative to this component. The method will fail if this component is not
+   * attached to a window.
+   *
+   * @param position The source position
+   *
+   * @return The viewport position
+   */
+
+  default PVector2I<SySpaceViewportType> viewportPositionOf(
+    final PVector2I<SySpaceParentRelativeType> position)
+  {
+    Objects.requireNonNull(position, "position");
+
+    final var windowOpt = this.windowReadable();
+    if (windowOpt.isEmpty()) {
+      throw new IllegalStateException("Not attached to a window!");
+    }
+
+    final var window = windowOpt.get();
+    var x = position.x();
+    var y = position.y();
+
+    var parentOpt =
+      this.nodeReadable().parentReadable();
+
+    while (parentOpt.isPresent()) {
+      final var parentNode =
+        parentOpt.get();
+      final var parent =
+        parentNode.value();
+      final var parentPosition =
+        parent.position().get();
+
+      x += parentPosition.x();
+      y += parentPosition.y();
+      parentOpt = parentNode.parentReadable();
+    }
+
+    final var windowPosition =
+      window.position().get();
+
+    return PVector2I.of(
+      windowPosition.x() + x,
+      windowPosition.y() + y
+    );
+  }
 }

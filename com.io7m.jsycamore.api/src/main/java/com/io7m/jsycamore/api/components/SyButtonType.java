@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,41 +16,26 @@
 
 package com.io7m.jsycamore.api.components;
 
-import java.util.Objects;
-import java.util.function.BiFunction;
-
 /**
- * The type of buttons.
+ * The basic type of button components.
  */
 
-public interface SyButtonType extends SyComponentType, SyButtonReadableType
+public interface SyButtonType
+  extends SyButtonReadableType, SyComponentType
 {
   /**
-   * Add a listener to the button that will be called whenever the button is pressed.
+   * Set a listener that will be executed when the button is clicked.
    *
-   * @param r The listener
+   * @param runnable The listener
    */
 
-  void buttonAddListener(SyButtonListenerType r);
+  void setOnClickListener(Runnable runnable);
 
   /**
-   * Remove a listener from the button that was previously added with {@link
-   * #buttonAddListener(SyButtonListenerType)}.
+   * Remove any listeners that are executed when the button is clicked.
    *
-   * @param r The listener
+   * @see #setOnClickListener(Runnable)
    */
 
-  void buttonRemoveListener(SyButtonListenerType r);
-
-  @Override
-  default <A, B> B matchComponent(
-    final A context,
-    final BiFunction<A, SyButtonType, B> on_button,
-    final BiFunction<A, SyPanelType, B> on_panel,
-    final BiFunction<A, SyLabelType, B> on_label,
-    final BiFunction<A, SyImageType, B> on_image,
-    final BiFunction<A, SyMeterType, B> on_meter)
-  {
-    return Objects.requireNonNull(on_button, "Button").apply(context, this);
-  }
+  void removeOnClickListener();
 }

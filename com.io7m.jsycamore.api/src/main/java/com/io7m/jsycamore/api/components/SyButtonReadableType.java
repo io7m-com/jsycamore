@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,41 +16,28 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jsycamore.api.themes.SyThemeButtonType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 
 /**
- * The type of buttons.
+ * Read-only access to a button.
  */
 
-public interface SyButtonReadableType extends SyComponentReadableType
+public interface SyButtonReadableType
+  extends SyComponentReadableType
 {
-  /**
-   * @param <T> The precise type of theme
-   *
-   * @return The current theme for the button
-   */
-
-  <T extends SyThemeButtonType> Optional<T> theme();
-
-  /**
-   * @return The current state of the button
-   */
-
-  SyButtonState buttonState();
-
   @Override
-  default <A, B> B matchComponentReadable(
-    final A context,
-    final BiFunction<A, SyButtonReadableType, B> on_button,
-    final BiFunction<A, SyPanelReadableType, B> on_panel,
-    final BiFunction<A, SyLabelReadableType, B> on_label,
-    final BiFunction<A, SyImageReadableType, B> on_image,
-    final BiFunction<A, SyMeterReadableType, B> on_meter)
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    return Objects.requireNonNull(on_button, "Button").apply(context, this);
+    return List.of(BUTTON);
   }
+
+  /**
+   * @return {@code true} if the button is currently pressed
+   */
+
+  boolean isPressed();
 }

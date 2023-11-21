@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 <code@io7m.com> http://io7m.com
+ * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,36 +16,42 @@
 
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
+
+import java.util.Map;
 
 /**
- * The theme parameters for windows.
+ * Theme information for windows.
  */
 
-@ImmutablesStyleType
-@Value.Immutable
 public interface SyThemeWindowType
 {
   /**
-   * @return The theme parameters used for window title bars
+   * Obtain the Z order for a window component. Components with higher Z values
+   * are rendered over the top of components with lower Z values.
+   *
+   * @param component The window component
+   *
+   * @return A Z order value
    */
 
-  @Value.Parameter
-  SyThemeWindowTitleBar titleBar();
+  int zOrderForWindowDecorationComponent(
+    SyWindowDecorationComponent component);
 
   /**
-   * @return The theme parameters used for window frames
+   * Set the positions and sizes of all window components, and execute a layout
+   * pass on each of them to allow them to lay out their own descendants.
+   *
+   * @param layoutContext     The layout context
+   * @param windowConstraints The window constraints
+   * @param windowComponents  The set of window components
    */
 
-  @Value.Parameter
-  SyThemeWindowFrame frame();
-
-  /**
-   * @return A function that, given a box representing the window, will return the positions of the
-   * various window components
-   */
-
-  @Value.Parameter
-  SyThemeWindowArrangementFunctionType arranger();
+  void layoutWindowComponents(
+    SyLayoutContextType layoutContext,
+    SyConstraints windowConstraints,
+    Map<SyWindowDecorationComponent, SyComponentType> windowComponents);
 }

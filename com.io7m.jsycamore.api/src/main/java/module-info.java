@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -22,23 +22,32 @@ module com.io7m.jsycamore.api
 {
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
-  requires static org.immutables.value;
-  requires static com.io7m.immutables.style;
+  requires static com.io7m.jcip.annotations;
+
+  requires transitive com.io7m.jattribute.core;
+  requires transitive com.io7m.jcolorspace.core;
+  requires transitive com.io7m.jorchard.core;
+  requires transitive com.io7m.jregions.core;
+  requires transitive com.io7m.jtensors.core;
 
   requires com.io7m.jaffirm.core;
-  requires com.io7m.jorchard.core;
-  requires com.io7m.jranges.core;
-  requires com.io7m.jregions.core;
-  requires com.io7m.jsycamore.api.images;
-  requires com.io7m.jsycamore.api.spaces;
-  requires com.io7m.jsycamore.api.text;
-  requires com.io7m.jtensors.core;
   requires com.io7m.junreachable.core;
-  requires jcip.annotations;
-  requires org.slf4j;
 
+  exports com.io7m.jsycamore.api.active;
+  exports com.io7m.jsycamore.api.bounded;
+  exports com.io7m.jsycamore.api.colors;
   exports com.io7m.jsycamore.api.components;
+  exports com.io7m.jsycamore.api.events;
+  exports com.io7m.jsycamore.api.keyboard;
+  exports com.io7m.jsycamore.api.layout;
+  exports com.io7m.jsycamore.api.menus;
+  exports com.io7m.jsycamore.api.mouse;
+  exports com.io7m.jsycamore.api.rendering;
+  exports com.io7m.jsycamore.api.screens;
+  exports com.io7m.jsycamore.api.sized;
+  exports com.io7m.jsycamore.api.spaces;
+  exports com.io7m.jsycamore.api.text;
   exports com.io7m.jsycamore.api.themes;
+  exports com.io7m.jsycamore.api.visibility;
   exports com.io7m.jsycamore.api.windows;
-  exports com.io7m.jsycamore.api;
 }
