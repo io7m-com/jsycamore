@@ -60,7 +60,6 @@ public final class SyMenuItemAtom
   private final SyTextView text;
   private final Runnable action;
   private final SyImageView icon;
-  private final SySpace space;
   private final SyFormRow row;
   private final SyFormColumnsConfiguration columns;
   private final SyAlign textAlign;
@@ -90,8 +89,6 @@ public final class SyMenuItemAtom
     this.action =
       Objects.requireNonNull(inAction, "action");
 
-    this.space = new SySpace();
-
     this.row = new SyFormRow(this.columns);
 
     this.icon = new SyImageView();
@@ -113,7 +110,8 @@ public final class SyMenuItemAtom
 
     this.row.childAdd(this.iconAlign);
     this.row.childAdd(this.textAlign);
-    this.row.childAdd(this.space);
+    this.row.childAdd(new SySpace());
+    this.row.childAdd(new SySpace());
 
     this.childAdd(this.row);
   }
@@ -169,6 +167,12 @@ public final class SyMenuItemAtom
   public SyMenuType menu()
   {
     return this.menu;
+  }
+
+  @Override
+  public boolean isMouseOverMenuDescendant()
+  {
+    return this.isMouseOver();
   }
 
   @Override

@@ -21,6 +21,8 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 
+import java.util.List;
+
 /**
  * A menu.
  *
@@ -77,4 +79,10 @@ public interface SyMenuType extends SyComponentType, SyMenuReadableType
 
   @Override
   AttributeType<Boolean> expanded();
+
+  /**
+   * @return An immutable snapshot of the items within the menu
+   */
+
+  List<SyMenuItemType> items();
 }

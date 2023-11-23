@@ -49,4 +49,10 @@ public sealed interface SyMenuItemType extends SyComponentType
    */
 
   SyMenuType menu();
+
+  /**
+   * @return {@code true} if this menu has a descendant that is currently under the mouse cursor
+   */
+
+  boolean isMouseOverMenuDescendant();
 }

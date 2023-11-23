@@ -54,6 +54,10 @@ import static com.io7m.jsycamore.components.standard.forms.SyFormColumnSizeType.
 
 public final class SyMenu extends SyComponentAbstract implements SyMenuType
 {
+  private static final int MENU_ICON_SIZE = 24;
+  private static final int MENU_SUBMENU_ICON_SIZE = 12;
+  private static final int MENU_SUBMENU_ICON_END_PADDING = 4;
+
   private final SyPackVertical align;
   private final AttributeType<Boolean> expanded;
   private final JOTreeNodeType<SyMenuType> menuNode;
@@ -72,11 +76,22 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     super(themeClasses);
 
     this.items = List.of();
+
+    /*
+     * Menu items use four columns.
+     *
+     * 1. The menu icon (maybe invisible)
+     * 2. The flexible space for the menu item text
+     * 3. An icon used to indicate a submenu
+     * 4. Some padding.
+     */
+
     this.columns =
       SyFormColumnsConfiguration.columns(
-        exact(24),
+        exact(MENU_ICON_SIZE),
         flexible(),
-        exact(12)
+        exact(MENU_SUBMENU_ICON_SIZE),
+        exact(MENU_SUBMENU_ICON_END_PADDING)
       );
 
     final var attributes = SyComponentAttributes.get();
@@ -116,7 +131,13 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     var itemMaxWidth = 0;
     var itemTotalY = 0;
 
-    final var menuItems = this.itemsNow();
+    /*
+     * Iterate over all the menu items and determine the total size on the Y
+     * axis needed for the menu, and the maximum width needed to display the
+     * longest menu item.
+     */
+
+    final var menuItems = this.items();
     for (final var menuItem : menuItems) {
       final var itemSize =
         menuItem.minimumSizeRequired(layoutContext);
@@ -124,6 +145,10 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
       itemTotalY += itemSize.sizeY();
       itemMaxWidth = Math.max(itemMaxWidth, itemSize.sizeX());
     }
+
+    /*
+     * Add some padding.
+     */
 
     itemMaxWidth += 16;
 
@@ -197,15 +222,16 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
   }
 
   @Override
+  public List<SyMenuItemType> items()
+  {
+    return List.copyOf(this.items);
+  }
+
+  @Override
   protected SyEventConsumed onEvent(
     final SyEventType event)
   {
     return EVENT_NOT_CONSUMED;
-  }
-
-  private List<SyMenuItemType> itemsNow()
-  {
-    return this.items;
   }
 
   private <T extends SyMenuItemType> T addMenuItem(

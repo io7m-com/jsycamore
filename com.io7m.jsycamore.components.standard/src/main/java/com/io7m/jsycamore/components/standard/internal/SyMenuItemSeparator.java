@@ -85,4 +85,10 @@ public final class SyMenuItemSeparator
   {
     return this.menu;
   }
+
+  @Override
+  public boolean isMouseOverMenuDescendant()
+  {
+    return this.isMouseOver();
+  }
 }

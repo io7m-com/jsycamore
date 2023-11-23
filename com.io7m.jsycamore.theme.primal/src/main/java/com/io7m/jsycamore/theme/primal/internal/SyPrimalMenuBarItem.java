@@ -63,7 +63,7 @@ public final class SyPrimalMenuBarItem extends SyPrimalAbstract
     try {
       final var values = this.theme().values();
 
-      if (component instanceof SyMenuBarItemType barItem) {
+      if (component instanceof final SyMenuBarItemType barItem) {
         final var rectangle =
           new SyShapeRectangle<SySpaceComponentRelativeType>(
             PAreasI.cast(PAreasI.moveToOrigin(component.boundingArea()))

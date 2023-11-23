@@ -93,7 +93,7 @@ public final class SyPrimalMenuItemTextView extends SyPrimalAbstract
           );
         }
 
-        if (menuItem.isMouseOver()) {
+        if (menuItem.isMouseOverMenuDescendant()) {
           return new SyRenderNodeText(
             values.fillFlat(PRIMARY_BACKGROUND),
             textSize,

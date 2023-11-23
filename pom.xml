@@ -14,7 +14,7 @@
 
   <groupId>com.io7m.jsycamore</groupId>
   <artifactId>com.io7m.jsycamore</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.jsycamore</name>
@@ -35,7 +35,7 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>0.1.0</io7m.api.previousVersion>
+    <io7m.api.previousVersion>0.2.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.org.immutables.value.version>2.10.0</io7m.org.immutables.value.version>
     <javafx.version>21.0.1</javafx.version>
     <jqwik.version>1.8.1</jqwik.version>

@@ -70,10 +70,16 @@ public final class SyPrimalMenuItem extends SyPrimalAbstract
       return SyRenderNodeNoop.noop();
     }
 
-    if (component instanceof SyMenuItemType) {
+    if (component instanceof final SyMenuItemType menuItem) {
       final var theme = this.theme();
       final var values = theme.values();
-      if (component.isMouseOver()) {
+
+      /*
+       * The menu item should be highlighted if the cursor is over this
+       * item, or a descendant of this item.
+       */
+
+      if (menuItem.isMouseOverMenuDescendant()) {
         try {
           return new SyRenderNodeShape(
             Optional.of(values.edgeFlat(PRIMARY_EDGE)),

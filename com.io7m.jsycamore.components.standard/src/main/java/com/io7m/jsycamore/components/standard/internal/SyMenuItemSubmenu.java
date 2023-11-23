@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSubmenuType;
+import com.io7m.jsycamore.api.menus.SyMenuItemType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -32,15 +33,14 @@ import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
+import com.io7m.jsycamore.components.standard.SySpace;
 import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
 import com.io7m.jsycamore.components.standard.forms.SyFormRow;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
@@ -62,7 +62,7 @@ public final class SyMenuItemSubmenu
   private final SyFormColumnsConfiguration columns;
   private final SyFormRow row;
   private final SyImageView icon;
-  private final SyImageView iconSubmenu;
+  private final SyTextView iconSubmenu;
   private final SyMenuType menuOpen;
   private final SyMenuType menuOwner;
   private final SyTextView text;
@@ -93,14 +93,12 @@ public final class SyMenuItemSubmenu
 
     this.row = new SyFormRow(this.columns);
 
-    this.iconSubmenu = new SyImageView();
+    this.iconSubmenu = new SyTextView(List.of(MENU_ITEM_TEXT));
     this.iconSubmenu.setMouseQueryAccepting(false);
-    this.iconSubmenu.sizeUpperLimit().set(PAreaSizeI.of(8, 8));
-    this.iconSubmenu.imageURI()
-      .set(Optional.of(URI.create("jsycamore:icon:menu_submenu")));
+    this.iconSubmenu.text().set("→");
 
     this.iconSubmenuAlign = new SyAlign();
-    this.iconSubmenuAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
+    this.iconSubmenuAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.iconSubmenuAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.iconSubmenuAlign.childAdd(this.iconSubmenu);
 
@@ -124,6 +122,7 @@ public final class SyMenuItemSubmenu
     this.row.childAdd(this.iconAlign);
     this.row.childAdd(this.textAlign);
     this.row.childAdd(this.iconSubmenuAlign);
+    this.row.childAdd(new SySpace());
 
     this.childAdd(this.row);
   }
@@ -179,6 +178,19 @@ public final class SyMenuItemSubmenu
   public SyMenuType menu()
   {
     return this.menuOwner;
+  }
+
+  @Override
+  public boolean isMouseOverMenuDescendant()
+  {
+    if (this.isMouseOver()) {
+      return true;
+    }
+
+    return this.submenu()
+      .items()
+      .stream()
+      .anyMatch(SyMenuItemType::isMouseOverMenuDescendant);
   }
 
   @Override
