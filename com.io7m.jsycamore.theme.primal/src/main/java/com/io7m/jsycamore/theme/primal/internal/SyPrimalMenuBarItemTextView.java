@@ -18,8 +18,8 @@ package com.io7m.jsycamore.theme.primal.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
-import com.io7m.jsycamore.api.menus.SyMenuBarItemType;
 import com.io7m.jsycamore.api.components.SyTextViewReadableType;
+import com.io7m.jsycamore.api.menus.SyMenuBarItemType;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;

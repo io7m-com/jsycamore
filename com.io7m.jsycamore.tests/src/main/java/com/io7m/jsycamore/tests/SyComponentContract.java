@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
@@ -45,6 +46,7 @@ import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_VISIBLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 public abstract class SyComponentContract<T extends SyComponentType>
 {
@@ -77,6 +79,11 @@ public abstract class SyComponentContract<T extends SyComponentType>
 
     this.layoutContext =
       Mockito.mock(SyLayoutContextType.class);
+
+    Mockito.doAnswer(invocationOnMock -> {
+        return invocationOnMock.getArguments()[0];
+      }).when(this.layoutContext)
+      .deriveThemeConstraints(any(), any());
 
     Mockito.when(this.layoutContext.themeCurrent())
       .thenReturn(this.theme);
@@ -201,5 +208,109 @@ public abstract class SyComponentContract<T extends SyComponentType>
 
     assertEquals(Optional.of(this.window), c.window());
     assertEquals(Optional.of(this.window), c.windowReadable());
+  }
+
+  /**
+   * Component children work.
+   */
+
+  @Test
+  public final void testComponentChildAddRemoveOK()
+  {
+    final var p = this.newComponent();
+    final var c0 = this.newComponent();
+    final var c1 = this.newComponent();
+    final var c2 = this.newComponent();
+
+    p.childAdd(c0);
+    p.childAdd(c1);
+    p.childAdd(c2);
+
+    var children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertTrue(children.contains(c0));
+    assertTrue(children.contains(c1));
+    assertTrue(children.contains(c2));
+
+    p.childRemove(c0);
+    children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertFalse(children.contains(c0));
+    assertTrue(children.contains(c1));
+    assertTrue(children.contains(c2));
+
+    p.childRemove(c1);
+    children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertFalse(children.contains(c0));
+    assertFalse(children.contains(c1));
+    assertTrue(children.contains(c2));
+
+    p.childRemove(c2);
+    children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertFalse(children.contains(c0));
+    assertFalse(children.contains(c1));
+    assertFalse(children.contains(c2));
+  }
+
+  /**
+   * Component children work.
+   */
+
+  @Test
+  public final void testComponentChildAddClearOK()
+  {
+    final var p = this.newComponent();
+    final var c0 = this.newComponent();
+    final var c1 = this.newComponent();
+    final var c2 = this.newComponent();
+
+    p.childAdd(c0);
+    p.childAdd(c1);
+    p.childAdd(c2);
+
+    var children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertTrue(children.contains(c0));
+    assertTrue(children.contains(c1));
+    assertTrue(children.contains(c2));
+
+    p.childrenClear();
+    children =
+      p.node()
+        .children()
+        .stream()
+        .map(JOTreeNodeReadableType::value)
+        .toList();
+
+    assertFalse(children.contains(c0));
+    assertFalse(children.contains(c1));
+    assertFalse(children.contains(c2));
   }
 }

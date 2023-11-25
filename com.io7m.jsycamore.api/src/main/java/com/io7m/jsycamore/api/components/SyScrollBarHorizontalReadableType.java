@@ -16,12 +16,34 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLBAR_HORIZONTAL;
+
 /**
- * Write access to scrollbars.
+ * Read-only access to scrollbars.
  */
 
-public interface SyScrollbarType
-  extends SyScrollbarReadableType, SyComponentType
+public interface SyScrollBarHorizontalReadableType
+  extends SyScrollBarReadableType
 {
+  @Override
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
+  {
+    return List.of(SCROLLBAR_HORIZONTAL);
+  }
 
+  /**
+   * @return The scrollbar left button
+   */
+
+  SyButtonReadableType buttonLeft();
+
+  /**
+   * @return The scrollbar right button
+   */
+
+  SyButtonReadableType buttonRight();
 }

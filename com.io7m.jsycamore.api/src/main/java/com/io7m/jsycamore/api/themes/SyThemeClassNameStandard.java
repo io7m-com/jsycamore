@@ -122,10 +122,52 @@ public enum SyThemeClassNameStandard
   METER("Meter"),
 
   /**
-   * A scrollbar class.
+   * A horizontal scrollbar class.
    */
 
-  SCROLLBAR("Scrollbar"),
+  SCROLLBAR_HORIZONTAL("ScrollbarHorizontal"),
+
+  /**
+   * A horizontal scrollbar track class.
+   */
+
+  SCROLLBAR_HORIZONTAL_TRACK("ScrollbarHorizontalTrack"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_LEFT("ScrollbarHorizontalButtonLeft"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_LEFT_ICON("ScrollbarHorizontalButtonLeftIcon"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_RIGHT("ScrollbarHorizontalButtonRight"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_RIGHT_ICON("ScrollbarHorizontalButtonRightIcon"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_THUMB("ScrollbarHorizontalButtonThumb"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_HORIZONTAL_BUTTON_THUMB_ICON("ScrollbarHorizontalButtonThumbIcon"),
 
   /**
    * A text area class.

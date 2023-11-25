@@ -36,8 +36,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static java.lang.Math.min;
-
 /**
  * The type of components.
  */
@@ -81,21 +79,38 @@ public interface SyComponentType
     Objects.requireNonNull(layoutContext, "layoutContext");
     Objects.requireNonNull(constraints, "constraints");
 
+    /*
+     * First, consult the theme to see if there are size constraints specified
+     * for this component. Derive a new set of constraints that try to
+     * satisfy the theme whilst also satisfying the passed in constraints.
+     */
+
+    var limitedConstraints =
+      layoutContext.deriveThemeConstraints(constraints, this);
+
+    /*
+     * Then, limit the derived constraints further by the component's size
+     * limit.
+     */
+
     final var sizeLimit =
       this.sizeUpperLimit().get();
 
-    final var limitedConstraints =
-      new SyConstraints(
-        constraints.sizeMinimumX(),
-        constraints.sizeMinimumY(),
-        min(constraints.sizeMaximumX(), sizeLimit.sizeX()),
-        min(constraints.sizeMaximumY(), sizeLimit.sizeY())
-      );
+    limitedConstraints = limitedConstraints.deriveLimitedBy(sizeLimit);
+
+    /*
+     * Now, lay out all child components according to the derived constraints.
+     */
 
     final var childNodes = this.node().children();
     for (final var childNode : childNodes) {
       childNode.value().layout(layoutContext, limitedConstraints);
     }
+
+    /*
+     * Finally, resize this component to the maximum size allowed by the
+     * constraints.
+     */
 
     final PAreaSizeI<SySpaceParentRelativeType> newSize =
       limitedConstraints.sizeMaximum();

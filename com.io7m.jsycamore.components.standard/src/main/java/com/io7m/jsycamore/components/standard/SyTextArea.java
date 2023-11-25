@@ -42,7 +42,7 @@ import static java.lang.Math.min;
 public final class SyTextArea
   extends SyComponentAbstract implements SyTextAreaType
 {
-  private static final int INTERNAL_TEXT_PADDING = 16;
+  private static final int INTERNAL_TEXT_PADDING = 2;
   private static final int INTERNAL_TEXT_PADDING_DOUBLE =
     INTERNAL_TEXT_PADDING + INTERNAL_TEXT_PADDING;
 

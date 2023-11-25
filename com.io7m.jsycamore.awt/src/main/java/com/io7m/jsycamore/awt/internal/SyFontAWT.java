@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.awt.internal;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontDescription;
@@ -27,10 +28,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.text.AttributedString;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A font loaded using AWT.
@@ -98,7 +101,11 @@ public final class SyFontAWT implements SyFontType
 
     if (text.isEmpty()) {
       return List.of(
-        new SectionLine(PAreaSizeI.of(0, this.textHeight()), "")
+        new SectionLine(
+          PAreaSizeI.of(0, this.textHeight()),
+          Optional.empty(),
+          ""
+        )
       );
     }
 
@@ -132,6 +139,7 @@ public final class SyFontAWT implements SyFontType
       final var line =
         new SectionLine(
           PAreaSizeI.of((int) Math.ceil(bounds.getWidth()), this.textHeight()),
+          Optional.of(layout),
           text.substring(indexThen, indexNow)
         );
 
@@ -144,9 +152,15 @@ public final class SyFontAWT implements SyFontType
 
   private record SectionLine(
     PAreaSizeI<SySpaceParentRelativeType> size,
+    Optional<TextLayout> layout,
     String text)
     implements SyTextSectionLineType
   {
-
+    SectionLine {
+      Preconditions.checkPreconditionV(
+        layout.isPresent() || text.isEmpty(),
+        "If no layout is provided, the text must be empty."
+      );
+    }
   }
 }

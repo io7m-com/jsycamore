@@ -14,48 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
-
-import com.io7m.jattribute.core.AttributeType;
-
-import java.net.URI;
-import java.util.Optional;
-
 /**
- * Write access to image views.
+ * Embedded GUI library (Standard components [Internals])
  */
 
-public interface SyImageViewType
-  extends SyImageViewReadableType, SyComponentType
-{
-  /**
-   * @return The image URI
-   */
+@Version("1.0.0")
+package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
-  @Override
-  AttributeType<Optional<URI>> imageURI();
-
-  /**
-   * A convenience method to set the image URI.
-   *
-   * @param uri The image URI
-   */
-
-  default void setImageURI(
-    final URI uri)
-  {
-    this.imageURI().set(Optional.of(uri));
-  }
-
-  /**
-   * A convenience method to set the image URI.
-   *
-   * @param uri The image URI
-   */
-
-  default void setImageURI(
-    final String uri)
-  {
-    this.setImageURI(URI.create(uri));
-  }
-}
+import org.osgi.annotation.versioning.Version;

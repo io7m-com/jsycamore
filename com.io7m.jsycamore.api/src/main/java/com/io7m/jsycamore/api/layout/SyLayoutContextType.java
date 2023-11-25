@@ -16,9 +16,13 @@
 
 package com.io7m.jsycamore.api.layout;
 
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+
+import java.util.Objects;
 
 /**
  * The context of a layout operation.
@@ -34,4 +38,35 @@ public interface SyLayoutContextType extends SyThemeContextType
 
   @Override
   SyFontDirectoryType fonts();
+
+  /**
+   * Derive size constraints based on the current theme, if any exist.
+   *
+   * @param constraints The initial constraints
+   * @param component   The component
+   *
+   * @return The possibly-limited constraints
+   */
+
+  default SyConstraints deriveThemeConstraints(
+    final SyConstraints constraints,
+    final SyComponentReadableType component)
+  {
+    Objects.requireNonNull(constraints, "constraints");
+    Objects.requireNonNull(component, "component");
+
+    /*
+     * Consult the theme to see if there are size constraints specified
+     * for this component. Derive a new set of constraints that try to
+     * satisfy the theme whilst also satisfying the passed in constraints.
+     */
+
+    final var themeSize =
+      this.themeCurrent()
+        .findForComponent(component)
+        .size(this, component);
+
+    return themeSize.map(constraints::deriveLimitedBy)
+      .orElse(constraints);
+  }
 }

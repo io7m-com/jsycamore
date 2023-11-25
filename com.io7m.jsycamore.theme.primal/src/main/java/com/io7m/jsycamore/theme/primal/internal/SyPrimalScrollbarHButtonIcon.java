@@ -14,65 +14,57 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.themes;
+package com.io7m.jsycamore.theme.primal.internal;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.themes.SyThemeContextType;
 
 import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A theme component.
+ * A theme component for scrollbar buttons.
  */
 
-public interface SyThemeComponentType
+public final class SyPrimalScrollbarHButtonIcon extends SyPrimalAbstract
 {
+  private final SyPrimalImageView imageView;
+
   /**
-   * Produce a size for the component, if the theme defines one.
+   * A theme component for scrollbar buttons.
    *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return The size, if the theme defines one
+   * @param inTheme  The theme
+   * @param inImageView The image view
    */
 
-  default Optional<PAreaSizeI<SySpaceParentRelativeType>> size(
+  public SyPrimalScrollbarHButtonIcon(
+    final SyThemePrimal inTheme,
+    final SyPrimalImageView inImageView)
+  {
+    super(inTheme);
+
+    this.imageView =
+      Objects.requireNonNull(inImageView, "inImageView");
+  }
+
+  @Override
+  public Optional<PAreaSizeI<SySpaceParentRelativeType>> size(
+    final SyThemeContextType context,
+    final SyComponentReadableType component)
+  {
+    return Optional.of(PAreaSizeI.of(8, 8));
+  }
+
+  @Override
+  public SyRenderNodeType render(
     final SyThemeContextType context,
     final SyComponentReadableType component)
   {
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
-
-    return Optional.empty();
+    return this.imageView.render(context, component);
   }
-
-  /**
-   * Produce a render node for a component.
-   *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return A render node
-   */
-
-  SyRenderNodeType render(
-    SyThemeContextType context,
-    SyComponentReadableType component);
-
-  /**
-   * Determine the font that should be used for a component.
-   *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return A font
-   */
-
-  SyFontType font(
-    SyThemeContextType context,
-    SyComponentReadableType component);
 }

@@ -14,65 +14,41 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.themes;
+package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
+import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
-import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.themes.SyThemeContextType;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
- * A theme component.
+ * A theme component for scrollbars.
  */
 
-public interface SyThemeComponentType
+public final class SyPrimalScrollbarH extends SyPrimalAbstract
 {
   /**
-   * Produce a size for the component, if the theme defines one.
+   * A theme component for scrollbars.
    *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return The size, if the theme defines one
+   * @param inTheme The theme
    */
 
-  default Optional<PAreaSizeI<SySpaceParentRelativeType>> size(
+  public SyPrimalScrollbarH(
+    final SyThemePrimal inTheme)
+  {
+    super(inTheme);
+  }
+
+  @Override
+  public SyRenderNodeType render(
     final SyThemeContextType context,
     final SyComponentReadableType component)
   {
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    return Optional.empty();
+    return SyRenderNodeNoop.noop();
   }
-
-  /**
-   * Produce a render node for a component.
-   *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return A render node
-   */
-
-  SyRenderNodeType render(
-    SyThemeContextType context,
-    SyComponentReadableType component);
-
-  /**
-   * Determine the font that should be used for a component.
-   *
-   * @param context   The theme context
-   * @param component The component
-   *
-   * @return A font
-   */
-
-  SyFontType font(
-    SyThemeContextType context,
-    SyComponentReadableType component);
 }

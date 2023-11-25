@@ -16,46 +16,35 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jattribute.core.AttributeType;
-
-import java.net.URI;
-import java.util.Optional;
-
 /**
- * Write access to image views.
+ * Read-only access to scrollbars.
  */
 
-public interface SyImageViewType
-  extends SyImageViewReadableType, SyComponentType
+public interface SyScrollBarReadableType
+  extends SyComponentReadableType
 {
   /**
-   * @return The image URI
+   * @return The scrollbar thumb
    */
 
-  @Override
-  AttributeType<Optional<URI>> imageURI();
+  SyComponentReadableType thumb();
 
   /**
-   * A convenience method to set the image URI.
    *
-   * @param uri The image URI
+   * @return The scrollbar track
    */
 
-  default void setImageURI(
-    final URI uri)
-  {
-    this.imageURI().set(Optional.of(uri));
-  }
+  SyComponentReadableType track();
 
   /**
-   * A convenience method to set the image URI.
-   *
-   * @param uri The image URI
+   * @return The scroll position in the range {@code [0, 1]}
    */
 
-  default void setImageURI(
-    final String uri)
-  {
-    this.setImageURI(URI.create(uri));
-  }
+  double scrollPosition();
+
+  /**
+   * @return The scroll position snapping value in the range {@code [0, 1]}
+   */
+
+  double scrollPositionSnapping();
 }

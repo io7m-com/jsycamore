@@ -82,7 +82,13 @@ public final class SyThemePrimal implements SyThemeType
     this.standards =
       new EnumMap<>(SyThemeClassNameStandard.class);
 
-    final var windowButton = new SyPrimalWindowButton(this);
+    final var windowButton =
+      new SyPrimalWindowButton(this);
+    final var button =
+      new SyPrimalButton(this);
+    final var imageView =
+      new SyPrimalImageView(this);
+
     for (final var className : SyThemeClassNameStandard.values()) {
       switch (className) {
         case WINDOW_BUTTON_CLOSE,
@@ -103,7 +109,7 @@ public final class SyThemePrimal implements SyThemeType
           this.standards.put(className, new SyPrimalWindowContentArea(this));
         }
         case BUTTON -> {
-          this.standards.put(BUTTON, new SyPrimalButton(this));
+          this.standards.put(BUTTON, button);
         }
         case TEXT_VIEW -> {
           this.standards.put(TEXT_VIEW, new SyPrimalTextView(this));
@@ -112,7 +118,7 @@ public final class SyThemePrimal implements SyThemeType
           this.standards.put(CONTAINER, new SyPrimalContainer(this));
         }
         case WINDOW_BUTTON_CLOSE_ICON, IMAGE_VIEW -> {
-          this.standards.put(className, new SyPrimalImageView(this));
+          this.standards.put(className, imageView);
         }
         case MENU_BAR -> {
           this.standards.put(className, new SyPrimalMenuBar(this));
@@ -141,6 +147,32 @@ public final class SyThemePrimal implements SyThemeType
         case MENU -> {
           this.standards.put(className, new SyPrimalMenu(this));
         }
+
+        case SCROLLBAR_HORIZONTAL -> {
+          this.standards.put(className, new SyPrimalScrollbarH(this));
+        }
+        case SCROLLBAR_HORIZONTAL_TRACK -> {
+          this.standards.put(className, new SyPrimalScrollbarHTrack(this));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_LEFT -> {
+          this.standards.put(className, new SyPrimalScrollbarHButton(this, button));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_LEFT_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarHButtonIcon(this, imageView));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_RIGHT -> {
+          this.standards.put(className, new SyPrimalScrollbarHButton(this, button));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_RIGHT_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarHButtonIcon(this, imageView));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_THUMB -> {
+          this.standards.put(className, new SyPrimalScrollbarHButton(this, button));
+        }
+        case SCROLLBAR_HORIZONTAL_BUTTON_THUMB_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarHButtonIcon(this, imageView));
+        }
+
         case TEXT_AREA -> {
           this.standards.put(className, new SyPrimalTextArea(this));
         }
@@ -149,7 +181,6 @@ public final class SyThemePrimal implements SyThemeType
           GRID_VIEW,
           LIST_VIEW,
           METER,
-          SCROLLBAR,
           TEXT_FIELD -> {
 
         }
@@ -455,7 +486,7 @@ public final class SyThemePrimal implements SyThemeType
     final SyThemeableReadableType component)
   {
     for (final var className : component.themeClassesInPreferenceOrder()) {
-      if (className instanceof SyThemeClassNameStandard standard) {
+      if (className instanceof final SyThemeClassNameStandard standard) {
         if (this.standards.containsKey(standard)) {
           return this.standards.get(standard);
         }

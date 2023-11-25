@@ -146,10 +146,10 @@ public record SyConstraints(
   {
     final var xOk =
       size.sizeX() >= this.sizeMinimumX
-        && size.sizeX() <= this.sizeMaximumX;
+      && size.sizeX() <= this.sizeMaximumX;
     final var yOk =
       size.sizeY() >= this.sizeMinimumY
-        && size.sizeY() <= this.sizeMaximumY;
+      && size.sizeY() <= this.sizeMaximumY;
     return xOk && yOk;
   }
 
@@ -164,6 +164,26 @@ public record SyConstraints(
       0,
       this.sizeMaximumX,
       this.sizeMaximumY
+    );
+  }
+
+  /**
+   * Derive a new set of constraints that obey the current constraints whilst
+   * attempting to constrain to the given size.
+   *
+   * @param size The size
+   *
+   * @return A new set of constraints
+   */
+
+  public SyConstraints deriveLimitedBy(
+    final PAreaSizeI<?> size)
+  {
+    return new SyConstraints(
+      this.sizeMinimumX(),
+      this.sizeMinimumY(),
+      min(this.sizeMaximumX(), size.sizeX()),
+      min(this.sizeMaximumY(), size.sizeY())
     );
   }
 }

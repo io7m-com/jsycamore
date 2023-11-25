@@ -67,6 +67,15 @@ public final class SyPrimalImageView extends SyPrimalAbstract
         case "icon:window_menu" -> {
           yield iconOf(size, "window_menu.png");
         }
+        case "icon:scroll_left" -> {
+          yield iconOf(size, "scroll_left.png");
+        }
+        case "icon:scroll_right" -> {
+          yield iconOf(size, "scroll_right.png");
+        }
+        case "icon:scroll_h_thumb" -> {
+          yield iconOf(size, "scroll_h_thumb.png");
+        }
         default -> SyRenderNodeNoop.noop();
       };
     }
