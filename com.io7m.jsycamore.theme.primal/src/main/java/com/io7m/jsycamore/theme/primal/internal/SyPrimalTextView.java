@@ -58,7 +58,7 @@ public final class SyPrimalTextView extends SyPrimalAbstract
     final var area =
       component.boundingArea();
 
-    if (component instanceof SyTextViewReadableType textView) {
+    if (component instanceof final SyTextViewReadableType textView) {
       final var theme = this.theme();
       try {
         return new SyRenderNodeText(

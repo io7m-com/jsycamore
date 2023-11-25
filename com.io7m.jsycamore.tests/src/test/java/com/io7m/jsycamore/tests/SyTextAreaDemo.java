@@ -27,9 +27,9 @@ import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
-import com.io7m.jsycamore.components.standard.SyButton;
-import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
-import com.io7m.jsycamore.components.standard.SyMenu;
+import com.io7m.jsycamore.awt.internal.SyRendererType;
+import com.io7m.jsycamore.components.standard.SyLayoutMargin;
+import com.io7m.jsycamore.components.standard.SyTextArea;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
@@ -52,21 +52,19 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.Executors;
 
-import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public final class SyMenuDemo
+public final class SyTextAreaDemo
 {
   private static final Logger LOG =
-    LoggerFactory.getLogger(SyMenuDemo.class);
+    LoggerFactory.getLogger(SyTextAreaDemo.class);
 
-  private SyMenuDemo()
+  private SyTextAreaDemo()
   {
     throw new UnreachableCodeException();
   }
@@ -87,28 +85,15 @@ public final class SyMenuDemo
     });
   }
 
-  private static Optional<URI> iconOf(
-    final String name)
-  {
-    try {
-      return Optional.of(
-        SyMenuDemo.class.getResource(
-            "/com/io7m/jsycamore/tests/" + name)
-          .toURI()
-      );
-    } catch (final URISyntaxException e) {
-      throw new IllegalStateException(e);
-    }
-  }
-
   private static final class Canvas extends JPanel
   {
     private final SyFontDirectoryType<SyFontAWT> fontDirectory;
-    private final SyAWTRenderer renderer;
+    private final SyRendererType renderer;
     private final SyScreenType screen;
     private final SyThemeType theme;
     private final SyWindowType window0;
     private final SyAWTImageLoader imageLoader;
+    private final List<String> sections;
 
     Canvas()
       throws Exception
@@ -138,8 +123,7 @@ public final class SyMenuDemo
         .set(HIDE_ON_CLOSE_BUTTON);
 
       this.renderer = new SyAWTRenderer(this.fontDirectory, this.imageLoader);
-      this.renderer.nodeRenderer()
-        .setDebugBoundsRendering(false);
+      // this.renderer = new SyBoundsOnlyRenderer();
 
       final var executor =
         Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -155,30 +139,30 @@ public final class SyMenuDemo
         public void mousePressed(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseDown(
+          SyTextAreaDemo.Canvas.this.screen.mouseDown(
             PVector2I.of(e.getX(), e.getY()),
             SyMouseButton.ofIndex(e.getButton() - 1));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextAreaDemo.Canvas.this.repaint();
         }
 
         @Override
         public void mouseDragged(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseMoved(PVector2I.of(
+          SyTextAreaDemo.Canvas.this.screen.mouseMoved(PVector2I.of(
             e.getX(),
             e.getY()));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextAreaDemo.Canvas.this.repaint();
         }
 
         @Override
         public void mouseReleased(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseUp(
+          SyTextAreaDemo.Canvas.this.screen.mouseUp(
             PVector2I.of(e.getX(), e.getY()),
             SyMouseButton.ofIndex(e.getButton() - 1));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextAreaDemo.Canvas.this.repaint();
         }
 
         @Override
@@ -187,8 +171,8 @@ public final class SyMenuDemo
         {
           final PVector2I<SySpaceViewportType> position =
             PVector2I.of(e.getX(), e.getY());
-          SyMenuDemo.Canvas.this.screen.mouseMoved(position);
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextAreaDemo.Canvas.this.screen.mouseMoved(position);
+          SyTextAreaDemo.Canvas.this.repaint();
         }
       };
 
@@ -216,7 +200,7 @@ public final class SyMenuDemo
         @Override
         public void componentResized(final ComponentEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.setSize(
+          SyTextAreaDemo.Canvas.this.screen.setSize(
             PAreaSizeI.of(
               e.getComponent().getWidth(),
               e.getComponent().getHeight())
@@ -225,35 +209,27 @@ public final class SyMenuDemo
       });
 
       {
-        final Runnable action = () -> {
-          LOG.debug("action!");
-        };
+        final var c =
+          SyTextLayoutDemo.class;
+        final var u =
+          c.getResource("/com/io7m/jsycamore/tests/arctic.txt");
 
-        final var menu = new SyMenu();
-        menu.addAtom("New...", action)
-          .icon().set(iconOf("paper16.png"));
+        try (var s = u.openStream()) {
+          this.sections = new String(s.readAllBytes(), UTF_8).lines().toList();
+        }
+      }
 
-        menu.addAtom("Open...", action);
-        menu.addAtom("Save", action).setActive(INACTIVE);
-        menu.addSeparator();
-        menu.addAtom("Quit", action);
+      {
+        final var margin = new SyLayoutMargin();
+        margin.setPaddingAll(8);
 
-        final var buttonOpen = new SyButton("Menu Open", () -> {
-          final var mousePosition =
-            this.screen.mousePosition().get();
-          menu.position().set(PVector2I.of(
-            mousePosition.x(),
-            mousePosition.y()
-          ));
-          this.screen.menuOpen(menu);
-        });
-        final var buttonClose =
-          new SyButton("Menu Close", this.screen::menuClose);
+        final var textArea = new SyTextArea(List.of());
+        for (final var section : this.sections) {
+          textArea.textSectionAppend(section);
+        }
 
-        final var layout = new SyLayoutHorizontal();
-        layout.childAdd(buttonOpen);
-        layout.childAdd(buttonClose);
-        this.window0.contentArea().childAdd(layout);
+        margin.childAdd(textArea);
+        this.window0.contentArea().childAdd(margin);
       }
 
       executor.scheduleAtFixedRate(() -> {

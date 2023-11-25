@@ -23,5 +23,11 @@ package com.io7m.jsycamore.api.components;
 public interface SyTextAreaType
   extends SyTextAreaReadableType, SyComponentType
 {
+  /**
+   * Append a text section to the end of the text area.
+   *
+   * @param section The section
+   */
 
+  void textSectionAppend(String section);
 }

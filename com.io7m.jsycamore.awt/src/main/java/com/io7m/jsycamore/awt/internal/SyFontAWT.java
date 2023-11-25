@@ -17,11 +17,19 @@
 
 package com.io7m.jsycamore.awt.internal;
 
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.text.SyTextSectionLineType;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -79,5 +87,66 @@ public final class SyFontAWT implements SyFontType
   public SyFontDescription description()
   {
     return this.description;
+  }
+
+  @Override
+  public List<SyTextSectionLineType> textLayout(
+    final String text,
+    final int width)
+  {
+    Objects.requireNonNull(text, "text");
+
+    if (text.isEmpty()) {
+      return List.of(
+        new SectionLine(PAreaSizeI.of(0, this.textHeight()), "")
+      );
+    }
+
+    final var attributedString = new AttributedString(text);
+    attributedString.addAttribute(TextAttribute.FONT, this.font);
+
+    final var breaker =
+      new LineBreakMeasurer(
+        attributedString.getIterator(),
+        this.metrics.getFontRenderContext()
+      );
+
+    final var fWidth = (float) width;
+
+    var indexThen = 0;
+
+    final var results =
+      new LinkedList<SyTextSectionLineType>();
+
+    while (true) {
+      final var layout = breaker.nextLayout(fWidth);
+      if (layout == null) {
+        break;
+      }
+
+      final var indexNow =
+        breaker.getPosition();
+      final var bounds =
+        layout.getBounds();
+
+      final var line =
+        new SectionLine(
+          PAreaSizeI.of((int) Math.ceil(bounds.getWidth()), this.textHeight()),
+          text.substring(indexThen, indexNow)
+        );
+
+      results.add(line);
+      indexThen = indexNow;
+    }
+
+    return results;
+  }
+
+  private record SectionLine(
+    PAreaSizeI<SySpaceParentRelativeType> size,
+    String text)
+    implements SyTextSectionLineType
+  {
+
   }
 }

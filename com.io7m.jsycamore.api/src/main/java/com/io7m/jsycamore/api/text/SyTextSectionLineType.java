@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import com.io7m.jsycamore.api.text.SyFontServiceType;
+
+package com.io7m.jsycamore.api.text;
+
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 
 /**
- * {@code jsycamore} Primal theme.
+ * A line that has been produced by splitting a text section into multiple lines
+ * based on a wrapping width.
  */
 
-module com.io7m.jsycamore.theme.primal
+public interface SyTextSectionLineType
 {
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
-  requires static org.osgi.service.component.annotations;
+  /**
+   * @return The size of the text line
+   */
 
-  requires transitive com.io7m.jsycamore.api;
-  requires transitive com.io7m.jsycamore.theme.spi;
+  PAreaSizeI<SySpaceParentRelativeType> size();
 
-  requires com.io7m.jaffirm.core;
-  requires com.io7m.jregions.core;
-  requires com.io7m.junreachable.core;
+  /**
+   * @return The actual line text
+   */
 
-  uses SyFontServiceType;
-
-  exports com.io7m.jsycamore.theme.primal;
+  String text();
 }

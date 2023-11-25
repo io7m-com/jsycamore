@@ -76,8 +76,11 @@ public abstract class SyPrimalAbstract implements SyThemeComponentType
     Objects.requireNonNull(component, "component");
 
     try {
-      return context.fonts()
-        .get(this.theme.values().font(SyPrimalValues.TEXT_FONT));
+      final var themeValues =
+        this.theme.values();
+      final var font =
+        themeValues.font(SyPrimalValues.TEXT_FONT);
+      return context.fonts().get(font);
     } catch (final SyThemeValueException | SyFontException e) {
       throw new IllegalStateException(e);
     }

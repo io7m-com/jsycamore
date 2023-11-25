@@ -31,6 +31,7 @@ import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowViewportAccumulatorType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -118,6 +119,20 @@ public interface SyComponentType
     PVector2I<SySpaceWindowType> windowPosition,
     SyWindowViewportAccumulatorType context,
     SyComponentQuery query);
+
+  /**
+   * A convenience function to remove all child components of this component.
+   */
+
+  default void childrenClear()
+  {
+    final var children =
+      List.copyOf(this.node().children());
+
+    for (final var child : children) {
+      this.node().childRemove(child);
+    }
+  }
 
   /**
    * A convenience function to add a component as a child of this component.

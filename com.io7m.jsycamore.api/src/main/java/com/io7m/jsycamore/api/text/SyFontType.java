@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.api.text;
 
+import java.util.List;
+
 /**
  * A font.
  */
@@ -55,4 +57,35 @@ public interface SyFontType
    */
 
   SyFontDescription description();
+
+  /**
+   * Split the given text into lines based on the given wrapping width.
+   *
+   * @param text  The text
+   * @param width The width
+   *
+   * @return The split lines
+   */
+
+  List<SyTextSectionLineType> textLayout(
+    String text,
+    int width);
+
+  /**
+   * Split the given texts into lines based on the given wrapping width.
+   *
+   * @param texts The texts
+   * @param width The width
+   *
+   * @return The split lines
+   */
+
+  default List<SyTextSectionLineType> textLayoutMultiple(
+    final List<String> texts,
+    final int width)
+  {
+    return texts.stream()
+      .flatMap(s -> this.textLayout(s, width).stream())
+      .toList();
+  }
 }

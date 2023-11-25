@@ -20,16 +20,19 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontStyle;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
+import com.io7m.jsycamore.awt.internal.SyAWTKeyCodeAdapter;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
-import com.io7m.jsycamore.components.standard.SyButton;
-import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
-import com.io7m.jsycamore.components.standard.SyMenu;
+import com.io7m.jsycamore.components.standard.SyLayoutMargin;
+import com.io7m.jsycamore.components.standard.SyPackVertical;
+import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
@@ -48,25 +51,22 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.Executors;
 
-import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
+import static java.lang.Boolean.TRUE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public final class SyMenuDemo
+public final class SyTextLayoutDemo
 {
   private static final Logger LOG =
-    LoggerFactory.getLogger(SyMenuDemo.class);
+    LoggerFactory.getLogger(SyTextLayoutDemo.class);
 
-  private SyMenuDemo()
+  private SyTextLayoutDemo()
   {
     throw new UnreachableCodeException();
   }
@@ -87,20 +87,6 @@ public final class SyMenuDemo
     });
   }
 
-  private static Optional<URI> iconOf(
-    final String name)
-  {
-    try {
-      return Optional.of(
-        SyMenuDemo.class.getResource(
-            "/com/io7m/jsycamore/tests/" + name)
-          .toURI()
-      );
-    } catch (final URISyntaxException e) {
-      throw new IllegalStateException(e);
-    }
-  }
-
   private static final class Canvas extends JPanel
   {
     private final SyFontDirectoryType<SyFontAWT> fontDirectory;
@@ -109,6 +95,9 @@ public final class SyMenuDemo
     private final SyThemeType theme;
     private final SyWindowType window0;
     private final SyAWTImageLoader imageLoader;
+    private final SyPackVertical vertical;
+    private final List<String> sections;
+    private final SyFontAWT font;
 
     Canvas()
       throws Exception
@@ -124,11 +113,25 @@ public final class SyMenuDemo
         new SyThemePrimalFactory()
           .create();
 
+      this.theme.values()
+        .setFont("text_font", new SyFontDescription(
+          "York Sans",
+          SyFontStyle.REGULAR,
+          12
+        ));
+
+      this.theme.values()
+        .setFont("window_title_text_font", new SyFontDescription(
+          "York Sans",
+          SyFontStyle.REGULAR,
+          12
+        ));
+
       this.screen =
         new SyScreenFactory().create(
           this.theme,
           this.fontDirectory,
-          PAreaSizeI.of(1024, 768)
+          PAreaSizeI.of(800, 600)
         );
 
       this.window0 =
@@ -139,7 +142,7 @@ public final class SyMenuDemo
 
       this.renderer = new SyAWTRenderer(this.fontDirectory, this.imageLoader);
       this.renderer.nodeRenderer()
-        .setDebugBoundsRendering(false);
+        .setTextAntialiasing(false);
 
       final var executor =
         Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -155,30 +158,28 @@ public final class SyMenuDemo
         public void mousePressed(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseDown(
+          SyTextLayoutDemo.Canvas.this.screen.mouseDown(
             PVector2I.of(e.getX(), e.getY()),
             SyMouseButton.ofIndex(e.getButton() - 1));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextLayoutDemo.Canvas.this.repaint();
         }
 
         @Override
         public void mouseDragged(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseMoved(PVector2I.of(
-            e.getX(),
-            e.getY()));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextLayoutDemo.Canvas.this.screen.mouseMoved(PVector2I.of(e.getX(), e.getY()));
+          SyTextLayoutDemo.Canvas.this.repaint();
         }
 
         @Override
         public void mouseReleased(
           final MouseEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.mouseUp(
+          SyTextLayoutDemo.Canvas.this.screen.mouseUp(
             PVector2I.of(e.getX(), e.getY()),
             SyMouseButton.ofIndex(e.getButton() - 1));
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextLayoutDemo.Canvas.this.repaint();
         }
 
         @Override
@@ -187,26 +188,12 @@ public final class SyMenuDemo
         {
           final PVector2I<SySpaceViewportType> position =
             PVector2I.of(e.getX(), e.getY());
-          SyMenuDemo.Canvas.this.screen.mouseMoved(position);
-          SyMenuDemo.Canvas.this.repaint();
+          SyTextLayoutDemo.Canvas.this.screen.mouseMoved(position);
+          SyTextLayoutDemo.Canvas.this.repaint();
         }
       };
 
-      final var keyAdapter = new KeyAdapter()
-      {
-        @Override
-        public void keyPressed(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-      };
-
+      final var keyAdapter = new SyAWTKeyCodeAdapter(this.screen);
       this.addMouseMotionListener(mouseAdapter);
       this.addMouseListener(mouseAdapter);
       this.addKeyListener(keyAdapter);
@@ -216,7 +203,7 @@ public final class SyMenuDemo
         @Override
         public void componentResized(final ComponentEvent e)
         {
-          SyMenuDemo.Canvas.this.screen.setSize(
+          SyTextLayoutDemo.Canvas.this.screen.setSize(
             PAreaSizeI.of(
               e.getComponent().getWidth(),
               e.getComponent().getHeight())
@@ -225,35 +212,37 @@ public final class SyMenuDemo
       });
 
       {
-        final Runnable action = () -> {
-          LOG.debug("action!");
-        };
+        final var margin = new SyLayoutMargin();
+        margin.setPaddingAll(16);
 
-        final var menu = new SyMenu();
-        menu.addAtom("New...", action)
-          .icon().set(iconOf("paper16.png"));
+        this.vertical = new SyPackVertical();
+        this.vertical.paddingBetween().set(0);
+        margin.childAdd(this.vertical);
 
-        menu.addAtom("Open...", action);
-        menu.addAtom("Save", action).setActive(INACTIVE);
-        menu.addSeparator();
-        menu.addAtom("Quit", action);
+        this.window0.decorated().set(TRUE);
+        this.window0.contentArea().childAdd(margin);
+        this.window0.title().set("Window Title");
+        this.window0.positionSnapping().set(16);
+        this.window0.sizeSnapping().set(16);
+      }
 
-        final var buttonOpen = new SyButton("Menu Open", () -> {
-          final var mousePosition =
-            this.screen.mousePosition().get();
-          menu.position().set(PVector2I.of(
-            mousePosition.x(),
-            mousePosition.y()
-          ));
-          this.screen.menuOpen(menu);
-        });
-        final var buttonClose =
-          new SyButton("Menu Close", this.screen::menuClose);
+      {
+        this.font =
+          this.fontDirectory.get(
+            new SyFontDescription(
+          "York Sans",
+          SyFontStyle.REGULAR,
+          12
+        ));
 
-        final var layout = new SyLayoutHorizontal();
-        layout.childAdd(buttonOpen);
-        layout.childAdd(buttonClose);
-        this.window0.contentArea().childAdd(layout);
+        final var c =
+          SyTextLayoutDemo.class;
+        final var u =
+          c.getResource("/com/io7m/jsycamore/tests/arctic.txt");
+
+        try (var s = u.openStream()) {
+          this.sections = new String(s.readAllBytes(), UTF_8).lines().toList();
+        }
       }
 
       executor.scheduleAtFixedRate(() -> {
@@ -287,6 +276,14 @@ public final class SyMenuDemo
           this.fontDirectory,
           this.screen.theme()
         );
+
+      this.vertical.childrenClear();
+      for (final var line : this.font.textLayoutMultiple(this.sections, this.window0.size().get().sizeX() / 2)) {
+        final var t = new SyTextView();
+        t.setText(line.text());
+        t.setSize(line.size());
+        this.vertical.childAdd(t);
+      }
 
       final var windows = this.screen.windowsVisibleOrdered();
       for (int index = windows.size() - 1; index >= 0; --index) {

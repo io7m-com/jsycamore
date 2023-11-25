@@ -129,7 +129,6 @@ public final class SyThemePrimal implements SyThemeType
         case MENU_ITEM -> {
           this.standards.put(className, new SyPrimalMenuItem(this));
         }
-
         case MENU_ITEM_ATOM -> {
 
         }
@@ -139,9 +138,11 @@ public final class SyThemePrimal implements SyThemeType
         case MENU_ITEM_SUBMENU -> {
 
         }
-
         case MENU -> {
           this.standards.put(className, new SyPrimalMenu(this));
+        }
+        case TEXT_AREA -> {
+          this.standards.put(className, new SyPrimalTextArea(this));
         }
 
         case CHECKBOX,
@@ -149,7 +150,6 @@ public final class SyThemePrimal implements SyThemeType
           LIST_VIEW,
           METER,
           SCROLLBAR,
-          TEXT_AREA,
           TEXT_FIELD -> {
 
         }
