@@ -173,6 +173,31 @@ public final class SyThemePrimal implements SyThemeType
           this.standards.put(className, new SyPrimalScrollbarHButtonIcon(this, imageView));
         }
 
+        case SCROLLBAR_VERTICAL -> {
+          this.standards.put(className, new SyPrimalScrollbarV(this));
+        }
+        case SCROLLBAR_VERTICAL_TRACK -> {
+          this.standards.put(className, new SyPrimalScrollbarVTrack(this));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_UP -> {
+          this.standards.put(className, new SyPrimalScrollbarVButton(this, button));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_UP_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarVButtonIcon(this, imageView));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_DOWN -> {
+          this.standards.put(className, new SyPrimalScrollbarVButton(this, button));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_DOWN_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarVButtonIcon(this, imageView));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_THUMB -> {
+          this.standards.put(className, new SyPrimalScrollbarVButton(this, button));
+        }
+        case SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON -> {
+          this.standards.put(className, new SyPrimalScrollbarVButtonIcon(this, imageView));
+        }
+
         case TEXT_AREA -> {
           this.standards.put(className, new SyPrimalTextArea(this));
         }

@@ -169,6 +169,57 @@ public enum SyThemeClassNameStandard
 
   SCROLLBAR_HORIZONTAL_BUTTON_THUMB_ICON("ScrollbarHorizontalButtonThumbIcon"),
 
+
+
+
+  /**
+   * A horizontal scrollbar class.
+   */
+
+  SCROLLBAR_VERTICAL("ScrollbarVertical"),
+
+  /**
+   * A horizontal scrollbar track class.
+   */
+
+  SCROLLBAR_VERTICAL_TRACK("ScrollbarVerticalTrack"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_UP("ScrollbarVerticalButtonUp"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_UP_ICON("ScrollbarVerticalButtonUpIcon"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_DOWN("ScrollbarVerticalButtonDown"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_DOWN_ICON("ScrollbarVerticalButtonDownIcon"),
+
+  /**
+   * A scrollbar button class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_THUMB("ScrollbarVerticalButtonThumb"),
+
+  /**
+   * A scrollbar button icon class.
+   */
+
+  SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON("ScrollbarVerticalButtonThumbIcon"),
+
   /**
    * A text area class.
    */

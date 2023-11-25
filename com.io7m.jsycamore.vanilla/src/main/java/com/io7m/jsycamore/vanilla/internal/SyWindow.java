@@ -26,8 +26,8 @@ import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.layout.SySnapping;
 import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.spaces.SySpaceType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
@@ -185,37 +185,12 @@ public final class SyWindow implements SyWindowType
   {
     Objects.requireNonNull(newPosition, "position");
 
-    if (this.maximized.get()) {
-      this.positionMaximized = this.snapPosition(newPosition);
-    } else {
-      this.position = this.snapPosition(newPosition);
-    }
-  }
-
-  private <T extends SySpaceType> PVector2I<T> snapPosition(
-    final PVector2I<T> newPosition)
-  {
     final var snapping = this.positionSnapping.get().intValue();
-    if (snapping > 0) {
-      return PVector2I.of(
-        (newPosition.x() / snapping) * snapping,
-        (newPosition.y() / snapping) * snapping
-      );
+    if (this.maximized.get()) {
+      this.positionMaximized = SySnapping.snapVector(newPosition, snapping);
+    } else {
+      this.position = SySnapping.snapVector(newPosition, snapping);
     }
-    return newPosition;
-  }
-
-  private <T extends SySpaceType> PAreaSizeI<T> snapSize(
-    final PAreaSizeI<T> newSize)
-  {
-    final var snapping = this.sizeSnapping.get().intValue();
-    if (snapping > 0) {
-      return PAreaSizeI.of(
-        (newSize.sizeX() / snapping) * snapping,
-        (newSize.sizeY() / snapping) * snapping
-      );
-    }
-    return newSize;
   }
 
   @Override
@@ -225,19 +200,24 @@ public final class SyWindow implements SyWindowType
     Objects.requireNonNull(newSize, "size");
 
     final var clampedSize =
-      this.snapSize(PAreaSizeI.<SySpaceViewportType>of(
+      PAreaSizeI.<SySpaceViewportType>of(
         Math.max(0, newSize.sizeX()),
         Math.max(0, newSize.sizeY())
-      ));
+      );
+
+    final var snapping =
+      this.sizeSnapping.get().intValue();
+    final var snappedSize =
+      SySnapping.snapSize(clampedSize, snapping);
 
     if (this.maximized.get()) {
-      this.sizeMaximized = clampedSize;
+      this.sizeMaximized = snappedSize;
     } else {
-      this.size = clampedSize;
+      this.size = snappedSize;
     }
 
-    final var sizeX = clampedSize.sizeX();
-    final var sizeY = clampedSize.sizeY();
+    final var sizeX = snappedSize.sizeX();
+    final var sizeY = snappedSize.sizeY();
     this.root.size().set(PAreaSizeI.of(sizeX, sizeY));
     this.viewportAccumulator.reset(sizeX, sizeY);
     this.constraints =

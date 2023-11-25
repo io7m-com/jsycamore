@@ -18,6 +18,8 @@ package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeType;
 
+import java.util.function.Consumer;
+
 /**
  * Write access to scrollbars.
  */
@@ -59,4 +61,20 @@ public interface SyScrollBarType
    */
 
   void setScrollAmountShown(double amount);
+
+  /**
+   * Set a listener that will be executed when the thumb is dragged.
+   *
+   * @param listener The listener
+   */
+
+  void setOnThumbDragListener(Consumer<SyScrollBarDrag> listener);
+
+  /**
+   * Remove any listeners that are executed when the thumb is dragged.
+   *
+   * @see #setOnThumbDragListener(Consumer)
+   */
+
+  void removeOnThumbDragListener();
 }

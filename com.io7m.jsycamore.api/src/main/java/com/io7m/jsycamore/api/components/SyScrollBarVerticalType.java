@@ -20,38 +20,38 @@ package com.io7m.jsycamore.api.components;
  * Write access to scrollbars.
  */
 
-public interface SyScrollBarHorizontalType
-  extends SyScrollBarHorizontalReadableType, SyScrollBarType
+public interface SyScrollBarVerticalType
+  extends SyScrollBarVerticalReadableType, SyScrollBarType
 {
   /**
-   * Set a listener that will be executed when the left scroll button is clicked.
+   * Set a listener that will be executed when the up scroll button is clicked.
    *
    * @param runnable The listener
    */
 
-  void setOnClickLeftListener(Runnable runnable);
+  void setOnClickUpListener(Runnable runnable);
 
   /**
-   * Remove any listeners that are executed when the left button is clicked.
+   * Remove any listeners that are executed when the up button is clicked.
    *
-   * @see #setOnClickLeftListener(Runnable)
+   * @see #setOnClickUpListener(Runnable)
    */
 
-  void removeOnClickLeftListener();
+  void removeOnClickUpListener();
 
   /**
-   * Set a listener that will be executed when the right scroll button is clicked.
+   * Set a listener that will be executed when the down scroll button is clicked.
    *
    * @param runnable The listener
    */
 
-  void setOnClickRightListener(Runnable runnable);
+  void setOnClickDownListener(Runnable runnable);
 
   /**
-   * Remove any listeners that are executed when the right button is clicked.
+   * Remove any listeners that are executed when the down button is clicked.
    *
-   * @see #setOnClickRightListener(Runnable)
+   * @see #setOnClickDownListener(Runnable)
    */
 
-  void removeOnClickRightListener();
+  void removeOnClickDownListener();
 }

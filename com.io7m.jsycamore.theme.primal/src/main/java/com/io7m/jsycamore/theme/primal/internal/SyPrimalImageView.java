@@ -73,8 +73,17 @@ public final class SyPrimalImageView extends SyPrimalAbstract
         case "icon:scroll_right" -> {
           yield iconOf(size, "scroll_right.png");
         }
+        case "icon:scroll_up" -> {
+          yield iconOf(size, "scroll_up.png");
+        }
+        case "icon:scroll_down" -> {
+          yield iconOf(size, "scroll_down.png");
+        }
         case "icon:scroll_h_thumb" -> {
           yield iconOf(size, "scroll_h_thumb.png");
+        }
+        case "icon:scroll_v_thumb" -> {
+          yield iconOf(size, "scroll_v_thumb.png");
         }
         default -> SyRenderNodeNoop.noop();
       };
@@ -113,7 +122,7 @@ public final class SyPrimalImageView extends SyPrimalAbstract
     final var area =
       component.boundingArea();
 
-    if (component instanceof SyImageViewType imageView) {
+    if (component instanceof final SyImageViewType imageView) {
       return imageView.imageURI()
         .get()
         .map(uri -> imageOf(area, uri))

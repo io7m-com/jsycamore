@@ -35,27 +35,27 @@ import java.util.function.Consumer;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.layout.SySnapping.snapDouble;
-import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLBAR_HORIZONTAL_TRACK;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLBAR_VERTICAL_TRACK;
 
-final class SyScrollBarHTrack extends SyComponentAbstract
+final class SyScrollBarVTrack extends SyComponentAbstract
 {
-  private final SyScrollBarHButtonThumb thumb;
+  private final SyScrollBarVButtonThumb thumb;
   private double scrollAmount;
   private double scrollPosition;
   private double scrollPositionSnap;
 
-  SyScrollBarHTrack()
+  SyScrollBarVTrack()
   {
     super(List.of());
 
-    this.thumb = new SyScrollBarHButtonThumb(this);
+    this.thumb = new SyScrollBarVButtonThumb(this);
     this.childAdd(this.thumb);
   }
 
   @Override
   public List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
-    return List.of(SCROLLBAR_HORIZONTAL_TRACK);
+    return List.of(SCROLLBAR_VERTICAL_TRACK);
   }
 
   @Override
@@ -72,32 +72,32 @@ final class SyScrollBarHTrack extends SyComponentAbstract
      * it can be is "fill the entire track".
      */
 
-    final var thumbWidthMinimum =
-      size.sizeY();
-    final var thumbWidthMaximum =
+    final var thumbHeightMinimum =
       size.sizeX();
+    final var thumbHeightMaximum =
+      size.sizeY();
 
-    final var thumbWidth =
+    final var thumbHeight =
       (int) InterpolationD.interpolateLinear(
-        thumbWidthMinimum,
-        thumbWidthMaximum,
+        thumbHeightMinimum,
+        thumbHeightMaximum,
         this.scrollAmount
       );
 
     final var limitedConstraints =
       new SyConstraints(
-        Math.max(constraints.sizeMinimumX(), thumbWidth),
-        constraints.sizeMinimumY(),
-        Math.min(constraints.sizeMaximumX(), thumbWidth),
-        constraints.sizeMaximumY()
+        constraints.sizeMinimumX(),
+        Math.max(constraints.sizeMinimumY(), thumbHeight),
+        constraints.sizeMaximumX(),
+        Math.min(constraints.sizeMaximumY(), thumbHeight)
       );
 
     this.thumb.layout(layoutContext, limitedConstraints);
 
     final var thumbPosition =
-      this.scrollPosition * (size.sizeX() - this.thumb.size().get().sizeX());
+      this.scrollPosition * (size.sizeY() - this.thumb.size().get().sizeY());
 
-    this.thumb.setPosition(PVector2I.of((int) thumbPosition, 0));
+    this.thumb.setPosition(PVector2I.of(0, (int) thumbPosition));
     return size;
   }
 

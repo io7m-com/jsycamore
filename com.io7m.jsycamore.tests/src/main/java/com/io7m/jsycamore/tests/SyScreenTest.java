@@ -1204,7 +1204,7 @@ public final class SyScreenTest
       final var position =
         PVector2I.<SySpaceViewportType>of(x, y);
       final var insideWindow =
-        x > windowX && x < windowXMax && y > windowY && y < windowYMax;
+        x >= windowX && x < windowXMax && y >= windowY && y < windowYMax;
 
       final var result =
         this.screen.mouseMoved(position);

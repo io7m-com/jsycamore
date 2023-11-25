@@ -16,42 +16,34 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+
+import java.util.List;
+
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLBAR_VERTICAL;
+
 /**
- * Write access to scrollbars.
+ * Read-only access to scrollbars.
  */
 
-public interface SyScrollBarHorizontalType
-  extends SyScrollBarHorizontalReadableType, SyScrollBarType
+public interface SyScrollBarVerticalReadableType
+  extends SyScrollBarReadableType
 {
-  /**
-   * Set a listener that will be executed when the left scroll button is clicked.
-   *
-   * @param runnable The listener
-   */
-
-  void setOnClickLeftListener(Runnable runnable);
+  @Override
+  default List<SyThemeClassNameType> themeClassesDefaultForComponent()
+  {
+    return List.of(SCROLLBAR_VERTICAL);
+  }
 
   /**
-   * Remove any listeners that are executed when the left button is clicked.
-   *
-   * @see #setOnClickLeftListener(Runnable)
+   * @return The scrollbar up button
    */
 
-  void removeOnClickLeftListener();
+  SyButtonReadableType buttonUp();
 
   /**
-   * Set a listener that will be executed when the right scroll button is clicked.
-   *
-   * @param runnable The listener
+   * @return The scrollbar down button
    */
 
-  void setOnClickRightListener(Runnable runnable);
-
-  /**
-   * Remove any listeners that are executed when the right button is clicked.
-   *
-   * @see #setOnClickRightListener(Runnable)
-   */
-
-  void removeOnClickRightListener();
+  SyButtonReadableType buttonDown();
 }
