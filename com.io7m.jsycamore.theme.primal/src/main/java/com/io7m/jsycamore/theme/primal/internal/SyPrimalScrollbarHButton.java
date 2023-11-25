@@ -54,7 +54,7 @@ public final class SyPrimalScrollbarHButton extends SyPrimalAbstract
     final SyThemeContextType context,
     final SyComponentReadableType component)
   {
-    return Optional.of(PAreaSizeI.of(24, 24));
+    return Optional.of(PAreaSizeI.of(16, 16));
   }
 
   @Override
