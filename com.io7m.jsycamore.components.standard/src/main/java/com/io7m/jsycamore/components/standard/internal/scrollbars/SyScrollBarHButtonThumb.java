@@ -31,6 +31,7 @@ import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ final class SyScrollBarHButtonThumb
   private final SyScrollBarHTrack track;
   private boolean pressed;
   private Consumer<SyScrollBarDrag> onDragListener;
-  private double scrollStart;
+  private double dragScrollStart;
   private double scrollThen;
 
   SyScrollBarHButtonThumb(
@@ -181,7 +182,7 @@ final class SyScrollBarHButtonThumb
   private SyEventConsumed onMousePressed()
   {
     this.pressed = true;
-    this.scrollStart = this.track.scrollPosition();
+    this.dragScrollStart = this.track.scrollPosition();
     this.publishToDragListener(DRAG_STARTED);
     return EVENT_CONSUMED;
   }
@@ -191,19 +192,19 @@ final class SyScrollBarHButtonThumb
   {
     this.pressed = true;
 
-    final var trackInViewportXStart =
-      this.viewportPositionOf(this.track.position().get()).x();
-    final var trackInViewportXEnd =
-      trackInViewportXStart + this.track.size().get().sizeX();
+    final var mouseThen =
+      e.mousePositionFirst();
+    final var mouseNow =
+      e.mousePositionNow();
+    final var mouseDelta =
+      PVectors2I.subtract(mouseNow, mouseThen);
 
-    final var xMouse =
-      e.mousePositionNow().x() - trackInViewportXStart;
-    final var xEnd =
-      trackInViewportXEnd - trackInViewportXStart;
-    final var xPosition =
-      (double) xMouse / (double) xEnd;
+    final var trackSize =
+      this.track.size().get().sizeX();
+    final var trackDelta =
+      (double) mouseDelta.x() / (double) trackSize;
 
-    this.track.setScrollPosition(xPosition);
+    this.track.setScrollPosition(this.dragScrollStart + trackDelta);
     this.publishToDragListener(DRAG_CONTINUED);
     this.scrollThen = this.track.scrollPosition();
     return EVENT_CONSUMED;
@@ -223,7 +224,7 @@ final class SyScrollBarHButtonThumb
         this.onDragListener.accept(
           new SyScrollBarDrag(
             dragKind,
-            this.scrollStart,
+            this.dragScrollStart,
             this.track.scrollPosition()
           )
         );

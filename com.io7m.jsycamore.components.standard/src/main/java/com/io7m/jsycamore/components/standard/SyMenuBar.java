@@ -236,21 +236,24 @@ public final class SyMenuBar
     protected SyEventConsumed onEvent(
       final SyEventType event)
     {
-      if (event instanceof SyMouseEventOnPressed) {
-        this.menuBar.menuChangeSelection(this);
-        return EVENT_CONSUMED;
-      }
-
-      if (event instanceof SyMouseEventOnOver) {
-        if (this.menuBar.menuAnySelected()) {
-          if (!this.menuBar.menuIsSelected(this)) {
-            this.menuBar.menuChangeSelection(this);
-            return EVENT_CONSUMED;
-          }
+      return switch (event) {
+        case final SyMouseEventOnPressed e -> {
+          this.menuBar.menuChangeSelection(this);
+          yield EVENT_CONSUMED;
         }
-      }
-
-      return EVENT_NOT_CONSUMED;
+        case final SyMouseEventOnOver e -> {
+          if (this.menuBar.menuAnySelected()) {
+            if (!this.menuBar.menuIsSelected(this)) {
+              this.menuBar.menuChangeSelection(this);
+              yield EVENT_CONSUMED;
+            }
+          }
+          yield EVENT_NOT_CONSUMED;
+        }
+        default -> {
+          yield EVENT_NOT_CONSUMED;
+        }
+      };
     }
 
     @Override

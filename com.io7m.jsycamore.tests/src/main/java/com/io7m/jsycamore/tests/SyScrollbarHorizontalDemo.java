@@ -213,6 +213,7 @@ public final class SyScrollbarHorizontalDemo
 
         final var scrollbar = SyScrollBarsHorizontal.create();
         scrollbar.setScrollPositionSnapping(1.0 / 64.0);
+        scrollbar.setScrollAmountShown(0.5);
         scrollbar.setOnThumbDragListener(drag -> {
           LOG.debug("Drag: {}", drag);
         });

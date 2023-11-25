@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
+import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
@@ -24,24 +25,29 @@ import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
+import com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
+import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
+import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
+import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.DISABLED_IF_ENTIRE_RANGE_SHOWN;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
  * A horizontal scrollbar.
  */
 
-public final class SyScrollBarHorizontalBasic
+public final class SyScrollBarH
   extends SyComponentAbstract
   implements SyScrollBarHorizontalType
 {
@@ -51,6 +57,7 @@ public final class SyScrollBarHorizontalBasic
   private final SyScrollBarHButtonLeft buttonLeft;
   private final SyScrollBarHButtonRight buttonRight;
   private final SyScrollBarHTrack track;
+  private final AttributeType<SyScrollBarPresencePolicy> presencePolicy;
 
   /**
    * A horizontal scrollbar.
@@ -58,10 +65,13 @@ public final class SyScrollBarHorizontalBasic
    * @param inThemeClassesExtra The extra theme classes, if any
    */
 
-  public SyScrollBarHorizontalBasic(
+  public SyScrollBarH(
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
     super(inThemeClassesExtra);
+
+    this.presencePolicy =
+      SyComponentAttributes.get().create(DISABLED_IF_ENTIRE_RANGE_SHOWN);
 
     this.buttonLeft =
       new SyScrollBarHButtonLeft();
@@ -265,6 +275,22 @@ public final class SyScrollBarHorizontalBasic
     final double amount)
   {
     this.track.setScrollAmountShown(amount);
+
+    switch (this.presencePolicy.get()) {
+      case ALWAYS_ENABLED -> {
+        final var active = ACTIVE;
+        this.buttonLeft.setActive(active);
+        this.buttonRight.setActive(active);
+        this.track.setActive(active);
+      }
+      case DISABLED_IF_ENTIRE_RANGE_SHOWN -> {
+        final var active =
+          this.track.scrollAmountShown() >= 1.0 ? INACTIVE : ACTIVE;
+        this.buttonLeft.setActive(active);
+        this.buttonRight.setActive(active);
+        this.track.setActive(active);
+      }
+    }
   }
 
   @Override
@@ -301,5 +327,11 @@ public final class SyScrollBarHorizontalBasic
   public double scrollPositionSnapping()
   {
     return this.track.scrollPositionSnapping();
+  }
+
+  @Override
+  public AttributeType<SyScrollBarPresencePolicy> presencePolicy()
+  {
+    return this.presencePolicy;
   }
 }

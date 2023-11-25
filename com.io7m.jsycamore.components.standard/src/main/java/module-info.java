@@ -30,6 +30,7 @@ module com.io7m.jsycamore.components.standard
   requires transitive com.io7m.jtensors.core;
 
   requires com.io7m.jaffirm.core;
+  requires com.io7m.jinterp.core;
   requires com.io7m.junreachable.core;
   requires org.slf4j;
 

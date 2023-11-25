@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jattribute.core.AttributeReadableType;
+
 /**
  * Read-only access to scrollbars.
  */
@@ -30,7 +32,6 @@ public interface SyScrollBarReadableType
   SyComponentReadableType thumb();
 
   /**
-   *
    * @return The scrollbar track
    */
 
@@ -47,4 +48,10 @@ public interface SyScrollBarReadableType
    */
 
   double scrollPositionSnapping();
+
+  /**
+   * @return The scrollbar presence policy
+   */
+
+  AttributeReadableType<SyScrollBarPresencePolicy> presencePolicy();
 }

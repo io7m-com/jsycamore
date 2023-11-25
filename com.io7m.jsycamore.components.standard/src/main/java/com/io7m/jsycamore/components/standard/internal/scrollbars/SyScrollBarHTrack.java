@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
+import com.io7m.jinterp.InterpolationD;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
@@ -89,10 +90,35 @@ final class SyScrollBarHTrack extends SyComponentAbstract
     final var size =
       super.layout(layoutContext, constraints);
 
+    /*
+     * The minimum size on the Y axis that would yield a square is the value
+     * of the X axis.
+     */
+
+    final var thumbWidthMinimum =
+      size.sizeY();
+    final var thumbWidthMaximum =
+      size.sizeX();
+
     final var thumbWidth =
-      this.thumb.size().get().sizeX();
+      (int) InterpolationD.interpolateLinear(
+        thumbWidthMinimum,
+        thumbWidthMaximum,
+        this.scrollAmount
+      );
+
+    final var limitedConstraints =
+      new SyConstraints(
+        Math.max(constraints.sizeMinimumX(), thumbWidth),
+        constraints.sizeMinimumY(),
+        Math.min(constraints.sizeMaximumX(), thumbWidth),
+        constraints.sizeMaximumY()
+      );
+
+    this.thumb.layout(layoutContext, limitedConstraints);
+
     final var thumbPosition =
-      this.scrollPosition * (size.sizeX() - thumbWidth);
+      this.scrollPosition * (size.sizeX() - this.thumb.size().get().sizeX());
 
     this.thumb.setPosition(PVector2I.of((int) thumbPosition, 0));
     return size;
@@ -150,5 +176,10 @@ final class SyScrollBarHTrack extends SyComponentAbstract
   double scrollPositionSnapping()
   {
     return this.scrollPositionSnap;
+  }
+
+  double scrollAmountShown()
+  {
+    return this.scrollAmount;
   }
 }

@@ -17,8 +17,10 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.active.SyActive;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
+import com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.components.standard.SyScrollBarsHorizontal;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -31,10 +33,14 @@ import java.util.LinkedList;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_CONTINUED;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_ENDED;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_STARTED;
+import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.ALWAYS_ENABLED;
+import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.DISABLED_IF_ENTIRE_RANGE_SHOWN;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_RIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class SyScrollBarHorizontalTest
   extends SyComponentContract<SyScrollBarHorizontalType>
@@ -301,5 +307,73 @@ public final class SyScrollBarHorizontalTest
     this.screen().mouseUp(p2, MOUSE_BUTTON_RIGHT);
 
     assertEquals(0, this.drags.size());
+  }
+
+  /**
+   * The ALWAYS_ENABLED presence policy works.
+   */
+
+  @Test
+  public void testPresencePolicyAlwaysActive()
+  {
+    final var c = this.newComponent();
+    c.presencePolicy().set(ALWAYS_ENABLED);
+
+    final var t = c.thumb();
+    final var l = c.buttonLeft();
+    final var r = c.buttonRight();
+
+    this.windowContentArea().childAdd(c);
+    this.window().layout(this.layoutContext);
+    this.screen().mouseMoved(Z);
+
+    c.setScrollAmountShown(0.0);
+    assertTrue(t.isActive());
+    assertTrue(l.isActive());
+    assertTrue(r.isActive());
+
+    c.setScrollAmountShown(1.0);
+    assertTrue(t.isActive());
+    assertTrue(l.isActive());
+    assertTrue(r.isActive());
+
+    c.setScrollAmountShown(0.0);
+    assertTrue(t.isActive());
+    assertTrue(l.isActive());
+    assertTrue(r.isActive());
+  }
+
+  /**
+   * The DISABLED_IF_ENTIRE_RANGE_SHOWN presence policy works.
+   */
+
+  @Test
+  public void testPresencePolicyDisabledIfFullyShown()
+  {
+    final var c = this.newComponent();
+    c.presencePolicy().set(DISABLED_IF_ENTIRE_RANGE_SHOWN);
+
+    final var t = c.thumb();
+    final var l = c.buttonLeft();
+    final var r = c.buttonRight();
+
+    this.windowContentArea().childAdd(c);
+    this.window().layout(this.layoutContext);
+    this.screen().mouseMoved(Z);
+
+    c.setScrollAmountShown(0.0);
+    assertTrue(t.isActive());
+    assertTrue(l.isActive());
+    assertTrue(r.isActive());
+
+    c.setScrollAmountShown(1.0);
+    assertFalse(t.isActive());
+    assertFalse(l.isActive());
+    assertFalse(r.isActive());
+
+    c.setScrollAmountShown(0.0);
+    assertTrue(t.isActive());
+    assertTrue(l.isActive());
+    assertTrue(r.isActive());
   }
 }

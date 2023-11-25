@@ -72,36 +72,4 @@ public interface SyScrollBarHorizontalType
    */
 
   void removeOnThumbDragListener();
-
-  /**
-   * Set the scroll position in the range {@code [0, 1]}.
-   *
-   * @param position The position
-   */
-
-  void setScrollPosition(double position);
-
-  /**
-   * Set the scroll position snapping value in the range {@code [0, 1]}. The
-   * given fraction is used to determine how many divisions will be used within
-   * the scrolling space. For example, a value of {@code 1.0 / 4.0} will yield
-   * four possible snapped position values.
-   *
-   * @param fraction The fraction
-   */
-
-  void setScrollPositionSnapping(double fraction);
-
-  /**
-   * Scrollbars are typically used to scroll a visible portion of some larger
-   * structure. Some implementations might want to scale the scrollbar thumb
-   * based on the portion of the visible space that is visible. A value of
-   * {@code 0.0} means that an infinitely small piece of the larger structure
-   * is visible. A value of {@code 1.0} means that the entirety of the larger
-   * structure is visible.
-   *
-   * @param amount The amount shown
-   */
-
-  void setScrollAmountShown(double amount);
 }

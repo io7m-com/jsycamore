@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
 import com.io7m.jsycamore.api.visibility.SyVisibleReadableType;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -183,5 +184,28 @@ public interface SyComponentReadableType
       windowPosition.x() + x,
       windowPosition.y() + y
     );
+  }
+
+  /**
+   * Determine the parent-relative position of the given viewport position
+   * for component. The method will fail if this component is not attached to
+   * a window.
+   *
+   * @param position The source position
+   *
+   * @return The viewport position
+   */
+
+  default PVector2I<SySpaceParentRelativeType> relativePositionOf(
+    final PVector2I<SySpaceViewportType> position)
+  {
+    Objects.requireNonNull(position, "position");
+
+    final var base =
+      this.viewportPositionOf(PVectors2I.zero());
+    final var delta =
+      PVectors2I.subtract(position, base);
+
+    return PVector2I.of(delta.x(), delta.y());
   }
 }

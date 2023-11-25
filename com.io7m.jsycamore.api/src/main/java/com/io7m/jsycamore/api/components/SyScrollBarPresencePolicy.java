@@ -15,47 +15,25 @@
  */
 
 
-package com.io7m.jsycamore.components.standard;
-
-import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
-import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
-import com.io7m.jsycamore.components.standard.internal.scrollbars.SyScrollBarH;
-
-import java.util.List;
+package com.io7m.jsycamore.api.components;
 
 /**
- * Functions to create horizontal scroll bars.
+ * The presence policy for scrollbars.
  */
 
-public final class SyScrollBarsHorizontal
+public enum SyScrollBarPresencePolicy
 {
-  private SyScrollBarsHorizontal()
-  {
-
-  }
-
   /**
-   * Create a horizontal scrollbar.
-   *
-   * @param themeClassesExtra The extra theme classes
-   *
-   * @return A scrollbar
+   * The scrollbar should always be present and enabled.
    */
 
-  public static SyScrollBarHorizontalType create(
-    final List<SyThemeClassNameType> themeClassesExtra)
-  {
-    return new SyScrollBarH(themeClassesExtra);
-  }
+  ALWAYS_ENABLED,
 
   /**
-   * Create a horizontal scrollbar.
+   * The scrollbar is disabled if the entire range is shown.
    *
-   * @return A scrollbar
+   * @see SyScrollBarType#setScrollAmountShown(double)
    */
 
-  public static SyScrollBarHorizontalType create()
-  {
-    return create(List.of());
-  }
+  DISABLED_IF_ENTIRE_RANGE_SHOWN
 }
