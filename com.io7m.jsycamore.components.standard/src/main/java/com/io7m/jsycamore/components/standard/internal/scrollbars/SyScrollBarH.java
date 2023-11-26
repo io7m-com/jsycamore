@@ -17,30 +17,29 @@
 
 package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
-import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
+import com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
-import com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
-import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
-import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.DISABLED_IF_ENTIRE_RANGE_SHOWN;
+import static com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled.HIDE_IF_DISABLED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
@@ -57,7 +56,8 @@ public final class SyScrollBarH
   private final SyScrollBarHButtonLeft buttonLeft;
   private final SyScrollBarHButtonRight buttonRight;
   private final SyScrollBarHTrack track;
-  private final AttributeType<SyScrollBarPresencePolicy> presencePolicy;
+  private SyScrollBarHideIfDisabled hideIfDisabled =
+    SyScrollBarHideIfDisabled.SHOW_EVEN_IF_DISABLED;
 
   /**
    * A horizontal scrollbar.
@@ -69,9 +69,6 @@ public final class SyScrollBarH
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
     super(inThemeClassesExtra);
-
-    this.presencePolicy =
-      SyComponentAttributes.get().create(DISABLED_IF_ENTIRE_RANGE_SHOWN);
 
     this.buttonLeft =
       new SyScrollBarHButtonLeft();
@@ -90,6 +87,19 @@ public final class SyScrollBarH
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    /*
+     * Scrollbars are able to hide themselves by collapsing to zero size.
+     */
+
+    if (this.hideIfDisabled == HIDE_IF_DISABLED) {
+      if (!this.isActive()) {
+        final var zero =
+          PAreaSizeI.<SySpaceParentRelativeType>of(0, 0);
+        this.setSize(zero);
+        return zero;
+      }
+    }
+
     var limitedConstraints =
       layoutContext.deriveThemeConstraints(constraints, this);
 
@@ -263,6 +273,14 @@ public final class SyScrollBarH
   }
 
   @Override
+  public void setHideIfDisabled(
+    final SyScrollBarHideIfDisabled newHideIfDisabled)
+  {
+    this.hideIfDisabled =
+      Objects.requireNonNull(newHideIfDisabled, "newHideIfDisabled");
+  }
+
+  @Override
   public void setScrollPosition(
     final double position)
   {
@@ -281,23 +299,7 @@ public final class SyScrollBarH
     final double amount)
   {
     this.track.setScrollAmountShown(amount);
-
-    final var all =
-      this.track.scrollAmountShown() >= 1.0;
-
-    final var active =
-      switch (this.presencePolicy.get()) {
-        case ALWAYS_ENABLED -> {
-          yield ACTIVE;
-        }
-        case DISABLED_IF_ENTIRE_RANGE_SHOWN -> {
-          yield all ? INACTIVE : ACTIVE;
-        }
-      };
-
-    this.buttonLeft.setActive(active);
-    this.buttonRight.setActive(active);
-    this.track.setActive(active);
+    this.setActive(this.track.scrollAmountShown() >= 1.0 ? INACTIVE : ACTIVE);
   }
 
   @Override
@@ -325,6 +327,12 @@ public final class SyScrollBarH
   }
 
   @Override
+  public double scrollAmountShown()
+  {
+    return this.track.scrollAmountShown();
+  }
+
+  @Override
   public double scrollPosition()
   {
     return this.track.scrollPosition();
@@ -334,11 +342,5 @@ public final class SyScrollBarH
   public double scrollPositionSnapping()
   {
     return this.track.scrollPositionSnapping();
-  }
-
-  @Override
-  public AttributeType<SyScrollBarPresencePolicy> presencePolicy()
-  {
-    return this.presencePolicy;
   }
 }

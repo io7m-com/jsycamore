@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
@@ -54,6 +55,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.concurrent.Executors;
 
+import static com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled.HIDE_IF_DISABLED;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -211,7 +213,7 @@ public final class SyTextAreaDemo
         final var c =
           SyTextLayoutDemo.class;
         final var u =
-          c.getResource("/com/io7m/jsycamore/tests/arctic.txt");
+          c.getResource("/com/io7m/jsycamore/tests/arcticLarge.txt");
 
         try (var s = u.openStream()) {
           this.sections = new String(s.readAllBytes(), UTF_8).lines().toList();
@@ -226,6 +228,8 @@ public final class SyTextAreaDemo
         for (final var section : this.sections) {
           textArea.textSectionAppend(section);
         }
+        textArea.scrollbarVertical().setHideIfDisabled(HIDE_IF_DISABLED);
+        textArea.scrollbarHorizontal().setHideIfDisabled(HIDE_IF_DISABLED);
 
         margin.childAdd(textArea);
         this.window0.contentArea().childAdd(margin);
@@ -269,6 +273,7 @@ public final class SyTextAreaDemo
         window.layout(layoutContext);
         // this.renderer.nodeRenderer().setDebugBoundsRendering(true);
         this.renderer.render(g2, this.screen, window);
+        this.repaint();
       }
     }
   }

@@ -81,9 +81,9 @@ public final class SyScrollPane
     this.contentAreaSize =
       attributes.create(PAreaSizeI.of(1024, 1024));
 
-    this.childAdd(this.contentAreaViewport);
     this.childAdd(this.scrollH);
     this.childAdd(this.scrollV);
+    this.childAdd(this.contentAreaViewport);
 
     this.scrollH.setOnClickLeftListener(
       this.onScrollClickLeftListener());
@@ -95,19 +95,22 @@ public final class SyScrollPane
       this.onScrollClickDownListener());
   }
 
-  private void updateScrollBars(
-    final PAreaSizeI<SySpaceParentRelativeType> newContentAreaSize,
-    final PAreaSizeI<SySpaceParentRelativeType> newContentViewportSize)
+  private void updateScrollBars()
   {
+    final var contentAreaSizeNow =
+      this.contentAreaSize.get();
+    final var contentViewportSizeNow =
+      this.contentAreaViewport.size().get();
+
     final var viewportX =
-      (double) newContentViewportSize.sizeX();
+      (double) contentViewportSizeNow.sizeX();
     final var viewportY =
-      (double) newContentViewportSize.sizeY();
+      (double) contentViewportSizeNow.sizeY();
 
     final var contentX =
-      (double) newContentAreaSize.sizeX();
+      (double) contentAreaSizeNow.sizeX();
     final var contentY =
-      (double) newContentAreaSize.sizeY();
+      (double) contentAreaSizeNow.sizeY();
 
     /*
      * Clamp the results to [0, 1]. This has the effect of stamping out any
@@ -128,6 +131,8 @@ public final class SyScrollPane
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    this.updateScrollBars();
+
     /*
      * Resize this main component to the maximum size allowed by the
      * constraints.
@@ -156,14 +161,21 @@ public final class SyScrollPane
     this.scrollV.layout(layoutContext, limitedConstraints);
 
     /*
-     * Now, the scrollbars needed to be shortened slightly, and placed at
-     * the edges of the component.
+     * The width of the horizontal scrollbar must be reduced by the width of
+     * the vertical scrollbar. This may be nothing if that scrollbar isn't
+     * visible.
      */
 
     final var scrollHConstraints =
       limitedConstraints.deriveSubtractMaximumWidth(
         this.scrollV.size().get().sizeX()
       );
+
+    /*
+     * The height of the scrollbar must be reduced by the height of the
+     * horizontal scrollbar. This may be nothing if that scrollbar isn't
+     * visible.
+     */
 
     final var scrollVConstraints =
       limitedConstraints.deriveSubtractMaximumHeight(
@@ -178,7 +190,8 @@ public final class SyScrollPane
      * content area viewport is derived from the size of the scrollpane as a
      * whole, minus the sizes of the scrollbars. The size of the content area
      * within the viewport is of a fixed size and may be far, far larger than
-     * the content viewport.
+     * the content viewport. If either of the scrollbars aren't enabled, then
+     * the viewport is sized such that it overlaps them.
      *
      * Therefore, to set their sizes independently:
      *
@@ -223,8 +236,6 @@ public final class SyScrollPane
     this.scrollV.setPosition(
       PVector2I.of(contentViewportSizeNow.sizeX(), 0)
     );
-
-    this.updateScrollBars(contentAreaSizeNow, contentViewportSizeNow);
 
     /*
      * The content area is offset by a proportion of the scrollable region

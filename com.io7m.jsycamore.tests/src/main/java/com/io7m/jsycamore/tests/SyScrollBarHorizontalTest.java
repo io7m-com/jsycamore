@@ -19,8 +19,8 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.active.SyActive;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
+import com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
-import com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.components.standard.SyScrollBarsHorizontal;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -30,11 +30,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
+import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_CONTINUED;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_ENDED;
 import static com.io7m.jsycamore.api.components.SyScrollBarDrag.Kind.DRAG_STARTED;
-import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.ALWAYS_ENABLED;
-import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.DISABLED_IF_ENTIRE_RANGE_SHOWN;
+import static com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled.HIDE_IF_DISABLED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_RIGHT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -310,48 +310,13 @@ public final class SyScrollBarHorizontalTest
   }
 
   /**
-   * The ALWAYS_ENABLED presence policy works.
+   * The bar is disabled if the full amount is shown.
    */
 
   @Test
-  public void testPresencePolicyAlwaysActive()
+  public void testDisabledIfFullyShown()
   {
     final var c = this.newComponent();
-    c.presencePolicy().set(ALWAYS_ENABLED);
-
-    final var t = c.thumb();
-    final var l = c.buttonLeft();
-    final var r = c.buttonRight();
-
-    this.windowContentArea().childAdd(c);
-    this.window().layout(this.layoutContext);
-    this.screen().mouseMoved(Z);
-
-    c.setScrollAmountShown(0.0);
-    assertTrue(t.isActive());
-    assertTrue(l.isActive());
-    assertTrue(r.isActive());
-
-    c.setScrollAmountShown(1.0);
-    assertTrue(t.isActive());
-    assertTrue(l.isActive());
-    assertTrue(r.isActive());
-
-    c.setScrollAmountShown(0.0);
-    assertTrue(t.isActive());
-    assertTrue(l.isActive());
-    assertTrue(r.isActive());
-  }
-
-  /**
-   * The DISABLED_IF_ENTIRE_RANGE_SHOWN presence policy works.
-   */
-
-  @Test
-  public void testPresencePolicyDisabledIfFullyShown()
-  {
-    final var c = this.newComponent();
-    c.presencePolicy().set(DISABLED_IF_ENTIRE_RANGE_SHOWN);
 
     final var t = c.thumb();
     final var l = c.buttonLeft();
@@ -375,5 +340,24 @@ public final class SyScrollBarHorizontalTest
     assertTrue(t.isActive());
     assertTrue(l.isActive());
     assertTrue(r.isActive());
+  }
+
+  /**
+   * The bar is disabled if the full amount is shown.
+   */
+
+  @Test
+  public void testCollapsedIfDisabled()
+  {
+    final var c = this.newComponent();
+
+    c.setHideIfDisabled(HIDE_IF_DISABLED);
+    c.setActive(INACTIVE);
+
+    this.windowContentArea().childAdd(c);
+    this.window().layout(this.layoutContext);
+
+    assertEquals(0, c.size().get().sizeX());
+    assertEquals(0, c.size().get().sizeY());
   }
 }

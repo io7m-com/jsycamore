@@ -80,7 +80,7 @@ public interface SyComponentType
     Objects.requireNonNull(constraints, "constraints");
 
     /*
-     * First, consult the theme to see if there are size constraints specified
+     * Consult the theme to see if there are size constraints specified
      * for this component. Derive a new set of constraints that try to
      * satisfy the theme whilst also satisfying the passed in constraints.
      */

@@ -37,6 +37,9 @@ public record SyConstraints(
   int sizeMaximumX,
   int sizeMaximumY)
 {
+  private static final SyConstraints ZERO =
+    new SyConstraints(0, 0, 0, 0);
+
   /**
    * A set of size constraints.
    *
@@ -60,6 +63,15 @@ public record SyConstraints(
       Math.clamp(sizeMinimumY, 0, MAX_VALUE);
     this.sizeMaximumY =
       Math.clamp(sizeMaximumY, this.sizeMinimumY, MAX_VALUE);
+  }
+
+  /**
+   * @return Constraints that force a zero size
+   */
+
+  public static SyConstraints zero()
+  {
+    return ZERO;
   }
 
   /**

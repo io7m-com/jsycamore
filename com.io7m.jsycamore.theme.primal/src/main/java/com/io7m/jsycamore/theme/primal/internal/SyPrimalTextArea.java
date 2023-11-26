@@ -74,50 +74,8 @@ public final class SyPrimalTextArea extends SyPrimalAbstract
             PAreasI.cast(PAreasI.moveToOrigin(area))
           );
 
-        final var rectArea =
-          rectangle.area();
-
         final var values =
           this.theme().values();
-
-        final var embossed =
-          SyEmbossedRectangle.emboss(
-            rectArea,
-            values.fillFlat(EMBOSS_SOUTH),
-            values.fillFlat(EMBOSS_WEST),
-            values.fillFlat(EMBOSS_NORTH),
-            values.fillFlat(EMBOSS_EAST),
-            1,
-            1
-          );
-
-        final SyRenderNodeShape embossW =
-          new SyRenderNodeShape(
-            Optional.empty(),
-            Optional.of(embossed.fillWest()),
-            embossed.shapeWest()
-          );
-
-        final SyRenderNodeShape embossS =
-          new SyRenderNodeShape(
-            Optional.empty(),
-            Optional.of(embossed.fillSouth()),
-            embossed.shapeSouth()
-          );
-
-        final SyRenderNodeShape embossN =
-          new SyRenderNodeShape(
-            Optional.empty(),
-            Optional.of(embossed.fillNorth()),
-            embossed.shapeNorth()
-          );
-
-        final SyRenderNodeShape embossE =
-          new SyRenderNodeShape(
-            Optional.empty(),
-            Optional.of(embossed.fillEast()),
-            embossed.shapeEast()
-          );
 
         final var mainFill =
           new SyRenderNodeShape(
@@ -133,9 +91,7 @@ public final class SyPrimalTextArea extends SyPrimalAbstract
             rectangle
           );
 
-        return SyRenderNodeComposite.composite(
-          mainFill, embossN, embossE, embossS, embossW, mainEdge
-        );
+        return SyRenderNodeComposite.composite(mainFill, mainEdge);
       } catch (final SyThemeValueException e) {
         throw new IllegalStateException(e);
       }

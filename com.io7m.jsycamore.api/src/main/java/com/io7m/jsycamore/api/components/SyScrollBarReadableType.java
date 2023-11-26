@@ -38,6 +38,12 @@ public interface SyScrollBarReadableType
   SyComponentReadableType track();
 
   /**
+   * @return The scroll amount shown in the range {@code [0, 1]}
+   */
+
+  double scrollAmountShown();
+
+  /**
    * @return The scroll position in the range {@code [0, 1]}
    */
 
@@ -59,10 +65,4 @@ public interface SyScrollBarReadableType
    */
 
   double scrollIncrementSize();
-
-  /**
-   * @return The scrollbar presence policy
-   */
-
-  AttributeReadableType<SyScrollBarPresencePolicy> presencePolicy();
 }

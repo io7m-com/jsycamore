@@ -18,22 +18,22 @@
 package com.io7m.jsycamore.api.components;
 
 /**
- * The presence policy for scrollbars.
+ * A specification of whether to collapse scrollbars to zero size when
+ * disabled.
  */
 
-public enum SyScrollBarPresencePolicy
+public enum SyScrollBarHideIfDisabled
 {
   /**
-   * The scrollbar should always be present and enabled.
+   * When disabled, the scrollbar collapses to zero size and is effectively
+   * hidden.
    */
 
-  ALWAYS_ENABLED,
+  HIDE_IF_DISABLED,
 
   /**
-   * The scrollbar is disabled if the entire range is shown.
-   *
-   * @see SyScrollBarType#setScrollAmountShown(double)
+   * When disabled, the scrollbar remains visible.
    */
 
-  DISABLED_IF_ENTIRE_RANGE_SHOWN
+  SHOW_EVEN_IF_DISABLED
 }

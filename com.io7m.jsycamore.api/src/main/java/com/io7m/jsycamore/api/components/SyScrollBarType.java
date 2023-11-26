@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 
 import java.util.function.Consumer;
 
@@ -27,8 +27,17 @@ import java.util.function.Consumer;
 public interface SyScrollBarType
   extends SyScrollBarReadableType, SyComponentType
 {
-  @Override
-  AttributeType<SyScrollBarPresencePolicy> presencePolicy();
+  /**
+   * Allow for hiding the scrollbar if it is disabled. If hiding-if-disabled
+   * is enabled, then the scrollbar's size will collapse to zero when
+   * {@link #layout(SyLayoutContextType, SyConstraints)} is called and the
+   * scrollbar is disabled.
+   *
+   * @param hideIfDisabled The hide-if-disabled setting
+   */
+
+  void setHideIfDisabled(
+    SyScrollBarHideIfDisabled hideIfDisabled);
 
   /**
    * Set the scroll position in the range {@code [0, 1]}.

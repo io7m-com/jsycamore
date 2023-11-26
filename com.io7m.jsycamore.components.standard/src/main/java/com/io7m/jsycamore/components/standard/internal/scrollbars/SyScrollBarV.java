@@ -17,14 +17,13 @@
 
 package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
-import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
-import com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy;
+import com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled;
 import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
@@ -32,15 +31,15 @@ import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
-import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.io7m.jsycamore.api.active.SyActive.ACTIVE;
 import static com.io7m.jsycamore.api.active.SyActive.INACTIVE;
-import static com.io7m.jsycamore.api.components.SyScrollBarPresencePolicy.DISABLED_IF_ENTIRE_RANGE_SHOWN;
+import static com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled.HIDE_IF_DISABLED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
 /**
@@ -57,7 +56,8 @@ public final class SyScrollBarV
   private final SyScrollBarVButtonUp buttonUp;
   private final SyScrollBarVButtonDown buttonDown;
   private final SyScrollBarVTrack track;
-  private final AttributeType<SyScrollBarPresencePolicy> presencePolicy;
+  private SyScrollBarHideIfDisabled hideIfDisabled =
+    SyScrollBarHideIfDisabled.SHOW_EVEN_IF_DISABLED;
 
   /**
    * A vertical scrollbar.
@@ -69,9 +69,6 @@ public final class SyScrollBarV
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
     super(inThemeClassesExtra);
-
-    this.presencePolicy =
-      SyComponentAttributes.get().create(DISABLED_IF_ENTIRE_RANGE_SHOWN);
 
     this.buttonUp =
       new SyScrollBarVButtonUp();
@@ -90,6 +87,19 @@ public final class SyScrollBarV
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    /*
+     * Scrollbars are able to hide themselves by collapsing to zero size.
+     */
+
+    if (this.hideIfDisabled == HIDE_IF_DISABLED) {
+      if (!this.isActive()) {
+        final var zero =
+          PAreaSizeI.<SySpaceParentRelativeType>of(0, 0);
+        this.setSize(zero);
+        return zero;
+      }
+    }
+
     var limitedConstraints =
       layoutContext.deriveThemeConstraints(constraints, this);
 
@@ -249,23 +259,7 @@ public final class SyScrollBarV
     final double amount)
   {
     this.track.setScrollAmountShown(amount);
-
-    final var all =
-      this.track.scrollAmountShown() >= 1.0;
-
-    final var active =
-      switch (this.presencePolicy.get()) {
-        case ALWAYS_ENABLED -> {
-          yield ACTIVE;
-        }
-        case DISABLED_IF_ENTIRE_RANGE_SHOWN -> {
-          yield all ? INACTIVE : ACTIVE;
-        }
-      };
-
-    this.buttonUp.setActive(active);
-    this.buttonDown.setActive(active);
-    this.track.setActive(active);
+    this.setActive(this.track.scrollAmountShown() >= 1.0 ? INACTIVE : ACTIVE);
   }
 
   @Override
@@ -293,6 +287,12 @@ public final class SyScrollBarV
   }
 
   @Override
+  public double scrollAmountShown()
+  {
+    return this.track.scrollAmountShown();
+  }
+
+  @Override
   public double scrollPosition()
   {
     return this.track.scrollPosition();
@@ -308,12 +308,6 @@ public final class SyScrollBarV
   public double scrollIncrementSize()
   {
     return this.track.scrollIncrementSize();
-  }
-
-  @Override
-  public AttributeType<SyScrollBarPresencePolicy> presencePolicy()
-  {
-    return this.presencePolicy;
   }
 
   @Override
@@ -340,5 +334,13 @@ public final class SyScrollBarV
   public void removeOnClickDownListener()
   {
     this.buttonDown.removeOnClickListener();
+  }
+
+  @Override
+  public void setHideIfDisabled(
+    final SyScrollBarHideIfDisabled newHideIfDisabled)
+  {
+    this.hideIfDisabled =
+      Objects.requireNonNull(newHideIfDisabled, "newHideIfDisabled");
   }
 }
