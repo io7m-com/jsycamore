@@ -250,21 +250,22 @@ public final class SyScrollBarV
   {
     this.track.setScrollAmountShown(amount);
 
-    switch (this.presencePolicy.get()) {
-      case ALWAYS_ENABLED -> {
-        final var active = ACTIVE;
-        this.buttonUp.setActive(active);
-        this.buttonDown.setActive(active);
-        this.track.setActive(active);
-      }
-      case DISABLED_IF_ENTIRE_RANGE_SHOWN -> {
-        final var active =
-          this.track.scrollAmountShown() >= 1.0 ? INACTIVE : ACTIVE;
-        this.buttonUp.setActive(active);
-        this.buttonDown.setActive(active);
-        this.track.setActive(active);
-      }
-    }
+    final var all =
+      this.track.scrollAmountShown() >= 1.0;
+
+    final var active =
+      switch (this.presencePolicy.get()) {
+        case ALWAYS_ENABLED -> {
+          yield ACTIVE;
+        }
+        case DISABLED_IF_ENTIRE_RANGE_SHOWN -> {
+          yield all ? INACTIVE : ACTIVE;
+        }
+      };
+
+    this.buttonUp.setActive(active);
+    this.buttonDown.setActive(active);
+    this.track.setActive(active);
   }
 
   @Override

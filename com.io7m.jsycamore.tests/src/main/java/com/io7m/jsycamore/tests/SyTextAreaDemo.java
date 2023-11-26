@@ -27,7 +27,6 @@ import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.awt.internal.SyFontAWT;
 import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
-import com.io7m.jsycamore.awt.internal.SyRendererType;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.components.standard.SyTextArea;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
@@ -88,7 +87,7 @@ public final class SyTextAreaDemo
   private static final class Canvas extends JPanel
   {
     private final SyFontDirectoryType<SyFontAWT> fontDirectory;
-    private final SyRendererType renderer;
+    private final SyAWTRenderer renderer;
     private final SyScreenType screen;
     private final SyThemeType theme;
     private final SyWindowType window0;
@@ -268,6 +267,7 @@ public final class SyTextAreaDemo
       for (int index = windows.size() - 1; index >= 0; --index) {
         final var window = windows.get(index);
         window.layout(layoutContext);
+        // this.renderer.nodeRenderer().setDebugBoundsRendering(true);
         this.renderer.render(g2, this.screen, window);
       }
     }

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard.internal.scrollpanes;
 
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
@@ -261,6 +262,12 @@ public final class SyScrollPane
   public SyComponentType contentArea()
   {
     return this.contentArea;
+  }
+
+  @Override
+  public SyComponentReadableType contentViewport()
+  {
+    return this.contentAreaViewport;
   }
 
   @Override

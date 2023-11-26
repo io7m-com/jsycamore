@@ -133,14 +133,16 @@ public final class SyFontAWT implements SyFontType
 
       final var indexNow =
         breaker.getPosition();
-      final var bounds =
-        layout.getBounds();
+      final var brokenText =
+        text.substring(indexThen, indexNow);
+      final var textWidth =
+        this.textWidth(brokenText);
 
       final var line =
         new SectionLine(
-          PAreaSizeI.of((int) Math.ceil(bounds.getWidth()), this.textHeight()),
+          PAreaSizeI.of(textWidth, this.textHeight()),
           Optional.of(layout),
-          text.substring(indexThen, indexNow)
+          brokenText
         );
 
       results.add(line);

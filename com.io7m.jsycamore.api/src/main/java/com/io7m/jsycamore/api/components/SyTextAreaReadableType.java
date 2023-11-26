@@ -41,4 +41,16 @@ public interface SyTextAreaReadableType
    */
 
   AttributeReadableType<List<String>> textSections();
+
+  /**
+   * @return Access to the horizontal scrollbar
+   */
+
+  SyScrollBarHorizontalReadableType scrollbarHorizontal();
+
+  /**
+   * @return Access to the vertical scrollbar
+   */
+
+  SyScrollBarVerticalReadableType scrollbarVertical();
 }

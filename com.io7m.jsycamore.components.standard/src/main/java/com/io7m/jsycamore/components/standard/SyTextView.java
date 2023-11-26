@@ -75,6 +75,14 @@ public final class SyTextView
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
+    /*
+     * Note that text views are a special case when it comes to layout
+     * sizes. Text views must be dynamically sized according to their
+     * actual text content, and so cannot realistically be sized at the
+     * whim of whatever component is passing in constraints. They can, as
+     * a last resort, be hard clipped by setting a maximum size limit.
+     */
+
     final var requiredSize =
       this.minimumSizeRequired(layoutContext);
 
@@ -82,7 +90,7 @@ public final class SyTextView
       this.sizeUpperLimit().get();
 
     final var newSize =
-      constraints.<SySpaceParentRelativeType>sizeNotExceeding(
+      PAreaSizeI.<SySpaceParentRelativeType>of(
         Math.min(requiredSize.sizeX(), limitSize.sizeX()),
         Math.min(requiredSize.sizeY(), limitSize.sizeY())
       );

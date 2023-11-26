@@ -30,4 +30,10 @@ public interface SyTextAreaType
    */
 
   void textSectionAppend(String section);
+
+  @Override
+  SyScrollBarHorizontalType scrollbarHorizontal();
+
+  @Override
+  SyScrollBarVerticalType scrollbarVertical();
 }

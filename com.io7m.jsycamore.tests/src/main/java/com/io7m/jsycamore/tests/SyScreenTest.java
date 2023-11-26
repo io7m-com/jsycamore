@@ -1251,7 +1251,7 @@ public final class SyScreenTest
       final var position =
         PVector2I.<SySpaceViewportType>of(x, y);
       final var insideWindow =
-        x > windowX && x < windowXMax && y > windowY && y < windowYMax;
+        x >= windowX && x < windowXMax && y >= windowY && y < windowYMax;
 
       final var result =
         this.screen.mouseDown(position, MOUSE_BUTTON_LEFT);
@@ -1298,8 +1298,10 @@ public final class SyScreenTest
       final var position =
         PVector2I.<SySpaceViewportType>of(x, y);
 
+      final var insideWindow =
+        x >= windowX && x < windowXMax && y >= windowY && y < windowYMax;
       final var outsideWindow =
-        x < windowX || x > windowXMax || y < windowY || y > windowYMax;
+        !insideWindow;
 
       this.screen.mouseDown(position, MOUSE_BUTTON_LEFT);
 

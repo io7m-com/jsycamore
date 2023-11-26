@@ -31,6 +31,12 @@ public interface SyScrollPaneReadableType
   SyComponentReadableType contentArea();
 
   /**
+   * @return A readable reference to the internal content viewport
+   */
+
+  SyComponentReadableType contentViewport();
+
+  /**
    * @return A readable reference to the horizontal scroll bar
    */
 

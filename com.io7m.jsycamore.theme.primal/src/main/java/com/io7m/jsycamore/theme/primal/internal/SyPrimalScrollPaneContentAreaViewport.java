@@ -23,12 +23,9 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
-import com.io7m.jsycamore.api.themes.SyThemeValueException;
 
 import java.util.Objects;
 import java.util.Optional;
-
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_OVER;
 
 /**
  * A theme component for scroll pane content area viewports.
@@ -64,15 +61,10 @@ public final class SyPrimalScrollPaneContentAreaViewport extends SyPrimalAbstrac
         PAreaI.of(0, area.sizeX(), 0, area.sizeY())
       );
 
-    try {
-      final var values = this.theme().values();
-      return new SyRenderNodeShape(
-        Optional.of(values.edgeFlat(PRIMARY_OVER)),
-        Optional.empty(),
-        rectangle
-      );
-    } catch (final SyThemeValueException e) {
-      throw new IllegalStateException(e);
-    }
+    return new SyRenderNodeShape(
+      Optional.empty(),
+      Optional.empty(),
+      rectangle
+    );
   }
 }

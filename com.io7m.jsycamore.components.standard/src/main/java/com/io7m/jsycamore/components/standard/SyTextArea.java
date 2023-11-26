@@ -19,21 +19,25 @@ package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
+import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
+import com.io7m.jsycamore.api.components.SyScrollPaneType;
 import com.io7m.jsycamore.api.components.SyTextAreaType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
-import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
-import static java.lang.Math.min;
 
 /**
  * A text area.
@@ -42,12 +46,13 @@ import static java.lang.Math.min;
 public final class SyTextArea
   extends SyComponentAbstract implements SyTextAreaType
 {
-  private static final int INTERNAL_TEXT_PADDING = 2;
-  private static final int INTERNAL_TEXT_PADDING_DOUBLE =
-    INTERNAL_TEXT_PADDING + INTERNAL_TEXT_PADDING;
+  private static final int EDGE_PADDING = 8;
+  private static final int PADDING = EDGE_PADDING * 2;
 
   private final AttributeType<List<String>> textSections;
-  private final SyPackVertical textContainer;
+  private final SyPackVertical textLayout;
+  private final SyScrollPaneType textScroller;
+  private final SyLayoutMargin textLayoutMargin;
   private boolean viewsUpToDate;
 
   /**
@@ -66,11 +71,22 @@ public final class SyTextArea
     this.textSections =
       attributes.create(List.of());
 
-    this.textContainer = new SyPackVertical(inThemeClassesExtra);
-    this.textSections.subscribe(this::invalidateViews);
-    this.size().subscribe(this::invalidateViews);
+    this.textScroller =
+      SyScrollPanes.create(inThemeClassesExtra);
+    this.textLayoutMargin =
+      new SyLayoutMargin();
+    this.textLayout =
+      new SyPackVertical();
 
-    this.childAdd(this.textContainer);
+    this.textLayoutMargin.childAdd(this.textLayout);
+    this.textLayoutMargin.setPaddingAll(EDGE_PADDING);
+    this.textScroller.contentArea().childAdd(this.textLayoutMargin);
+    this.childAdd(this.textScroller);
+
+    this.textSections
+      .subscribe(this::invalidateViews);
+    this.size()
+      .subscribe(this::invalidateViews);
   }
 
   private void invalidateViews(
@@ -98,82 +114,95 @@ public final class SyTextArea
     final SyLayoutContextType layoutContext,
     final SyConstraints constraints)
   {
-    /*
-     * Set this text area to the maximum allowed size.
-     */
-
-    final var sizeLimit =
-      this.sizeUpperLimit().get();
-
-    final var limitedConstraints =
-      new SyConstraints(
-        constraints.sizeMinimumX(),
-        constraints.sizeMinimumY(),
-        min(constraints.sizeMaximumX(), sizeLimit.sizeX()),
-        min(constraints.sizeMaximumY(), sizeLimit.sizeY())
-      );
-
-    final PAreaSizeI<SySpaceParentRelativeType> newSize =
-      limitedConstraints.sizeMaximum();
-
-    this.setSize(newSize);
-
-    /*
-     * The text container is the current text area size, plus a margin.
-     */
-
-    final var internalAreaPosition =
-      PVector2I.<SySpaceParentRelativeType>of(
-        INTERNAL_TEXT_PADDING,
-        INTERNAL_TEXT_PADDING
-      );
-
-    final var internalArea =
-      PAreaSizeI.<SySpaceParentRelativeType>of(
-        Math.max(0, newSize.sizeX() - INTERNAL_TEXT_PADDING_DOUBLE),
-        Math.max(0, newSize.sizeY() - INTERNAL_TEXT_PADDING_DOUBLE)
-      );
-
-    this.textContainer.position()
-      .set(internalAreaPosition);
-    this.textContainer.size()
-      .set(internalArea);
+    final var newSize =
+      super.layout(layoutContext, constraints);
 
     /*
      * If the internal text views aren't up-to-date (perhaps because the
-     * text changed), then remove and create new views, and then tell the
-     * text container to execute a layout.
+     * text changed), then remove and create new views. This will yield a
+     * set of views from which we can determine the total required height
+     * of the content.
      */
 
     if (!this.viewsUpToDate) {
-      this.textContainer.childrenClear();
-
-      final var themeComponent =
-        layoutContext.themeCurrent()
-          .findForComponent(this);
-
-      final var font =
-        themeComponent.font(layoutContext, this);
-
-      final var lines =
-        font.textLayoutMultiple(
-          this.textSections.get(),
-          internalArea.sizeX()
-        );
-
-      for (final var line : lines) {
-        final var textView = new SyTextView();
-        textView.setSize(line.size());
-        textView.setText(line.text());
-        textView.setMouseQueryAccepting(false);
-        this.textContainer.childAdd(textView);
-      }
-
-      this.textContainer.layout(layoutContext, limitedConstraints);
-      this.viewsUpToDate = true;
+      this.regenerateViews(layoutContext);
     }
 
+    final var textHeightRequired =
+      this.textViews()
+        .mapToInt(c -> c.size().get().sizeY())
+        .sum();
+
+    final var viewportSize =
+      this.textScroller.contentViewport()
+        .size()
+        .get()
+        .sizeX();
+
+    this.textScroller.setContentAreaSize(
+      PAreaSizeI.of(viewportSize, textHeightRequired)
+    );
+
+    this.textScroller.layout(layoutContext, constraints);
     return newSize;
+  }
+
+  /**
+   * @return The width at which text should be wrapped
+   */
+
+  private int textWrapWidth()
+  {
+    /*
+     * Wrap all text such that it is no wider than the viewport size, minus
+     * the padding applied to the text area.
+     */
+
+    final var viewportSize =
+      this.textScroller.contentViewport()
+        .size()
+        .get()
+        .sizeX();
+
+    return Math.max(0, viewportSize - PADDING);
+  }
+
+  private Stream<SyComponentReadableType> textViews()
+  {
+    return this.textLayout
+      .nodeReadable()
+      .childrenReadable()
+      .stream()
+      .map(JOTreeNodeReadableType::value);
+  }
+
+  private void regenerateViews(
+    final SyLayoutContextType layoutContext)
+  {
+    this.textLayout.childrenClear();
+
+    final var themeComponent =
+      layoutContext.themeCurrent()
+        .findForComponent(this);
+
+    final var font =
+      themeComponent.font(layoutContext, this);
+
+    final var lines =
+      font.textLayoutMultiple(
+        this.textSections.get(),
+        this.textWrapWidth()
+      );
+
+    for (final var line : lines) {
+      final var textView = new SyTextView();
+      textView.setSize(line.size());
+      textView.setText(line.text());
+      textView.setMouseQueryAccepting(false);
+      this.textLayout.childAdd(textView);
+    }
+
+    this.viewsUpToDate = true;
   }
 
   @Override
@@ -183,5 +212,17 @@ public final class SyTextArea
     final var appended = new LinkedList<>(this.textSections.get());
     appended.add(section);
     this.textSections.set(List.copyOf(appended));
+  }
+
+  @Override
+  public SyScrollBarHorizontalType scrollbarHorizontal()
+  {
+    return this.textScroller.scrollBarHorizontal();
+  }
+
+  @Override
+  public SyScrollBarVerticalType scrollbarVertical()
+  {
+    return this.textScroller.scrollBarVertical();
   }
 }
