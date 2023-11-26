@@ -364,10 +364,19 @@ public abstract class SyComponentAbstract implements SyComponentType
   @Override
   public final String toString()
   {
+    final var currentSize =
+      this.size.get();
+    final var currentPosition =
+      this.position.get();
+
     return String.format(
-      "[%s 0x%s]",
+      "[%s 0x%s %dx%d %d,%d]",
       this.getClass().getSimpleName(),
-      Integer.toUnsignedString(this.hashCode(), 16)
+      Integer.toUnsignedString(this.hashCode(), 16),
+      Integer.valueOf(currentSize.sizeX()),
+      Integer.valueOf(currentSize.sizeY()),
+      Integer.valueOf(currentPosition.x()),
+      Integer.valueOf(currentPosition.y())
     );
   }
 }

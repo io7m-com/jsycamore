@@ -14,31 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jsycamore.api.components;
-
 /**
- * <p>The basic type of button components.</p>
- * <p>A button is a component that notifies a listener when clicked.</p>
- * <p>The button has a "momentary" action; every time the mouse is clicked
- * on the button, the listener is notified when the mouse button is released.</p>
+ * Embedded GUI library (Standard components [Internals])
  */
 
-public interface SyButtonType
-  extends SyButtonReadableType, SyComponentType
-{
-  /**
-   * Set a listener that will be executed when the button is clicked.
-   *
-   * @param runnable The listener
-   */
+@Version("1.0.0")
+package com.io7m.jsycamore.components.standard.internal.scrollpanes;
 
-  void setOnClickListener(Runnable runnable);
-
-  /**
-   * Remove any listeners that are executed when the button is clicked.
-   *
-   * @see #setOnClickListener(Runnable)
-   */
-
-  void removeOnClickListener();
-}
+import org.osgi.annotation.versioning.Version;

@@ -17,7 +17,11 @@
 package com.io7m.jsycamore.api.components;
 
 /**
- * The basic type of checkbox components.
+ * <p>The basic type of checkbox components.</p>
+ * <p>A checkbox is similar to a button except that the checkbox is toggled
+ * by clicking it.</p>
+ *
+ * @see SyButtonType
  */
 
 public interface SyCheckboxType

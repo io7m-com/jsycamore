@@ -50,6 +50,17 @@ public interface SyScrollBarReadableType
   double scrollPositionSnapping();
 
   /**
+   * Based on the current snapping setting and scrollbar size, determine a
+   * reasonable value to use to increment or decrement the current scroll
+   * position. This is used to implement up/down/left/right arrow buttons
+   * on scrollbars.
+   *
+   * @return The size of a single scroll increment in the range {@code [0, 1]}
+   */
+
+  double scrollIncrementSize();
+
+  /**
    * @return The scrollbar presence policy
    */
 

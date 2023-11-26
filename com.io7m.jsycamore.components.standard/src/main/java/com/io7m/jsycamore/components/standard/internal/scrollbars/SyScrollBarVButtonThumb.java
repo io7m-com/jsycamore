@@ -75,6 +75,7 @@ final class SyScrollBarVButtonThumb
     this.image =
       new SyImageView(List.of(SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON));
     this.image.setImageURI("jsycamore:icon:scroll_v_thumb");
+    this.image.setMouseQueryAccepting(false);
 
     this.align = new SyAlign();
     this.align.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);

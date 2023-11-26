@@ -53,21 +53,13 @@ public record SyConstraints(
     final int sizeMaximumY)
   {
     this.sizeMinimumX =
-      clamp(0, MAX_VALUE, sizeMinimumX);
+      Math.clamp(sizeMinimumX, 0, MAX_VALUE);
     this.sizeMaximumX =
-      clamp(this.sizeMinimumX, MAX_VALUE, sizeMaximumX);
+      Math.clamp(sizeMaximumX, this.sizeMinimumX, MAX_VALUE);
     this.sizeMinimumY =
-      clamp(0, MAX_VALUE, sizeMinimumY);
+      Math.clamp(sizeMinimumY, 0, MAX_VALUE);
     this.sizeMaximumY =
-      clamp(this.sizeMinimumY, MAX_VALUE, sizeMaximumY);
-  }
-
-  private static int clamp(
-    final int min,
-    final int max,
-    final int v)
-  {
-    return Math.max(min, min(max, v));
+      Math.clamp(sizeMaximumY, this.sizeMinimumY, MAX_VALUE);
   }
 
   /**
@@ -108,8 +100,8 @@ public record SyConstraints(
     final int sizeY)
   {
     return PAreaSizeI.of(
-      clamp(this.sizeMinimumX, this.sizeMaximumX, sizeX),
-      clamp(this.sizeMinimumY, this.sizeMaximumY, sizeY)
+      Math.clamp(sizeX, this.sizeMinimumX, this.sizeMaximumX),
+      Math.clamp(sizeY, this.sizeMinimumY, this.sizeMaximumY)
     );
   }
 
@@ -184,6 +176,68 @@ public record SyConstraints(
       this.sizeMinimumY(),
       min(this.sizeMaximumX(), size.sizeX()),
       min(this.sizeMaximumY(), size.sizeY())
+    );
+  }
+
+  /**
+   * Derive a new set of constraints where the new maximum width has the given
+   * size subtracted from it.
+   *
+   * @param size The size to subtract
+   *
+   * @return A new set of constraints
+   */
+
+  public SyConstraints deriveSubtractMaximumWidth(
+    final int size)
+  {
+    return new SyConstraints(
+      this.sizeMinimumX,
+      this.sizeMinimumY,
+      this.sizeMaximumX - size,
+      this.sizeMaximumY
+    );
+  }
+
+  /**
+   * Derive a new set of constraints where the new maximum height has the given
+   * size subtracted from it.
+   *
+   * @param size The size to subtract
+   *
+   * @return A new set of constraints
+   */
+
+  public SyConstraints deriveSubtractMaximumHeight(
+    final int size)
+  {
+    return new SyConstraints(
+      this.sizeMinimumX,
+      this.sizeMinimumY,
+      this.sizeMaximumX,
+      this.sizeMaximumY - size
+    );
+  }
+
+  /**
+   * Derive a new set of constraints where the new maximum width and height
+   * values have the given sizes subtracted from them.
+   *
+   * @param sizeX The X size to subtract
+   * @param sizeY The Y size to subtract
+   *
+   * @return A new set of constraints
+   */
+
+  public SyConstraints deriveSubtractMaximumSizes(
+    final int sizeX,
+    final int sizeY)
+  {
+    return new SyConstraints(
+      this.sizeMinimumX,
+      this.sizeMinimumY,
+      this.sizeMaximumX - sizeX,
+      this.sizeMaximumY - sizeY
     );
   }
 }

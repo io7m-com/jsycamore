@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,31 +14,36 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+
 /**
- * <p>The basic type of button components.</p>
- * <p>A button is a component that notifies a listener when clicked.</p>
- * <p>The button has a "momentary" action; every time the mouse is clicked
- * on the button, the listener is notified when the mouse button is released.</p>
+ * <p>The type of scroll panes.</p>
+ * <p>A scroll pane provides a scrollable viewport into a much larger internal
+ * content region.</p>
  */
 
-public interface SyButtonType
-  extends SyButtonReadableType, SyComponentType
+public interface SyScrollPaneType
+  extends SyComponentType, SyScrollPaneReadableType
 {
-  /**
-   * Set a listener that will be executed when the button is clicked.
-   *
-   * @param runnable The listener
-   */
-
-  void setOnClickListener(Runnable runnable);
+  @Override
+  SyComponentType contentArea();
 
   /**
-   * Remove any listeners that are executed when the button is clicked.
+   * Set the fixed size of the internal content region.
    *
-   * @see #setOnClickListener(Runnable)
+   * @param size The size
    */
 
-  void removeOnClickListener();
+  void setContentAreaSize(
+    PAreaSizeI<SySpaceParentRelativeType> size);
+
+  @Override
+  SyScrollBarHorizontalType scrollBarHorizontal();
+
+  @Override
+  SyScrollBarVerticalType scrollBarVertical();
 }

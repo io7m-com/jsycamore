@@ -169,9 +169,6 @@ public enum SyThemeClassNameStandard
 
   SCROLLBAR_HORIZONTAL_BUTTON_THUMB_ICON("ScrollbarHorizontalButtonThumbIcon"),
 
-
-
-
   /**
    * A horizontal scrollbar class.
    */
@@ -219,6 +216,24 @@ public enum SyThemeClassNameStandard
    */
 
   SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON("ScrollbarVerticalButtonThumbIcon"),
+
+  /**
+   * A scrollpane class.
+   */
+
+  SCROLLPANE("ScrollPane"),
+
+  /**
+   * A scrollpane content area class.
+   */
+
+  SCROLLPANE_CONTENT_AREA("ScrollPaneContentArea"),
+
+  /**
+   * A scrollpane content area viewport class.
+   */
+
+  SCROLLPANE_CONTENT_AREA_VIEWPORT("ScrollPaneContentAreaViewport"),
 
   /**
    * A text area class.

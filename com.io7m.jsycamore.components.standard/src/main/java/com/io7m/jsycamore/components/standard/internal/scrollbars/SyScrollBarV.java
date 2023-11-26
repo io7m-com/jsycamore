@@ -304,6 +304,12 @@ public final class SyScrollBarV
   }
 
   @Override
+  public double scrollIncrementSize()
+  {
+    return this.track.scrollIncrementSize();
+  }
+
+  @Override
   public AttributeType<SyScrollBarPresencePolicy> presencePolicy()
   {
     return this.presencePolicy;

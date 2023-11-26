@@ -41,6 +41,7 @@ final class SyScrollBarVButtonDown extends SyButtonAbstract
 
     this.image = new SyImageView(List.of(SCROLLBAR_VERTICAL_BUTTON_DOWN_ICON));
     this.image.setImageURI("jsycamore:icon:scroll_down");
+    this.image.setMouseQueryAccepting(false);
 
     this.align = new SyAlign();
     this.align.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);

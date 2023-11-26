@@ -257,6 +257,12 @@ public final class SyScrollBarH
   }
 
   @Override
+  public double scrollIncrementSize()
+  {
+    return this.track.scrollIncrementSize();
+  }
+
+  @Override
   public void setScrollPosition(
     final double position)
   {

@@ -159,4 +159,13 @@ final class SyScrollBarHTrack extends SyComponentAbstract
   {
     return this.scrollAmount;
   }
+
+  public double scrollIncrementSize()
+  {
+    final var width =
+      (double) this.size().get().sizeX();
+    final var base =
+      1.0 / width;
+    return snapDouble(base, this.scrollPositionSnap);
+  }
 }
