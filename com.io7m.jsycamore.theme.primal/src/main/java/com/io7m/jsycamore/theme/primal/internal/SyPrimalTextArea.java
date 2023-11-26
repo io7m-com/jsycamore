@@ -19,7 +19,6 @@ package com.io7m.jsycamore.theme.primal.internal;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyTextAreaReadableType;
-import com.io7m.jsycamore.api.rendering.SyEmbossedRectangle;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
@@ -33,10 +32,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.BUTTON_PRESSED;
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_EAST;
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_NORTH;
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_SOUTH;
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.EMBOSS_WEST;
 import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_EDGE;
 
 /**
