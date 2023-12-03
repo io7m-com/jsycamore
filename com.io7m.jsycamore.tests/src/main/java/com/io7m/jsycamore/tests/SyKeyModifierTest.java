@@ -18,13 +18,18 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.keyboard.SyKeyCode;
-import com.io7m.jsycamore.api.keyboard.SyKeyModifier;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static com.io7m.jsycamore.api.keyboard.SyKeyCode.*;
-import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.*;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_LEFT_ALT;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_LEFT_CONTROL;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_LEFT_SHIFT;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_LEFT_SUPER;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_RIGHT_ALT;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_RIGHT_CONTROL;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_RIGHT_SHIFT;
+import static com.io7m.jsycamore.api.keyboard.SyKeyCode.SY_KEY_RIGHT_SUPER;
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_ALT_LEFT;
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_ALT_RIGHT;
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_CONTROL_LEFT;
@@ -33,6 +38,7 @@ import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_SHIFT_LE
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_SHIFT_RIGHT;
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_SUPER_LEFT;
 import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.SY_MODIFIER_SUPER_RIGHT;
+import static com.io7m.jsycamore.api.keyboard.SyKeyModifier.ofKey;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

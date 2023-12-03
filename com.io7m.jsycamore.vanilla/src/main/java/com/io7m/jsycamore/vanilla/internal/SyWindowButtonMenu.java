@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -24,6 +26,7 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
 
+import static com.io7m.jsycamore.api.text.SyTextDirection.TEXT_DIRECTION_LEFT_TO_RIGHT;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_MENU;
 
@@ -35,13 +38,19 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
 {
   private final SyMenu menu;
 
-  SyWindowButtonMenu()
+  SyWindowButtonMenu(final SyScreenType screen)
   {
-    super(WINDOW_BUTTON_MENU, "jsycamore:icon:window_menu");
+    super(screen, WINDOW_BUTTON_MENU, "jsycamore:icon:window_menu");
 
-    this.menu = new SyMenu();
-    this.menu.addAtom("Close", this::windowClose);
-    this.menu.addAtom("Maximize", this::windowMaximize);
+    this.menu = new SyMenu(screen);
+    this.menu.addAtom(
+      new SyText("Close", TEXT_DIRECTION_LEFT_TO_RIGHT),
+      this::windowClose
+    );
+    this.menu.addAtom(
+      new SyText("Maximize", TEXT_DIRECTION_LEFT_TO_RIGHT),
+      this::windowMaximize
+    );
   }
 
   private void windowClose()
@@ -54,10 +63,14 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
     final var window = windowOpt.get();
     switch (window.closeButtonBehaviour().get()) {
       case HIDE_ON_CLOSE_BUTTON -> {
-        window.screen().windowHide(window);
+        window.screen()
+          .windowService()
+          .windowHide(window);
       }
       case CLOSE_ON_CLOSE_BUTTON -> {
-        window.screen().windowClose(window);
+        window.screen()
+          .windowService()
+          .windowClose(window);
       }
     }
   }
@@ -65,7 +78,9 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
   private void windowMaximize()
   {
     this.window().ifPresent(w -> {
-      w.screen().windowMaximize(w);
+      w.screen()
+        .windowService()
+        .windowMaximize(w);
     });
   }
 
@@ -83,7 +98,7 @@ public final class SyWindowButtonMenu extends SyWindowButtonWithIcon
       .ifPresent(s -> {
         final var position = s.mousePosition().get();
         this.menu.setPosition(PVector2I.of(position.x(), position.y()));
-        s.menuOpen(this.menu);
+        s.menuService().menuOpen(this.menu);
       });
   }
 }

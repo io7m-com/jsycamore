@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.internal.scrollbars.SyScrollBarH;
 
@@ -37,25 +38,29 @@ public final class SyScrollBarsHorizontal
   /**
    * Create a horizontal scrollbar.
    *
+   * @param screen            The screen that owns the component
    * @param themeClassesExtra The extra theme classes
    *
    * @return A scrollbar
    */
 
   public static SyScrollBarHorizontalType create(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> themeClassesExtra)
   {
-    return new SyScrollBarH(themeClassesExtra);
+    return new SyScrollBarH(screen, themeClassesExtra);
   }
 
   /**
    * Create a horizontal scrollbar.
    *
+   * @param screen The screen that owns the component
+   *
    * @return A scrollbar
    */
 
-  public static SyScrollBarHorizontalType create()
+  public static SyScrollBarHorizontalType create(final SyScreenType screen)
   {
-    return create(List.of());
+    return create(screen, List.of());
   }
 }

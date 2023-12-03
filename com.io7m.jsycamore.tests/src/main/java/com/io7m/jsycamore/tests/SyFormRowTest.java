@@ -19,7 +19,6 @@ package com.io7m.jsycamore.tests;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jsycamore.components.standard.forms.SyFormRow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
+import static com.io7m.jsycamore.components.standard.buttons.SyButton.button;
 import static com.io7m.jsycamore.components.standard.forms.SyFormColumnSizeType.exact;
 import static com.io7m.jsycamore.components.standard.forms.SyFormColumnSizeType.flexible;
 import static com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration.columns;
@@ -49,9 +49,9 @@ public final class SyFormRowTest extends SyComponentContract<SyFormRow>
   {
     final var layout = this.newComponent();
 
-    final var c0 = new SyButton();
-    final var c1 = new SyButton();
-    final var c2 = new SyButton();
+    final var c0 = button(this.screen());
+    final var c1 = button(this.screen());
+    final var c2 = button(this.screen());
 
     layout.childAdd(c0);
     layout.childAdd(c1);
@@ -105,15 +105,17 @@ public final class SyFormRowTest extends SyComponentContract<SyFormRow>
   public void testLayoutAllFixed()
   {
     final var layout =
-      new SyFormRow(columns(
-        exact(32),
-        exact(100),
-        exact(16)
-      ));
+      new SyFormRow(
+        this.screen(),
+        columns(
+          exact(32),
+          exact(100),
+          exact(16)
+        ));
 
-    final var c0 = new SyButton();
-    final var c1 = new SyButton();
-    final var c2 = new SyButton();
+    final var c0 = button(this.screen());
+    final var c1 = button(this.screen());
+    final var c2 = button(this.screen());
 
     layout.childAdd(c0);
     layout.childAdd(c1);
@@ -167,15 +169,17 @@ public final class SyFormRowTest extends SyComponentContract<SyFormRow>
   public void testLayoutAllFlexible()
   {
     final var layout =
-      new SyFormRow(columns(
-        flexible(),
-        flexible(),
-        flexible()
-      ));
+      new SyFormRow(
+        this.screen(),
+        columns(
+          flexible(),
+          flexible(),
+          flexible()
+        ));
 
-    final var c0 = new SyButton();
-    final var c1 = new SyButton();
-    final var c2 = new SyButton();
+    final var c0 = button(this.screen());
+    final var c1 = button(this.screen());
+    final var c2 = button(this.screen());
 
     layout.childAdd(c0);
     layout.childAdd(c1);
@@ -238,10 +242,12 @@ public final class SyFormRowTest extends SyComponentContract<SyFormRow>
   @Override
   protected SyFormRow newComponent()
   {
-    return new SyFormRow(columns(
-      exact(32),
-      flexible(),
-      exact(16)
-    ));
+    return new SyFormRow(
+      this.screen(),
+      columns(
+        exact(32),
+        flexible(),
+        exact(16)
+      ));
   }
 }

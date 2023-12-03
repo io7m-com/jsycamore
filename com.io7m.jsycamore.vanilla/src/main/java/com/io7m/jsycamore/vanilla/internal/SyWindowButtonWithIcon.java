@@ -17,6 +17,7 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyAlignmentHorizontal;
@@ -45,24 +46,27 @@ public abstract class SyWindowButtonWithIcon extends SyWindowButtonComponent
    *
    * @param component     The classifier for the component
    * @param imageResource The image resource name
+   * @param screen        The screen that owns the component
    */
 
   public SyWindowButtonWithIcon(
+    final SyScreenType screen,
     final SyWindowDecorationComponent component,
     final String imageResource)
   {
-    super(component, List.of());
+    super(screen, component, List.of());
 
-    this.margin = new SyLayoutMargin();
+    this.margin = new SyLayoutMargin(screen);
     this.margin.setPaddingAll(8);
 
-    this.align = new SyAlign();
+    this.align = new SyAlign(screen);
     this.align.alignmentHorizontal()
       .set(SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER);
     this.align.alignmentVertical()
       .set(SyAlignmentVertical.ALIGN_VERTICAL_CENTER);
 
-    this.image = new SyImageView(List.of(WINDOW_BUTTON_CLOSE_ICON));
+    this.image =
+      new SyImageView(screen, List.of(WINDOW_BUTTON_CLOSE_ICON));
     this.image.imageURI()
       .set(Optional.of(URI.create(imageResource)));
 

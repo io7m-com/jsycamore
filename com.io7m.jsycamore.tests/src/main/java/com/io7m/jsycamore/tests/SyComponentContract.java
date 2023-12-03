@@ -24,11 +24,12 @@ import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
+import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
-import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
+import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -57,7 +58,8 @@ public abstract class SyComponentContract<T extends SyComponentType>
   private SyThemeType theme;
   private SyScreenType screen;
   private SyWindowType window;
-  private SyFontDirectoryType<? extends SyFontType> fonts;
+  private SyFontDirectoryServiceType<? extends SyFontType> fonts;
+  private SyWindowServiceType windowService;
 
   protected abstract T newComponent();
 
@@ -65,15 +67,18 @@ public abstract class SyComponentContract<T extends SyComponentType>
   public void componentSetup()
   {
     this.fonts =
-      SyFontDirectoryAWT.createFromServiceLoader();
+      SyAWTFontDirectoryService.createFromServiceLoader();
     this.theme =
       new SyThemePrimalFactory()
         .create();
     this.screen =
       new SyScreenFactory()
         .create(this.theme, this.fonts, PAreaSizeI.of(1024, 1024));
+    this.windowService =
+      this.screen.windowService();
+
     this.window =
-      this.screen.windowCreate(512, 512);
+      this.windowService.windowCreate(512, 512);
     this.window.decorated()
       .set(false);
 

@@ -19,17 +19,20 @@ package com.io7m.jsycamore.api.rendering;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 /**
  * A no-op render node.
  */
 
-public record SyRenderNodeNoop() implements SyRenderNodeType
+public record SyRenderNodeNoop() implements SyRenderNodePrimitiveType
 {
-  private static final PAreaSizeI<SySpaceComponentRelativeType> ZERO =
+  private static final PAreaSizeI<SySpaceComponentRelativeType> ZERO_SIZE =
     PAreaSizeI.of(0, 0);
 
-  private static final SyRenderNodeNoop NOOP = new SyRenderNodeNoop();
+  private static final SyRenderNodeNoop NOOP =
+    new SyRenderNodeNoop();
 
   /**
    * @return A no-op render node.
@@ -41,8 +44,20 @@ public record SyRenderNodeNoop() implements SyRenderNodeType
   }
 
   @Override
+  public String name()
+  {
+    return "NoOp";
+  }
+
+  @Override
+  public PVector2I<SySpaceComponentRelativeType> position()
+  {
+    return PVectors2I.zero();
+  }
+
+  @Override
   public PAreaSizeI<SySpaceComponentRelativeType> size()
   {
-    return ZERO;
+    return ZERO_SIZE;
   }
 }

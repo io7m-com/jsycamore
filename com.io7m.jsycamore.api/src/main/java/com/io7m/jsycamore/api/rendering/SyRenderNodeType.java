@@ -16,8 +16,11 @@
 
 package com.io7m.jsycamore.api.rendering;
 
+import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 /**
  * The type of render nodes.
@@ -25,14 +28,37 @@ import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 
 public sealed interface SyRenderNodeType
   permits SyRenderNodeComposite,
-  SyRenderNodeImage,
-  SyRenderNodeNoop,
-  SyRenderNodeShape,
-  SyRenderNodeText
+  SyRenderNodePrimitiveType
 {
   /**
-   * @return The bounds of the render node
+   * @return A name for the node, for debugging purposes
+   */
+
+  String name();
+
+  /**
+   * @return The position of the node relative to the component
+   */
+
+  PVector2I<SySpaceComponentRelativeType> position();
+
+  /**
+   * @return The size of the node
    */
 
   PAreaSizeI<SySpaceComponentRelativeType> size();
+
+  /**
+   * @return The bounding area of the node
+   */
+
+  default PAreaI<SySpaceComponentRelativeType> boundingArea()
+  {
+    return PAreasI.create(
+      this.position().x(),
+      this.position().y(),
+      this.size().sizeX(),
+      this.size().sizeY()
+    );
+  }
 }

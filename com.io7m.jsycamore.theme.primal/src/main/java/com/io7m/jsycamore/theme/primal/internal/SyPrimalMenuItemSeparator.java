@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -69,6 +70,8 @@ public final class SyPrimalMenuItemSeparator extends SyPrimalAbstract
     try {
       final var values = this.theme().values();
       return new SyRenderNodeShape(
+        "MenuItemSeparator",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_OVER)),
         rectangle

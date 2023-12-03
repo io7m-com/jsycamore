@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -59,13 +60,6 @@ public final class SyPrimalMenuItem extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-    final var rectangle =
-      new SyShapeRectangle<SySpaceComponentRelativeType>(
-        PAreasI.cast(PAreasI.moveToOrigin(area))
-      );
-
     if (!component.isActive()) {
       return SyRenderNodeNoop.noop();
     }
@@ -81,7 +75,16 @@ public final class SyPrimalMenuItem extends SyPrimalAbstract
 
       if (menuItem.isMouseOverMenuDescendant()) {
         try {
+          final var area =
+            component.boundingArea();
+          final var rectangle =
+            new SyShapeRectangle<SySpaceComponentRelativeType>(
+              PAreasI.cast(PAreasI.moveToOrigin(area))
+            );
+
           return new SyRenderNodeShape(
+            "MenuItemSelected",
+            PVectors2I.zero(),
             Optional.of(values.edgeFlat(PRIMARY_EDGE)),
             Optional.of(values.fillFlat(PRIMARY_FOREGROUND)),
             rectangle

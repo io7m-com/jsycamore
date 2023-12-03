@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -68,6 +69,8 @@ public final class SyPrimalUnmatched extends SyPrimalAbstract
 
     try {
       return new SyRenderNodeShape(
+        "UNMATCHED",
+        PVectors2I.zero(),
         Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
         Optional.of(values.fillFlat(SyPrimalValues.UNMATCHED)),
         rectAll

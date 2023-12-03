@@ -51,9 +51,9 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
     final var c = this.newComponent();
     c.paddingBetween().set(0);
 
-    final var b0 = new SyBlob(300, 100);
-    final var b1 = new SyBlob(300, 100);
-    final var b2 = new SyBlob(300, 100);
+    final var b0 = new SyBlob(this.screen(), 300, 100);
+    final var b1 = new SyBlob(this.screen(), 300, 100);
+    final var b2 = new SyBlob(this.screen(), 300, 100);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -89,9 +89,9 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
     c.childSizeXBehaviour().set(PRESERVE);
     c.alignHorizontal().set(ALIGN_HORIZONTAL_CENTER);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -131,9 +131,9 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
     c.childSizeXBehaviour().set(PRESERVE);
     c.alignHorizontal().set(ALIGN_HORIZONTAL_LEFT);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -173,9 +173,9 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
     c.childSizeXBehaviour().set(PRESERVE);
     c.alignHorizontal().set(ALIGN_HORIZONTAL_RIGHT);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -215,9 +215,9 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
     c.childSizeXBehaviour().set(FILL_SPACE);
     c.alignHorizontal().set(ALIGN_HORIZONTAL_LEFT);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -262,6 +262,6 @@ public final class SyPackVerticalTest extends SyComponentContract<SyPackVertical
   @Override
   protected SyPackVertical newComponent()
   {
-    return new SyPackVertical();
+    return new SyPackVertical(this.screen());
   }
 }

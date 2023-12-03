@@ -28,6 +28,7 @@ import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -62,20 +63,22 @@ public final class SyScrollBarV
   /**
    * A vertical scrollbar.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyScrollBarV(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
 
     this.buttonUp =
-      new SyScrollBarVButtonUp();
+      new SyScrollBarVButtonUp(screen);
     this.buttonDown =
-      new SyScrollBarVButtonDown();
+      new SyScrollBarVButtonDown(screen);
     this.track =
-      new SyScrollBarVTrack();
+      new SyScrollBarVTrack(screen);
 
     this.childAdd(this.buttonUp);
     this.childAdd(this.track);

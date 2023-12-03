@@ -19,20 +19,22 @@ package com.io7m.jsycamore.components.standard.internal;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemAtomType;
+import com.io7m.jsycamore.api.menus.SyMenuServiceType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
 import com.io7m.jsycamore.components.standard.SySpace;
-import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
 import com.io7m.jsycamore.components.standard.forms.SyFormRow;
 
@@ -47,6 +49,7 @@ import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_T
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
 import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static com.io7m.jsycamore.components.standard.text.SyTextView.textView;
 
 /**
  * A menu atom item.
@@ -57,7 +60,7 @@ public final class SyMenuItemAtom
   implements SyMenuItemAtomType
 {
   private final SyMenuType menu;
-  private final SyTextView text;
+  private final SyTextViewType text;
   private final Runnable action;
   private final SyImageView icon;
   private final SyFormRow row;
@@ -77,10 +80,10 @@ public final class SyMenuItemAtom
   public SyMenuItemAtom(
     final SyMenuType inMenu,
     final SyFormColumnsConfiguration inColumns,
-    final String inText,
+    final SyText inText,
     final Runnable inAction)
   {
-    super(List.of());
+    super(inMenu.screen(), List.of());
 
     this.columns =
       Objects.requireNonNull(inColumns, "inColumns");
@@ -89,29 +92,28 @@ public final class SyMenuItemAtom
     this.action =
       Objects.requireNonNull(inAction, "action");
 
-    this.row = new SyFormRow(this.columns);
+    this.row = new SyFormRow(inMenu.screen(), this.columns);
 
-    this.icon = new SyImageView();
+    this.icon = new SyImageView(inMenu.screen());
     this.icon.setMouseQueryAccepting(false);
     this.icon.sizeUpperLimit().set(PAreaSizeI.of(16, 16));
 
-    this.iconAlign = new SyAlign();
+    this.iconAlign = new SyAlign(inMenu.screen());
     this.iconAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.iconAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.iconAlign.childAdd(this.icon);
 
-    this.text = new SyTextView(List.of(MENU_ITEM_TEXT));
-    this.text.text().set(inText);
+    this.text = textView(inMenu.screen(), List.of(MENU_ITEM_TEXT), inText);
 
-    this.textAlign = new SyAlign();
+    this.textAlign = new SyAlign(inMenu.screen());
     this.textAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
     this.textAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.textAlign.childAdd(this.text);
 
     this.row.childAdd(this.iconAlign);
     this.row.childAdd(this.textAlign);
-    this.row.childAdd(new SySpace());
-    this.row.childAdd(new SySpace());
+    this.row.childAdd(new SySpace(inMenu.screen()));
+    this.row.childAdd(new SySpace(inMenu.screen()));
 
     this.childAdd(this.row);
   }
@@ -179,7 +181,7 @@ public final class SyMenuItemAtom
   protected SyEventConsumed onEvent(
     final SyEventType event)
   {
-    if (event instanceof SyMouseEventOnReleased released) {
+    if (event instanceof final SyMouseEventOnReleased released) {
       return switch (released.button()) {
         case MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT -> EVENT_NOT_CONSUMED;
         case MOUSE_BUTTON_LEFT -> {
@@ -189,7 +191,8 @@ public final class SyMenuItemAtom
           } finally {
             this.window()
               .map(SyWindowType::screen)
-              .ifPresent(SyScreenType::menuClose);
+              .map(SyScreenType::menuService)
+              .ifPresent(SyMenuServiceType::menuClose);
           }
 
           yield EVENT_CONSUMED;
@@ -207,7 +210,7 @@ public final class SyMenuItemAtom
   }
 
   @Override
-  public AttributeType<String> text()
+  public AttributeType<SyText> text()
   {
     return this.text.text();
   }

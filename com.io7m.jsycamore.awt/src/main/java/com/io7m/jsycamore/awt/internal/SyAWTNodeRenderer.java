@@ -18,7 +18,6 @@
 package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
-import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.rendering.SyPaintEdgeType;
 import com.io7m.jsycamore.api.rendering.SyPaintFillType;
 import com.io7m.jsycamore.api.rendering.SyPaintFlat;
@@ -26,6 +25,7 @@ import com.io7m.jsycamore.api.rendering.SyPaintGradientLinear;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeImage;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
+import com.io7m.jsycamore.api.rendering.SyRenderNodePrimitiveType;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
@@ -35,13 +35,14 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceRGBAPreType;
 import com.io7m.jsycamore.api.spaces.SySpaceType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jtensors.core.parameterized.vectors.PVector4D;
 import com.io7m.junreachable.UnimplementedCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
@@ -50,6 +51,8 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * An AWT node renderer.
@@ -61,7 +64,7 @@ public final class SyAWTNodeRenderer
     LoggerFactory.getLogger(SyAWTNodeRenderer.class);
 
   private final SyAWTImageLoader imageLoader;
-  private final SyFontDirectoryType<SyFontAWT> fontDirectory;
+  private final SyFontDirectoryServiceType<SyAWTFont> fontDirectory;
   private boolean debugBounds;
   private boolean textAntialias;
 
@@ -74,7 +77,7 @@ public final class SyAWTNodeRenderer
 
   public SyAWTNodeRenderer(
     final SyAWTImageLoader inImageLoader,
-    final SyFontDirectoryType<SyFontAWT> inFontDirectory)
+    final SyFontDirectoryServiceType<SyAWTFont> inFontDirectory)
   {
     this.imageLoader =
       Objects.requireNonNull(inImageLoader, "imageLoader");
@@ -201,7 +204,9 @@ public final class SyAWTNodeRenderer
     return new LinearGradientPaint(
       (float) x0, (float) y0,
       (float) x1, (float) y1,
-      fractions, colors);
+      fractions,
+      colors
+    );
   }
 
   private static Paint fillToPaintFlat(
@@ -232,27 +237,37 @@ public final class SyAWTNodeRenderer
 
   private void renderNodeText(
     final Graphics2D g,
-    final SyFontDirectoryType<SyFontAWT> fonts,
+    final SyFontDirectoryServiceType<SyAWTFont> fonts,
     final SyRenderNodeText textNode)
   {
     final var text = textNode.text();
-    if (text.isEmpty()) {
+    if (text.value().isEmpty()) {
       return;
     }
 
     final var size = textNode.size();
     final var sizeX = size.sizeX();
     final var sizeY = size.sizeY();
-    final var area =
-      PAreasI.<SySpaceType>create(0, 0, sizeX, sizeY);
 
     try {
       final var font =
         fonts.get(textNode.font().description());
 
-      final var width = font.textWidth(text);
-      final var x = (sizeX / 2) - (width / 2);
-      final var y = font.textHeight() - (font.textDescent());
+      final var width =
+        font.textWidth(text.value());
+
+      final int x =
+        switch (text.direction()) {
+          case TEXT_DIRECTION_LEFT_TO_RIGHT -> {
+            yield 0;
+          }
+          case TEXT_DIRECTION_RIGHT_TO_LEFT -> {
+            yield sizeX - width;
+          }
+        };
+
+
+      final int y = font.textHeight() - (font.textDescent());
 
       if (this.textAntialias) {
         g.setRenderingHint(
@@ -267,10 +282,10 @@ public final class SyAWTNodeRenderer
       }
 
       g.setFont(font.font());
-      g.setPaint(fillToPaint(area, textNode.fillPaint()));
-      g.drawString(text, x, y);
+      g.setPaint(fillToPaint(textNode.boundingArea(), textNode.fillPaint()));
+      g.drawString(text.value(), x, y);
     } catch (final SyFontException e) {
-      LOG.error("error rendering text: ", e);
+      LOG.error("Error rendering text: ", e);
       g.setPaint(Color.RED);
       g.fillRect(0, 0, sizeX, sizeY);
     }
@@ -317,6 +332,18 @@ public final class SyAWTNodeRenderer
     this.textAntialias = enabled;
   }
 
+  private static void pushTransform(
+    final Graphics2D graphics2D,
+    final Consumer<Graphics2D> f)
+  {
+    final var saved = graphics2D.getTransform();
+    try {
+      f.accept(graphics2D);
+    } finally {
+      graphics2D.setTransform(saved);
+    }
+  }
+
   /**
    * Render the given node.
    *
@@ -328,37 +355,63 @@ public final class SyAWTNodeRenderer
     final Graphics2D graphics2D,
     final SyRenderNodeType renderNode)
   {
-    try {
-      switch (renderNode) {
-        case final SyRenderNodeShape shape -> {
-          renderNodeShape(graphics2D, shape);
-        }
-        case final SyRenderNodeText text -> {
-          this.renderNodeText(graphics2D, this.fontDirectory, text);
-        }
-        case final SyRenderNodeImage image -> {
-          this.renderNodeImage(graphics2D, image);
-        }
-        case final SyRenderNodeComposite composite -> {
-          for (final var node : composite.nodes()) {
-            this.renderNode(graphics2D, node);
-          }
-        }
-        case final SyRenderNodeNoop noOp -> {
+    pushTransform(graphics2D, g -> {
+      final var nodes =
+        flattenNodes(renderNode).toList();
 
-        }
+      for (final var node : nodes) {
+        pushTransform(g, g2 -> {
+          final var position = node.position();
+          g2.translate(position.x(), position.y());
+          this.renderNodePrimitive(g2, node);
+        });
       }
-    } finally {
-      if (this.debugBounds) {
-        graphics2D.setPaint(Color.RED);
-        graphics2D.drawRect(
-          0,
-          0,
-          renderNode.size().sizeX(),
-          renderNode.size().sizeY()
-        );
+    });
+  }
+
+  private void renderNodePrimitive(
+    final Graphics2D g,
+    final SyRenderNodePrimitiveType node)
+  {
+    g.setComposite(AlphaComposite.SrcOver);
+
+    switch (node) {
+      case final SyRenderNodeImage n -> {
+        this.renderNodeImage(g, n);
+      }
+      case final SyRenderNodeNoop n -> {
+
+      }
+      case final SyRenderNodeShape n -> {
+        renderNodeShape(g, n);
+      }
+      case final SyRenderNodeText n -> {
+        this.renderNodeText(g, this.fontDirectory, n);
       }
     }
+
+    if (this.debugBounds) {
+      g.setColor(Color.RED);
+      g.drawRect(
+        0, 0, node.size().sizeX(), node.size().sizeY()
+      );
+    }
+  }
+
+  private static Stream<SyRenderNodePrimitiveType> flattenNodes(
+    final SyRenderNodeType renderNode)
+  {
+    return Stream.of(renderNode)
+      .flatMap(n -> {
+        return switch (n) {
+          case final SyRenderNodeComposite m ->
+            m.nodes().stream().flatMap(SyAWTNodeRenderer::flattenNodes);
+          case final SyRenderNodeImage m -> Stream.of(m);
+          case final SyRenderNodeNoop m -> Stream.of(m);
+          case final SyRenderNodeShape m -> Stream.of(m);
+          case final SyRenderNodeText m -> Stream.of(m);
+        };
+      });
   }
 
   private void renderNodeImage(

@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
@@ -136,7 +137,7 @@ public interface SyWindowType extends SyWindowReadableType
   SyComponentType contentArea();
 
   @Override
-  AttributeType<String> title();
+  AttributeType<SyText> title();
 
   @Override
   AttributeType<Integer> positionSnapping();

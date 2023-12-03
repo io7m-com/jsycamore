@@ -16,16 +16,18 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyTextViewReadableType;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeNoop;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
+import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 
@@ -73,15 +75,18 @@ public final class SyPrimalTitleTextView extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-
-    if (component instanceof SyTextViewReadableType textView) {
+    if (component instanceof final SyTextViewReadableType textView) {
       final var theme = this.theme();
       try {
+        final var size =
+          PAreasI.<SySpaceComponentRelativeType>size(
+            PAreasI.cast(textView.boundingArea()));
+
         return new SyRenderNodeText(
+          "TitleTextViewText",
+          PVectors2I.zero(),
+          size,
           theme.values().fillFlat(PRIMARY_FOREGROUND),
-          PAreaSizeI.of(area.sizeX(), area.sizeY()),
           this.font(context, component),
           textView.text().get()
         );

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.rendering;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.net.URI;
 import java.util.Objects;
@@ -26,24 +27,33 @@ import java.util.Objects;
 /**
  * A render node consisting of an image.
  *
- * @param image The image
- * @param size  The image size
+ * @param name     The node name, for debugging purposes
+ * @param image    The image
+ * @param position The position
+ * @param size     The image size
  */
 
 public record SyRenderNodeImage(
+  String name,
   URI image,
+  PVector2I<SySpaceComponentRelativeType> position,
   PAreaSizeI<SySpaceComponentRelativeType> size)
-  implements SyRenderNodeType
+  implements SyRenderNodePrimitiveType
 {
   /**
    * A render node consisting of an image.
    *
-   * @param image The image
-   * @param size  The image size
+   * @param name     The node name, for debugging purposes
+   * @param image    The image
+   * @param position The position
+   * @param size     The image size
    */
 
   public SyRenderNodeImage
   {
+    Objects.requireNonNull(name, "name");
     Objects.requireNonNull(image, "image");
+    Objects.requireNonNull(size, "size");
+    Objects.requireNonNull(position, "position");
   }
 }

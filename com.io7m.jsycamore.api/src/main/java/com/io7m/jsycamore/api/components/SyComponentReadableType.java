@@ -20,6 +20,7 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.active.SyActiveReadableType;
 import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
 import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeableReadableType;
@@ -43,6 +44,12 @@ public interface SyComponentReadableType
   SyBoundedReadableType<SySpaceParentRelativeType>,
   SyThemeableReadableType
 {
+  /**
+   * @return The screen that owns the component
+   */
+
+  SyScreenType screen();
+
   /**
    * @return The window to which this component belongs
    */
@@ -201,10 +208,11 @@ public interface SyComponentReadableType
   {
     Objects.requireNonNull(position, "position");
 
-    final var base =
-      this.viewportPositionOf(PVectors2I.zero());
+    final var componentBase =
+      this.viewportPositionOf(this.position().get());
+
     final var delta =
-      PVectors2I.subtract(position, base);
+      PVectors2I.subtract(position, componentBase);
 
     return PVector2I.of(delta.x(), delta.y());
   }

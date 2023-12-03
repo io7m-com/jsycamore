@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -49,9 +50,9 @@ public final class SyWindowResizeSW
   private PVector2I<SySpaceViewportType> windowStartPosition;
   private PAreaSizeI<SySpaceViewportType> windowStartSize;
 
-  SyWindowResizeSW()
+  SyWindowResizeSW(final SyScreenType screen)
   {
-    super(WINDOW_RESIZE_SE, List.of());
+    super(screen, WINDOW_RESIZE_SE, List.of());
   }
 
   @Override

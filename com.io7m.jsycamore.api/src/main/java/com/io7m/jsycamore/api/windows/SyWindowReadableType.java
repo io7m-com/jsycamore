@@ -21,6 +21,7 @@ import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
 
 /**
@@ -58,7 +59,7 @@ public interface SyWindowReadableType
    * @return An attribute representing the window title
    */
 
-  AttributeReadableType<String> title();
+  AttributeReadableType<SyText> title();
 
   /**
    * An attribute that, when set to a non-zero value, specifies a snapping value

@@ -27,7 +27,7 @@ public final class SyScrollPaneTest extends SyComponentContract<SyScrollPaneType
   @Override
   protected SyScrollPaneType newComponent()
   {
-    return SyScrollPanes.create();
+    return SyScrollPanes.create(this.screen());
   }
 
   @Test

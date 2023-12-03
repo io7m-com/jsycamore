@@ -21,6 +21,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyResizeBehaviour;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -47,13 +48,15 @@ public final class SyPackVertical extends SyLayoutAbstract
    * A simple container that distributes child objects vertically with a
    * configurable amount of padding between the objects.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyPackVertical(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
     final var attributes = SyComponentAttributes.get();
     this.paddingBetween = attributes.create(0);
     this.alignHorizontal = attributes.create(ALIGN_HORIZONTAL_LEFT);
@@ -63,26 +66,30 @@ public final class SyPackVertical extends SyLayoutAbstract
   /**
    * A simple container that distributes child objects vertically with a
    * configurable amount of padding between the objects.
+   *
+   * @param screen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyPackVertical()
+  public SyPackVertical(final SyScreenType screen)
   {
-    this(List.of());
+    this(screen, List.of());
   }
 
   /**
    * A simple container that distributes child objects vertically with a
    * configurable amount of padding between the objects.
    *
+   * @param screen  The screen that owns the component
    * @param padding The padding to insert between objects
    */
 
   @ConvenienceConstructor
   public SyPackVertical(
+    final SyScreenType screen,
     final int padding)
   {
-    this(List.of());
+    this(screen, List.of());
     this.paddingBetween.set(padding);
   }
 

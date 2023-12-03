@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.components.SyScrollPaneType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.internal.scrollpanes.SyScrollPane;
 
@@ -37,25 +38,30 @@ public final class SyScrollPanes
   /**
    * Create a scroll pane.
    *
+   * @param screen            The screen that owns the component
    * @param themeClassesExtra The extra theme classes
    *
    * @return A scroll pane
    */
 
   public static SyScrollPaneType create(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> themeClassesExtra)
   {
-    return new SyScrollPane(themeClassesExtra);
+    return new SyScrollPane(screen, themeClassesExtra);
   }
 
   /**
    * Create a scroll pane.
    *
+   * @param screen The screen that owns the component
+   *
    * @return A scroll pane
    */
 
-  public static SyScrollPaneType create()
+  public static SyScrollPaneType create(
+    final SyScreenType screen)
   {
-    return create(List.of());
+    return create(screen, List.of());
   }
 }

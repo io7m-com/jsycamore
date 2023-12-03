@@ -36,4 +36,6 @@ module com.io7m.jsycamore.components.standard
 
   exports com.io7m.jsycamore.components.standard;
   exports com.io7m.jsycamore.components.standard.forms;
+  exports com.io7m.jsycamore.components.standard.text;
+  exports com.io7m.jsycamore.components.standard.buttons;
 }

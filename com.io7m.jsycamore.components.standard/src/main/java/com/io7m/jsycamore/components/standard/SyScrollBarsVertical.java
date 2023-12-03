@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.internal.scrollbars.SyScrollBarV;
 
@@ -37,25 +38,30 @@ public final class SyScrollBarsVertical
   /**
    * Create a vertical scrollbar.
    *
+   * @param screen            The screen that owns the component
    * @param themeClassesExtra The extra theme classes
    *
    * @return A scrollbar
    */
 
   public static SyScrollBarVerticalType create(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> themeClassesExtra)
   {
-    return new SyScrollBarV(themeClassesExtra);
+    return new SyScrollBarV(screen, themeClassesExtra);
   }
 
   /**
    * Create a vertical scrollbar.
    *
+   * @param screen The screen that owns the component
+   *
    * @return A scrollbar
    */
 
-  public static SyScrollBarVerticalType create()
+  public static SyScrollBarVerticalType create(
+    final SyScreenType screen)
   {
-    return create(List.of());
+    return create(screen, List.of());
   }
 }

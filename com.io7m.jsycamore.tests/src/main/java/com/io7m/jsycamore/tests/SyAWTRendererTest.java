@@ -19,12 +19,12 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.awt.internal.SyAWTFont;
+import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
-import com.io7m.jsycamore.awt.internal.SyFontAWT;
-import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
 import com.io7m.jsycamore.vanilla.SyScreenFactory;
 import com.io7m.jsycamore.vanilla.internal.SyLayoutContext;
@@ -43,6 +43,7 @@ import java.awt.image.PixelGrabber;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.io7m.jsycamore.api.text.SyText.text;
 import static com.io7m.jsycamore.api.visibility.SyVisibility.VISIBILITY_INVISIBLE;
 import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -55,11 +56,10 @@ public final class SyAWTRendererTest
     LoggerFactory.getLogger(SyAWTRendererTest.class);
 
   private Path directory;
-  private SyAWTRenderer renderer;
   private BufferedImage imageReceived;
   private Graphics2D graphics;
   private Path imageReceivedFile;
-  private SyFontDirectoryType<SyFontAWT> fonts;
+  private SyFontDirectoryServiceType<SyAWTFont> fonts;
   private SyScreenFactory screens;
   private SyAWTImageLoader imageLoader;
 
@@ -78,10 +78,9 @@ public final class SyAWTRendererTest
     this.graphics.setPaint(Color.BLACK);
     this.graphics.fillRect(0, 0, 512, 512);
 
-    this.fonts = SyFontDirectoryAWT.createFromServiceLoader();
+    this.fonts = SyAWTFontDirectoryService.createFromServiceLoader();
     this.imageLoader = new SyAWTImageLoader();
 
-    this.renderer = new SyAWTRenderer(this.fonts, this.imageLoader);
     this.screens = new SyScreenFactory();
   }
 
@@ -174,18 +173,21 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.layout(layoutContext);
 
     this.renderAndCompare(screen, window, "testWindow0.png");
@@ -204,18 +206,21 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.layout(layoutContext);
 
@@ -235,18 +240,20 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.layout(layoutContext);
@@ -267,18 +274,20 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
@@ -300,18 +309,20 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.maximizeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.layout(layoutContext);
@@ -332,18 +343,20 @@ public final class SyAWTRendererTest
     final var theme =
       new SyThemePrimalFactory()
         .create();
-    final var layoutContext =
-      new SyLayoutContext(this.fonts, theme);
-
     final var screen =
       this.screens.create(theme, this.fonts, PAreaSizeI.of(512, 512));
-    final var window =
-      screen.windowCreate(512, 512);
+    final var layoutContext =
+      new SyLayoutContext(screen.services(), this.fonts, theme);
 
-    screen.windowShow(window);
+    final var windowService =
+      screen.windowService();
+    final var window =
+      windowService.windowCreate(512, 512);
+
+    windowService.windowShow(window);
 
     window.decorated().set(true);
-    window.title().set("Window Title");
+    window.title().set(text("Window Title"));
     window.closeButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.menuButtonVisibility().set(VISIBILITY_INVISIBLE);
     window.layout(layoutContext);
@@ -364,9 +377,10 @@ public final class SyAWTRendererTest
      * time around.
      */
 
-    this.renderer.render(this.graphics, screen, window);
+    final var renderer = new SyAWTRenderer(screen.services(), this.fonts, this.imageLoader);
+    renderer.render(this.graphics, screen, window);
     Thread.sleep(500L);
-    this.renderer.render(this.graphics, screen, window);
+    renderer.render(this.graphics, screen, window);
 
     this.saveImage();
     this.compareImages(imageName);

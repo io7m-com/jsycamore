@@ -55,10 +55,12 @@ public final class SyFormTest extends SyComponentContract<SyForm>
   @Override
   protected SyForm newComponent()
   {
-    return new SyForm(columns(
-      exact(32),
-      flexible(),
-      exact(16)
-    ));
+    return new SyForm(
+      this.screen(),
+      columns(
+        exact(32),
+        flexible(),
+        exact(16)
+      ));
   }
 }

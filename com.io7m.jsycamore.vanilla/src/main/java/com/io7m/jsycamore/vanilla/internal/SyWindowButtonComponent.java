@@ -23,6 +23,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 
@@ -45,10 +46,11 @@ public abstract class SyWindowButtonComponent
   private Runnable listener;
 
   protected SyWindowButtonComponent(
-    final SyWindowDecorationComponent inSemantic,
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final SyWindowDecorationComponent semantic,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inSemantic, inThemeClassesExtra);
+    super(screen, semantic, themeClasses);
     this.listener = () -> {
     };
   }

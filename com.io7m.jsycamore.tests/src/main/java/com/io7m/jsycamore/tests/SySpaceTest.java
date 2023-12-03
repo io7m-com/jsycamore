@@ -52,6 +52,6 @@ public final class SySpaceTest extends SyComponentContract<SySpace>
   @Override
   protected SySpace newComponent()
   {
-    return new SySpace();
+    return new SySpace(this.screen());
   }
 }

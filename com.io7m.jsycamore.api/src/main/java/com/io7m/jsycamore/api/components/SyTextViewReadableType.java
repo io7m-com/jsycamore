@@ -20,6 +20,7 @@ import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -33,6 +34,21 @@ import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_VIEW;
 public interface SyTextViewReadableType
   extends SyComponentReadableType
 {
+  /**
+   * @return An attribute indicating if this text view is selectable
+   */
+
+  AttributeReadableType<Boolean> textSelectable();
+
+  /**
+   * @return {@code true} if {@link #textSelectable()} is {@code true}
+   */
+
+  default boolean isTextSelectable()
+  {
+    return this.textSelectable().get().booleanValue();
+  }
+
   @Override
   default List<SyThemeClassNameType> themeClassesDefaultForComponent()
   {
@@ -54,5 +70,5 @@ public interface SyTextViewReadableType
    * @return The current text
    */
 
-  AttributeReadableType<String> text();
+  AttributeReadableType<SyText> text();
 }

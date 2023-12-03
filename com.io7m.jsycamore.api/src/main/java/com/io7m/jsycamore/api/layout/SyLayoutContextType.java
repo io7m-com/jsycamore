@@ -18,7 +18,6 @@ package com.io7m.jsycamore.api.layout;
 
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyConstraints;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 
@@ -35,9 +34,6 @@ public interface SyLayoutContextType extends SyThemeContextType
    */
 
   SyThemeType themeCurrent();
-
-  @Override
-  SyFontDirectoryType fonts();
 
   /**
    * Derive size constraints based on the current theme, if any exist.

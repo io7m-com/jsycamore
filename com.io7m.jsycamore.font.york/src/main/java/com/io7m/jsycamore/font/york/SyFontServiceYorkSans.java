@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.font.york;
 
+import com.io7m.jsycamore.api.services.SyServiceAbstract;
 import com.io7m.jsycamore.api.text.SyFontServiceType;
 import com.io7m.jsycamore.api.text.SyFontStyle;
 import org.osgi.service.component.annotations.Component;
@@ -31,6 +32,7 @@ import static com.io7m.jsycamore.api.text.SyFontStyle.REGULAR;
 
 @Component
 public final class SyFontServiceYorkSans
+  extends SyServiceAbstract
   implements SyFontServiceType
 {
   /**
@@ -64,5 +66,11 @@ public final class SyFontServiceYorkSans
       throw new IOException("Unable to open font file!");
     }
     return url.openStream();
+  }
+
+  @Override
+  public String description()
+  {
+    return "York Sans font service.";
   }
 }

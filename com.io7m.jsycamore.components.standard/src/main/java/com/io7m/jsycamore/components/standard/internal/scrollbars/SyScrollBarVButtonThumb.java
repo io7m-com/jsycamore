@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -65,19 +66,20 @@ final class SyScrollBarVButtonThumb
   private double scrollThen;
 
   SyScrollBarVButtonThumb(
+    final SyScreenType screen,
     final SyScrollBarVTrack inTrack)
   {
-    super(List.of());
+    super(screen, List.of());
 
     this.track =
       Objects.requireNonNull(inTrack, "track");
 
     this.image =
-      new SyImageView(List.of(SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON));
+      new SyImageView(screen, List.of(SCROLLBAR_VERTICAL_BUTTON_THUMB_ICON));
     this.image.setImageURI("jsycamore:icon:scroll_v_thumb");
     this.image.setMouseQueryAccepting(false);
 
-    this.align = new SyAlign();
+    this.align = new SyAlign(screen);
     this.align.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.align.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.align.childAdd(this.image);

@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.api.menus;
 
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.text.SyText;
 
 /**
  * Write access to menu bars.
@@ -35,6 +36,6 @@ public interface SyMenuBarType
    */
 
   SyMenuBarItemType addMenu(
-    String name,
+    SyText name,
     SyMenuType menu);
 }

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.menus;
 
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public interface SyMenuBarItemType extends SyComponentType, SyMenuHostType
    * @return The menu bar item name
    */
 
-  AttributeType<String> name();
+  AttributeType<SyText> name();
 
   /**
    * @return The menu that will be opened by this item

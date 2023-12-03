@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -36,16 +37,17 @@ public final class SyBlob extends SyComponentAbstract
   private int preferredSizeX;
   private int preferredSizeY;
 
-  public SyBlob()
+  public SyBlob(final SyScreenType screen)
   {
-    super(List.of());
+    super(screen, List.of());
   }
 
   public SyBlob(
+    final SyScreenType screen,
     final int x,
     final int y)
   {
-    this();
+    this(screen);
     this.setPreferredSizeX(x);
     this.setPreferredSizeY(y);
   }

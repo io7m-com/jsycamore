@@ -30,6 +30,7 @@ import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -66,6 +67,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> size;
   private final List<SyThemeClassNameType> themeClassesExtra;
   private final AttributeType<PAreaSizeI<SySpaceParentRelativeType>> sizeUpperLimit;
+  private final SyScreenType screen;
   private volatile boolean mouseOver;
   private volatile boolean mouseAcceptQuery = true;
   private Optional<SyWindowType> window;
@@ -74,6 +76,7 @@ public abstract class SyComponentAbstract implements SyComponentType
    * A convenient abstract implementation of a component, to make it easier to
    * implement new components.
    *
+   * @param inScreen            The screen that owns the component
    * @param inThemeClassesExtra The extra theme classes, if any
    * @param inNodeDetachCheck   A function that returns {@code true} if this
    *                            component should be allowed to be detached from
@@ -81,9 +84,12 @@ public abstract class SyComponentAbstract implements SyComponentType
    */
 
   protected SyComponentAbstract(
+    final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra,
     final BooleanSupplier inNodeDetachCheck)
   {
+    this.screen =
+      Objects.requireNonNull(inScreen, "inScreen");
     this.themeClassesExtra =
       Objects.requireNonNull(inThemeClassesExtra, "themeClassesExtra");
 
@@ -108,29 +114,12 @@ public abstract class SyComponentAbstract implements SyComponentType
       Optional.empty();
   }
 
-  /**
-   * Set the window that owns the component. This method is only intended to be
-   * called for the root component that is attached directly to a window.
-   *
-   * @param newWindow The new window
-   */
-
-  public final void setWindow(
-    final Optional<SyWindowType> newWindow)
-  {
-    Objects.requireNonNull(newWindow, "newWindow");
-    Preconditions.checkPreconditionV(
-      this.node.parent().isEmpty(),
-      "Nodes attached to windows must not have parents."
-    );
-    this.window = Objects.requireNonNull(newWindow, "newWindow");
-  }
-
   @ConvenienceConstructor
   protected SyComponentAbstract(
+    final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    this(inThemeClassesExtra, () -> true);
+    this(inScreen, inThemeClassesExtra, () -> true);
   }
 
   @SuppressWarnings("unchecked")
@@ -152,6 +141,30 @@ public abstract class SyComponentAbstract implements SyComponentType
       return targetY >= viewportMinY && targetY <= viewportMaxY;
     }
     return false;
+  }
+
+  @Override
+  public final SyScreenType screen()
+  {
+    return this.screen;
+  }
+
+  /**
+   * Set the window that owns the component. This method is only intended to be
+   * called for the root component that is attached directly to a window.
+   *
+   * @param newWindow The new window
+   */
+
+  public final void setWindow(
+    final Optional<SyWindowType> newWindow)
+  {
+    Objects.requireNonNull(newWindow, "newWindow");
+    Preconditions.checkPreconditionV(
+      this.node.parent().isEmpty(),
+      "Nodes attached to windows must not have parents."
+    );
+    this.window = Objects.requireNonNull(newWindow, "newWindow");
   }
 
   @Override

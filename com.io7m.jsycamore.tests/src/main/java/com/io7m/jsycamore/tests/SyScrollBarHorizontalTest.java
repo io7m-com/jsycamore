@@ -17,9 +17,7 @@
 
 package com.io7m.jsycamore.tests;
 
-import com.io7m.jsycamore.api.active.SyActive;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
-import com.io7m.jsycamore.api.components.SyScrollBarHideIfDisabled;
 import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.components.standard.SyScrollBarsHorizontal;
@@ -63,7 +61,7 @@ public final class SyScrollBarHorizontalTest
   @Override
   protected SyScrollBarHorizontalType newComponent()
   {
-    return SyScrollBarsHorizontal.create();
+    return SyScrollBarsHorizontal.create(this.screen());
   }
 
   /**

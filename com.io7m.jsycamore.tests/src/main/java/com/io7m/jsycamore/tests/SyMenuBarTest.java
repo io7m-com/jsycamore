@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
+import static com.io7m.jsycamore.api.text.SyText.text;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,14 +51,14 @@ public final class SyMenuBarTest extends SyComponentContract<SyMenuBar>
   @Test
   public void testMenuAcyclic()
   {
-    final var menu0 = new SyMenu();
-    final var menu1 = new SyMenu();
-    final var item1 = menu0.addSubmenu("Menu 1", menu1);
+    final var menu0 = new SyMenu(this.screen());
+    final var menu1 = new SyMenu(this.screen());
+    final var item1 = menu0.addSubmenu(text("Menu 1"), menu1);
     assertEquals(menu0, item1.menu());
     assertEquals(menu1, item1.submenu());
 
     assertThrows(JOTreeExceptionCycle.class, () -> {
-      menu1.addSubmenu("Menu 0", menu0);
+      menu1.addSubmenu(text("Menu 0"), menu0);
     });
   }
 
@@ -78,6 +79,6 @@ public final class SyMenuBarTest extends SyComponentContract<SyMenuBar>
   @Override
   protected SyMenuBar newComponent()
   {
-    return new SyMenuBar();
+    return new SyMenuBar(this.screen());
   }
 }

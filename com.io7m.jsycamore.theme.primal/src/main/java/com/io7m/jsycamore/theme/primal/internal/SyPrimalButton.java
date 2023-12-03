@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -87,6 +88,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final SyRenderNodeShape embossW =
         new SyRenderNodeShape(
+          "ButtonPressedEmbossW",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillWest()),
           embossed.shapeWest()
@@ -94,6 +97,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final SyRenderNodeShape embossS =
         new SyRenderNodeShape(
+          "ButtonPressedEmbossS",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillSouth()),
           embossed.shapeSouth()
@@ -101,6 +106,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final SyRenderNodeShape embossN =
         new SyRenderNodeShape(
+          "ButtonPressedEmbossN",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillNorth()),
           embossed.shapeNorth()
@@ -108,6 +115,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final SyRenderNodeShape embossE =
         new SyRenderNodeShape(
+          "ButtonPressedEmbossE",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillEast()),
           embossed.shapeEast()
@@ -115,6 +124,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final var mainFill =
         new SyRenderNodeShape(
+          "ButtonPressedMainFill",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(values.fillFlat(BUTTON_PRESSED)),
           rectangle
@@ -122,12 +133,15 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
       final var mainEdge =
         new SyRenderNodeShape(
+          "ButtonPressedMainEdge",
+          PVectors2I.zero(),
           Optional.of(values.edgeFlat(PRIMARY_EDGE)),
           Optional.empty(),
           rectangle
         );
 
       return SyRenderNodeComposite.composite(
+        "ButtonPressedComposite",
         mainFill, embossN, embossE, embossS, embossW, mainEdge
       );
     }
@@ -145,6 +159,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "ButtonOverEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -152,6 +168,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "ButtonOverEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -159,6 +177,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "ButtonOverEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -166,6 +186,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "ButtonOverEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -173,6 +195,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainFill =
       new SyRenderNodeShape(
+        "ButtonOverMainFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_OVER)),
         rectangle
@@ -180,12 +204,15 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "ButtonOverMainEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "ButtonOverComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }
@@ -210,6 +237,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "ButtonEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -217,6 +246,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "ButtonEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -224,6 +255,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "ButtonEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -231,6 +264,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "ButtonEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -238,6 +273,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainFill =
       new SyRenderNodeShape(
+        "ButtonMainFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
         rectangle
@@ -245,12 +282,15 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "ButtonMainEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "ButtonMainComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }
@@ -260,12 +300,14 @@ public final class SyPrimalButton extends SyPrimalAbstract
     final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
     throws SyThemeValueException
   {
-    if (component instanceof SyButtonReadableType button) {
+    if (component instanceof final SyButtonReadableType button) {
       return this.renderForActiveNotOverButton(button, rectangle);
     }
 
     final var values = this.theme().values();
     return new SyRenderNodeShape(
+      "ButtonUnmatched",
+      PVectors2I.zero(),
       Optional.of(values.edgeFlat(PRIMARY_EDGE)),
       Optional.of(values.fillFlat(UNMATCHED)),
       rectangle
@@ -277,12 +319,14 @@ public final class SyPrimalButton extends SyPrimalAbstract
     final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
     throws SyThemeValueException
   {
-    if (component instanceof SyButtonReadableType button) {
+    if (component instanceof final SyButtonReadableType button) {
       return this.renderForActiveOverButton(button, rectangle);
     }
 
     final var values = this.theme().values();
     return new SyRenderNodeShape(
+      "ButtonUnmatched",
+      PVectors2I.zero(),
       Optional.of(values.edgeFlat(PRIMARY_EDGE)),
       Optional.of(values.fillFlat(UNMATCHED)),
       rectangle
@@ -345,6 +389,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "ButtonInactiveEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -352,6 +398,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "ButtonInactiveEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -359,6 +407,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "ButtonInactiveEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -366,6 +416,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "ButtonInactiveEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -373,6 +425,8 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainFill =
       new SyRenderNodeShape(
+        "ButtonInactiveMainFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_INACTIVE)),
         rectangle
@@ -380,12 +434,15 @@ public final class SyPrimalButton extends SyPrimalAbstract
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "ButtonInactiveMainEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "ButtonInactiveComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }

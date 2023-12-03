@@ -44,14 +44,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVTopHLeft()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_TOP);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
     a.childAdd(c);
@@ -73,14 +73,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVTopHRight()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_TOP);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_RIGHT);
     a.childAdd(c);
@@ -102,14 +102,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVTopHCenter()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_TOP);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     a.childAdd(c);
@@ -131,14 +131,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVCenterHLeft()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
     a.childAdd(c);
@@ -160,14 +160,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVCenterHRight()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_RIGHT);
     a.childAdd(c);
@@ -189,14 +189,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVCenterHCenter()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     a.childAdd(c);
@@ -218,14 +218,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVBottomHLeft()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_BOTTOM);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
     a.childAdd(c);
@@ -247,14 +247,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVBottomHRight()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_BOTTOM);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_RIGHT);
     a.childAdd(c);
@@ -277,14 +277,14 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Test
   public void testLayoutVBottomHCenter()
   {
-    final var c = new SyBlob();
+    final var c = new SyBlob(this.screen());
     c.setPreferredSizeY(32);
     c.setPreferredSizeX(32);
 
     assertEquals(0, c.position().get().x());
     assertEquals(0, c.position().get().y());
 
-    final var a = new SyAlign();
+    final var a = new SyAlign(this.screen());
     a.alignmentVertical().set(ALIGN_VERTICAL_BOTTOM);
     a.alignmentHorizontal().set(ALIGN_HORIZONTAL_RIGHT);
     a.childAdd(c);
@@ -307,6 +307,6 @@ public final class SyAlignTest extends SyComponentContract<SyAlign>
   @Override
   protected SyAlign newComponent()
   {
-    return new SyAlign();
+    return new SyAlign(this.screen());
   }
 }

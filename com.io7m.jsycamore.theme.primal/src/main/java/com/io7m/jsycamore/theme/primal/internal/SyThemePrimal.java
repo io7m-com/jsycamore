@@ -35,6 +35,7 @@ import java.util.Objects;
 
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.BUTTON;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.CONTAINER;
+import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_MULTILINE_VIEW;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_VIEW;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.WINDOW_TITLE_TEXT;
 import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_BUTTON_CLOSE;
@@ -91,6 +92,9 @@ public final class SyThemePrimal implements SyThemeType
 
     for (final var className : SyThemeClassNameStandard.values()) {
       switch (className) {
+        case TEXT_MULTILINE_VIEW -> {
+          this.standards.put(TEXT_MULTILINE_VIEW, new SyPrimalTextMultilineView(this));
+        }
         case WINDOW_BUTTON_CLOSE,
           WINDOW_BUTTON_MAXIMIZE,
           WINDOW_BUTTON_MENU,

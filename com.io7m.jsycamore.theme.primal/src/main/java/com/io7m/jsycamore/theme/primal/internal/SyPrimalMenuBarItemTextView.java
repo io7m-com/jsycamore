@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyTextViewReadableType;
 import com.io7m.jsycamore.api.menus.SyMenuBarItemType;
@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 
@@ -58,10 +59,7 @@ public final class SyPrimalMenuBarItemTextView extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-
-    if (component instanceof SyTextViewReadableType textView) {
+    if (component instanceof final SyTextViewReadableType textView) {
       final var theme = this.theme();
       final var values = theme.values();
 
@@ -75,28 +73,34 @@ public final class SyPrimalMenuBarItemTextView extends SyPrimalAbstract
       final var parentComponent =
         parentNodeOpt.get().value();
 
-      if (parentComponent instanceof SyMenuBarItemType barItem) {
+      if (parentComponent instanceof final SyMenuBarItemType barItem) {
         try {
+          final var size =
+            PAreasI.<SySpaceComponentRelativeType>size(
+              PAreasI.cast(textView.boundingArea()));
+
           final var textFont =
             this.font(context, component);
           final var text =
             textView.text().get();
-          final var textSize =
-            PAreaSizeI.<SySpaceComponentRelativeType>of(area.sizeX(), area.sizeY());
 
           return switch (barItem.selected()) {
             case MENU_SELECTED -> {
               yield new SyRenderNodeText(
+                "MenuBarItemTextSelected",
+                PVectors2I.zero(),
+                size,
                 values.fillFlat(PRIMARY_BACKGROUND),
-                textSize,
                 textFont,
                 text
               );
             }
             case MENU_NOT_SELECTED -> {
               yield new SyRenderNodeText(
+                "MenuBarItemTextNotSelected",
+                PVectors2I.zero(),
+                size,
                 values.fillFlat(PRIMARY_FOREGROUND),
-                textSize,
                 textFont,
                 text
               );

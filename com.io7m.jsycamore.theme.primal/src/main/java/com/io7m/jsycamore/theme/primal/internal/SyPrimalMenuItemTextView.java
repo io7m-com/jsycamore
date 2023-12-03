@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.theme.primal.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyTextViewReadableType;
 import com.io7m.jsycamore.api.menus.SyMenuItemType;
@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 
@@ -59,10 +60,7 @@ public final class SyPrimalMenuItemTextView extends SyPrimalAbstract
     Objects.requireNonNull(context, "context");
     Objects.requireNonNull(component, "component");
 
-    final var area =
-      component.boundingArea();
-
-    if (component instanceof SyTextViewReadableType textView) {
+    if (component instanceof final SyTextViewReadableType textView) {
       final var theme = this.theme();
       final var values = theme.values();
 
@@ -81,13 +79,17 @@ public final class SyPrimalMenuItemTextView extends SyPrimalAbstract
           this.font(context, component);
         final var text =
           textView.text().get();
-        final var textSize =
-          PAreaSizeI.<SySpaceComponentRelativeType>of(area.sizeX(), area.sizeY());
+
+        final var size =
+          PAreasI.<SySpaceComponentRelativeType>size(
+            PAreasI.cast(textView.boundingArea()));
 
         if (!menuItem.isActive()) {
           return new SyRenderNodeText(
+            "MenuItemTextViewInactive",
+            PVectors2I.zero(),
+            size,
             values.fillFlat(PRIMARY_FOREGROUND_INACTIVE),
-            textSize,
             textFont,
             text
           );
@@ -95,16 +97,20 @@ public final class SyPrimalMenuItemTextView extends SyPrimalAbstract
 
         if (menuItem.isMouseOverMenuDescendant()) {
           return new SyRenderNodeText(
+            "MenuItemTextViewOver",
+            PVectors2I.zero(),
+            size,
             values.fillFlat(PRIMARY_BACKGROUND),
-            textSize,
             textFont,
             text
           );
         }
 
         return new SyRenderNodeText(
+          "MenuItemTextView",
+          PVectors2I.zero(),
+          size,
           values.fillFlat(PRIMARY_FOREGROUND),
-          textSize,
           textFont,
           text
         );

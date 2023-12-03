@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -32,11 +33,13 @@ public final class SyWindowButtonClose extends SyWindowButtonWithIcon
 {
   /**
    * A window close button.
+   *
+   * @param screen The screen that owns the component
    */
 
-  public SyWindowButtonClose()
+  public SyWindowButtonClose(final SyScreenType screen)
   {
-    super(WINDOW_BUTTON_CLOSE, "jsycamore:icon:window_close");
+    super(screen, WINDOW_BUTTON_CLOSE, "jsycamore:icon:window_close");
   }
 
   @Override
@@ -51,10 +54,14 @@ public final class SyWindowButtonClose extends SyWindowButtonWithIcon
     this.window().ifPresent(w -> {
       switch (w.closeButtonBehaviour().get()) {
         case HIDE_ON_CLOSE_BUTTON -> {
-          w.screen().windowHide(w);
+          w.screen()
+            .windowService()
+            .windowHide(w);
         }
         case CLOSE_ON_CLOSE_BUTTON -> {
-          w.screen().windowClose(w);
+          w.screen()
+            .windowService()
+            .windowClose(w);
         }
       }
     });

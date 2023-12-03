@@ -23,6 +23,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -62,6 +63,8 @@ public final class SyPrimalScrollPaneContentAreaViewport extends SyPrimalAbstrac
       );
 
     return new SyRenderNodeShape(
+      "ScrollPaneContentAreaViewport",
+      PVectors2I.zero(),
       Optional.empty(),
       Optional.empty(),
       rectangle

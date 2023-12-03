@@ -28,6 +28,7 @@ import com.io7m.jsycamore.api.components.SyScrollPaneType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -58,22 +59,24 @@ public final class SyScrollPane
   /**
    * The main scroll pane implementation.
    *
-   * @param inExtraClasses The extra classes
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra classes
    */
 
   public SyScrollPane(
-    final List<SyThemeClassNameType> inExtraClasses)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inExtraClasses);
+    super(screen, themeClasses);
 
     this.scrollH =
-      SyScrollBarsHorizontal.create();
+      SyScrollBarsHorizontal.create(screen);
     this.scrollV =
-      SyScrollBarsVertical.create();
+      SyScrollBarsVertical.create(screen);
     this.contentArea =
-      new SyScrollPaneContentArea();
+      new SyScrollPaneContentArea(screen);
     this.contentAreaViewport =
-      new SyScrollPaneContentAreaViewport();
+      new SyScrollPaneContentAreaViewport(screen);
 
     final var attributes =
       SyComponentAttributes.get();

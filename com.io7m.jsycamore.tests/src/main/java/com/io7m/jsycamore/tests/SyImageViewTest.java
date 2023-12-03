@@ -53,6 +53,6 @@ public final class SyImageViewTest extends SyComponentContract<SyImageView>
   @Override
   protected SyImageView newComponent()
   {
-    return new SyImageView();
+    return new SyImageView(this.screen());
   }
 }

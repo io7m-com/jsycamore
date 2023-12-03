@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard.forms;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.ConvenienceConstructor;
@@ -41,15 +42,17 @@ public final class SyForm extends SyLayoutAbstract
   /**
    * A vertical form layout consisting of rows of columns.
    *
-   * @param inThemeClassesExtra   The extra theme classes, if any
+   * @param screen              The screen that owns the component
+   * @param themeClasses   The extra theme classes, if any
    * @param inColumnConfiguration The column configuration
    */
 
   public SyForm(
-    final List<SyThemeClassNameType> inThemeClassesExtra,
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses,
     final SyFormColumnsConfiguration inColumnConfiguration)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
     this.columnConfiguration =
       Objects.requireNonNull(inColumnConfiguration, "inColumnConfiguration");
   }
@@ -57,14 +60,16 @@ public final class SyForm extends SyLayoutAbstract
   /**
    * A vertical form layout consisting of rows of columns.
    *
+   * @param screen              The screen that owns the component
    * @param inColumnConfiguration The column configuration
    */
 
   @ConvenienceConstructor
   public SyForm(
+    final SyScreenType screen,
     final SyFormColumnsConfiguration inColumnConfiguration)
   {
-    this(List.of(), inColumnConfiguration);
+    this(screen, List.of(), inColumnConfiguration);
   }
 
   /**
@@ -75,7 +80,7 @@ public final class SyForm extends SyLayoutAbstract
 
   public SyFormRow addRow()
   {
-    final var row = new SyFormRow(this.columnConfiguration);
+    final var row = new SyFormRow(this.screen(), this.columnConfiguration);
     this.childAdd(row);
     return row;
   }

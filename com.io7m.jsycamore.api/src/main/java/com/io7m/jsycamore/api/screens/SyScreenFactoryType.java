@@ -18,7 +18,7 @@ package com.io7m.jsycamore.api.screens;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 
 /**
@@ -39,7 +39,7 @@ public interface SyScreenFactoryType
 
   SyScreenType create(
     SyThemeType theme,
-    SyFontDirectoryType fonts,
+    SyFontDirectoryServiceType fonts,
     PAreaSizeI<SySpaceViewportType> size
   );
 }

@@ -21,6 +21,7 @@ import com.io7m.jattribute.core.AttributeSubscriptionType;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
@@ -30,9 +31,12 @@ import com.io7m.jsycamore.api.menus.SyMenuSelected;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
+import com.io7m.jsycamore.components.standard.text.SyTextView;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.ArrayList;
@@ -62,19 +66,21 @@ public final class SyMenuBar
   /**
    * A menu bar.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyMenuBar(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
 
     this.menuBarItems = List.of();
     this.menuSelected = null;
     this.menuSubscriptions = new HashMap<>(4);
 
-    this.align = new SyPackHorizontal();
+    this.align = new SyPackHorizontal(screen);
     this.align.setMouseQueryAccepting(false);
 
     this.childAdd(this.align);
@@ -82,12 +88,14 @@ public final class SyMenuBar
 
   /**
    * A menu bar.
+   *
+   * @param inScreen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyMenuBar()
+  public SyMenuBar(final SyScreenType inScreen)
   {
-    this(List.of());
+    this(inScreen, List.of());
   }
 
   @Override
@@ -140,12 +148,15 @@ public final class SyMenuBar
     menu.menu.setPosition(
       PVector2I.of(viewportPosition.x(), viewportPosition.y())
     );
-    window.screen().menuOpen(menu.menu());
+
+    window.screen()
+      .menuService()
+      .menuOpen(menu.menu());
   }
 
   @Override
   public SyMenuBarItemType addMenu(
-    final String name,
+    final SyText name,
     final SyMenuType menu)
   {
     Objects.requireNonNull(name, "name");
@@ -190,24 +201,27 @@ public final class SyMenuBar
   {
     private final SyMenuBar menuBar;
     private final SyMenuType menu;
-    private final SyTextView text;
+    private final SyTextViewType text;
 
     SyMenuBarItem(
       final SyMenuBar inMenuBar,
       final SyMenuType inMenu,
-      final String inName)
+      final SyText inName)
     {
-      super(List.of());
+      super(inMenuBar.screen(), List.of());
 
       this.menuBar =
         Objects.requireNonNull(inMenuBar, "inMenuBar");
       this.menu =
         Objects.requireNonNull(inMenu, "inMenu");
 
-      this.text = new SyTextView(List.of(MENU_BAR_ITEM_TEXT));
-      this.text.setText(inName);
+      this.text =
+        SyTextView.textView(
+          inMenuBar.screen(),
+          List.of(MENU_BAR_ITEM_TEXT),
+          inName
+        );
       this.text.setMouseQueryAccepting(false);
-
       this.childAdd(this.text);
     }
 
@@ -266,7 +280,7 @@ public final class SyMenuBar
     }
 
     @Override
-    public AttributeType<String> name()
+    public AttributeType<SyText> name()
     {
       return this.text.text();
     }

@@ -47,7 +47,7 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
     final var c = this.newComponent();
     c.setPaddingAll(8);
 
-    final var b = new SyBlob();
+    final var b = new SyBlob(this.screen());
     b.setPreferredSizeX(128);
     b.setPreferredSizeY(128);
     c.childAdd(b);
@@ -71,7 +71,7 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
     final var c = this.newComponent();
     c.setPaddingAll(0);
 
-    final var b = new SyBlob();
+    final var b = new SyBlob(this.screen());
     b.setPreferredSizeX(128);
     b.setPreferredSizeY(128);
     c.childAdd(b);
@@ -95,7 +95,7 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
     final var c = this.newComponent();
     c.setPaddingAll(256);
 
-    final var b = new SyBlob();
+    final var b = new SyBlob(this.screen());
     b.setPreferredSizeX(128);
     b.setPreferredSizeY(128);
     c.childAdd(b);
@@ -126,6 +126,6 @@ public final class SyLayoutMarginTest extends SyComponentContract<SyLayoutMargin
   @Override
   protected SyLayoutMargin newComponent()
   {
-    return new SyLayoutMargin();
+    return new SyLayoutMargin(this.screen());
   }
 }

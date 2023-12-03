@@ -22,6 +22,7 @@ import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -46,13 +47,15 @@ public final class SyAlign extends SyLayoutAbstract
    * A container that aligns child components to the given horizontal and
    * vertical alignment.
    *
+   * @param screen            The screen that owns the component
    * @param themeClassesExtra The extra theme classes, if any
    */
 
   public SyAlign(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> themeClassesExtra)
   {
-    super(themeClassesExtra);
+    super(screen, themeClassesExtra);
     final var attributes = SyComponentAttributes.get();
     this.alignH = attributes.create(ALIGN_HORIZONTAL_LEFT);
     this.alignV = attributes.create(ALIGN_VERTICAL_CENTER);
@@ -61,12 +64,14 @@ public final class SyAlign extends SyLayoutAbstract
   /**
    * A container that aligns child components to the given horizontal and
    * vertical alignment.
+   *
+   * @param screen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyAlign()
+  public SyAlign(final SyScreenType screen)
   {
-    this(List.of());
+    this(screen, List.of());
   }
 
   @Override

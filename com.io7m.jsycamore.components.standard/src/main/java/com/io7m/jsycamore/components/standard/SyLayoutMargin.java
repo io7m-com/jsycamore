@@ -20,6 +20,7 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -45,13 +46,15 @@ public final class SyLayoutMargin extends SyLayoutAbstract
    * A trivial container that pads each edge with a configurable amount of empty
    * space.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyLayoutMargin(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
     final var attributes = SyComponentAttributes.get();
     this.paddingTop = attributes.create(0);
     this.paddingBottom = attributes.create(0);
@@ -62,12 +65,14 @@ public final class SyLayoutMargin extends SyLayoutAbstract
   /**
    * A trivial container that pads each edge with a configurable amount of empty
    * space.
+   *
+   * @param screen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyLayoutMargin()
+  public SyLayoutMargin(final SyScreenType screen)
   {
-    this(List.of());
+    this(screen, List.of());
   }
 
   /**

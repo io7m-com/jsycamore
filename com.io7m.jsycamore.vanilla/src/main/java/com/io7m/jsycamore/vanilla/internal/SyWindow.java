@@ -30,6 +30,7 @@ import com.io7m.jsycamore.api.layout.SySnapping;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.spaces.SySpaceWindowType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.visibility.SyVisibility;
 import com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour;
 import com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy;
@@ -62,7 +63,7 @@ public final class SyWindow implements SyWindowType
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> sizeAttribute;
   private final AttributeType<Boolean> maximized;
   private final AttributeType<Boolean> decorated;
-  private final AttributeType<String> titleText;
+  private final AttributeType<SyText> titleText;
   private final SyWindowID id;
   private final AttributeType<SyWindowCloseBehaviour> closeBehaviour;
   private final AttributeType<Integer> positionSnapping;
@@ -136,7 +137,7 @@ public final class SyWindow implements SyWindowType
         return this.sizeMaximized;
       });
 
-    this.root = new SyWindowRoot();
+    this.root = new SyWindowRoot(inScreen);
     this.root.setWindow(Optional.of(this));
     this.setSize(inSize);
 
@@ -153,7 +154,7 @@ public final class SyWindow implements SyWindowType
     sb.append(this.id.value());
     sb.append(' ');
     sb.append('[');
-    sb.append(this.titleText.get());
+    sb.append(this.titleText.get().value());
     sb.append(']');
     sb.append(' ');
     PAreasI.showToBuilder(this.boundingArea(), sb);
@@ -231,7 +232,7 @@ public final class SyWindow implements SyWindowType
   }
 
   @Override
-  public AttributeType<String> title()
+  public AttributeType<SyText> title()
   {
     return this.titleText;
   }

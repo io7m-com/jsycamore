@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -72,6 +73,8 @@ public final class SyPrimalMenuBarItem extends SyPrimalAbstract
         return switch (barItem.selected()) {
           case MENU_SELECTED -> {
             yield new SyRenderNodeShape(
+              "MenuBarItemSelected",
+              PVectors2I.zero(),
               Optional.of(values.edgeFlat(PRIMARY_EDGE)),
               Optional.of(values.fillFlat(PRIMARY_FOREGROUND)),
               rectangle
@@ -80,6 +83,8 @@ public final class SyPrimalMenuBarItem extends SyPrimalAbstract
           case MENU_NOT_SELECTED -> {
             if (barItem.isMouseOver()) {
               yield new SyRenderNodeShape(
+                "MenuBarItemNotSelected",
+                PVectors2I.zero(),
                 Optional.of(values.edgeFlat(PRIMARY_EDGE)),
                 Optional.of(values.fillFlat(PRIMARY_OVER)),
                 rectangle

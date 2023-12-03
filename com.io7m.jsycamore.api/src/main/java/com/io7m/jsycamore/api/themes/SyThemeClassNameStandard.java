@@ -254,6 +254,12 @@ public enum SyThemeClassNameStandard
   TEXT_VIEW("TextView"),
 
   /**
+   * A multi-line text view  class.
+   */
+
+  TEXT_MULTILINE_VIEW("TextMultilineView"),
+
+  /**
    * The close button for a window.
    */
 

@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.rendering;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -26,20 +27,26 @@ import java.util.Optional;
 /**
  * A render node consisting of a shape.
  *
+ * @param name      The node name, for debugging purposes
+ * @param position  The position offset for this node
  * @param edgePaint The edge paint
  * @param fillPaint The fill paint
  * @param shape     The shape
  */
 
 public record SyRenderNodeShape(
+  String name,
+  PVector2I<SySpaceComponentRelativeType> position,
   Optional<SyPaintEdgeType> edgePaint,
   Optional<SyPaintFillType> fillPaint,
   SyShapeType<SySpaceComponentRelativeType> shape)
-  implements SyRenderNodeType
+  implements SyRenderNodePrimitiveType
 {
   /**
    * A render node consisting of a shape.
    *
+   * @param name      The node name, for debugging purposes
+   * @param position  The position offset for this node
    * @param edgePaint The edge paint
    * @param fillPaint The fill paint
    * @param shape     The shape
@@ -47,7 +54,9 @@ public record SyRenderNodeShape(
 
   public SyRenderNodeShape
   {
+    Objects.requireNonNull(name, "name");
     Objects.requireNonNull(edgePaint, "edgePaint");
+    Objects.requireNonNull(position, "position");
     Objects.requireNonNull(fillPaint, "fillPaint");
     Objects.requireNonNull(shape, "shape");
   }
@@ -55,6 +64,9 @@ public record SyRenderNodeShape(
   @Override
   public PAreaSizeI<SySpaceComponentRelativeType> size()
   {
-    return this.shape.size();
+    return PAreaSizeI.of(
+      this.shape.boundingArea().sizeX(),
+      this.shape.boundingArea().sizeY()
+    );
   }
 }

@@ -14,10 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 package com.io7m.jsycamore.api.text;
 
-
+import com.io7m.jsycamore.api.services.SyServiceType;
 import org.osgi.annotation.versioning.ProviderType;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ import java.io.InputStream;
  */
 
 @ProviderType
-public interface SyFontServiceType
+public interface SyFontServiceType extends SyServiceType
 {
   /**
    * @return A description of the font family this service provides

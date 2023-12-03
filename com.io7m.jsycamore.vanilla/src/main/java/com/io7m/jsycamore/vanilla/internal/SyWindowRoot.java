@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -52,9 +53,9 @@ public final class SyWindowRoot extends SyWindowComponent
   private final EnumMap<SyWindowDecorationComponent, SyWindowComponent> windowComponents;
   private final Map<SyWindowDecorationComponent, SyComponentType> windowComponentsView;
 
-  SyWindowRoot()
+  SyWindowRoot(final SyScreenType screen)
   {
-    super(WINDOW_ROOT, List.of());
+    super(screen, WINDOW_ROOT, List.of());
 
     this.windowComponents =
       new EnumMap<>(SyWindowDecorationComponent.class);
@@ -67,20 +68,20 @@ public final class SyWindowRoot extends SyWindowComponent
       }
 
       final SyWindowComponent component = switch (semantic) {
-        case WINDOW_RESIZE_E -> new SyWindowResizeE();
-        case WINDOW_RESIZE_SE -> new SyWindowResizeSE();
+        case WINDOW_RESIZE_E -> new SyWindowResizeE(screen);
+        case WINDOW_RESIZE_SE -> new SyWindowResizeSE(screen);
         case WINDOW_ROOT -> throw new UnreachableCodeException();
-        case WINDOW_CONTENT_AREA -> new SyWindowContentArea();
-        case WINDOW_RESIZE_NW -> new SyWindowResizeNW();
-        case WINDOW_RESIZE_N -> new SyWindowResizeN();
-        case WINDOW_RESIZE_NE -> new SyWindowResizeNE();
-        case WINDOW_RESIZE_S -> new SyWindowResizeS();
-        case WINDOW_RESIZE_SW -> new SyWindowResizeSW();
-        case WINDOW_RESIZE_W -> new SyWindowResizeW();
-        case WINDOW_BUTTON_CLOSE -> new SyWindowButtonClose();
-        case WINDOW_BUTTON_MAXIMIZE -> new SyWindowButtonMaximize();
-        case WINDOW_BUTTON_MENU -> new SyWindowButtonMenu();
-        case WINDOW_TITLE -> new SyWindowTitle();
+        case WINDOW_CONTENT_AREA -> new SyWindowContentArea(screen);
+        case WINDOW_RESIZE_NW -> new SyWindowResizeNW(screen);
+        case WINDOW_RESIZE_N -> new SyWindowResizeN(screen);
+        case WINDOW_RESIZE_NE -> new SyWindowResizeNE(screen);
+        case WINDOW_RESIZE_S -> new SyWindowResizeS(screen);
+        case WINDOW_RESIZE_SW -> new SyWindowResizeSW(screen);
+        case WINDOW_RESIZE_W -> new SyWindowResizeW(screen);
+        case WINDOW_BUTTON_CLOSE -> new SyWindowButtonClose(screen);
+        case WINDOW_BUTTON_MAXIMIZE -> new SyWindowButtonMaximize(screen);
+        case WINDOW_BUTTON_MENU -> new SyWindowButtonMenu(screen);
+        case WINDOW_TITLE -> new SyWindowTitle(screen);
       };
 
       this.windowComponents.put(semantic, component);

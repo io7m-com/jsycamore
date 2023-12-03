@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -35,24 +36,28 @@ public final class SySpace extends SyComponentAbstract
   /**
    * An empty space element.
    *
+   * @param inScreen            The screen that owns the component
    * @param inThemeClassesExtra The extra theme classes, if any
    */
 
   public SySpace(
+    final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inThemeClassesExtra);
+    super(inScreen, inThemeClassesExtra);
     this.setMouseQueryAccepting(false);
   }
 
   /**
    * An empty space element.
+   *
+   * @param inScreen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SySpace()
+  public SySpace(final SyScreenType inScreen)
   {
-    this(List.of());
+    this(inScreen, List.of());
   }
 
   @Override

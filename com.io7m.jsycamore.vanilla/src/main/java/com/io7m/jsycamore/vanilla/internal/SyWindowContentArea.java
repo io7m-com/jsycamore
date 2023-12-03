@@ -18,6 +18,7 @@ package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -33,9 +34,9 @@ import static com.io7m.jsycamore.api.windows.SyWindowDecorationComponent.WINDOW_
 
 public final class SyWindowContentArea extends SyWindowComponent
 {
-  SyWindowContentArea()
+  SyWindowContentArea(final SyScreenType screen)
   {
-    super(WINDOW_CONTENT_AREA, List.of());
+    super(screen, WINDOW_CONTENT_AREA, List.of());
     this.setMouseQueryAccepting(false);
   }
 

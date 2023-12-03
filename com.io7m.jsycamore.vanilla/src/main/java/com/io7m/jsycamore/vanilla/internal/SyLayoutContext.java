@@ -18,7 +18,8 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.services.SyServiceDirectoryReadableType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 
@@ -30,20 +31,25 @@ import java.util.Objects;
 
 public final class SyLayoutContext implements SyLayoutContextType
 {
-  private final SyFontDirectoryType<? extends SyFontType> fonts;
+  private final SyFontDirectoryServiceType<? extends SyFontType> fonts;
   private final SyThemeType themeCurrent;
+  private final SyServiceDirectoryReadableType services;
 
   /**
    * Construct a layout context.
    *
+   * @param inServices       The screen
    * @param inFonts        A font directory
    * @param inThemeCurrent The current theme
    */
 
   public SyLayoutContext(
-    final SyFontDirectoryType<? extends SyFontType> inFonts,
+    final SyServiceDirectoryReadableType inServices,
+    final SyFontDirectoryServiceType<? extends SyFontType> inFonts,
     final SyThemeType inThemeCurrent)
   {
+    this.services =
+      Objects.requireNonNull(inServices, "services");
     this.fonts =
       Objects.requireNonNull(inFonts, "fonts");
     this.themeCurrent =
@@ -57,7 +63,13 @@ public final class SyLayoutContext implements SyLayoutContextType
   }
 
   @Override
-  public SyFontDirectoryType<? extends SyFontType> fonts()
+  public SyServiceDirectoryReadableType services()
+  {
+    return this.services;
+  }
+
+  @Override
+  public SyFontDirectoryServiceType<? extends SyFontType> fonts()
   {
     return this.fonts;
   }

@@ -17,8 +17,6 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jorchard.core.JOTreeExceptionCycle;
-import com.io7m.jsycamore.api.mouse.SyMouseButton;
-import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
@@ -35,6 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
+import static com.io7m.jsycamore.api.text.SyText.text;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -59,9 +58,9 @@ public final class SyMenuTest extends SyComponentContract<SyMenu>
 
     final var sc = this.newComponent();
     final var si0 =
-      sc.addAtom("A", clicks::incrementAndGet);
+      sc.addAtom(text("A"), clicks::incrementAndGet);
     final var si1 =
-      sc.addAtom("B", clicks::incrementAndGet);
+      sc.addAtom(text("B"), clicks::incrementAndGet);
 
     assertEquals(sc, si0.menu());
     assertEquals(sc, si1.menu());
@@ -69,13 +68,13 @@ public final class SyMenuTest extends SyComponentContract<SyMenu>
     final var c = this.newComponent();
 
     final var i0 =
-      c.addAtom("Item 0", clicks::incrementAndGet);
+      c.addAtom(text("Item 0"), clicks::incrementAndGet);
     final var i1 =
       c.addSeparator();
     final var i2 =
-      c.addAtom("Item 1", clicks::incrementAndGet);
+      c.addAtom(text("Item 1"), clicks::incrementAndGet);
     final var i3 =
-      c.addSubmenu("Item 2", sc);
+      c.addSubmenu(text("Item 2"), sc);
 
     assertEquals(c, i0.menu());
     assertEquals(c, i1.menu());
@@ -111,14 +110,14 @@ public final class SyMenuTest extends SyComponentContract<SyMenu>
   @Test
   public void testMenuAcyclic()
   {
-    final var menu0 = new SyMenu();
-    final var menu1 = new SyMenu();
-    final var item1 = menu0.addSubmenu("Menu 1", menu1);
+    final var menu0 = new SyMenu(this.screen());
+    final var menu1 = new SyMenu(this.screen());
+    final var item1 = menu0.addSubmenu(text("Menu 1"), menu1);
     assertEquals(menu0, item1.menu());
     assertEquals(menu1, item1.submenu());
 
     assertThrows(JOTreeExceptionCycle.class, () -> {
-      menu1.addSubmenu("Menu 0", menu0);
+      menu1.addSubmenu(text("Menu 0"), menu0);
     });
   }
 
@@ -139,6 +138,6 @@ public final class SyMenuTest extends SyComponentContract<SyMenu>
   @Override
   protected SyMenu newComponent()
   {
-    return new SyMenu();
+    return new SyMenu(this.screen());
   }
 }

@@ -18,9 +18,11 @@ package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
+import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyAlign;
-import com.io7m.jsycamore.components.standard.SyButtonAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
+import com.io7m.jsycamore.components.standard.buttons.SyButtonAbstract;
 
 import java.util.List;
 
@@ -32,19 +34,24 @@ import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_V
 
 final class SyScrollBarHButtonRight extends SyButtonAbstract
 {
+  private static final List<SyThemeClassNameType> THEME_CLASSES =
+    List.of(SCROLLBAR_HORIZONTAL_BUTTON_RIGHT);
+  private static final List<SyThemeClassNameType> ICON_CLASSES =
+    List.of(SCROLLBAR_HORIZONTAL_BUTTON_RIGHT_ICON);
+
   private final SyImageView image;
   private final SyAlign align;
 
-  SyScrollBarHButtonRight()
+  SyScrollBarHButtonRight(
+    final SyScreenType screen)
   {
-    super(List.of(SCROLLBAR_HORIZONTAL_BUTTON_RIGHT));
+    super(screen, THEME_CLASSES);
 
-    this.image = new SyImageView(List.of(
-      SCROLLBAR_HORIZONTAL_BUTTON_RIGHT_ICON));
+    this.image = new SyImageView(screen, ICON_CLASSES);
     this.image.setImageURI("jsycamore:icon:scroll_right");
     this.image.setMouseQueryAccepting(false);
 
-    this.align = new SyAlign();
+    this.align = new SyAlign(screen);
     this.align.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.align.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.align.childAdd(this.image);

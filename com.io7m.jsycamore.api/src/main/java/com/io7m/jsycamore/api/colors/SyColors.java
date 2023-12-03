@@ -37,14 +37,6 @@ public final class SyColors
 
   }
 
-  private static double clamp(
-    final double x,
-    final double min,
-    final double max)
-  {
-    return Math.min(Math.max(x, min), max);
-  }
-
   /**
    * @return An opaque white color
    */
@@ -66,9 +58,9 @@ public final class SyColors
     final PVector4D<SySpaceRGBAPreType> color)
   {
     return PVector4D.of(
-      clamp(color.x() + 0.1, 0.0, 1.0),
-      clamp(color.y() + 0.1, 0.0, 1.0),
-      clamp(color.z() + 0.1, 0.0, 1.0),
+      Math.clamp(color.x() + 0.1, 0.0, 1.0),
+      Math.clamp(color.y() + 0.1, 0.0, 1.0),
+      Math.clamp(color.z() + 0.1, 0.0, 1.0),
       color.w()
     );
   }
@@ -85,9 +77,9 @@ public final class SyColors
     final PVector4D<SySpaceRGBAPreType> color)
   {
     return PVector4D.of(
-      clamp(color.x() - 0.1, 0.0, 1.0),
-      clamp(color.y() - 0.1, 0.0, 1.0),
-      clamp(color.z() - 0.1, 0.0, 1.0),
+      Math.clamp(color.x() - 0.1, 0.0, 1.0),
+      Math.clamp(color.y() - 0.1, 0.0, 1.0),
+      Math.clamp(color.z() - 0.1, 0.0, 1.0),
       color.w()
     );
   }
@@ -136,10 +128,29 @@ public final class SyColors
     final int a)
   {
     return PVector4D.of(
-      clamp((double) r / 255.0, 0.0, 1.0),
-      clamp((double) g / 255.0, 0.0, 1.0),
-      clamp((double) b / 255.0, 0.0, 1.0),
-      clamp((double) a / 255.0, 0.0, 1.0)
+      Math.clamp((double) r / 255.0, 0.0, 1.0),
+      Math.clamp((double) g / 255.0, 0.0, 1.0),
+      Math.clamp((double) b / 255.0, 0.0, 1.0),
+      Math.clamp((double) a / 255.0, 0.0, 1.0)
+    );
+  }
+
+  /**
+   * Invert the values of the R, G, and B components.
+   *
+   * @param c The color
+   *
+   * @return A color
+   */
+
+  public static PVector4D<SySpaceRGBAPreType> inverted(
+    final PVector4D<SySpaceRGBAPreType> c)
+  {
+    return PVector4D.of(
+      Math.clamp(1.0 - c.x(), 0.0, 1.0),
+      Math.clamp(1.0 - c.y(), 0.0, 1.0),
+      Math.clamp(1.0 - c.z(), 0.0, 1.0),
+      Math.clamp(c.w(), 0.0, 1.0)
     );
   }
 }

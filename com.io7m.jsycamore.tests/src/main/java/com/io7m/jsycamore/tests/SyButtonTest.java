@@ -17,6 +17,8 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.components.SyButtonType;
+import com.io7m.jsycamore.api.components.SyButtonWithTextType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
@@ -26,7 +28,6 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameCustom;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,11 +39,13 @@ import java.util.UUID;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_RIGHT;
+import static com.io7m.jsycamore.api.text.SyText.text;
+import static com.io7m.jsycamore.components.standard.buttons.SyButton.button;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public final class SyButtonTest extends SyComponentContract<SyButton>
+public final class SyButtonTest extends SyComponentContract<SyButtonType>
 {
   private static final PVector2I<SySpaceViewportType> Z =
     PVectors2I.zero();
@@ -94,7 +97,8 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   @Test
   public void testButtonPressReleaseConvenience()
   {
-    final var c = new SyButton(() -> this.clicks++);
+    final var c =
+      button(this.screen(), () -> this.clicks++);
 
     c.eventSend(new SyMouseEventOnPressed(Z, MOUSE_BUTTON_LEFT, c));
     assertTrue(c.isPressed());
@@ -235,12 +239,12 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   public void testButtonText()
   {
     final var c = this.newComponent();
-    c.setText("A");
-    assertEquals("A", c.text().get());
-    c.text().set("B");
-    assertEquals("B", c.text().get());
-    c.setText("C");
-    assertEquals("C", c.text().get());
+    c.setText(text("A"));
+    assertEquals("A", c.text().get().value());
+    c.text().set(text("B"));
+    assertEquals("B", c.text().get().value());
+    c.setText(text("C"));
+    assertEquals("C", c.text().get().value());
   }
 
   /**
@@ -250,8 +254,8 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   @Test
   public void testButtonTextInitial()
   {
-    final var c = new SyButton("Z");
-    assertEquals("Z", c.text().get());
+    final var c = button(this.screen(), text("Z"));
+    assertEquals("Z", c.text().get().value());
   }
 
   /**
@@ -261,8 +265,9 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   @Test
   public void testButtonTextInitialExtras()
   {
-    final var c = new SyButton(List.of(new SyThemeClassNameCustom("Q")), "Z");
-    assertEquals("Z", c.text().get());
+    final var c =
+      button(this.screen(), List.of(new SyThemeClassNameCustom("Q")), text("Z"));
+    assertEquals("Z", c.text().get().value());
     assertEquals("Q", c.themeClassesInPreferenceOrder().get(0).className());
   }
 
@@ -281,8 +286,8 @@ public final class SyButtonTest extends SyComponentContract<SyButton>
   }
 
   @Override
-  protected SyButton newComponent()
+  protected SyButtonWithTextType newComponent()
   {
-    return new SyButton();
+    return button(this.screen());
   }
 }

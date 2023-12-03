@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jsycamore.api.text.SyText;
 
 /**
  * Read-only access to a button.
@@ -29,5 +30,5 @@ public interface SyButtonWithTextReadableType
    * @return The button text
    */
 
-  AttributeReadableType<String> text();
+  AttributeReadableType<SyText> text();
 }

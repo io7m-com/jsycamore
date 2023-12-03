@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -44,11 +45,11 @@ final class SyScrollBarHTrack extends SyComponentAbstract
   private double scrollPosition;
   private double scrollPositionSnap;
 
-  SyScrollBarHTrack()
+  SyScrollBarHTrack(final SyScreenType inScreen)
   {
-    super(List.of());
+    super(inScreen, List.of());
 
-    this.thumb = new SyScrollBarHButtonThumb(this);
+    this.thumb = new SyScrollBarHButtonThumb(inScreen, this);
     this.childAdd(this.thumb);
   }
 

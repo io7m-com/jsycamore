@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,10 +14,12 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
 package com.io7m.jsycamore.api.themes;
 
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
-import com.io7m.jsycamore.api.text.SyFontType;
+import com.io7m.jsycamore.api.services.SyServiceDirectoryReadableType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
+import com.io7m.jsycamore.api.text.SyTextSelectionServiceType;
 
 /**
  * The context of a theme operation.
@@ -26,8 +28,26 @@ import com.io7m.jsycamore.api.text.SyFontType;
 public interface SyThemeContextType
 {
   /**
-   * @return A reference to the font directory
+   * @return The service directory
    */
 
-  SyFontDirectoryType<? extends SyFontType> fonts();
+  SyServiceDirectoryReadableType services();
+
+  /**
+   * @return The font service
+   */
+
+  default SyFontDirectoryServiceType fonts()
+  {
+    return this.services().requireService(SyFontDirectoryServiceType.class);
+  }
+
+  /**
+   * @return The text selection service
+   */
+
+  default SyTextSelectionServiceType textSelection()
+  {
+    return this.services().requireService(SyTextSelectionServiceType.class);
+  }
 }

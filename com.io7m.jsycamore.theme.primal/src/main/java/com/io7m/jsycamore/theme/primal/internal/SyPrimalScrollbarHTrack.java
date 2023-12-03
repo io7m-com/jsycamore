@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -71,6 +72,8 @@ public final class SyPrimalScrollbarHTrack extends SyPrimalAbstract
 
       final var mainFill =
         new SyRenderNodeShape(
+          "ScrollBarHTrackFill",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
           rectangle
@@ -78,12 +81,18 @@ public final class SyPrimalScrollbarHTrack extends SyPrimalAbstract
 
       final var mainEdge =
         new SyRenderNodeShape(
+          "ScrollBarHTrackEdge",
+          PVectors2I.zero(),
           Optional.of(values.edgeFlat(PRIMARY_EDGE)),
           Optional.empty(),
           rectangle
         );
 
-      return SyRenderNodeComposite.composite(mainFill, mainEdge);
+      return SyRenderNodeComposite.composite(
+        "ScrollBarHTrackComposite",
+        mainFill,
+        mainEdge
+      );
     } catch (final SyThemeValueException e) {
       throw new IllegalStateException(e);
     }

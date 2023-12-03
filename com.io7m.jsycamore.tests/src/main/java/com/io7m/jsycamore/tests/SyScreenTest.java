@@ -18,11 +18,11 @@
 package com.io7m.jsycamore.tests;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
-import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventConsumer;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.menus.SyMenuClosed;
 import com.io7m.jsycamore.api.menus.SyMenuOpened;
+import com.io7m.jsycamore.api.menus.SyMenuServiceType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
@@ -32,12 +32,12 @@ import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowCreated;
 import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.api.windows.SyWindowMaximized;
+import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.api.windows.SyWindowUnmaximized;
+import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
-import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
-import com.io7m.jsycamore.components.standard.SyButton;
 import com.io7m.jsycamore.components.standard.SyLayoutVertical;
 import com.io7m.jsycamore.components.standard.SyMenu;
 import com.io7m.jsycamore.theme.primal.SyThemePrimalFactory;
@@ -72,8 +72,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
+import static com.io7m.jsycamore.api.text.SyText.text;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.CLOSE_ON_CLOSE_BUTTON;
 import static com.io7m.jsycamore.api.windows.SyWindowCloseBehaviour.HIDE_ON_CLOSE_BUTTON;
+import static com.io7m.jsycamore.components.standard.buttons.SyButton.button;
 import static java.awt.image.BufferedImage.TYPE_4BYTE_ABGR_PRE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -89,6 +91,8 @@ public final class SyScreenTest
   private SyScreenType screen;
   private List<SyEventType> events;
   private CountDownLatch eventsLatch;
+  private SyWindowServiceType windowService;
+  private SyMenuServiceType menuService;
 
   private static boolean shouldDumpImages()
   {
@@ -109,9 +113,14 @@ public final class SyScreenTest
     this.screen =
       this.screens.create(
         new SyThemePrimalFactory().create(),
-        SyFontDirectoryAWT.createFromServiceLoader(),
+        SyAWTFontDirectoryService.createFromServiceLoader(),
         PAreaSizeI.of(1024, 1024)
       );
+
+    this.windowService =
+      this.screen.windowService();
+    this.menuService =
+      this.screen.menuService();
 
     this.eventsLatch = new CountDownLatch(1);
     this.events = Collections.synchronizedList(new ArrayList<>());
@@ -147,15 +156,15 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
     final var w1 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
-    assertTrue(this.screen.windowIsVisible(w0));
-    assertTrue(this.screen.windowIsVisible(w1));
+    assertTrue(this.windowService.windowIsVisible(w0));
+    assertTrue(this.windowService.windowIsVisible(w1));
 
-    assertFalse(this.screen.windowIsFocused(w0));
-    assertTrue(this.screen.windowIsFocused(w1));
+    assertFalse(this.windowService.windowIsFocused(w0));
+    assertTrue(this.windowService.windowIsFocused(w1));
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
@@ -177,21 +186,21 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
     final var w1 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.setPosition(PVector2I.of(0, 0));
     w1.setPosition(PVector2I.of(250, 150));
     this.screen.update();
 
-    assertFalse(this.screen.windowIsFocused(w0));
-    assertTrue(this.screen.windowIsFocused(w1));
+    assertFalse(this.windowService.windowIsFocused(w0));
+    assertTrue(this.windowService.windowIsFocused(w1));
 
     this.screen.mouseDown(PVector2I.of(48, 20), MOUSE_BUTTON_LEFT);
 
-    assertTrue(this.screen.windowIsFocused(w0));
-    assertFalse(this.screen.windowIsFocused(w1));
+    assertTrue(this.windowService.windowIsFocused(w0));
+    assertFalse(this.windowService.windowIsFocused(w1));
     this.screen.close();
 
     this.eventsLatch.await(3L, TimeUnit.SECONDS);
@@ -213,16 +222,16 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
     final var w1 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
-    assertFalse(this.screen.windowIsFocused(w0));
-    assertTrue(this.screen.windowIsFocused(w1));
+    assertFalse(this.windowService.windowIsFocused(w0));
+    assertTrue(this.windowService.windowIsFocused(w1));
 
-    this.screen.windowFocus(w0);
-    assertTrue(this.screen.windowIsFocused(w0));
-    assertFalse(this.screen.windowIsFocused(w1));
+    this.windowService.windowFocus(w0);
+    assertTrue(this.windowService.windowIsFocused(w0));
+    assertFalse(this.windowService.windowIsFocused(w1));
 
     this.screen.close();
 
@@ -245,21 +254,21 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
     final var w1 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
-    assertTrue(this.screen.windowIsVisible(w0));
-    assertTrue(this.screen.windowIsVisible(w1));
-    assertFalse(this.screen.windowIsFocused(w0));
-    assertTrue(this.screen.windowIsFocused(w1));
+    assertTrue(this.windowService.windowIsVisible(w0));
+    assertTrue(this.windowService.windowIsVisible(w1));
+    assertFalse(this.windowService.windowIsFocused(w0));
+    assertTrue(this.windowService.windowIsFocused(w1));
 
-    this.screen.windowHide(w1);
+    this.windowService.windowHide(w1);
 
-    assertTrue(this.screen.windowIsVisible(w0));
-    assertFalse(this.screen.windowIsVisible(w1));
-    assertTrue(this.screen.windowIsFocused(w0));
-    assertFalse(this.screen.windowIsFocused(w1));
+    assertTrue(this.windowService.windowIsVisible(w0));
+    assertFalse(this.windowService.windowIsVisible(w1));
+    assertTrue(this.windowService.windowIsFocused(w0));
+    assertFalse(this.windowService.windowIsFocused(w1));
 
     this.screen.close();
 
@@ -286,7 +295,7 @@ public final class SyScreenTest
     Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
 
     assertThrows(IllegalStateException.class, () -> {
-      this.screen.windowShow(w0);
+      this.windowService.windowShow(w0);
     });
   }
 
@@ -301,7 +310,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.setPosition(PVector2I.of(1, 1));
     assertEquals(PVector2I.of(1, 1), w0.position().get());
@@ -327,7 +336,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.setSize(PAreaSizeI.of(1, 1));
     assertEquals(PAreaSizeI.of(1, 1), w0.size().get());
@@ -353,15 +362,15 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     this.screen.update();
     w0.closeButtonBehaviour().set(HIDE_ON_CLOSE_BUTTON);
 
-    assertTrue(this.screen.windowIsVisible(w0));
+    assertTrue(this.windowService.windowIsVisible(w0));
     this.screen.mouseDown(PVector2I.of(20, 20), MOUSE_BUTTON_LEFT);
     this.screen.mouseUp(PVector2I.of(20, 20), MOUSE_BUTTON_LEFT);
-    assertFalse(this.screen.windowIsVisible(w0));
+    assertFalse(this.windowService.windowIsVisible(w0));
 
     this.screen.close();
 
@@ -383,15 +392,15 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     this.screen.update();
     w0.closeButtonBehaviour().set(CLOSE_ON_CLOSE_BUTTON);
 
-    assertTrue(this.screen.windowIsVisible(w0));
+    assertTrue(this.windowService.windowIsVisible(w0));
     this.screen.mouseDown(PVector2I.of(20, 20), MOUSE_BUTTON_LEFT);
     this.screen.mouseUp(PVector2I.of(20, 20), MOUSE_BUTTON_LEFT);
-    assertFalse(this.screen.windowIsVisible(w0));
+    assertFalse(this.windowService.windowIsVisible(w0));
 
     this.screen.close();
 
@@ -413,7 +422,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     this.screen.update();
     this.screen.mouseDown(PVector2I.of(220, 20), MOUSE_BUTTON_LEFT);
@@ -442,7 +451,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     this.screen.update();
     this.screen.mouseDown(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
@@ -471,7 +480,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     this.screen.update();
     this.screen.mouseDown(PVector2I.of(200, 20), MOUSE_BUTTON_LEFT);
@@ -502,27 +511,27 @@ public final class SyScreenTest
   {
     final var clicks = new AtomicInteger(0);
 
-    final var menu = new SyMenu();
-    menu.addAtom("Item 0", () -> {
+    final var menu = new SyMenu(this.screen);
+    menu.addAtom(text("Item 0"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 2", () -> {
+    menu.addAtom(text("Item 2"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 3", () -> {
+    menu.addAtom(text("Item 3"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
     menu.position().set(PVector2I.of(0, 0));
 
-    final var button = new SyButton("Open", () -> {
-      this.screen.menuOpen(menu);
+    final var button = button(this.screen, text("Open"), () -> {
+      this.menuService.menuOpen(menu);
     });
 
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.decorated().set(false);
     w0.contentArea().childAdd(button);
@@ -561,27 +570,27 @@ public final class SyScreenTest
   {
     final var clicks = new AtomicInteger(0);
 
-    final var menu = new SyMenu();
-    menu.addAtom("Item 0", () -> {
+    final var menu = new SyMenu(this.screen);
+    menu.addAtom(text("Item 0"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 2", () -> {
+    menu.addAtom(text("Item 2"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 3", () -> {
+    menu.addAtom(text("Item 3"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
     menu.position().set(PVector2I.of(0, 0));
 
-    final var button = new SyButton("Open", () -> {
-      this.screen.menuOpen(menu);
+    final var button = button(this.screen, text("Open"), () -> {
+      this.menuService.menuOpen(menu);
     });
 
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.decorated().set(false);
     w0.contentArea().childAdd(button);
@@ -624,33 +633,34 @@ public final class SyScreenTest
     final var clicksOther =
       new AtomicInteger(0);
 
-    final var menu = new SyMenu();
-    menu.addAtom("Item 0", () -> {
+    final var menu = new SyMenu(this.screen);
+    menu.addAtom(text("Item 0"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 2", () -> {
+    menu.addAtom(text("Item 2"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
-    menu.addAtom("Item 3", () -> {
+    menu.addAtom(text("Item 3"), () -> {
       LOG.debug("click");
       clicks.incrementAndGet();
     });
     menu.position().set(PVector2I.of(0, 0));
 
-    final var button = new SyButton("Open", () -> {
-      this.screen.menuOpen(menu);
-    });
-    final var otherButton =
-      new SyButton("Otherwise", clicksOther::incrementAndGet);
+    final var b0 =
+      button(this.screen, text("Open"), () -> {
+        this.menuService.menuOpen(menu);
+      });
+    final var b1 =
+      button(this.screen, text("Otherwise"), clicksOther::incrementAndGet);
 
-    final var vertical = new SyLayoutVertical();
-    vertical.childAdd(button);
-    vertical.childAdd(otherButton);
+    final var vertical = new SyLayoutVertical(this.screen);
+    vertical.childAdd(b0);
+    vertical.childAdd(b1);
 
     final var w0 =
-      this.screen.windowCreate(240, 120);
+      this.windowService.windowCreate(240, 120);
 
     w0.decorated().set(false);
     w0.contentArea().childAdd(vertical);
@@ -690,13 +700,13 @@ public final class SyScreenTest
       final var imageLoader =
         new SyAWTImageLoader();
       final var fonts =
-        SyFontDirectoryAWT.createFromServiceLoader();
+        SyAWTFontDirectoryService.createFromServiceLoader();
       final var renderer =
-        new SyAWTRenderer(fonts, imageLoader);
+        new SyAWTRenderer(this.screen.services(), fonts, imageLoader);
       final var graphics =
         image.createGraphics();
 
-      for (final var w : this.screen.windowsVisibleOrdered()) {
+      for (final var w : this.windowService.windowsVisibleOrdered()) {
         renderer.render(graphics, this.screen, w);
       }
 
@@ -718,7 +728,7 @@ public final class SyScreenTest
   public void testMenuCloseNoop()
     throws Exception
   {
-    this.screen.menuClose();
+    this.menuService.menuClose();
     this.screen.update();
     this.screen.close();
 
@@ -737,7 +747,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -776,7 +786,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -815,7 +825,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -855,7 +865,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -896,7 +906,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -937,7 +947,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -978,7 +988,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -1017,7 +1027,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -1056,7 +1066,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     w0.setPosition(PVector2I.of(384, 384));
     this.screen.update();
@@ -1159,7 +1169,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     var root = w0.contentArea().node();
     while (root.parent().isPresent()) {
@@ -1189,7 +1199,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     final var windowX = 384;
     final var windowY = 384;
@@ -1197,7 +1207,7 @@ public final class SyScreenTest
     final var windowYMax = 384 + 256;
 
     try {
-      w0.contentArea().childAdd(new SyButton());
+      w0.contentArea().childAdd(button(this.screen));
       w0.setPosition(PVector2I.of(windowX, windowY));
       this.screen.update();
 
@@ -1219,7 +1229,7 @@ public final class SyScreenTest
       this.dumpScreen();
       throw e;
     } finally {
-      this.screen.windowClose(w0);
+      this.windowService.windowClose(w0);
     }
   }
 
@@ -1236,7 +1246,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     final var windowX = 384;
     final var windowY = 384;
@@ -1244,7 +1254,7 @@ public final class SyScreenTest
     final var windowYMax = 384 + 256;
 
     try {
-      w0.contentArea().childAdd(new SyButton());
+      w0.contentArea().childAdd(button(this.screen));
       w0.setPosition(PVector2I.of(windowX, windowY));
       this.screen.update();
 
@@ -1266,7 +1276,7 @@ public final class SyScreenTest
       this.dumpScreen();
       throw e;
     } finally {
-      this.screen.windowClose(w0);
+      this.windowService.windowClose(w0);
     }
   }
 
@@ -1283,7 +1293,7 @@ public final class SyScreenTest
     throws Exception
   {
     final var w0 =
-      this.screen.windowCreate(256, 256);
+      this.windowService.windowCreate(256, 256);
 
     final var windowX = 384;
     final var windowY = 384;
@@ -1291,7 +1301,7 @@ public final class SyScreenTest
     final var windowYMax = 384 + 256;
 
     try {
-      w0.contentArea().childAdd(new SyButton());
+      w0.contentArea().childAdd(button(this.screen));
       w0.setPosition(PVector2I.of(windowX, windowY));
       this.screen.update();
 
@@ -1318,7 +1328,7 @@ public final class SyScreenTest
       this.dumpScreen();
       throw e;
     } finally {
-      this.screen.windowClose(w0);
+      this.windowService.windowClose(w0);
     }
   }
 

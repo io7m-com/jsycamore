@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.vanilla.internal;
 
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -33,11 +34,13 @@ public final class SyWindowButtonMaximize
 {
   /**
    * A window maximize button.
+   *
+   * @param screen The screen that owns the component
    */
 
-  public SyWindowButtonMaximize()
+  public SyWindowButtonMaximize(final SyScreenType screen)
   {
-    super(WINDOW_BUTTON_MAXIMIZE, "jsycamore:icon:window_maximize");
+    super(screen, WINDOW_BUTTON_MAXIMIZE, "jsycamore:icon:window_maximize");
   }
 
   @Override
@@ -49,6 +52,10 @@ public final class SyWindowButtonMaximize
   @Override
   protected void onClicked()
   {
-    this.window().ifPresent(w -> w.screen().windowMaximize(w));
+    this.window().ifPresent(w -> {
+      w.screen()
+        .windowService()
+        .windowMaximize(w);
+    });
   }
 }

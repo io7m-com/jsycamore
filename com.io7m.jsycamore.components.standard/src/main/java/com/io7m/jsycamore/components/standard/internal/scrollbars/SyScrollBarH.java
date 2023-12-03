@@ -28,6 +28,7 @@ import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -62,20 +63,22 @@ public final class SyScrollBarH
   /**
    * A horizontal scrollbar.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyScrollBarH(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
 
     this.buttonLeft =
-      new SyScrollBarHButtonLeft();
+      new SyScrollBarHButtonLeft(screen);
     this.buttonRight =
-      new SyScrollBarHButtonRight();
+      new SyScrollBarHButtonRight(screen);
     this.track =
-      new SyScrollBarHTrack();
+      new SyScrollBarHTrack(screen);
 
     this.childAdd(this.buttonLeft);
     this.childAdd(this.track);

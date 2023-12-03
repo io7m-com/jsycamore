@@ -19,8 +19,7 @@ package com.io7m.jsycamore.tests;
 
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.components.standard.SyTextArea;
-import com.io7m.jsycamore.components.standard.SyTextView;
+import com.io7m.jsycamore.components.standard.text.SyTextArea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +54,6 @@ public final class SyTextAreaTest extends SyComponentContract<SyTextArea>
   @Override
   protected SyTextArea newComponent()
   {
-    return new SyTextArea(List.of());
+    return new SyTextArea(this.screen(), List.of());
   }
 }

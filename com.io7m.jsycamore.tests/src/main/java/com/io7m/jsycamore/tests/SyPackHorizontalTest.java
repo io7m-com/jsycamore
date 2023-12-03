@@ -19,7 +19,6 @@ package com.io7m.jsycamore.tests;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
-import com.io7m.jsycamore.components.standard.SyAlignmentVertical;
 import com.io7m.jsycamore.components.standard.SyPackHorizontal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +28,9 @@ import java.util.UUID;
 import static com.io7m.jsycamore.api.components.SyResizeBehaviour.FILL_SPACE;
 import static com.io7m.jsycamore.api.components.SyResizeBehaviour.PRESERVE;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
-import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
-import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
-import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_RIGHT;
-import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.*;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_BOTTOM;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_CENTER;
+import static com.io7m.jsycamore.components.standard.SyAlignmentVertical.ALIGN_VERTICAL_TOP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizontal>
@@ -53,9 +51,9 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     final var c = this.newComponent();
     c.paddingBetween().set(0);
 
-    final var b0 = new SyBlob(100, 300);
-    final var b1 = new SyBlob(100, 300);
-    final var b2 = new SyBlob(100, 300);
+    final var b0 = new SyBlob(this.screen(), 100, 300);
+    final var b1 = new SyBlob(this.screen(), 100, 300);
+    final var b2 = new SyBlob(this.screen(), 100, 300);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -91,9 +89,9 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     c.childSizeYBehaviour().set(PRESERVE);
     c.alignVertical().set(ALIGN_VERTICAL_CENTER);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -133,9 +131,9 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     c.childSizeYBehaviour().set(PRESERVE);
     c.alignVertical().set(ALIGN_VERTICAL_TOP);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -175,9 +173,9 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     c.childSizeYBehaviour().set(PRESERVE);
     c.alignVertical().set(ALIGN_VERTICAL_BOTTOM);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -217,9 +215,9 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     c.childSizeYBehaviour().set(FILL_SPACE);
     c.alignVertical().set(ALIGN_VERTICAL_TOP);
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(32, 32);
-    final var b2 = new SyBlob(32, 32);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 32, 32);
+    final var b2 = new SyBlob(this.screen(), 32, 32);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -264,6 +262,6 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
   @Override
   protected SyPackHorizontal newComponent()
   {
-    return new SyPackHorizontal();
+    return new SyPackHorizontal(this.screen());
   }
 }

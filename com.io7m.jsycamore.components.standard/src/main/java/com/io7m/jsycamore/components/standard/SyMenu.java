@@ -32,7 +32,9 @@ import com.io7m.jsycamore.api.menus.SyMenuItemSubmenuType;
 import com.io7m.jsycamore.api.menus.SyMenuItemType;
 import com.io7m.jsycamore.api.menus.SyMenuReadableType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
 import com.io7m.jsycamore.components.standard.internal.SyMenuItemAtom;
@@ -67,13 +69,15 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
   /**
    * A menu.
    *
+   * @param screen     The screen that owns the menu
    * @param themeClasses The extra theme classes, if any
    */
 
   public SyMenu(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(themeClasses);
+    super(screen, themeClasses);
 
     this.items = List.of();
 
@@ -97,7 +101,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     final var attributes = SyComponentAttributes.get();
     this.expanded = attributes.create(false);
 
-    this.align = new SyPackVertical();
+    this.align = new SyPackVertical(screen);
     this.align.childSizeXBehaviour().set(FILL_SPACE);
     this.childAdd(this.align);
 
@@ -106,12 +110,14 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
 
   /**
    * A menu.
+   *
+   * @param inScreen The screen that owns the menu
    */
 
   @ConvenienceConstructor
-  public SyMenu()
+  public SyMenu(final SyScreenType inScreen)
   {
-    this(List.of());
+    this(inScreen, List.of());
   }
 
   private static <TR, T extends TR> JOTreeNodeType<TR> castNode(
@@ -184,7 +190,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
 
   @Override
   public SyMenuItemAtomType addAtom(
-    final String text,
+    final SyText text,
     final Runnable action)
   {
     final var v =
@@ -198,7 +204,7 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
 
   @Override
   public SyMenuItemSubmenuType addSubmenu(
-    final String text,
+    final SyText text,
     final SyMenuType menu)
   {
     this.menuNode.childAdd(menu.menuNode());

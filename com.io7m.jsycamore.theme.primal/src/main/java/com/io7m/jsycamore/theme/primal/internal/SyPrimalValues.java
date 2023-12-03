@@ -109,6 +109,14 @@ public final class SyPrimalValues
   /**
    * A value name.
    */
+  public static final String TEXT_SELECTION_BACKGROUND = "text_selection_background";
+  /**
+   * A value name.
+   */
+  public static final String TEXT_AREA_BACKGROUND = "text_area_background";
+  /**
+   * A value name.
+   */
   public static final String UNMATCHED = "unmatched";
   /**
    * A value name.
@@ -162,6 +170,20 @@ public final class SyPrimalValues
         "The foreground color for inactive components.",
         PRIMARY_FOREGROUND,
         color -> darker(darker(color))
+      );
+
+      builder.createFunctionColor4D(
+        TEXT_SELECTION_BACKGROUND,
+        "The background color for selected text.",
+        PRIMARY_FOREGROUND,
+        SyColors::inverted
+      );
+
+      builder.createFunctionColor4D(
+        TEXT_AREA_BACKGROUND,
+        "The background color for text areas and text fields.",
+        PRIMARY_BACKGROUND,
+        c -> darker(darker(c))
       );
 
       builder.createFunctionColor4D(

@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.theme.primal.internal;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
+import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyImageViewType;
@@ -26,6 +27,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -53,8 +55,8 @@ public final class SyPrimalImageView extends SyPrimalAbstract
     final PAreaI<SySpaceParentRelativeType> area,
     final URI uri)
   {
-    final var size =
-      PAreaSizeI.<SySpaceComponentRelativeType>of(area.sizeX(), area.sizeY());
+    final PAreaSizeI<SySpaceComponentRelativeType> size =
+      PAreasI.size(PAreasI.cast(area));
 
     if (Objects.equals(uri.getScheme(), "jsycamore")) {
       return switch (uri.getSchemeSpecificPart()) {
@@ -89,14 +91,19 @@ public final class SyPrimalImageView extends SyPrimalAbstract
       };
     }
 
-    return new SyRenderNodeImage(uri, size);
+    return new SyRenderNodeImage("ImageView", uri, PVectors2I.zero(), size);
   }
 
   private static SyRenderNodeImage iconOf(
     final PAreaSizeI<SySpaceComponentRelativeType> size,
     final String name)
   {
-    return new SyRenderNodeImage(resource(name), size);
+    return new SyRenderNodeImage(
+      "ImageView",
+      resource(name),
+      PVectors2I.zero(),
+      size
+    );
   }
 
   private static URI resource(

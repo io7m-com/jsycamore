@@ -17,9 +17,10 @@
 
 package com.io7m.jsycamore.api.rendering;
 
-import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,52 +28,59 @@ import java.util.Objects;
 /**
  * A render node consisting of a composition of render nodes.
  *
+ * @param name  The node name, for debugging purposes
  * @param nodes The nodes
  */
 
 public record SyRenderNodeComposite(
+  String name,
   List<SyRenderNodeType> nodes)
   implements SyRenderNodeType
 {
   /**
    * A render node consisting of a composition of render nodes.
    *
+   * @param name  The node name, for debugging purposes
    * @param nodes The nodes
    */
 
   public SyRenderNodeComposite
   {
+    Objects.requireNonNull(name, "name");
     Objects.requireNonNull(nodes, "nodes");
   }
 
   /**
    * Create a composite node from the list of nodes.
    *
+   * @param name  The node name, for debugging purposes
    * @param nodes The nodes
    *
    * @return A composite node
    */
 
   public static SyRenderNodeComposite composite(
+    final String name,
     final SyRenderNodeType... nodes)
   {
-    return new SyRenderNodeComposite(List.of(nodes));
+    return new SyRenderNodeComposite(name, List.of(nodes));
+  }
+
+  @Override
+  public PVector2I<SySpaceComponentRelativeType> position()
+  {
+    return PVectors2I.zero();
   }
 
   @Override
   public PAreaSizeI<SySpaceComponentRelativeType> size()
   {
-    var area =
-      PAreasI.<SySpaceComponentRelativeType>create(
-        0, 0, 0, 0);
-
+    var sizeX = 0;
+    var sizeY = 0;
     for (final var node : this.nodes) {
-      final var extraArea =
-        PAreasI.<SySpaceComponentRelativeType>create(
-          0, 0, node.size().sizeX(), node.size().sizeY());
-      area = PAreasI.containing(area, extraArea);
+      sizeX = Math.max(sizeX, node.size().sizeX());
+      sizeY = Math.max(sizeY, node.size().sizeY());
     }
-
-    return PAreasI.size(area);
+    return PAreaSizeI.of(sizeX, sizeY);
   }
 }

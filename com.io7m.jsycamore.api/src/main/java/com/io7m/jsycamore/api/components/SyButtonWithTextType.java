@@ -17,16 +17,17 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.text.SyText;
 
 /**
  * The basic type of button components.
  */
 
 public interface SyButtonWithTextType
-  extends SyButtonWithTextReadableType
+  extends SyButtonWithTextReadableType, SyButtonType
 {
   @Override
-  AttributeType<String> text();
+  AttributeType<SyText> text();
 
   /**
    * Set the button text.
@@ -35,7 +36,7 @@ public interface SyButtonWithTextType
    */
 
   default void setText(
-    final String text)
+    final SyText text)
   {
     this.text().set(text);
   }

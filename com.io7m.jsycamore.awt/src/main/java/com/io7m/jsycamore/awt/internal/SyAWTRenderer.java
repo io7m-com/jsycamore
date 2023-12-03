@@ -19,7 +19,8 @@ package com.io7m.jsycamore.awt.internal;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.services.SyServiceDirectoryReadableType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 
@@ -39,18 +40,20 @@ public final class SyAWTRenderer implements SyRendererType
   /**
    * An AWT renderer.
    *
-   * @param inFonts       A font directory
+   * @param inServices    The service directory
+   * @param inFonts       The AWT font service
    * @param inImageLoader An image loader
    */
 
   public SyAWTRenderer(
-    final SyFontDirectoryType<SyFontAWT> inFonts,
+    final SyServiceDirectoryReadableType inServices,
+    final SyFontDirectoryServiceType<SyAWTFont> inFonts,
     final SyAWTImageLoader inImageLoader)
   {
     this.nodeRenderer =
       new SyAWTNodeRenderer(inImageLoader, inFonts);
     this.themeContext =
-      new ThemeContext(inFonts);
+      new ThemeContext(inServices);
   }
 
   /**
@@ -127,18 +130,18 @@ public final class SyAWTRenderer implements SyRendererType
 
   private static final class ThemeContext implements SyThemeContextType
   {
-    private final SyFontDirectoryType<SyFontAWT> fonts;
+    private final SyServiceDirectoryReadableType services;
 
     ThemeContext(
-      final SyFontDirectoryType<SyFontAWT> inFonts)
+      final SyServiceDirectoryReadableType inServices)
     {
-      this.fonts = Objects.requireNonNull(inFonts, "fonts");
+      this.services = Objects.requireNonNull(inServices, "services");
     }
 
     @Override
-    public SyFontDirectoryType<SyFontAWT> fonts()
+    public SyServiceDirectoryReadableType services()
     {
-      return this.fonts;
+      return this.services;
     }
   }
 }

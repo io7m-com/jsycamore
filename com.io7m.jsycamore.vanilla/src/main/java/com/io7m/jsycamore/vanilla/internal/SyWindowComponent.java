@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
 import com.io7m.jsycamore.api.windows.SyWindowReadableType;
@@ -36,10 +37,11 @@ public abstract class SyWindowComponent extends SyComponentAbstract
   private final SyWindowDecorationComponent semantic;
 
   protected SyWindowComponent(
+    final SyScreenType screen,
     final SyWindowDecorationComponent inSemantic,
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra, () -> false);
+    super(screen, themeClasses, () -> false);
 
     this.semantic =
       Objects.requireNonNull(inSemantic, "semantic");

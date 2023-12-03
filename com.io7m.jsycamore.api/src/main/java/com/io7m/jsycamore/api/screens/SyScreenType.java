@@ -19,15 +19,15 @@ package com.io7m.jsycamore.api.screens;
 import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventType;
-import com.io7m.jsycamore.api.menus.SyMenuType;
+import com.io7m.jsycamore.api.menus.SyMenuServiceType;
+import com.io7m.jsycamore.api.services.SyServiceDirectoryReadableType;
 import com.io7m.jsycamore.api.sized.SySizedType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyTextSelectionServiceType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowLayers;
-import com.io7m.jsycamore.api.windows.SyWindowType;
+import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Flow.Publisher;
 
@@ -42,109 +42,37 @@ public interface SyScreenType
   AutoCloseable
 {
   /**
-   * Create a new window.
-   *
-   * @param sizeX The window width
-   * @param sizeY The window height
-   *
-   * @return A new window
+   * @return Access to the services for the screen
    */
 
-  default SyWindowType windowCreate(
-    final int sizeX,
-    final int sizeY)
+  SyServiceDirectoryReadableType services();
+
+  /**
+   * @return Access to the (mandatory) window service
+   */
+
+  default SyWindowServiceType windowService()
   {
-    return this.windowCreateOnLayer(
-      sizeX,
-      sizeY,
-      SyWindowLayers.layerForNormalWindows()
-    );
+    return this.services().requireService(SyWindowServiceType.class);
   }
 
   /**
-   * Create a new window.
-   *
-   * @param sizeX The window width
-   * @param sizeY The window height
-   * @param layer The window layer
-   *
-   * @return A new window
+   * @return Access to the (mandatory) menu service
    */
 
-  SyWindowType windowCreateOnLayer(
-    int sizeX,
-    int sizeY,
-    int layer);
+  default SyMenuServiceType menuService()
+  {
+    return this.services().requireService(SyMenuServiceType.class);
+  }
 
   /**
-   * @return A read-only list of the currently open windows in order from
-   * nearest to furthest
+   * @return Access to the (mandatory) text selection service
    */
 
-  List<SyWindowType> windowsVisibleOrdered();
-
-  /**
-   * @param window A window
-   *
-   * @return {@code true} iff {@code w} is currently isFocused
-   */
-
-  boolean windowIsFocused(SyWindowType window);
-
-  /**
-   * @param window A window
-   *
-   * @return {@code true} iff {@code w} is currently open
-   */
-
-  boolean windowIsVisible(SyWindowType window);
-
-  /**
-   * Make the window visible. The window, once visible, has focus. If the window
-   * is already visible, the window gains focus.
-   *
-   * @param window A window
-   */
-
-  void windowShow(SyWindowType window);
-
-  /**
-   * Hide the window. If the window is already invisible, this has no effect.
-   *
-   * @param window A window
-   */
-
-  void windowHide(SyWindowType window);
-
-  /**
-   * Close/destroy the window.
-   *
-   * @param window A window
-   */
-
-  void windowClose(SyWindowType window);
-
-  /**
-   * Bring {@code w} to the front.
-   *
-   * @param window A window
-   */
-
-  void windowFocus(SyWindowType window);
-
-  /**
-   * Maximize the window.
-   *
-   * @param window A window
-   */
-
-  void windowMaximize(SyWindowType window);
-
-  /**
-   * @return A reference to the window used for menus
-   */
-
-  SyWindowType windowMenu();
+  default SyTextSelectionServiceType textSelectionService()
+  {
+    return this.services().requireService(SyTextSelectionServiceType.class);
+  }
 
   /**
    * @return The current theme used by the screen
@@ -178,24 +106,6 @@ public interface SyScreenType
    */
 
   AttributeReadableType<PVector2I<SySpaceViewportType>> mousePosition();
-
-  /**
-   * Open a global menu. If a menu is already open, it is closed as if {@link
-   * #menuClose()} had been called, and then the given menu is opened instead.
-   * The menu will be positioned onscreen according to the value of {@link
-   * SyMenuType#expandPosition()} at the time of this call.
-   *
-   * @param menu The menu
-   */
-
-  void menuOpen(SyMenuType menu);
-
-  /**
-   * Close any menu that may be open. If no menu is open, the operation is a
-   * no-op.
-   */
-
-  void menuClose();
 
   @Override
   void close()

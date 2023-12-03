@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -49,16 +50,16 @@ public final class SyWindowResizeW
   private PVector2I<SySpaceViewportType> windowStartPosition;
   private PAreaSizeI<SySpaceViewportType> windowStartSize;
 
-  SyWindowResizeW()
+  SyWindowResizeW(final SyScreenType screen)
   {
-    super(WINDOW_RESIZE_W, List.of());
+    super(screen, WINDOW_RESIZE_W, List.of());
   }
 
   @Override
   protected SyEventConsumed onEvent(
     final SyEventType event)
   {
-    if (event instanceof SyMouseEventType mouseEvent) {
+    if (event instanceof final SyMouseEventType mouseEvent) {
       return this.onMouseEvent(mouseEvent);
     }
     return EVENT_NOT_CONSUMED;
@@ -67,7 +68,7 @@ public final class SyWindowResizeW
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)
   {
-    if (event instanceof SyMouseEventOnPressed onPressed) {
+    if (event instanceof final SyMouseEventOnPressed onPressed) {
       return switch (onPressed.button()) {
         case MOUSE_BUTTON_LEFT -> {
           this.pressed = true;
@@ -83,7 +84,7 @@ public final class SyWindowResizeW
       };
     }
 
-    if (event instanceof SyMouseEventOnReleased onReleased) {
+    if (event instanceof final SyMouseEventOnReleased onReleased) {
       return switch (onReleased.button()) {
         case MOUSE_BUTTON_LEFT -> {
           this.pressed = false;
@@ -93,7 +94,7 @@ public final class SyWindowResizeW
       };
     }
 
-    if (event instanceof SyMouseEventOnHeld onHeld) {
+    if (event instanceof final SyMouseEventOnHeld onHeld) {
       return switch (onHeld.button()) {
         case MOUSE_BUTTON_LEFT -> {
           final var deltaX =

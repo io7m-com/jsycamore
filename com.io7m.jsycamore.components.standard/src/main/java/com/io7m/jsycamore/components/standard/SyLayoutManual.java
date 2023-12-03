@@ -20,6 +20,7 @@ package com.io7m.jsycamore.components.standard;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -36,23 +37,27 @@ public final class SyLayoutManual extends SyLayoutAbstract
   /**
    * A layout that respects manually configured positions and sizes.
    *
+   * @param screen              The screen that owns the component
    * @param inThemeClassesExtra The extra theme classes, if any
    */
 
   public SyLayoutManual(
+    final SyScreenType screen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inThemeClassesExtra);
+    super(screen, inThemeClassesExtra);
   }
 
   /**
    * A layout that respects manually configured positions and sizes.
+   *
+   * @param screen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyLayoutManual()
+  public SyLayoutManual(final SyScreenType screen)
   {
-    this(List.of());
+    this(screen, List.of());
   }
 
   @Override

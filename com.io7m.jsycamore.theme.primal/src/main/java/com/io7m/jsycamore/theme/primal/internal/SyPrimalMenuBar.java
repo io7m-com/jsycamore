@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -66,6 +67,8 @@ public final class SyPrimalMenuBar extends SyPrimalAbstract
         );
 
       return new SyRenderNodeShape(
+        "MenuBar",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
         rectangle

@@ -47,9 +47,9 @@ public final class SyLayoutManualTest extends SyComponentContract<SyLayoutManual
   {
     final var c = this.newComponent();
 
-    final var b0 = new SyBlob(32, 32);
-    final var b1 = new SyBlob(64, 64);
-    final var b2 = new SyBlob(80, 80);
+    final var b0 = new SyBlob(this.screen(), 32, 32);
+    final var b1 = new SyBlob(this.screen(), 64, 64);
+    final var b2 = new SyBlob(this.screen(), 80, 80);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -98,6 +98,6 @@ public final class SyLayoutManualTest extends SyComponentContract<SyLayoutManual
   @Override
   protected SyLayoutManual newComponent()
   {
-    return new SyLayoutManual();
+    return new SyLayoutManual(this.screen());
   }
 }

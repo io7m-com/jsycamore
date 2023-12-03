@@ -20,6 +20,7 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -44,13 +45,15 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
    * A simple container that distributes child objects horizontally with a
    * configurable amount of padding between the objects.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
+   * @param screen       The screen that owns the component
+   * @param themeClasses The extra theme classes, if any
    */
 
   public SyLayoutHorizontal(
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
     final var attributes = SyComponentAttributes.get();
     this.paddingBetween = attributes.create(0);
     this.alignVertical = attributes.create(ALIGN_VERTICAL_CENTER);
@@ -59,12 +62,14 @@ public final class SyLayoutHorizontal extends SyLayoutAbstract
   /**
    * A simple container that distributes child objects horizontally with a
    * configurable amount of padding between the objects.
+   *
+   * @param screen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyLayoutHorizontal()
+  public SyLayoutHorizontal(final SyScreenType screen)
   {
-    this(List.of());
+    this(screen, List.of());
   }
 
   /**

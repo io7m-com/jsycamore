@@ -20,6 +20,7 @@ package com.io7m.jsycamore.components.standard.internal;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
+import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
@@ -27,16 +28,18 @@ import com.io7m.jsycamore.api.menus.SyMenuItemSubmenuType;
 import com.io7m.jsycamore.api.menus.SyMenuItemType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
 import com.io7m.jsycamore.components.standard.SySpace;
-import com.io7m.jsycamore.components.standard.SyTextView;
 import com.io7m.jsycamore.components.standard.forms.SyFormColumnsConfiguration;
 import com.io7m.jsycamore.components.standard.forms.SyFormRow;
+import com.io7m.jsycamore.components.standard.text.SyTextView;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.List;
@@ -44,6 +47,7 @@ import java.util.Objects;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
+import static com.io7m.jsycamore.api.text.SyTextDirection.TEXT_DIRECTION_LEFT_TO_RIGHT;
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.MENU_ITEM_TEXT;
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_CENTER;
 import static com.io7m.jsycamore.components.standard.SyAlignmentHorizontal.ALIGN_HORIZONTAL_LEFT;
@@ -62,10 +66,10 @@ public final class SyMenuItemSubmenu
   private final SyFormColumnsConfiguration columns;
   private final SyFormRow row;
   private final SyImageView icon;
-  private final SyTextView iconSubmenu;
+  private final SyTextViewType iconSubmenu;
   private final SyMenuType menuOpen;
   private final SyMenuType menuOwner;
-  private final SyTextView text;
+  private final SyTextViewType text;
 
   /**
    * A menu item that opens a submenu.
@@ -80,9 +84,9 @@ public final class SyMenuItemSubmenu
     final SyMenuType inMenuOwner,
     final SyFormColumnsConfiguration inColumns,
     final SyMenuType inMenuOpen,
-    final String inText)
+    final SyText inText)
   {
-    super(List.of());
+    super(inMenuOwner.screen(), List.of());
 
     this.menuOwner =
       Objects.requireNonNull(inMenuOwner, "inMenuOwner");
@@ -91,30 +95,34 @@ public final class SyMenuItemSubmenu
     this.menuOpen =
       Objects.requireNonNull(inMenuOpen, "inMenuOpen");
 
-    this.row = new SyFormRow(this.columns);
+    this.row =
+      new SyFormRow(inMenuOwner.screen(), this.columns);
 
-    this.iconSubmenu = new SyTextView(List.of(MENU_ITEM_TEXT));
+    this.iconSubmenu =
+      SyTextView.textView(inMenuOwner.screen(), List.of(MENU_ITEM_TEXT));
     this.iconSubmenu.setMouseQueryAccepting(false);
-    this.iconSubmenu.text().set("→");
+    this.iconSubmenu.text()
+      .set(new SyText("→", TEXT_DIRECTION_LEFT_TO_RIGHT));
 
-    this.iconSubmenuAlign = new SyAlign();
+    this.iconSubmenuAlign = new SyAlign(inMenuOwner.screen());
     this.iconSubmenuAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.iconSubmenuAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.iconSubmenuAlign.childAdd(this.iconSubmenu);
 
-    this.icon = new SyImageView();
+    this.icon = new SyImageView(inMenuOwner.screen());
     this.icon.setMouseQueryAccepting(false);
     this.icon.sizeUpperLimit().set(PAreaSizeI.of(16, 16));
 
-    this.iconAlign = new SyAlign();
+    this.iconAlign = new SyAlign(inMenuOwner.screen());
     this.iconAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.iconAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_CENTER);
     this.iconAlign.childAdd(this.icon);
 
-    this.text = new SyTextView(List.of(MENU_ITEM_TEXT));
+    this.text =
+      SyTextView.textView(inMenuOwner.screen(), List.of(MENU_ITEM_TEXT));
     this.text.text().set(inText);
 
-    this.textAlign = new SyAlign();
+    this.textAlign = new SyAlign(inMenuOwner.screen());
     this.textAlign.alignmentHorizontal().set(ALIGN_HORIZONTAL_LEFT);
     this.textAlign.alignmentVertical().set(ALIGN_VERTICAL_CENTER);
     this.textAlign.childAdd(this.text);
@@ -122,7 +130,7 @@ public final class SyMenuItemSubmenu
     this.row.childAdd(this.iconAlign);
     this.row.childAdd(this.textAlign);
     this.row.childAdd(this.iconSubmenuAlign);
-    this.row.childAdd(new SySpace());
+    this.row.childAdd(new SySpace(inMenuOwner.screen()));
 
     this.childAdd(this.row);
   }
@@ -200,7 +208,7 @@ public final class SyMenuItemSubmenu
   }
 
   @Override
-  public AttributeType<String> text()
+  public AttributeType<SyText> text()
   {
     return this.text.text();
   }
@@ -243,6 +251,7 @@ public final class SyMenuItemSubmenu
 
     this.window()
       .map(SyWindowType::screen)
+      .map(SyScreenType::menuService)
       .ifPresent(screen -> screen.menuOpen(this.menuOpen));
   }
 }

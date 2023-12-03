@@ -16,6 +16,8 @@
 
 package com.io7m.jsycamore.api.components;
 
+import com.io7m.jsycamore.api.text.SyText;
+
 /**
  * Write access to text areas.
  */
@@ -29,7 +31,7 @@ public interface SyTextAreaType
    * @param section The section
    */
 
-  void textSectionAppend(String section);
+  void textSectionAppend(SyText section);
 
   @Override
   SyScrollBarHorizontalType scrollbarHorizontal();

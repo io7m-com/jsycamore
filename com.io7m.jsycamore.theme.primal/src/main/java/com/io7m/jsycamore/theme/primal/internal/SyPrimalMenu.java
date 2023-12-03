@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     try {
       return this.emboss(rectangle);
-    } catch (SyThemeValueException e) {
+    } catch (final SyThemeValueException e) {
       throw new IllegalStateException(e);
     }
   }
@@ -96,6 +97,8 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "MenuEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -103,6 +106,8 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "MenuEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -110,6 +115,8 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "MenuEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -117,6 +124,8 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "MenuEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -124,6 +133,8 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final var mainFill =
       new SyRenderNodeShape(
+        "MenuMainFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
         rectangle
@@ -131,12 +142,15 @@ public final class SyPrimalMenu extends SyPrimalAbstract
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "MenuMainEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "MenuComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }

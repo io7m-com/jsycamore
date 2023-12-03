@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.text.SyText;
 
 /**
  * Write access to text views.
@@ -25,8 +26,27 @@ import com.io7m.jattribute.core.AttributeType;
 public interface SyTextViewType
   extends SyTextViewReadableType, SyComponentType
 {
+  /**
+   * @return An attribute indicating if this text view is selectable
+   */
+
   @Override
-  AttributeType<String> text();
+  AttributeType<Boolean> textSelectable();
+
+  @Override
+  AttributeType<SyText> text();
+
+  /**
+   * Set whether the text view is selectable.
+   *
+   * @param selectable {@code true} if the text view is selectable
+   */
+
+  default void setTextSelectable(
+    final boolean selectable)
+  {
+    this.textSelectable().set(Boolean.valueOf(selectable));
+  }
 
   /**
    * Set the text.
@@ -35,7 +55,7 @@ public interface SyTextViewType
    */
 
   default void setText(
-    final String text)
+    final SyText text)
   {
     this.text().set(text);
   }

@@ -18,6 +18,7 @@
 package com.io7m.jsycamore.api.menus;
 
 import com.io7m.jattribute.core.AttributeType;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -47,5 +48,5 @@ public non-sealed interface SyMenuItemSubmenuType extends SyMenuItemType
    * @return The menu item text
    */
 
-  AttributeType<String> text();
+  AttributeType<SyText> text();
 }

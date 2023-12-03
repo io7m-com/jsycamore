@@ -20,6 +20,7 @@ package com.io7m.jsycamore.components.standard.forms;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.ConvenienceConstructor;
@@ -42,15 +43,17 @@ public final class SyFormRow extends SyLayoutAbstract
   /**
    * A row within a form.
    *
-   * @param inThemeClassesExtra The extra theme classes, if any
-   * @param inConfiguration     The column configuration
+   * @param screen          The screen that owns the component
+   * @param themeClasses    The extra theme classes, if any
+   * @param inConfiguration The column configuration
    */
 
   public SyFormRow(
-    final List<SyThemeClassNameType> inThemeClassesExtra,
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses,
     final SyFormColumnsConfiguration inConfiguration)
   {
-    super(inThemeClassesExtra);
+    super(screen, themeClasses);
     this.configuration =
       Objects.requireNonNull(inConfiguration, "configuration");
   }
@@ -58,14 +61,16 @@ public final class SyFormRow extends SyLayoutAbstract
   /**
    * A row within a form.
    *
+   * @param screen          The screen that owns the component
    * @param inConfiguration The column configuration
    */
 
   @ConvenienceConstructor
   public SyFormRow(
+    final SyScreenType screen,
     final SyFormColumnsConfiguration inConfiguration)
   {
-    this(List.of(), inConfiguration);
+    this(screen, List.of(), inConfiguration);
   }
 
   @Override

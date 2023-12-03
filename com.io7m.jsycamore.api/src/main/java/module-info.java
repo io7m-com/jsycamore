@@ -29,6 +29,7 @@ module com.io7m.jsycamore.api
   requires transitive com.io7m.jorchard.core;
   requires transitive com.io7m.jregions.core;
   requires transitive com.io7m.jtensors.core;
+  requires transitive com.io7m.repetoir.core;
 
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;
@@ -44,6 +45,7 @@ module com.io7m.jsycamore.api
   exports com.io7m.jsycamore.api.mouse;
   exports com.io7m.jsycamore.api.rendering;
   exports com.io7m.jsycamore.api.screens;
+  exports com.io7m.jsycamore.api.services;
   exports com.io7m.jsycamore.api.sized;
   exports com.io7m.jsycamore.api.spaces;
   exports com.io7m.jsycamore.api.text;

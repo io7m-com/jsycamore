@@ -50,7 +50,7 @@ public final class SyMenuItemSeparator
   public SyMenuItemSeparator(
     final SyMenuType inMenu)
   {
-    super(List.of());
+    super(inMenu.screen(), List.of());
     this.menu = Objects.requireNonNull(inMenu, "menu");
   }
 

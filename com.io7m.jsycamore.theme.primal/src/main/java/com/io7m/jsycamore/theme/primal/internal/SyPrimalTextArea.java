@@ -27,12 +27,13 @@ import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.BUTTON_PRESSED;
 import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.PRIMARY_EDGE;
+import static com.io7m.jsycamore.theme.primal.internal.SyPrimalValues.TEXT_AREA_BACKGROUND;
 
 /**
  * A theme component for text areas.
@@ -74,19 +75,27 @@ public final class SyPrimalTextArea extends SyPrimalAbstract
 
         final var mainFill =
           new SyRenderNodeShape(
+            "TextAreaFill",
+            PVectors2I.zero(),
             Optional.empty(),
-            Optional.of(values.fillFlat(BUTTON_PRESSED)),
+            Optional.of(values.fillFlat(TEXT_AREA_BACKGROUND)),
             rectangle
           );
 
         final var mainEdge =
           new SyRenderNodeShape(
+            "TextAreaEdge",
+            PVectors2I.zero(),
             Optional.of(values.edgeFlat(PRIMARY_EDGE)),
             Optional.empty(),
             rectangle
           );
 
-        return SyRenderNodeComposite.composite(mainFill, mainEdge);
+        return SyRenderNodeComposite.composite(
+          "TextAreaComposite",
+          mainFill,
+          mainEdge
+        );
       } catch (final SyThemeValueException e) {
         throw new IllegalStateException(e);
       }

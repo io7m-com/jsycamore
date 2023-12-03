@@ -23,11 +23,12 @@ import com.io7m.jsycamore.api.rendering.SyPaintFlat;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeComposite;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeShape;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
-import com.io7m.jsycamore.api.text.SyFontDirectoryType;
+import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
+import com.io7m.jsycamore.awt.internal.SyAWTFont;
+import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
 import com.io7m.jsycamore.awt.internal.SyAWTNodeRenderer;
-import com.io7m.jsycamore.awt.internal.SyFontAWT;
-import com.io7m.jsycamore.awt.internal.SyFontDirectoryAWT;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,7 @@ public final class SyAWTNodeRendererTest
   private Graphics2D graphics;
   private Path imageReceivedFile;
   private SyAWTImageLoader imageLoader;
-  private SyFontDirectoryType<SyFontAWT> fonts;
+  private SyFontDirectoryServiceType<SyAWTFont> fonts;
 
   @BeforeEach
   public void setup()
@@ -72,7 +73,7 @@ public final class SyAWTNodeRendererTest
     this.imageLoader =
       new SyAWTImageLoader();
     this.fonts =
-      SyFontDirectoryAWT.createFromServiceLoader();
+      SyAWTFontDirectoryService.createFromServiceLoader();
 
     this.graphics = this.imageReceived.createGraphics();
     this.graphics.setPaint(Color.BLACK);
@@ -128,7 +129,14 @@ public final class SyAWTNodeRendererTest
 
     final var pixelsR = (int[]) grabR.getPixels();
     final var pixelsE = (int[]) grabE.getPixels();
-    assertArrayEquals(pixelsE, pixelsR, "Images do not match");
+
+    try {
+      assertArrayEquals(pixelsE, pixelsR, "Images do not match");
+    } catch (final Throwable e) {
+      LOG.error("Image mismatch: ", e);
+      LOG.error("Run: feh {} {}", expectedPath, this.imageReceivedFile);
+      throw e;
+    }
   }
 
   private void saveImage()
@@ -148,6 +156,8 @@ public final class SyAWTNodeRendererTest
     this.nodeRenderer.renderNode(
       this.graphics,
       new SyRenderNodeShape(
+        "Simple0",
+        PVectors2I.zero(),
         Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
         Optional.empty(),
         new SyShapeRectangle<>(
@@ -166,13 +176,18 @@ public final class SyAWTNodeRendererTest
     this.nodeRenderer.renderNode(
       this.graphics,
       SyRenderNodeComposite.composite(
+        "Composite",
         new SyRenderNodeShape(
+          "Simple0",
+          PVectors2I.zero(),
           Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
           Optional.empty(),
           new SyShapeRectangle<>(
             PAreaI.of(2, 32 + 2, 2, 32 + 2))
         ),
         new SyRenderNodeShape(
+          "Simple1",
+          PVectors2I.zero(),
           Optional.of(new SyPaintFlat(SyColors.whiteOpaque())),
           Optional.empty(),
           new SyShapeRectangle<>(

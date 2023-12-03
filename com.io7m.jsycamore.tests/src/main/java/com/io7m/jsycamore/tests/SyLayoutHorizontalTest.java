@@ -46,9 +46,9 @@ public final class SyLayoutHorizontalTest extends SyComponentContract<SyLayoutHo
     final var c = this.newComponent();
     c.paddingBetween().set(0);
 
-    final var b0 = new SyBlob(100, 300);
-    final var b1 = new SyBlob(100, 300);
-    final var b2 = new SyBlob(100, 300);
+    final var b0 = new SyBlob(this.screen(), 100, 300);
+    final var b1 = new SyBlob(this.screen(), 100, 300);
+    final var b2 = new SyBlob(this.screen(), 100, 300);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -82,9 +82,9 @@ public final class SyLayoutHorizontalTest extends SyComponentContract<SyLayoutHo
     final var c = this.newComponent();
     c.paddingBetween().set(10);
 
-    final var b0 = new SyBlob(100, 300);
-    final var b1 = new SyBlob(100, 300);
-    final var b2 = new SyBlob(100, 300);
+    final var b0 = new SyBlob(this.screen(), 100, 300);
+    final var b1 = new SyBlob(this.screen(), 100, 300);
+    final var b2 = new SyBlob(this.screen(), 100, 300);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -125,6 +125,6 @@ public final class SyLayoutHorizontalTest extends SyComponentContract<SyLayoutHo
   @Override
   protected SyLayoutHorizontal newComponent()
   {
-    return new SyLayoutHorizontal();
+    return new SyLayoutHorizontal(this.screen());
   }
 }

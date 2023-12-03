@@ -46,9 +46,9 @@ public final class SyLayoutVerticalTest extends SyComponentContract<SyLayoutVert
     final var c = this.newComponent();
     c.paddingBetween().set(0);
 
-    final var b0 = new SyBlob(300, 100);
-    final var b1 = new SyBlob(300, 100);
-    final var b2 = new SyBlob(300, 100);
+    final var b0 = new SyBlob(this.screen(), 300, 100);
+    final var b1 = new SyBlob(this.screen(), 300, 100);
+    final var b2 = new SyBlob(this.screen(), 300, 100);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -82,9 +82,9 @@ public final class SyLayoutVerticalTest extends SyComponentContract<SyLayoutVert
     final var c = this.newComponent();
     c.paddingBetween().set(10);
 
-    final var b0 = new SyBlob(300, 100);
-    final var b1 = new SyBlob(300, 100);
-    final var b2 = new SyBlob(300, 100);
+    final var b0 = new SyBlob(this.screen(), 300, 100);
+    final var b1 = new SyBlob(this.screen(), 300, 100);
+    final var b2 = new SyBlob(this.screen(), 300, 100);
     c.childAdd(b0);
     c.childAdd(b1);
     c.childAdd(b2);
@@ -125,6 +125,6 @@ public final class SyLayoutVerticalTest extends SyComponentContract<SyLayoutVert
   @Override
   protected SyLayoutVertical newComponent()
   {
-    return new SyLayoutVertical();
+    return new SyLayoutVertical(this.screen());
   }
 }

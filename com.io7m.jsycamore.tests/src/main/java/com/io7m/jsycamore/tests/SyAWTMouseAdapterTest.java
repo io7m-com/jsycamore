@@ -16,7 +16,6 @@
 
 package com.io7m.jsycamore.tests;
 
-import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenMouseEventsType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.awt.internal.SyAWTMouseAdapter;
@@ -30,7 +29,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import static com.io7m.jsycamore.api.mouse.SyMouseButton.MOUSE_BUTTON_LEFT;
-import static java.awt.event.MouseEvent.*;
+import static java.awt.event.MouseEvent.BUTTON1;
 import static org.mockito.Mockito.times;
 
 public final class SyAWTMouseAdapterTest

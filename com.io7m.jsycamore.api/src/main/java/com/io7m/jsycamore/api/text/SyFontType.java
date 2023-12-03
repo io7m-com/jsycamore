@@ -59,33 +59,42 @@ public interface SyFontType
   SyFontDescription description();
 
   /**
-   * Split the given text into lines based on the given wrapping width.
+   * Split the given text into lines based on the given page width; lines will
+   * be broken in order to ensure that text fits within the page width.
    *
-   * @param text  The text
-   * @param width The width
+   * @param text            The text
+   * @param firstLineNumber The number of the first line
+   * @param pageWidth       The page width
    *
-   * @return The split lines
+   * @return The non-empty list of split lines
    */
 
-  List<SyTextSectionLineType> textLayout(
-    String text,
-    int width);
+  default List<SyTextLineMeasuredType> textLayout(
+    final SyText text,
+    final int firstLineNumber,
+    final int pageWidth)
+  {
+    return this.textLayoutMultiple(
+      List.of(text),
+      firstLineNumber,
+      pageWidth
+    );
+  }
 
   /**
-   * Split the given texts into lines based on the given wrapping width.
+   * Split the given texts into lines based on the given page width; lines will
+   * be broken in order to ensure that text fits within the page width.
    *
-   * @param texts The texts
-   * @param width The width
+   * @param texts           The texts
+   * @param firstLineNumber The number of the first line
+   * @param pageWidth       The page width
    *
    * @return The split lines
    */
 
-  default List<SyTextSectionLineType> textLayoutMultiple(
-    final List<String> texts,
-    final int width)
-  {
-    return texts.stream()
-      .flatMap(s -> this.textLayout(s, width).stream())
-      .toList();
-  }
+  List<SyTextLineMeasuredType> textLayoutMultiple(
+    List<SyText> texts,
+    int firstLineNumber,
+    int pageWidth
+  );
 }

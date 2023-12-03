@@ -20,6 +20,7 @@ package com.io7m.jsycamore.api.menus;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jsycamore.api.components.SyComponentType;
+import com.io7m.jsycamore.api.text.SyText;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public interface SyMenuType extends SyComponentType, SyMenuReadableType
    */
 
   SyMenuItemAtomType addAtom(
-    String text,
+    SyText text,
     Runnable action);
 
   /**
@@ -74,7 +75,7 @@ public interface SyMenuType extends SyComponentType, SyMenuReadableType
    */
 
   SyMenuItemSubmenuType addSubmenu(
-    String text,
+    SyText text,
     SyMenuType menu);
 
   @Override

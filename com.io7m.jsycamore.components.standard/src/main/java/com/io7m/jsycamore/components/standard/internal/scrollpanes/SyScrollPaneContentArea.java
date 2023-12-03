@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard.internal.scrollpanes;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 
@@ -29,9 +30,10 @@ import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.SCROLLPANE_
 
 final class SyScrollPaneContentArea extends SyComponentAbstract
 {
-  SyScrollPaneContentArea()
+  SyScrollPaneContentArea(
+    final SyScreenType inScreen)
   {
-    super(List.of());
+    super(inScreen, List.of());
   }
 
   @Override

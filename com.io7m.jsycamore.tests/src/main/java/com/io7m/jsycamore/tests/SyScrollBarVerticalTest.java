@@ -61,7 +61,7 @@ public final class SyScrollBarVerticalTest
   @Override
   protected SyScrollBarVerticalType newComponent()
   {
-    return SyScrollBarsVertical.create();
+    return SyScrollBarsVertical.create(this.screen());
   }
 
   /**

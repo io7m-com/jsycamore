@@ -21,6 +21,7 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyImageViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.net.URI;
@@ -41,25 +42,29 @@ public final class SyImageView
   /**
    * An image view.
    *
+   * @param inScreen            The screen that owns the component
    * @param inThemeClassesExtra The extra theme classes, if any
    */
 
   public SyImageView(
+    final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inThemeClassesExtra);
+    super(inScreen, inThemeClassesExtra);
     final var attributes = SyComponentAttributes.get();
     this.imageURI = attributes.create(Optional.empty());
   }
 
   /**
    * An image view.
+   *
+   * @param inScreen The screen that owns the component
    */
 
   @ConvenienceConstructor
-  public SyImageView()
+  public SyImageView(final SyScreenType inScreen)
   {
-    this(List.of());
+    this(inScreen, List.of());
   }
 
   @Override

@@ -54,15 +54,6 @@ public final class SyWindowViewportAccumulator
     return new SyWindowViewportAccumulator();
   }
 
-  private static int clamp(
-    final int value,
-    final int min,
-    final int max)
-  {
-    final var low = Math.max(value, min);
-    return Math.min(max, low);
-  }
-
   @Override
   public String toString()
   {
@@ -103,10 +94,10 @@ public final class SyWindowViewportAccumulator
 
     this.saved.push(this.current);
 
-    final var originalX0 = this.current.minimumX();
-    final var originalY0 = this.current.minimumY();
-    final var originalX1 = this.current.maximumX();
-    final var originalY1 = this.current.maximumY();
+    final var originalX0 =
+      this.current.minimumX();
+    final var originalY0 =
+      this.current.minimumY();
 
     final var moveX = box.minimumX();
     final var moveY = box.minimumY();
@@ -115,32 +106,13 @@ public final class SyWindowViewportAccumulator
       Math.addExact(originalX0, moveX);
     final var newY0 =
       Math.addExact(originalY0, moveY);
-    final var mx0 =
-      clamp(newX0, originalX0, originalX1);
-    final var my0 =
-      clamp(newY0, originalY0, originalY1);
 
     final var sizeX = box.sizeX();
     final var sizeY = box.sizeY();
     final var newX1 = Math.addExact(newX0, sizeX);
     final var newY1 = Math.addExact(newY0, sizeY);
-    final var mx1 = clamp(newX1, mx0, originalX1);
-    final var my1 = clamp(newY1, my0, originalY1);
 
-    Preconditions.checkPreconditionI(
-      mx0, mx0 >= originalX0, i -> "mx0 must be >= original_x0");
-    Preconditions.checkPreconditionI(
-      my0, my0 >= originalY0, i -> "my0 must be >= original_y0");
-    Preconditions.checkPreconditionI(
-      mx1, mx1 <= originalX1, i -> "mx1 must be >= original_x1");
-    Preconditions.checkPreconditionI(
-      my1, my1 <= originalY1, i -> "my1 must be >= original_y1");
-    Preconditions.checkPreconditionI(
-      mx0, mx0 <= mx1, i -> "mx0 must be <= mx1");
-    Preconditions.checkPreconditionI(
-      my0, my0 <= my1, i -> "my0 must be <= my1");
-
-    this.current = PAreaI.of(mx0, mx1, my0, my1);
+    this.current = PAreaI.of(newX0, newX1, newY0, newY1);
   }
 
   @Override

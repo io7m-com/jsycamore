@@ -26,6 +26,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
 import com.io7m.jsycamore.api.themes.SyThemeValueException;
+import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import com.io7m.junreachable.UnimplementedCodeException;
 
 import java.util.Objects;
@@ -76,6 +77,8 @@ public final class SyPrimalWindowButtons
 
       final SyRenderNodeShape embossW =
         new SyRenderNodeShape(
+          "WindowButtonPressedEmbossW",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillWest()),
           embossed.shapeWest()
@@ -83,6 +86,8 @@ public final class SyPrimalWindowButtons
 
       final SyRenderNodeShape embossS =
         new SyRenderNodeShape(
+          "WindowButtonPressedEmbossS",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillSouth()),
           embossed.shapeSouth()
@@ -90,6 +95,8 @@ public final class SyPrimalWindowButtons
 
       final SyRenderNodeShape embossN =
         new SyRenderNodeShape(
+          "WindowButtonPressedEmbossN",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillNorth()),
           embossed.shapeNorth()
@@ -97,6 +104,8 @@ public final class SyPrimalWindowButtons
 
       final SyRenderNodeShape embossE =
         new SyRenderNodeShape(
+          "WindowButtonPressedEmbossE",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(embossed.fillEast()),
           embossed.shapeEast()
@@ -104,6 +113,8 @@ public final class SyPrimalWindowButtons
 
       final var mainFill =
         new SyRenderNodeShape(
+          "WindowButtonPressedFill",
+          PVectors2I.zero(),
           Optional.empty(),
           Optional.of(values.fillFlat(BUTTON_PRESSED)),
           rectangle
@@ -111,12 +122,15 @@ public final class SyPrimalWindowButtons
 
       final var mainEdge =
         new SyRenderNodeShape(
+          "WindowButtonPressedEdge",
+          PVectors2I.zero(),
           Optional.of(values.edgeFlat(PRIMARY_EDGE)),
           Optional.empty(),
           rectangle
         );
 
       return SyRenderNodeComposite.composite(
+        "WindowButtonPressedComposite",
         mainFill, embossN, embossE, embossS, embossW, mainEdge
       );
     }
@@ -134,6 +148,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "WindowButtonOverEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -141,6 +157,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "WindowButtonOverEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -148,6 +166,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "WindowButtonOverEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -155,6 +175,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "WindowButtonOverEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -162,6 +184,8 @@ public final class SyPrimalWindowButtons
 
     final var mainFill =
       new SyRenderNodeShape(
+        "WindowButtonOverFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_OVER)),
         rectangle
@@ -169,12 +193,15 @@ public final class SyPrimalWindowButtons
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "WindowButtonOverEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "WindowButtonOverComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }
@@ -200,6 +227,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossW =
       new SyRenderNodeShape(
+        "WindowButtonEmbossW",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillWest()),
         embossed.shapeWest()
@@ -207,6 +236,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossS =
       new SyRenderNodeShape(
+        "WindowButtonEmbossS",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillSouth()),
         embossed.shapeSouth()
@@ -214,6 +245,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossN =
       new SyRenderNodeShape(
+        "WindowButtonEmbossN",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillNorth()),
         embossed.shapeNorth()
@@ -221,6 +254,8 @@ public final class SyPrimalWindowButtons
 
     final SyRenderNodeShape embossE =
       new SyRenderNodeShape(
+        "WindowButtonEmbossE",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(embossed.fillEast()),
         embossed.shapeEast()
@@ -228,6 +263,8 @@ public final class SyPrimalWindowButtons
 
     final var mainFill =
       new SyRenderNodeShape(
+        "WindowButtonFill",
+        PVectors2I.zero(),
         Optional.empty(),
         Optional.of(values.fillFlat(PRIMARY_BACKGROUND)),
         rectangle
@@ -235,12 +272,15 @@ public final class SyPrimalWindowButtons
 
     final var mainEdge =
       new SyRenderNodeShape(
+        "WindowButtonEdge",
+        PVectors2I.zero(),
         Optional.of(values.edgeFlat(PRIMARY_EDGE)),
         Optional.empty(),
         rectangle
       );
 
     return SyRenderNodeComposite.composite(
+      "WindowButtonComposite",
       mainFill, embossN, embossE, embossS, embossW, mainEdge
     );
   }
@@ -251,12 +291,14 @@ public final class SyPrimalWindowButtons
     final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
     throws SyThemeValueException
   {
-    if (component instanceof SyButtonReadableType button) {
+    if (component instanceof final SyButtonReadableType button) {
       return renderForActiveNotOverButton(theme, button, rectangle);
     }
 
     final var values = theme.values();
     return new SyRenderNodeShape(
+      "UNMATCHED",
+      PVectors2I.zero(),
       Optional.of(values.edgeFlat(PRIMARY_EDGE)),
       Optional.of(values.fillFlat(UNMATCHED)),
       rectangle
@@ -269,12 +311,14 @@ public final class SyPrimalWindowButtons
     final SyShapeRectangle<SySpaceComponentRelativeType> rectangle)
     throws SyThemeValueException
   {
-    if (component instanceof SyButtonReadableType button) {
+    if (component instanceof final SyButtonReadableType button) {
       return renderForActiveOverButton(theme, button, rectangle);
     }
 
     final var values = theme.values();
     return new SyRenderNodeShape(
+      "UNMATCHED",
+      PVectors2I.zero(),
       Optional.of(values.edgeFlat(PRIMARY_EDGE)),
       Optional.of(values.fillFlat(UNMATCHED)),
       rectangle
