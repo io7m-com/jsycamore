@@ -38,9 +38,9 @@
     <io7m.api.previousVersion>0.2.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.org.immutables.value.version>2.10.0</io7m.org.immutables.value.version>
     <javafx.version>21.0.1</javafx.version>
-    <jqwik.version>1.8.1</jqwik.version>
-    <junit.version>5.10.0</junit.version>
-    <mockito.version>5.6.0</mockito.version>
+    <jqwik.version>1.8.2</jqwik.version>
+    <junit.version>5.10.1</junit.version>
+    <mockito.version>5.8.0</mockito.version>
   </properties>
 
   <licenses>
@@ -186,7 +186,7 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.11</version>
+        <version>1.4.14</version>
       </dependency>
       <dependency>
         <groupId>net.java.dev.designgridlayout</groupId>
