@@ -32,6 +32,7 @@ import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType.SyTextSelectionIsSelected;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
@@ -172,8 +173,8 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -252,8 +253,8 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -332,8 +333,8 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -412,8 +413,8 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();

@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="cb46abcd-d0b1-41f4-bb95-662186d4aa78"
+         title="Windows">
+
+  <Section title="Description">
+    <Subsection title="Overview">
+      <FormalItem title="Windows">
+        <Image source="window.png"
+               width="640"
+               height="268">
+          Two example windows.
+        </Image>
+      </FormalItem>
+
+      <Paragraph>
+        A <Term type="term">window</Term> is an interactive, resizable, rectangular region that acts as a container for <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">
+        components</Link>.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Window Order"
+                id="caab0ac3-f623-457f-986d-312b260f184e">
+      <Paragraph>
+        Each window is assigned an abstract <Term type="term">order</Term> value by the screen in which it resides. The
+        order encodes the notion of windows being in a stack, with the window at the top of the stack being the
+        frontmost or <Term type="term">focused</Term> window. When the user clicks on any component within a window,
+        that window is moved to the top of the stack and becomes <Term type="term">focused</Term>.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Window Visibility">
+      <Paragraph>
+        Windows are either <Term type="term">visible</Term>, or <Term type="term">invisible</Term>. An invisible window
+        is not rendered, and does not receive
+        <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>.
+      </Paragraph>
+      <Paragraph>
+        When a window's visibility changes,
+        <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>
+        of type
+        <Term type="type">SyWindowBecameInvisible</Term>
+        or
+        <Term type="type">SyWindowBecameVisible</Term>
+        will be published.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Window Layers">
+      <Paragraph>
+        Windows can be grouped into <Term type="term">layers</Term>. A layer is an integer value
+        <Term type="variable">N</Term>
+        such that all windows with a layer value less than
+        <Term type="variable">N</Term>
+        are considered to be <Term type="term">below</Term> windows with layer value <Term type="variable">N</Term>. All
+        windows with a layer value greater than <Term type="variable">N</Term> are considered to be
+        <Term type="term">above</Term>
+        windows with layer value <Term type="variable">N</Term>.
+      </Paragraph>
+      <Paragraph>
+        Within an individual layer, <Link target="caab0ac3-f623-457f-986d-312b260f184e">window order</Link> decides
+        which windows are above or below other windows in that layer.
+      </Paragraph>
+      <Paragraph>
+        Window layers are a somewhat advanced feature, and most applications will not need to use them directly. They
+        are primarily useful for implementing UI elements that must temporarily appear above all other elements, such as
+        notifications or <Link target="ddd1079c-f636-4232-bebe-39672a140061">menus</Link>. They are also useful for
+        implementing user interfaces for games and other simulations; the game's HUD can be placed on one layer, and a
+        "pause" screen UI can be placed on a separate layer above the HUD layer, and the layers can individually be
+        shown or hidden as is appropriate.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Snapping">
+      <Paragraph>
+        The positions and sizes of windows can be configured to <Term type="term">snap</Term> to given values. For
+        example, if a window's <Term type="expression">positionSnapping</Term> attribute is set to
+        <Term type="constant">16</Term>, whenever the position of a window is set (either manually, or via the user
+        dragging the window), the position on both axes will snap to the nearest multiple of
+        <Term type="constant">16</Term>.
+      </Paragraph>
+    </Subsection>
+  </Section>
+
+  <Section title="Window Decorations">
+    <Subsection title="Standard Components">
+      <Paragraph>
+        Windows are created with a standard set of attached components. These standard components allow users to perform
+        actions such as closing windows, maximizing windows, and moving and resizing windows. Whether these components
+        are visible or not is dependent upon both the window's
+        <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">theme</Link>, and other per-window configuration settings.
+        By default, the standard components are visible if the window is configured as being
+        <Term type="term">decorated</Term>.
+      </Paragraph>
+      <FormalItem title="Decorated Window">
+        <Image source="window_parts.png"
+               width="640"
+               height="344">
+          A decorated window.
+        </Image>
+      </FormalItem>
+      <Paragraph>
+        As an example, the window shown in the above diagram appears as follows when marked as
+        <Term type="term">undecorated</Term>:
+      </Paragraph>
+      <FormalItem title="Undecorated Window">
+        <Image source="window_undecorated.png"
+               width="640"
+               height="462">
+          A decorated window.
+        </Image>
+      </FormalItem>
+      <Paragraph>
+        Windows can be switched between being <Term type="term">decorated</Term> or
+        <Term type="term">undecorated</Term>
+        at any time by setting the value of the
+        <Term type="variable">decorated</Term>
+        attribute. Note that, without window decorations, the user has very little control over the window: They cannot
+        directly close it, move it, or resize it.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Close Button">
+      <Subsection title="Description">
+        <Paragraph>
+          The <Term type="term">close</Term> button, when clicked, closes the window. The button is a
+          <Link target="9c6bfe16-d2dd-420b-b8ba-9d087bb9091c">standard button</Link>
+          and therefore follows the same behaviours with respect to keyboard and mouse interaction.
+        </Paragraph>
+        <Paragraph>
+          For a visible window, the close button is visible iff the following conditions hold:
+        </Paragraph>
+        <FormalItem title="Visibility Conditions">
+          <ListUnordered>
+            <Item>
+              The window is decorated.
+            </Item>
+            <Item>
+              The window's <Term type="variable">closeButtonVisibility</Term> attribute is set to
+              <Term type="constant">VISIBILITY_VISIBLE</Term>.
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="Events">
+        <Paragraph>
+          When a window is closed, an event of type <Term type="type">SyWindowClosed</Term> will be published.
+        </Paragraph>
+      </Subsection>
+    </Subsection>
+
+    <Subsection title="Maximize Button">
+      <Subsection title="Description">
+        <Paragraph>
+          The <Term type="term">maximize</Term> button, when clicked, resizes the window to match the size of the
+          screen's <Link target="f390c685-04c2-4c72-897d-9f28f6027983">viewport</Link>. If the window has already been
+          maximized, clicking the button again returns the window to its previous size. The button is a
+          <Link target="9c6bfe16-d2dd-420b-b8ba-9d087bb9091c">standard button</Link>
+          and therefore follows the same behaviours with respect to keyboard and mouse interaction.
+        </Paragraph>
+        <Paragraph>
+          For a visible window, the maximize button is visible iff the following conditions hold:
+        </Paragraph>
+        <FormalItem title="Visibility Conditions">
+          <ListUnordered>
+            <Item>
+              The window is decorated.
+            </Item>
+            <Item>
+              The window's <Term type="variable">maximizeButtonVisibility</Term> attribute is set to
+              <Term type="constant">VISIBILITY_VISIBLE</Term>.
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="Events">
+        <Paragraph>
+          When a window is maximized, an event of type <Term type="type">SyWindowMaximized</Term> will be published.
+          When a window is returned to normal size after having been maximized, an event of type
+          <Term type="type">SyWindowUnmaximized</Term>
+          will be published.
+        </Paragraph>
+      </Subsection>
+    </Subsection>
+
+    <Subsection title="Menu Button">
+      <Subsection title="Description">
+        <Paragraph>
+          The <Term type="term">menu</Term> button, when clicked, opens a
+          <Link target="ddd1079c-f636-4232-bebe-39672a140061">menu</Link>
+          containing a list of actions that can otherwise be performed by the other standard window buttons.
+          Hypothetically, the menu button is capable of subsuming the functionality of the other window buttons at the
+          cost of having the user go through an intermediate menu to perform actions. The button is a
+          <Link target="9c6bfe16-d2dd-420b-b8ba-9d087bb9091c">standard button</Link>
+          and therefore follows the same behaviours with respect to keyboard and mouse interaction.
+        </Paragraph>
+        <FormalItem title="Menu Button Menu">
+          <Image source="windowMenu.png"
+                 width="640"
+                 height="480">
+            The window menu.
+          </Image>
+        </FormalItem>
+        <Paragraph>
+          For a visible window, the menu button is visible iff the following conditions hold:
+        </Paragraph>
+        <FormalItem title="Visibility Conditions">
+          <ListUnordered>
+            <Item>
+              The window is decorated.
+            </Item>
+            <Item>
+              The window's <Term type="variable">menuButtonVisibility</Term> attribute is set to
+              <Term type="constant">VISIBILITY_VISIBLE</Term>.
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+      </Subsection>
+    </Subsection>
+
+    <Subsection title="Resize Handles">
+      <Subsection title="Overview">
+        <Paragraph>
+          <Term type="term">Resize handles</Term>
+          are typically placed on the edges and corners of windows (this is dependent upon the
+          <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">theme</Link>
+          used), and allow the user to click and drag the handles to resize the windows.
+        </Paragraph>
+        <Paragraph>
+          There are up to eight visible resize handles, each corresponding to the eight compass directions, and each
+          implementing a specific kind of resize behaviour as detailed in the following sections. The behaviour of each
+          handle is specified in terms of the user dragging the handles on the X and Y axes independently; the resulting
+          effect on the window should be understood to be the sum of the effects along both axes.
+        </Paragraph>
+        <Paragraph>
+          For a visible window, resize handle <Term type="variable">H</Term> is visible iff the following conditions
+          hold:
+        </Paragraph>
+        <FormalItem title="Visibility Conditions">
+          <ListUnordered>
+            <Item>
+              The window is decorated.
+            </Item>
+            <Item>
+              The window's <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">theme</Link> specifies that
+              <Term type="variable">H</Term>
+              should be visible.
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+        <Paragraph>
+          Note that it is not technically a requirement for a theme to allow <Term type="term">any</Term> resize handle
+          to be visible. However, making all handles invisible would be fairly user-hostile. Some applications may
+          choose to design themes where only the
+          <Link target="f1295748-ca82-46e1-b3fd-6704e1c64460">southeast</Link>
+          resize handle is visible, as this matches the design of many traditional windowing systems.
+        </Paragraph>
+      </Subsection>
+      <Subsection title="ResizeNW Handle">
+        <Paragraph>
+          Dragging the <Term type="term">northwest</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will move the window <Term type="variable">N</Term> units towards negative infinity
+          on the Y axis whilst also enlarging the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northwest</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will move the window <Term type="variable">M</Term> units towards negative infinity
+          on the X axis whilst also enlarging the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northwest</Term> handle <Term type="variable">P</Term> units along the Y axis
+          towards positive infinity will move the window <Term type="variable">P</Term> units towards positive infinity
+          on the Y axis whilst also shrinking the window by <Term type="variable">P</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northwest</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will move the window <Term type="variable">Q</Term> units towards positive infinity
+          on the X axis whilst also shrinking the window by <Term type="variable">Q</Term> units on the X axis.
+        </Paragraph>
+        <FormalItem title="Resize NW">
+          <Image source="windowResizeNW.png"
+                 width="582"
+                 height="441">
+            A window resizing northwest.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeN Handle">
+        <Paragraph>
+          Dragging the <Term type="term">north</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will move the window <Term type="variable">N</Term> units towards negative infinity
+          on the Y axis whilst also enlarging the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">north</Term> handle <Term type="variable">M</Term> units along the Y axis
+          towards positive infinity will move the window <Term type="variable">M</Term> units towards positive infinity
+          on the Y axis whilst also shrinking the window by <Term type="variable">M</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">north</Term> handle along the X axis has no effect on the window size or
+          position.
+        </Paragraph>
+        <FormalItem title="Resize N">
+          <Image source="windowResizeN.png"
+                 width="582"
+                 height="441">
+            A window resizing north.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeNE Handle">
+        <Paragraph>
+          Dragging the <Term type="term">northeast</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will move the window <Term type="variable">N</Term> units towards negative infinity
+          on the Y axis whilst also enlarging the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northeast</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will shrink the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northeast</Term> handle <Term type="variable">P</Term> units along the Y axis
+          towards positive infinity will move the window <Term type="variable">P</Term> units towards positive infinity
+          on the Y axis whilst also shrinking the window by <Term type="variable">P</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northeast</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will enlarge the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <FormalItem title="Resize NE">
+          <Image source="windowResizeNE.png"
+                 width="582"
+                 height="441">
+            A window resizing northeast.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeE Handle">
+        <Paragraph>
+          Dragging the <Term type="term">east</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will shrink the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">northeast</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will enlarge the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">east</Term> handle along the Y axis has no effect on the window size or
+          position.
+        </Paragraph>
+        <FormalItem title="Resize E">
+          <Image source="windowResizeE.png"
+                 width="582"
+                 height="441">
+            A window resizing east.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeSE Handle"
+                  id="f1295748-ca82-46e1-b3fd-6704e1c64460">
+        <Paragraph>
+          Dragging the <Term type="term">southeast</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will shrink the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southeast</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will shrink the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southeast</Term> handle <Term type="variable">P</Term> units along the Y axis
+          towards positive infinity will enlarge the window by <Term type="variable">P</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southeast</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will enlarge the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <FormalItem title="Resize SE">
+          <Image source="windowResizeSE.png"
+                 width="582"
+                 height="441">
+            A window resizing southeast.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeS Handle">
+        <Paragraph>
+          Dragging the <Term type="term">south</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will shrink the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">south</Term> handle <Term type="variable">P</Term> units along the Y axis
+          towards positive infinity will enlarge the window by <Term type="variable">P</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">south</Term> handle along the X axis has no effect on the window size or
+          position.
+        </Paragraph>
+        <FormalItem title="Resize S">
+          <Image source="windowResizeS.png"
+                 width="582"
+                 height="441">
+            A window resizing south.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeSW Handle">
+        <Paragraph>
+          Dragging the <Term type="term">southwest</Term> handle <Term type="variable">N</Term> units along the Y axis
+          towards negative infinity will shrink the window by <Term type="variable">N</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southwest</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will move the window <Term type="variable">M</Term> units towards negative infinity
+          on the X axis whilst also enlarging the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southwest</Term> handle <Term type="variable">P</Term> units along the Y axis
+          towards positive infinity will enlarge the window by <Term type="variable">P</Term> units on the Y axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">southwest</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will move the window <Term type="variable">Q</Term> units towards positive infinity
+          on the X axis whilst also shrinking the window by <Term type="variable">Q</Term> units on the X axis.
+        </Paragraph>
+        <FormalItem title="Resize SW">
+          <Image source="windowResizeSW.png"
+                 width="582"
+                 height="441">
+            A window resizing southwest.
+          </Image>
+        </FormalItem>
+      </Subsection>
+      <Subsection title="ResizeW Handle">
+        <Paragraph>
+          Dragging the <Term type="term">west</Term> handle <Term type="variable">M</Term> units along the X axis
+          towards negative infinity will move the window <Term type="variable">M</Term> units towards negative infinity
+          on the X axis whilst also enlarging the window by <Term type="variable">M</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">west</Term> handle <Term type="variable">Q</Term> units along the X axis
+          towards positive infinity will move the window <Term type="variable">Q</Term> units towards positive infinity
+          on the X axis whilst also shrinking the window by <Term type="variable">Q</Term> units on the X axis.
+        </Paragraph>
+        <Paragraph>
+          Dragging the <Term type="term">west</Term> handle along the Y axis has no effect on the window size or
+          position.
+        </Paragraph>
+        <FormalItem title="Resize W">
+          <Image source="windowResizeW.png"
+                 width="582"
+                 height="441">
+            A window resizing west.
+          </Image>
+        </FormalItem>
+      </Subsection>
+    </Subsection>
+
+    <Subsection title="Title Bar">
+      <Paragraph>
+        The <Term type="term">title bar</Term> displays the contents of the window's
+        <Term type="variable">title</Term>
+        attribute, and allows the user to move the window by dragging with the mouse.
+      </Paragraph>
+      <Paragraph>
+        Dragging the
+        <Term type="term">title bar</Term>
+        <Term type="variable">M</Term>
+        units along the X axis will move the window <Term type="variable">M</Term> units along the X axis.
+      </Paragraph>
+      <Paragraph>
+        Dragging the
+        <Term type="term">title bar</Term>
+        <Term type="variable">N</Term>
+        units along the Y axis will move the window <Term type="variable">N</Term> units along the Y axis.
+      </Paragraph>
+      <Paragraph>
+        For a visible window, the title bar is visible iff the following conditions hold:
+      </Paragraph>
+      <FormalItem title="Visibility">
+        <ListUnordered>
+          <Item>
+            The window is decorated.
+          </Item>
+        </ListUnordered>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="Content Area">
+      <Paragraph>
+        The <Term type="term">content area</Term> is the rectangular region dedicated to the actual
+        <Term type="term">content</Term>
+        of the window; it is the component that serves as the parent component of components added to the window for
+        display. The content area itself is effectively invisible; themes should not render the content area as being
+        any particular colour or shape. The content area does not consume
+        any <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>.
+      </Paragraph>
+      <Paragraph>
+        For a visible window, the content area is always visible.
+      </Paragraph>
+    </Subsection>
+  </Section>
+
+</Section>

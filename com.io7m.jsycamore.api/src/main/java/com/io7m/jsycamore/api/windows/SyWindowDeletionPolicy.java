@@ -16,8 +16,6 @@
 
 package com.io7m.jsycamore.api.windows;
 
-import com.io7m.jsycamore.api.screens.SyScreenType;
-
 /**
  * The deletion policy for a window.
  */
@@ -25,7 +23,7 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 public enum SyWindowDeletionPolicy
 {
   /**
-   * The window may be deleted with {@link SyScreenType#windowClose(SyWindowType)}.
+   * The window may be deleted with {@link SyWindowServiceType#windowClose(SyWindowType)}.
    */
 
   WINDOW_MAY_BE_DELETED,

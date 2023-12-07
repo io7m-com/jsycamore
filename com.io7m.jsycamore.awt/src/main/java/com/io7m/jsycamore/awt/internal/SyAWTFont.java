@@ -21,8 +21,9 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.text.SyText;
-import com.io7m.jsycamore.api.text.SyTextDirection;
+import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -33,6 +34,7 @@ import java.text.AttributedString;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.SortedMap;
 
 /**
  * A font loaded using AWT.
@@ -93,20 +95,30 @@ public final class SyAWTFont implements SyFontType
 
   @Override
   public List<SyTextLineMeasuredType> textLayoutMultiple(
-    final List<SyText> texts,
-    final int firstLineNumber,
+    final SortedMap<SyTextID, SyText> texts,
+    final SyTextLineNumber firstLineNumber,
     final int pageWidth)
   {
     Objects.requireNonNull(texts, "texts");
+
+    if (texts.isEmpty()) {
+      return List.of();
+    }
 
     final var results =
       new LinkedList<SyTextLineMeasuredType>();
 
     var lineNumber = firstLineNumber;
-    for (final var text : texts) {
+
+    for (final var textEntry : texts.entrySet()) {
+      final var textID =
+        textEntry.getKey();
+      final var text =
+        textEntry.getValue();
+
       if (text.value().isEmpty()) {
-        results.add(this.emptySectionLine(pageWidth, lineNumber));
-        ++lineNumber;
+        results.add(this.emptySectionLine(pageWidth, textID, lineNumber));
+        lineNumber = lineNumber.next();
         continue;
       }
 
@@ -153,17 +165,14 @@ public final class SyAWTFont implements SyFontType
             PAreaSizeI.of(textWidth, this.textHeight()),
             lineNumber,
             layout,
+            textID,
             new SyText(brokenText, text.direction())
           );
 
         results.add(line);
         indexThen = indexNow;
-        ++lineNumber;
+        lineNumber = lineNumber.next();
       }
-    }
-
-    if (results.isEmpty()) {
-      return List.of(this.emptySectionLine(pageWidth, lineNumber));
     }
 
     return results;
@@ -171,14 +180,16 @@ public final class SyAWTFont implements SyFontType
 
   private SyTextLineMeasuredType emptySectionLine(
     final int pageWidth,
-    final int lineNumber)
+    final SyTextID textID,
+    final SyTextLineNumber lineNumber)
   {
       return new SyAWTTextAnalyzed(
         pageWidth,
         PAreaSizeI.of(0, this.textHeight()),
         lineNumber,
         new TextLayout(" ", this.font, this.metrics.getFontRenderContext()),
-        new SyText("", SyTextDirection.TEXT_DIRECTION_LEFT_TO_RIGHT)
+        textID,
+        SyText.empty()
       );
   }
 }

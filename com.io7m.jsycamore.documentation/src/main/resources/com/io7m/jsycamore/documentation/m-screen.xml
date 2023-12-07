@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="81ad4c2b-2348-48cc-8a3d-7b0d247f088c"
+         title="Screens">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      A <Term type="term">screen</Term> is the top-level object in the <Term type="package">jsycamore</Term> package.
+      A screen acts as a container for <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>, and provides
+      access to various services such as facilities for opening
+      <Link target="ddd1079c-f636-4232-bebe-39672a140061">menus</Link>, handling
+      <Link target="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906">text selections</Link>, etc.
+    </Paragraph>
+    <Paragraph>
+      Most applications will only create a single screen, although there are no restrictions on creating multiple
+      screens. Windows (and the components contained within) are confined to a single screen instance, and cannot
+      be moved between screen instances.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Services" id="9f8f2252-fb23-4acc-8dfa-1604669e44de">
+    <Paragraph>
+      Screen instances expose <Term type="term">service directories</Term>.
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">Component</Link> implementations on a given screen
+      can obtain references to various services via the screen's service directory. Screens are required to
+      provide at least the following mandatory services:
+    </Paragraph>
+    <FormalItem title="Required Services">
+      <Table type="genericTable">
+        <Columns>
+          <Column>Type</Column>
+          <Column>Description</Column>
+        </Columns>
+        <Row>
+          <Cell>SyWindowServiceType</Cell>
+          <Cell>
+            A service for creating and managing
+            <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>.
+          </Cell>
+        </Row>
+        <Row>
+          <Cell>SyMenuServiceType</Cell>
+          <Cell>
+            A service for creating and managing
+            <Link target="ddd1079c-f636-4232-bebe-39672a140061">menus</Link>.
+          </Cell>
+        </Row>
+        <Row>
+          <Cell>SyTextSelectionServiceType</Cell>
+          <Cell>
+            A service for managing
+            <Link target="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906">text selection</Link>.
+          </Cell>
+        </Row>
+      </Table>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Events">
+    <Paragraph>
+      A screen provides an
+      <LinkExternal
+      target="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Flow.Publisher.html">
+      observable stream</LinkExternal> of <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>
+      to which external code may subscribe.
+    </Paragraph>
+  </Subsection>
+  
+  <Subsection title="Theme">
+    <Paragraph>
+      A screen holds a reference to the current <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">theme</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Viewport" id="f390c685-04c2-4c72-897d-9f28f6027983">
+    <Paragraph>
+      A screen defines a <Term type="term">viewport</Term> within which are placed
+      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>. The viewport has an explicitly-defined
+      size, but this may be freely changed at any point.
+    </Paragraph>
+    <Paragraph>
+      Applications embedding <Term type="package">jsycamore</Term> inside fullscreen applications, or projected
+      into 3D spaces, are responsible for translating the platform-specific coordinates produced by keyboard and
+      mouse input systems into the correct <Link target="7973aa4f-4fd9-40dd-8d96-0aaa3b4d6147">viewport
+      coordinate space</Link>. For example, <Term type="package">jsycamore</Term> can be embedded into 3D scenes
+      by casting rays in whatever is the host 3D engine's coordinate space, and then converting the ray/plane
+      intersection coordinates to <Term type="package">jsycamore</Term>'s viewport space:
+    </Paragraph>
+    <FormalItem title="3D Projection">
+      <Image source="projectScene.jpg" width="640" height="480">
+        3D projection of a jsycamore UI.
+      </Image>
+    </FormalItem>
+  </Subsection>
+
+</Section>

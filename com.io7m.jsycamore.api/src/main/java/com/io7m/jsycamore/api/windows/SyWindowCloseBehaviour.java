@@ -17,8 +17,6 @@
 
 package com.io7m.jsycamore.api.windows;
 
-import com.io7m.jsycamore.api.screens.SyScreenType;
-
 /**
  * The behaviour that will occur when a window's "Close" button is pressed.
  */
@@ -26,13 +24,13 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 public enum SyWindowCloseBehaviour
 {
   /**
-   * The window will be hidden, as per {@link SyScreenType#windowHide(SyWindowType)}.
+   * The window will be hidden, as per {@link SyWindowServiceType#windowHide(SyWindowType)}.
    */
 
   HIDE_ON_CLOSE_BUTTON,
 
   /**
-   * The window will be closed, as per {@link SyScreenType#windowClose(SyWindowType)}
+   * The window will be closed, as per {@link SyWindowServiceType#windowClose(SyWindowType)}
    * (SyWindowType)}.
    */
 

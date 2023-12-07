@@ -23,7 +23,9 @@ import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextLocationType;
 import com.io7m.jsycamore.api.text.SyTextSelection;
 import com.io7m.jsycamore.api.text.SyTextSingleLineModelType;
@@ -114,7 +116,12 @@ public final class SyTextSingleLineModel implements SyTextSingleLineModelType
     final var textWidth =
       fontNow.textWidth(textNow.value());
     final var measuredTexts =
-      fontNow.textLayout(textNow, 0, textWidth);
+      fontNow.textLayout(
+        SyTextID.first(),
+        textNow,
+        SyTextLineNumber.first(),
+        textWidth
+      );
     this.textMeasured =
       measuredTexts.get(0);
   }

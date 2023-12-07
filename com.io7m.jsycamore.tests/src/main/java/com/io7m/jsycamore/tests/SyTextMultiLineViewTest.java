@@ -30,6 +30,7 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowID;
@@ -213,7 +214,7 @@ public final class SyTextMultiLineViewTest
 
     assertEquals(
       SyText.text("Hello!"),
-      c.textsByYOffset().get(0).text()
+      c.textsByYOffset().get(0).textAsWrapped()
     );
 
     c.textSectionAppend(SyText.text("Goodbye!"));
@@ -221,11 +222,11 @@ public final class SyTextMultiLineViewTest
 
     assertEquals(
       SyText.text("Hello!"),
-      c.textsByYOffset().get(0).text()
+      c.textsByYOffset().get(0).textAsWrapped()
     );
     assertEquals(
       SyText.text("Goodbye!"),
-      c.textsByYOffset().get(14).text()
+      c.textsByYOffset().get(14).textAsWrapped()
     );
   }
 
@@ -329,8 +330,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -411,8 +412,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(1, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(1), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -497,8 +498,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(2, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(2), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -587,8 +588,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -669,8 +670,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(1, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(1), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -756,8 +757,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(2, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(2), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -848,8 +849,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -930,8 +931,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(1, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(1), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -1016,8 +1017,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(2, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(2), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -1106,8 +1107,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(0, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -1188,8 +1189,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(1, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(1), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();
@@ -1274,8 +1275,8 @@ public final class SyTextMultiLineViewTest
       );
 
     final var selection = selectionStatus.selection();
-    assertEquals(0, selection.lowerInclusive().lineNumber());
-    assertEquals(2, selection.upperInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(0), selection.lowerInclusive().lineNumber());
+    assertEquals(new SyTextLineNumber(2), selection.upperInclusive().lineNumber());
 
     final var chLower =
       selection.lowerInclusive().characterAt();

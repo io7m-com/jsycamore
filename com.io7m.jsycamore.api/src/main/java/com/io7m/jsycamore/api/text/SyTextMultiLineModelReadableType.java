@@ -42,6 +42,23 @@ public interface SyTextMultiLineModelReadableType
   int pageWidth();
 
   /**
+   * @return The text sections present in the model
+   */
+
+  SortedMap<SyTextID, SyText> textSections();
+
+  /**
+   * The text section that contains the given line number.
+   *
+   * @param lineNumber The line number
+   *
+   * @return The text section, if any
+   */
+
+  Optional<SyText> textSectionContainingLine(
+    SyTextLineNumber lineNumber);
+
+  /**
    * The set of measured lines with their associated Y coordinate.
    *
    * @return The measured lines

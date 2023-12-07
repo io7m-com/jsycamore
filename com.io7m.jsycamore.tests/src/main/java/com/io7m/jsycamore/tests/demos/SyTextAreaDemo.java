@@ -131,6 +131,8 @@ public final class SyTextAreaDemo
 
       this.window0.closeButtonBehaviour()
         .set(HIDE_ON_CLOSE_BUTTON);
+      this.window0.title()
+        .set(SyText.text("Example Window"));
 
       this.renderer = new SyAWTRenderer(this.screen.services(), this.fontDirectory, this.imageLoader);
       // this.renderer = new SyBoundsOnlyRenderer();
@@ -218,10 +220,13 @@ public final class SyTextAreaDemo
         final var c =
           SyTextAreaDemo.class;
         final var u =
-          c.getResource("/com/io7m/jsycamore/tests/arcticLarge.txt");
+          c.getResource("/com/io7m/jsycamore/tests/loremMixed.txt");
 
         try (var s = u.openStream()) {
-          this.sections = new String(s.readAllBytes(), UTF_8).lines().toList();
+          this.sections =
+            new String(s.readAllBytes(), UTF_8)
+              .lines()
+              .toList();
         }
       }
 

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="9c6bfe16-d2dd-420b-b8ba-9d087bb9091c"
+         title="Buttons">
+
+  <Subsection title="Description">
+    <Paragraph>
+      A <Term type="term">button</Term> is a simple
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>
+      that triggers a
+      <Term type="term">listener</Term>
+      when the user clicks on it.
+    </Paragraph>
+    <FormalItem title="Button">
+      <Image source="button.png"
+             width="640"
+             height="240">
+        A button in the process of being clicked.
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      Buttons always have exactly one assigned <Term type="term">listener</Term>. A listener is simply a parameterless
+      function that is evaluated by the button implementation and is expected to perform some kind of side effect. By
+      default, buttons have a listener that does nothing. A listener can be assigned to or removed from the button at
+      any time, and "removing" the listener simply re-assigns a default listener that does nothing when evaluated.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph>
+      Button components implement the given state machine
+      <LinkFootnote target="d2d3371f-8b9c-46f9-8601-c25530c7a8ee"/>:
+    </Paragraph>
+    <FormalItem title="Button State">
+      <Image source="buttonState.png"
+             width="640"
+             height="408">
+        Button state machine.
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      Buttons begin in the <Term type="constant">BUTTON_IDLE</Term> state. If the button is
+      <Link target="1d8361cb-1aa8-408e-820d-4d04c7f3bfab">inactive</Link>, it will stay in the
+      <Term type="constant">BUTTON_IDLE</Term>
+      state regardless of mouse or keyboard events.
+    </Paragraph>
+    <Paragraph>
+      Otherwise, assuming that the button is active, if the user moves the mouse cursor over the button, the button
+      transitions to the <Term type="constant">BUTTON_OVER</Term> state. If the user then moves the cursor such that it
+      is no longer over the button, the button transitions back to the <Term type="constant">BUTTON_IDLE</Term> state.
+    </Paragraph>
+    <Paragraph>
+      When in the <Term type="constant">BUTTON_OVER</Term> state, if the user presses the primary mouse button, the
+      button transitions to the <Term type="constant">BUTTON_PRESSED</Term> state. If the user moves the mouse cursor
+      such that it is no longer over the button (without releasing the primary mouse button), the button transitions to
+      the
+      <Term type="constant">BUTTON_PRESSED_NOT_OVER</Term>
+      state. Otherwise, if the user leaves the mouse cursor over the button and then releases the primary mouse button,
+      the button transitions to the
+      <Term type="constant">BUTTON_CLICKED</Term>
+      state. The button evaluates the associated listener and then either transitions to the
+      <Term type="constant">BUTTON_OVER</Term>
+      state if the mouse cursor is still over the button, or transitions to the <Term type="constant">BUTTON_IDLE</Term> state
+      if the mouse cursor is no longer over the button.
+    </Paragraph>
+    <Paragraph>
+      In the <Term type="constant">BUTTON_PRESSED_NOT_OVER</Term> state, the user can either release the primary mouse
+      button, which returns the button to the <Term type="constant">BUTTON_IDLE</Term> state, or the user can move the
+      cursor such that it is back over the button again, resulting in the button transitioning back to the
+      <Term type="constant">BUTTON_PRESSED</Term>
+      state.
+    </Paragraph>
+    <Paragraph>
+      The
+      <Term type="constant">BUTTON_CLICKED</Term>
+      state is the only state in which the listener will be evaluated, and the listener will be evaluated exactly once
+      upon each transition to the
+      <Term type="constant">BUTTON_CLICKED</Term>
+      state.
+    </Paragraph>
+  </Subsection>
+
+  <Footnote id="d2d3371f-8b9c-46f9-8601-c25530c7a8ee">
+    Buttons are not necessarily implemented in terms of an explicit state machine; this is merely a method of specifying
+    how buttons should behave.
+  </Footnote>
+
+</Section>

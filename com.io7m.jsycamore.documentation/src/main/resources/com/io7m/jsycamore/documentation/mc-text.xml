@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906"
+         title="Text">
+
+  <Subsection title="Description">
+    <Paragraph>
+      The
+      <Term type="term">text</Term>
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link>
+      are a family of components that provide the ability to display, format, select, and modify
+      <Term type="term">text</Term>.
+    </Paragraph>
+    <FormalItem title="Text Area">
+      <Image source="textArea.png"
+             width="640"
+             height="240">
+        A text area.
+      </Image>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Text Sections"
+              id="f50bee5f-35a0-4ca7-9c75-b213ee2e3983">
+    <Paragraph>
+      The <Term type="package">jsycamore</Term> package works in terms of immutable
+      <Term type="term">text sections</Term>. The concept of a text section is rather loosely defined, but it can be
+      most easily thought of as representing a single <Term type="term">paragraph</Term> of text. Each text section has
+      an associated <Term type="term">text direction</Term> indicating that the text is in a
+      <Term type="term">left-to-right</Term>
+      language (such as English), or that the text is in a
+      <Term type="term">right-to-left</Term>
+      language (such as Arabic, or Hebrew). There is currently no support for mixing directions within a single text
+      section, although having many text sections with varying directions inside a single text view is fully supported.
+    </Paragraph>
+    <FormalItem title="Mixed Text Area">
+      <Image source="textMixed.png"
+             width="420"
+             height="240">
+        A text area with three text sections.
+      </Image>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Font"
+              id="88c4c9ac-dc8e-4b0a-bae3-e767ee3cb575">
+    <Paragraph>
+      A <Term type="term">font</Term> defines the appearance and (ultimately) the layout of text. A font combines
+      a <Term type="term">typeface</Term>, a <Term type="term">size</Term>, and a
+      <Term type="term">style</Term>
+      (such as <Term type="term">bold</Term>, <Term type="term">italic</Term>, etc).
+    </Paragraph>
+    <Paragraph>
+      Fonts contain all the information required to determine what the bounding box will be for a given piece of text,
+      and much more detailed information not limited to the widths and heights of individual characters. It is for this
+      reason that fonts are considered to be an essential part of the
+      <Link target="88d61172-40fe-4f21-b4e9-776ff4a8f0d7">layout</Link>
+      of a given piece of text rather than just part of its appearance: A text view might be sized correctly for a
+      specific piece of text using font <Term type="variable">F</Term>, but might be woefully undersized for the same
+      piece of text using font <Term type="variable">G</Term>. The font interface exposes text formatting methods that
+      can take a <Link target="f50bee5f-35a0-4ca7-9c75-b213ee2e3983">text section</Link> and a
+      <Term type="term">page width</Term>, and return a set of one or more
+      <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured lines</Link> that represent the original
+      text section broken into lines using the given page width as a maximum line length. This line wrapping
+      functionality is used by <Link target="9570ffa3-a51e-4998-93a1-fa9e1f6a618a">multi-line text models</Link>.
+    </Paragraph>
+    <Paragraph>
+      Fonts are represented as instances of the abstract <Term type="class">SyFontType</Term> interface. The
+      <Term type="package">jsycamore</Term>
+      package provides implementations that are backed by standard Java
+      <LinkExternal target="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/font/package-summary.html">
+        AWT
+      </LinkExternal>
+      fonts, but any font system that can provide the information required by the
+      <Term type="class">SyFontType</Term>
+      interface could theoretically be used.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Font Services">
+    <Paragraph>
+      Font instances are obtained by providing an immutable
+      <Term type="term">font description</Term>
+      to a
+      <Term type="term">font directory service</Term>
+      represented by the
+      <Term type="class">SyFontDirectoryServiceType</Term>
+      interface. A font directory service aggregates
+      <Term type="term">font services</Term>, represented by the
+      <Term type="class">SyFontServiceType</Term>
+      interface, typically by loading instances of these services from
+      <LinkExternal target="https://docs.oracle.com/en/java/javase/21/docs/api//java.base/java/util/ServiceLoader.html">
+        ServiceLoader</LinkExternal>.
+    </Paragraph>
+    <Paragraph>
+      Applications are required to ensure that they include font modules for the fonts they use. There is no support for
+      reading fonts directly from the host system as this would make applications behave differently on different host
+      systems.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="package">jsycamore</Term> package includes the following optional font modules:
+    </Paragraph>
+    <FormalItem title="Included Fonts">
+      <Table type="genericTable">
+        <Columns>
+          <Column>Name</Column>
+          <Column>Module</Column>
+          <Column>Font</Column>
+        </Columns>
+        <Row>
+          <Cell>DejaVu Sans</Cell>
+          <Cell>
+            <Term type="package">com.io7m.jsycamore.font.dejavu</Term>
+          </Cell>
+          <Cell>
+            <LinkExternal target="https://dejavu-fonts.github.io/">DejaVu Sans</LinkExternal>
+          </Cell>
+        </Row>
+        <Row>
+          <Cell>York</Cell>
+          <Cell>
+            <Term type="package">com.io7m.jsycamore.font.york</Term>
+          </Cell>
+          <Cell>
+            <LinkExternal target="https://github.com/io7m/york-font/">York Sans</LinkExternal>
+          </Cell>
+        </Row>
+      </Table>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Measured Lines"
+              id="31d0fb77-51e6-404e-8174-d52300adb998">
+    <Paragraph>
+      A <Term type="term">measured line</Term> is an immutable value containing a single line of text augmented with
+      information derived from an associated <Link target="88c4c9ac-dc8e-4b0a-bae3-e767ee3cb575">font</Link>. It
+      contains enough information to answer questions such as "If the user clicks the text at the
+      <Link target="cafe405e-f68a-421d-a68a-fac4d5f557ac">parent-relative</Link>
+      position
+      <Term type="expression">(x, y)</Term>, which character within the text did they click on?".
+    </Paragraph>
+    <Paragraph id="ff3cef21-5f7a-4ea7-821c-b98d1beb3db9">
+      The <Term type="term">text location</Term> information returned by measured line queries includes
+      information not limited to the character at the given location, whether the location is at the leading edge of
+      a character, the index of the character within the given line, and a bounding box for use in rendering a
+      <Term type="term">caret</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Text Models">
+    <Subsection title="Overview">
+      <Paragraph>
+        A <Term type="term">text model</Term> is a mutable structure that handles <Term type="term">wrapping</Term>,
+        <Term type="term">editing</Term>, and <Term type="term">selection</Term> operations for text. A text model may
+        either be <Term type="term">single-line</Term> or <Term type="term">multi-line</Term>.
+      </Paragraph>
+    </Subsection>
+    <Subsection title="Multi-Line Model" id="9570ffa3-a51e-4998-93a1-fa9e1f6a618a">
+      <Subsection title="Description">
+        <Paragraph>
+          A multi-line text model is a relatively complex structure that maintains a list of
+          <Link target="f50bee5f-35a0-4ca7-9c75-b213ee2e3983">text sections</Link>, and transforms the text sections
+          into a potentially much larger list of
+          <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured lines</Link>
+          based upon a given
+          <Term type="term">page width</Term>
+          value.
+        </Paragraph>
+      </Subsection>
+      <Subsection title="Selection">
+        <Paragraph>
+          The work required to implement <Term type="term">text selection</Term> in a multi-line model is relatively
+          complex. The model must correctly handle <Term type="term">forward selection</Term> and
+          <Term type="term">backward selection</Term>, and must do so in the presence of
+          <Link target="f50bee5f-35a0-4ca7-9c75-b213ee2e3983">text sections</Link>
+          having different text directions within the same model.
+        </Paragraph>
+        <Paragraph>
+          In order to reason about text selections, it is necessary to describe the property of logical
+          ordering for characters in text.
+          A character <Term type="variable">C</Term> is considered <Term type="term">logically earlier</Term> in a
+          given piece of text than a character <Term type="variable">B</Term> if <Term type="variable">C</Term>
+          would be encountered before <Term type="variable">B</Term> in terms of reading order for the text.
+          For example, in the English sentence "The quick brown fox jumped over the lazy dogs", the character
+          <Term type="constant">q</Term> is <Term type="term">logically earlier</Term> than the character
+          <Term type="constant">z</Term> when the sentence is read. Conveniently, this order matches the order in
+          which the characters are actually stored as strings in memory, and the order does not change regardless
+          of the text direction of the language in which the text is written. Accordingly, the
+          <Term type="term">logically later</Term> property is simply the inverse of the
+          <Term type="term">logically earlier</Term> property.
+        </Paragraph>
+        <Paragraph id="a8de450f-3602-4df1-8d01-0a0cef7008af">
+          The output of the text selection progress is the inclusive lower and inclusive upper bounds of the
+          selection in logical order, and a set of <Term type="term">selection region</Term> bounding boxes
+          that can be used during <Link target="703f1dc9-6f1d-4083-a40d-8f7779d1c49b">rendering</Link> to render
+          selection boxes around the relevant text. The selection regions are trivial to create; the selection
+          region for a given line is the union of the bounding boxes of the characters that are selected on that line
+          (taken from the associated <Link target="88c4c9ac-dc8e-4b0a-bae3-e767ee3cb575">font</Link>),
+          and the set of regions for all lines spanned by the selection is the set of per-line regions.
+        </Paragraph>
+        <Paragraph>
+          <Term type="term">Forward selection</Term>
+          is the process of the user dragging the mouse across text, starting from an initial position in the text and
+          moving the mouse to a logically
+          <Term type="term">later</Term>
+          position in the text. For example:
+        </Paragraph>
+        <FormalItem title="Forward Selection LTR">
+          <Image source="ltrForwards.png"
+                 width="352"
+                 height="142">
+            Forward selection in LTR text.
+          </Image>
+        </FormalItem>
+        <Paragraph>
+          In the diagram above, the user is performing a forward selection in left-to-right text. The text consists of
+          two measured lines. The dotted arrows represent the mouse dragging directions. The user placed the cursor
+          before the letter <Term type="constant">q</Term> in
+          <Term type="constant">"quick"</Term>
+          and dragged the cursor rightwards and then downwards. This results in a selection that spans the two lines.
+          The selection is a forward selection because the selection progressed in a manner that started from a position
+          that is logically <Term type="term">earlier</Term> in the text, and progressed to a location that is logically
+          <Term type="term">later</Term> in the text.
+        </Paragraph>
+        <Paragraph>
+          <Term type="term">Backward selection</Term>
+          is the process of the user dragging the mouse across text, starting from an initial position in the text and
+          moving the mouse to a logically
+          <Term type="term">earlier</Term>
+          position in the text according to the text direction. For example:
+        </Paragraph>
+        <FormalItem title="Backward Selection LTR">
+          <Image source="ltrBackwards.png"
+                 width="352"
+                 height="142">
+            Backward selection in LTR text.
+          </Image>
+        </FormalItem>
+        <Paragraph>
+          In the diagram above, the user is performing a backward selection in left-to-right text. The text consists of
+          two measured lines. The dotted arrows represent the mouse dragging directions. The user placed the cursor
+          before the letter <Term type="constant">t</Term> in
+          <Term type="constant">"the"</Term>
+          and dragged the cursor upwards and then leftwards. This results in a selection that spans the two lines. The
+          selection is a backward selection because the selection progressed in a manner that started from a position
+          that is logically <Term type="term">later</Term> in the text, and progressed to a location that is logically
+          <Term type="term">earlier</Term> in the text.
+        </Paragraph>
+        <Paragraph>
+          For right-to-left text, the situation does not change in that forward selections progress from logically
+          earlier positions to logically later positions, and backward selections progress from logically later
+          positions to logically earlier positions, but the physical direction in which the user drags the selection
+          cursor is reversed. For example:
+        </Paragraph>
+        <FormalItem title="Forward Selection RTL">
+          <Image source="rtlForwards.png"
+                 width="352"
+                 height="142">
+            Forward selection in RTL text.
+          </Image>
+        </FormalItem>
+        <Paragraph>
+          In the diagram above, the user is performing a forward selection in right-to-left text. The text consists of
+          two measured lines. The dotted arrows represent the mouse dragging directions. The user placed the cursor
+          before the letter <Term type="constant">פ</Term> in
+          <Term type="constant">"אנציקלופדיה"</Term>
+          and dragged the cursor leftwards and then downwards. This results in a selection that spans the two lines. The
+          selection is a forward selection because the selection progressed in a manner that started from a position
+          that is logically <Term type="term">earlier</Term> in the text, and progressed to a location that is
+          logically <Term type="term">later</Term> in the text.
+        </Paragraph>
+        <Paragraph>
+          Conversely, for backward selection:
+        </Paragraph>
+        <FormalItem title="Backward Selection RTL">
+          <Image source="rtlBackwards.png"
+                 width="352"
+                 height="142">
+            Backward selection in RTL text.
+          </Image>
+        </FormalItem>
+        <Paragraph>
+          In the diagram above, the user is performing a backward selection in right-to-left text. The text consists of
+          two measured lines. The dotted arrows represent the mouse dragging directions. The user placed the cursor
+          after the letter <Term type="constant">ם</Term> in
+          <Term type="constant">"בדפים"</Term>
+          and dragged the cursor upwards and then rightwards. This results in a selection that spans the two lines. The
+          selection is a backward selection because the selection progressed in a manner that started from a position
+          that is logically <Term type="term">later</Term> in the text, and progressed to a location that is logically
+          <Term type="term">earlier</Term> in the text.
+        </Paragraph>
+        <Paragraph>
+          The process of text selection therefore takes the following steps:
+        </Paragraph>
+        <FormalItem title="Text Selection Steps">
+          <ListOrdered>
+            <Item>
+              When the user first presses the mouse button to start dragging, determine which
+              <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured line</Link> the cursor is over
+              based on the Y position of the cursor, then ask that line for the
+              <Link target="ff3cef21-5f7a-4ea7-821c-b98d1beb3db9">text location</Link> at the
+              X and Y position of the cursor. The position is recorded as the starting or
+              <Term type="term">pivot</Term> point for the selection, and all subsequent positions will
+              be considered relative to this pivot point.
+            </Item>
+            <Item>
+              When the user drags the mouse, determine which
+              <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured line</Link> the cursor is over
+              based on the Y position of the cursor, then ask that line for the
+              <Link target="ff3cef21-5f7a-4ea7-821c-b98d1beb3db9">text location</Link> at the
+              X and Y position of the cursor. If the location is <Term type="term">logically before</Term>
+              the pivot point, then the new position becomes
+              the lower bound of the selection, and the upper bound is set to the pivot point.
+              If the location is <Term type="term">logically after</Term> the pivot point, then the new position becomes
+              the upper bound of the selection, and the lower bound is set to the pivot point.
+            </Item>
+          </ListOrdered>
+        </FormalItem>
+        <Paragraph>
+          During each of the above steps, the lines between the lower and upper bounds of the selection in progress
+          are examined. The lower and upper bounds may span several lines, or may simply both be on the same line.
+          Based on the examined lines, a set of
+          <Link target="a8de450f-3602-4df1-8d01-0a0cef7008af">selection regions</Link> is generated. The algorithm
+          used differs based on whether the selection is a forward selection or a backward selection. For each
+          selection direction, the algorithm proceeds by case analysis:
+        </Paragraph>
+        <FormalItem title="Forward Selection Algorithm" id="93908f5d-9d88-4ed9-9f00-0d6d1eb15696">
+          <ListUnordered>
+            <Item>
+              For each line <Term type="variable">K</Term> in lines <Term type="expression">[P .. Q]</Term>:
+              <ListOrdered>
+                <Item>
+                  If <Term type="expression">K > P ∧ K &lt; Q</Term>, then we simply need to create
+                  a selection region that covers the entirety of <Term type="variable">K</Term>; it's
+                  a fully selected line that's between the starting and ending line of the selection.
+                </Item>
+                <Item>
+                  Otherwise, if <Term type="expression">K = P</Term>, then we need to create
+                  a selection region either from the lower bound of the selection to the end of
+                  the line, or from the lower bound of the selection to the upper bound of the selection
+                  if the upper bound happens to be on the same line.
+                </Item>
+                <Item>
+                  Otherwise, we must have <Term type="expression">K = Q ∧ Q ≠ P</Term>. We have already created
+                  a selection region that involves the lower bound of the selection in the previous step, therefore
+                  the only work remaining must be to create a selection region from the start of the line to the
+                  upper bound of the selection (which must be on that same line).
+                </Item>
+              </ListOrdered>
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+        <Paragraph>
+          For each case in the above algorithm, we create a selection region that's relevant to the text direction
+          of the given line. For example, a region that extends from the "start of the line" in left-to-right text
+          is a region that starts from the leftmost edge of the text area in
+          <Link target="cafe405e-f68a-421d-a68a-fac4d5f557ac">parent-relative</Link> space. Conversely, a region
+          that extends from the "start of the line" in right-to-left text
+          is a region that starts from the rightmost edge of the text area in parent-relative space.
+        </Paragraph>
+        <Paragraph>
+          For backward selection, the algorithm is similar:
+        </Paragraph>
+        <FormalItem title="Backward Selection Algorithm" id="e4bad910-7455-47ca-8474-b55792d8c076">
+          <ListUnordered>
+            <Item>
+              For each line <Term type="variable">K</Term> in lines <Term type="expression">[P .. Q]</Term>:
+              <ListOrdered>
+                <Item>
+                  If <Term type="expression">K > P ∧ K &lt; Q</Term>, then we simply need to create
+                  a selection region that covers the entirety of <Term type="variable">K</Term>; it's
+                  a fully selected line that's between the starting and ending line of the selection.
+                </Item>
+                <Item>
+                  Otherwise, if <Term type="expression">K = P</Term>, then we need to create
+                  a selection region either from the upper bound of the selection to the start of
+                  the line, or from the upper bound of the selection to the lower bound of the selection
+                  if the lower bound happens to be on the same line.
+                </Item>
+                <Item>
+                  Otherwise, we must have <Term type="expression">K = Q ∧ Q ≠ P</Term>. We have already created
+                  a selection region that involves the upper bound of the selection in the previous step, therefore
+                  the only work remaining must be to create a selection region from the end of the line to the
+                  lower bound of the selection (which must be on that same line).
+                </Item>
+              </ListOrdered>
+            </Item>
+          </ListUnordered>
+        </FormalItem>
+        <Paragraph>
+          Following the above algorithm, we can correctly build selection regions that span multiple lines where
+          each line has its own text direction:
+        </Paragraph>
+        <FormalItem title="Text Selection Example">
+          <Image source="textSelect.png" width="640" height="480">
+            Text selection example with multiple text directions.
+          </Image>
+        </FormalItem>
+      </Subsection>
+    </Subsection>
+    <Subsection title="Single-Line Model">
+      <Subsection title="Description">
+        <Paragraph>
+          A single-line text model is very simple, and augments a single
+          <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured line</Link>
+          with the information required for performing text selections.
+        </Paragraph>
+      </Subsection>
+      <Subsection title="Selection">
+        <Paragraph>
+          Text selection for single-line models is simply the
+          <Term type="expression">K = P</Term> case for
+          <Link target="93908f5d-9d88-4ed9-9f00-0d6d1eb15696">forward</Link>
+          and
+          <Link target="e4bad910-7455-47ca-8474-b55792d8c076">backward</Link> multi-line selections.
+          By definition, the upper and lower bounds of selections in single-line models are always
+          on the same line.
+        </Paragraph>
+      </Subsection>
+    </Subsection>
+  </Subsection>
+
+  <Footnote id="aa5f3251-757a-4ab3-89e3-e444f7a94638">
+    The reason for the separation of single-line and multi-line models is that the work required for single-line models
+    is <Term type="term">drastically</Term> simpler than the work required for multi-line models. There is no reason to
+    pay the complexity cost of multi-line models for every single text view if multiple lines are not required.
+  </Footnote>
+
+</Section>

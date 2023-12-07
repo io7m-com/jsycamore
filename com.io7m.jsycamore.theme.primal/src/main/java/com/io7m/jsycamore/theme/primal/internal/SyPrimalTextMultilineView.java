@@ -145,7 +145,7 @@ public final class SyPrimalTextMultilineView extends SyPrimalAbstract
               size,
               textColor,
               font,
-              line.text()
+              line.textAsWrapped()
             )
           );
         }

@@ -21,7 +21,9 @@ import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +63,14 @@ public final class SyAWTFontTest
         SyText.text(new String(s.readAllBytes(), StandardCharsets.UTF_8));
 
       final var r =
-        new ArrayList<>(this.font.textLayoutMultiple(List.of(text), 0,320));
+        new ArrayList<>(
+          this.font.textLayout(
+            SyTextID.first(),
+            text,
+            SyTextLineNumber.first(),
+            320
+          )
+        );
 
       assertEquals(26, r.size());
       check(r, "For three hundred years explorers have been ");
@@ -84,6 +93,6 @@ public final class SyAWTFontTest
     final List<SyTextLineMeasuredType> lines,
     final String expected)
   {
-    assertEquals(expected, lines.remove(0).text().value());
+    assertEquals(expected, lines.remove(0).textAsWrapped().value());
   }
 }

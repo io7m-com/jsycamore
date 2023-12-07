@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="0c480fad-ee66-4532-a0b1-f06ebe582ea8"
+         title="Components">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      A component...
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Activity" id="1d8361cb-1aa8-408e-820d-4d04c7f3bfab">
+    <Paragraph>
+      A component may be <Term type="term">active</Term> or <Term type="term">inactive</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Layout" id="88d61172-40fe-4f21-b4e9-776ff4a8f0d7">
+    <Paragraph>
+      Component layout...
+    </Paragraph>
+  </Subsection>
+
+</Section>

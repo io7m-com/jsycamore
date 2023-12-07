@@ -134,6 +134,11 @@ public final class SyTextMultilineViewDemo
       this.window0.closeButtonBehaviour()
         .set(HIDE_ON_CLOSE_BUTTON);
 
+      this.window0.positionSnapping()
+        .set(16);
+      this.window0.sizeSnapping()
+        .set(16);
+
       this.renderer = new SyAWTRenderer(this.screen.services(), this.fontDirectory, this.imageLoader);
       // this.renderer = new SyBoundsOnlyRenderer();
 

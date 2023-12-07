@@ -25,6 +25,7 @@
     <module>com.io7m.jsycamore.api</module>
     <module>com.io7m.jsycamore.awt</module>
     <module>com.io7m.jsycamore.components.standard</module>
+    <module>com.io7m.jsycamore.documentation</module>
     <module>com.io7m.jsycamore.font.dejavu</module>
     <module>com.io7m.jsycamore.font.york</module>
     <module>com.io7m.jsycamore.generation</module>
@@ -35,6 +36,7 @@
   </modules>
 
   <properties>
+    <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <io7m.api.previousVersion>0.2.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.org.immutables.value.version>2.10.0</io7m.org.immutables.value.version>
     <javafx.version>21.0.1</javafx.version>
@@ -292,6 +294,12 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.io7m.primogenitor</groupId>
+        <artifactId>com.io7m.primogenitor.support</artifactId>
+        <version>8.1.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

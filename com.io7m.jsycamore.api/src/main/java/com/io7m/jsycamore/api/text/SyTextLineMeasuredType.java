@@ -23,7 +23,11 @@ import com.io7m.jsycamore.api.spaces.SySpaceTextType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 /**
- * A line of text that has been analyzed/measured.
+ * <p>A line of text that has been analyzed/measured.</p>
+ * <p>Note that this line of text may have been produced as part of a text
+ * formatting operation, and therefore there is an 1:N relationship between
+ * the text given by {@link #textOriginal()} and {@link #textAsWrapped()}.
+ * All of the methods here work in terms of {@link #textAsWrapped()}.</p>
  */
 
 public interface SyTextLineMeasuredType
@@ -48,10 +52,16 @@ public interface SyTextLineMeasuredType
   PAreaSizeI<SySpaceParentRelativeType> textBounds();
 
   /**
-   * @return The actual text
+   * @return The original text that produced this line
    */
 
-  SyText text();
+  SyTextID textOriginal();
+
+  /**
+   * @return The actual text after analysis/wrapping
+   */
+
+  SyText textAsWrapped();
 
   /**
    * Inspect the text at the given position. The information returned includes
@@ -97,5 +107,5 @@ public interface SyTextLineMeasuredType
    * @return The line number
    */
 
-  int lineNumber();
+  SyTextLineNumber lineNumber();
 }

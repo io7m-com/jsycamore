@@ -17,6 +17,8 @@
 package com.io7m.jsycamore.api.text;
 
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * A font.
@@ -62,6 +64,7 @@ public interface SyFontType
    * Split the given text into lines based on the given page width; lines will
    * be broken in order to ensure that text fits within the page width.
    *
+   * @param textID The text identifier
    * @param text            The text
    * @param firstLineNumber The number of the first line
    * @param pageWidth       The page width
@@ -70,12 +73,15 @@ public interface SyFontType
    */
 
   default List<SyTextLineMeasuredType> textLayout(
+    final SyTextID textID,
     final SyText text,
-    final int firstLineNumber,
+    final SyTextLineNumber firstLineNumber,
     final int pageWidth)
   {
+    final var m = new TreeMap<SyTextID, SyText>();
+    m.put(textID, text);
     return this.textLayoutMultiple(
-      List.of(text),
+      m,
       firstLineNumber,
       pageWidth
     );
@@ -93,8 +99,8 @@ public interface SyFontType
    */
 
   List<SyTextLineMeasuredType> textLayoutMultiple(
-    List<SyText> texts,
-    int firstLineNumber,
+    SortedMap<SyTextID, SyText> texts,
+    SyTextLineNumber firstLineNumber,
     int pageWidth
   );
 }

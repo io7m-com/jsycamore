@@ -25,15 +25,20 @@ import com.io7m.jregions.core.parameterized.areas.PAreasI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextLocationType;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.text.SyTextSelection;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
@@ -46,10 +51,12 @@ import java.util.TreeMap;
 public final class SyTextMultiLineModel implements SyTextMultiLineModelType
 {
   private final AttributeType<Integer> pageWidth;
-  private final LinkedList<SyText> textSections;
-  private final TreeMap<Integer, SyTextLineMeasuredType> textMeasured;
-  private final TreeMap<Integer, Integer> textLineNumberToY;
+  private final TreeMap<SyTextID, SyText> textSections;
+  private final TreeMap<Integer, SyTextLineMeasuredType> textMeasuredLinesByY;
+  private final TreeMap<SyTextLineNumber, Integer> textLineNumberToY;
   private final AttributeType<SyFontType> font;
+  private final HashMap<SyTextID, List<SyTextLineMeasuredType>> textSectionsToMeasuredLines;
+  private final SortedMap<SyTextID, SyText> textSectionsReadable;
   private SySelectionState selectionState;
 
   private SyTextMultiLineModel(
@@ -64,22 +71,49 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       attributes.create(inFont);
 
     this.textSections =
-      new LinkedList<>();
-    this.textMeasured =
+      new TreeMap<>();
+    this.textSectionsReadable =
+      Collections.unmodifiableSortedMap(this.textSections);
+    this.textSectionsToMeasuredLines =
+      new HashMap<>();
+    this.textMeasuredLinesByY =
       new TreeMap<>();
     this.textLineNumberToY =
       new TreeMap<>();
 
+    /*
+     * Changing the page width or the font will require re-measuring all
+     * text sections.
+     */
+
     this.pageWidth.subscribe((oldValue, newValue) -> {
       if (!Objects.equals(oldValue, newValue)) {
-        this.regenerateAllMeasurements();
+        this.regenerate(SyRegenerateAll.REGENERATE_ALL);
       }
     });
     this.font.subscribe((oldValue, newValue) -> {
       if (!Objects.equals(oldValue, newValue)) {
-        this.regenerateAllMeasurements();
+        this.regenerate(SyRegenerateAll.REGENERATE_ALL);
       }
     });
+  }
+
+  private sealed interface SyRegenerateType
+  {
+
+  }
+
+  private enum SyRegenerateAll
+    implements SyRegenerateType
+  {
+    REGENERATE_ALL
+  }
+
+  private record SyRegenerateFrom(
+    SyTextID textSectionIndex)
+    implements SyRegenerateType
+  {
+
   }
 
   /**
@@ -120,28 +154,140 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     );
   }
 
-  private void regenerateAllMeasurements()
+  private void regenerate(
+    final SyRegenerateType regenerate)
   {
     final var fontNow =
       this.font.get();
     final var wrapNow =
       this.pageWidth.get().intValue();
 
-    final var measuredTexts =
-      fontNow.textLayoutMultiple(this.textSections, 0, wrapNow);
+    switch (regenerate) {
+      case final SyRegenerateAll all -> {
+        this.regenerateEverything(fontNow, wrapNow);
+      }
+      case final SyRegenerateFrom from -> {
+        this.regenerateFrom(from, fontNow, wrapNow);
+      }
+    }
+  }
 
-    var y = 0;
-    this.textMeasured.clear();
-    for (final var measured : measuredTexts) {
-      final var boxY = Integer.valueOf(y);
-      this.textMeasured.put(boxY, measured);
-      this.textLineNumberToY.put(
-        Integer.valueOf(measured.lineNumber()),
-        boxY
+  private void regenerateFrom(
+    final SyRegenerateFrom from,
+    final SyFontType fontNow,
+    final int wrapNow)
+  {
+    if (Objects.equals(from.textSectionIndex, SyTextID.first())) {
+      this.regenerateEverything(fontNow, wrapNow);
+      return;
+    }
+
+    final var textSectionsToRedo =
+      this.textSections.tailMap(
+        from.textSectionIndex,
+        true
       );
+
+    /*
+     * Remove all the data associated with the text sections that will
+     * be re-measured.
+     */
+
+    for (final var entry : textSectionsToRedo.entrySet()) {
+      final var textID =
+        entry.getKey();
+      final var lines =
+        this.textSectionsToMeasuredLines.get(textID);
+
+      if (lines == null) {
+        continue;
+      }
+
+      for (final var line : lines) {
+        final var lineNumber = line.lineNumber();
+        final var y = this.textLineNumberToY.get(lineNumber);
+        if (y == null) {
+          this.textMeasuredLinesByY.remove(y);
+        }
+        this.textLineNumberToY.remove(lineNumber);
+      }
+    }
+
+    /*
+     * Determine what the new starting line number will be.
+     */
+
+    SyTextLineNumber startingLineNumber;
+    try {
+      startingLineNumber =
+        this.textLineNumberToY.lastKey();
+    } catch (final NoSuchElementException e) {
+      startingLineNumber =
+        new SyTextLineNumber(0);
+    }
+
+    final var newMeasured =
+      fontNow.textLayoutMultiple(
+        textSectionsToRedo,
+        startingLineNumber,
+        wrapNow
+      );
+
+    var y = this.highestYOffset();
+    for (final var measured : newMeasured) {
+      final var boxY = Integer.valueOf(y);
+      this.recordMeasuredLineForText(measured);
+      this.textMeasuredLinesByY.put(boxY, measured);
+      this.textLineNumberToY.put(measured.lineNumber(), boxY);
       final var textSize = measured.textBounds();
       y += textSize.sizeY();
     }
+  }
+
+  private void regenerateEverything(
+    final SyFontType fontNow,
+    final int wrapNow)
+  {
+    this.textMeasuredLinesByY.clear();
+    this.textSectionsToMeasuredLines.clear();
+    this.textLineNumberToY.clear();
+
+    final var newMeasured =
+      fontNow.textLayoutMultiple(
+        this.textSections,
+        SyTextLineNumber.first(),
+        wrapNow
+      );
+
+    var y = 0;
+    for (final var measured : newMeasured) {
+      final var boxY = Integer.valueOf(y);
+      this.recordMeasuredLineForText(measured);
+      this.textMeasuredLinesByY.put(boxY, measured);
+      this.textLineNumberToY.put(measured.lineNumber(), boxY);
+      final var textSize = measured.textBounds();
+      y += textSize.sizeY();
+    }
+  }
+
+  /**
+   * Record the relationship between the original text and a
+   * measured line that it produced.
+   */
+
+  private void recordMeasuredLineForText(
+    final SyTextLineMeasuredType measured)
+  {
+    var linesForText =
+      this.textSectionsToMeasuredLines.get(measured.textOriginal());
+    if (linesForText == null) {
+      linesForText = new LinkedList<>();
+    }
+    linesForText.add(measured);
+    this.textSectionsToMeasuredLines.put(
+      measured.textOriginal(),
+      linesForText
+    );
   }
 
   @Override
@@ -162,33 +308,25 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   public void textSectionsAppend(
     final List<SyText> sections)
   {
-    this.textSections.addAll(
-      Objects.requireNonNull(sections, "sections")
-    );
-
-    final var fontNow =
-      this.font.get();
-    final var wrapNow =
-      this.pageWidth.get().intValue();
-
-    final var measuredTexts =
-      fontNow.textLayoutMultiple(
-        sections,
-        this.textMeasured.size(),
-        wrapNow
-      );
-
-    var y = this.highestYOffset();
-    for (final var measured : measuredTexts) {
-      final var boxY = Integer.valueOf(y);
-      this.textMeasured.put(boxY, measured);
-      this.textLineNumberToY.put(
-        Integer.valueOf(measured.lineNumber()),
-        boxY
-      );
-      final var textSize = measured.textBounds();
-      y += textSize.sizeY();
+    if (sections.isEmpty()) {
+      return;
     }
+
+    SyTextID nextID;
+    try {
+      nextID = this.textSections.lastKey().next();
+    } catch (final NoSuchElementException e) {
+      nextID = SyTextID.first();
+    }
+
+
+    final SyTextID regenerateFrom = nextID;
+    for (final var section : sections) {
+      this.textSections.put(nextID, section);
+      nextID = nextID.next();
+    }
+
+    this.regenerate(new SyRegenerateFrom(regenerateFrom));
   }
 
   private List<PAreaI<SySpaceParentRelativeType>> buildRegions(
@@ -235,15 +373,16 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       upperInclusive.lineNumber();
 
     for (var lineNumber = lowerLine;
-         lineNumber <= upperLine;
-         ++lineNumber) {
+         lineNumber.compareTo(upperLine) <= 0;
+         lineNumber = lineNumber.next()) {
 
       final var line =
         this.textForLine(lineNumber);
       final var textDirection =
-        line.text().direction();
+        line.textAsWrapped().direction();
       final var y =
-        this.textLineNumberToY.get(Integer.valueOf(lineNumber)).intValue();
+        this.textLineNumberToY.get(lineNumber)
+          .intValue();
       final var textSizeX =
         line.textBounds().sizeX();
       final var textSizeY =
@@ -253,7 +392,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
        * Lines that are not the first or last line are fully selected.
        */
 
-      if (lineNumber > lowerLine && lineNumber < upperLine) {
+      if (lineNumber.compareTo(lowerLine) > 0 && lineNumber.compareTo(upperLine) < 0) {
         results.add(
           switch (textDirection) {
 
@@ -278,14 +417,18 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
               final var alignmentDelta =
                 currentPageWidth - textSizeX;
 
-              yield sanitizedArea(alignmentDelta, currentPageWidth, y, textSizeY);
+              yield sanitizedArea(
+                alignmentDelta,
+                currentPageWidth,
+                y,
+                textSizeY);
             }
           }
         );
         continue;
       }
 
-      if (lineNumber == upperLine) {
+      if (lineNumber.equals(upperLine)) {
         results.add(
           switch (textDirection) {
 
@@ -302,7 +445,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
                 upperInclusive.caret().area().minimumX();
 
               final int xMinimum;
-              if (lineNumber == lowerLine) {
+              if (lineNumber.equals(lowerLine)) {
                 xMinimum = lowerInclusive.caret().area().minimumX();
               } else {
                 xMinimum = 0;
@@ -329,7 +472,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
                 upperInclusive.caret().area().minimumX() + alignmentDelta;
 
               final int xMaximum;
-              if (lineNumber == lowerLine) {
+              if (lineNumber.equals(lowerLine)) {
                 xMaximum = lowerInclusive.caret().area().minimumX() + alignmentDelta;
               } else {
                 xMaximum = currentPageWidth;
@@ -343,11 +486,11 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       }
 
       Invariants.checkInvariantV(
-        lineNumber == lowerLine,
+        lineNumber.equals(lowerLine),
         "Line number must equal lower bound."
       );
       Invariants.checkInvariantV(
-        lineNumber != upperLine,
+        !lineNumber.equals(upperLine),
         "Line number must not equal upper bound."
       );
 
@@ -420,15 +563,16 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       upperInclusive.lineNumber();
 
     for (var lineNumber = lowerLine;
-         lineNumber <= upperLine;
-         ++lineNumber) {
+         lineNumber.compareTo(upperLine) <= 0;
+         lineNumber = lineNumber.next()) {
 
       final var line =
         this.textForLine(lineNumber);
       final var textDirection =
-        line.text().direction();
+        line.textAsWrapped().direction();
       final var y =
-        this.textLineNumberToY.get(Integer.valueOf(lineNumber)).intValue();
+        this.textLineNumberToY.get(lineNumber)
+          .intValue();
       final var textSizeX =
         line.textBounds().sizeX();
       final var textSizeY =
@@ -438,7 +582,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
        * Lines that are not the first or last line are fully selected.
        */
 
-      if (lineNumber > lowerLine && lineNumber < upperLine) {
+      if (lineNumber.compareTo(lowerLine) > 0 && lineNumber.compareTo(upperLine) < 0) {
         results.add(
           switch (textDirection) {
 
@@ -463,14 +607,18 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
               final var alignmentDelta =
                 currentPageWidth - textSizeX;
 
-              yield sanitizedArea(alignmentDelta, currentPageWidth, y, textSizeY);
+              yield sanitizedArea(
+                alignmentDelta,
+                currentPageWidth,
+                y,
+                textSizeY);
             }
           }
         );
         continue;
       }
 
-      if (lineNumber == lowerLine) {
+      if (lineNumber.equals(lowerLine)) {
         results.add(
           switch (textDirection) {
 
@@ -487,7 +635,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
                 lowerInclusive.caret().area().minimumX();
 
               final int xMaximum;
-              if (lineNumber == upperLine) {
+              if (lineNumber.equals(upperLine)) {
                 xMaximum = upperInclusive.caret().area().minimumX();
               } else {
                 xMaximum = textSizeX;
@@ -514,7 +662,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
                 lowerInclusive.caret().area().minimumX() + alignmentDelta;
 
               final int xMinimum;
-              if (lineNumber == upperLine) {
+              if (lineNumber.equals(upperLine)) {
                 xMinimum = upperInclusive.caret().area().minimumX() + alignmentDelta;
               } else {
                 xMinimum = alignmentDelta;
@@ -528,11 +676,11 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       }
 
       Invariants.checkInvariantV(
-        lineNumber == upperLine,
+        lineNumber.equals(upperLine),
         "Line number must equal upper bound."
       );
       Invariants.checkInvariantV(
-        lineNumber != lowerLine,
+        !lineNumber.equals(lowerLine),
         "Line number must not equal lower bound."
       );
 
@@ -591,10 +739,10 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   }
 
   private SyTextLineMeasuredType textForLine(
-    final int lineNumber)
+    final SyTextLineNumber lineNumber)
   {
-    return this.textMeasured.get(
-      this.textLineNumberToY.get(Integer.valueOf(lineNumber))
+    return this.textMeasuredLinesByY.get(
+      this.textLineNumberToY.get(lineNumber)
     );
   }
 
@@ -689,7 +837,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   private int highestYOffset()
   {
     final var entry =
-      this.textMeasured.lastEntry();
+      this.textMeasuredLinesByY.lastEntry();
 
     if (entry == null) {
       return 0;
@@ -711,9 +859,32 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   }
 
   @Override
+  public SortedMap<SyTextID, SyText> textSections()
+  {
+    return this.textSectionsReadable;
+  }
+
+  @Override
+  public Optional<SyText> textSectionContainingLine(
+    final SyTextLineNumber lineNumber)
+  {
+    Objects.requireNonNull(lineNumber, "lineNumber");
+
+    final var y = this.textLineNumberToY.get(lineNumber);
+    if (y == null) {
+      return Optional.empty();
+    }
+    final var line = this.textMeasuredLinesByY.get(y);
+    if (line == null) {
+      return Optional.empty();
+    }
+    return Optional.ofNullable(this.textSections.get(line.textOriginal()));
+  }
+
+  @Override
   public SortedMap<Integer, SyTextLineMeasuredType> linesByYCoordinate()
   {
-    return new TreeMap<>(this.textMeasured);
+    return new TreeMap<>(this.textMeasuredLinesByY);
   }
 
   @Override
@@ -725,7 +896,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     final var y =
       Math.max(0, position.y());
     final var entry =
-      this.textMeasured.floorEntry(Integer.valueOf(y));
+      this.textMeasuredLinesByY.floorEntry(Integer.valueOf(y));
 
     if (entry == null) {
       return Optional.empty();
@@ -741,7 +912,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       this.font.get();
 
     var sum = fontNow.textHeight();
-    for (final var value : this.textMeasured.values()) {
+    for (final var value : this.textMeasuredLinesByY.values()) {
       sum += value.pageLineBounds().sizeY();
     }
     return sum;

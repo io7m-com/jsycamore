@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         id="e4a9d2d7-3fbe-4478-a4e4-19641b94a741"
+         title="Model">
+
+  <Section title="Introduction">
+    <Paragraph>
+      This section of the documentation describes the theory of operation of the <Term type="package">jsycamore</Term>
+      package; the basic concepts and elements that make up the system as a whole.
+    </Paragraph>
+  </Section>
+
+  <Section title="Architecture">
+    <Paragraph>
+      The top-level object in the <Term type="package">jsycamore</Term> package is the <Link
+      target="81ad4c2b-2348-48cc-8a3d-7b0d247f088c">screen</Link>. Screens act as containers for all UI elements,
+      and individual screens are effectively isolated UI instances. Most applications will only create a single
+      screen.
+    </Paragraph>
+    <Paragraph>
+      Within a screen, the top-level objects are <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>.
+      Windows provide all the typical windowing system actions such as opening, closing, maximizing, and resizing.
+    </Paragraph>
+    <Paragraph>
+      Inside each window is a <Term type="term">content area</Term> within which is placed a tree of
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link>. Components provide a standard set of UI
+      elements such as <Term type="term">buttons</Term>, <Term type="term">text fields</Term>,
+      <Term type="term">images</Term>, etc.
+    </Paragraph>
+    <FormalItem title="Screens, Windows And Components">
+      <Image source="arch.png" width="640" height="450">
+        A screen containing two windows.
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      The visual appearances of windows, and the components contained within, are completely decided by
+      configurable <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">themes</Link>. Components and windows decide
+      how UI elements <Term type="term">behave</Term> and where they are placed, whilst themes are solely responsible
+      for determining how UI elements <Term type="term">look</Term>.
+    </Paragraph>
+    <Paragraph>
+      User interaction is implemented using <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>. The
+      application hosting the <Link target="81ad4c2b-2348-48cc-8a3d-7b0d247f088c">screens</Link> is responsible for
+      delivering events to screens, and the screen instances will relay those events to the relevant windows and
+      components contained within.
+    </Paragraph>
+    <Paragraph>
+      The positions of UI elements are specified as values in strongly-typed
+      <Link target="9ae333c2-afd4-48b8-9c56-0f9c6605847a">coordinate systems</Link>, and the
+      <Term type="package">jsycamore</Term> package as a whole works entirely in terms of platform-independent
+      coordinates. The <Term type="package">jsycamore</Term> UI can be embedded into operating systems and used
+      with graphics standards that use completely different conventions as long as events are submitted to the UI
+      using the <Term type="package">jsycamore</Term> coordinate systems; extensive static typing is used to make
+      it difficult to use values in the wrong coordinate system at any point.
+    </Paragraph>
+  </Section>
+
+  <xi:include href="m-screen.xml"/>
+  <xi:include href="m-window.xml"/>
+  <xi:include href="m-component.xml"/>
+  <xi:include href="m-event.xml"/>
+  <xi:include href="m-theme.xml"/>
+  <xi:include href="m-coordinates.xml"/>
+  <xi:include href="m-rendering.xml"/>
+
+</Section>

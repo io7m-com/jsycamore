@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="ddd1079c-f636-4232-bebe-39672a140061"
+         title="Menus">
+
+  <Subsection title="Description">
+    <Paragraph>
+      A <Term type="term">menu</Term> is a
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>
+      that provides a tree-based structure from which users can select items.
+    </Paragraph>
+    <FormalItem title="Menu">
+      <Image source="menuAndBar.png"
+             width="640"
+             height="240">
+        A menu opened from a menu bar.
+      </Image>
+    </FormalItem>
+  </Subsection>
+
+</Section>

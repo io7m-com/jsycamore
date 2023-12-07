@@ -23,7 +23,9 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceTextType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextLocationType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
@@ -41,9 +43,10 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
   private final int pageWidth;
   private final PAreaSizeI<SySpaceParentRelativeType> textBounds;
   private final TextLayout layout;
-  private final int lineNumber;
-  private final SyText text;
+  private final SyTextLineNumber lineNumber;
+  private final SyText textAsWrapped;
   private final PAreaSizeI<SySpaceParentRelativeType> pageBounds;
+  private final SyTextID textOriginal;
 
   /**
    * Create a section of analyzed text.
@@ -52,29 +55,32 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
    * @param inTextBounds The text bounds
    * @param inLineNumber The line number
    * @param inLayout     The text layout
-   * @param inText       The text
+   * @param inTextOriginal The original text that was analyzed
+   * @param inTextAsWrapped       The text after analysis and wrapping
    */
 
   public SyAWTTextAnalyzed(
     final int inPageWidth,
     final PAreaSizeI<SySpaceParentRelativeType> inTextBounds,
-    final int inLineNumber,
+    final SyTextLineNumber inLineNumber,
     final TextLayout inLayout,
-    final SyText inText)
+    final SyTextID inTextOriginal,
+    final SyText inTextAsWrapped)
   {
     this.pageWidth =
       inPageWidth;
     this.textBounds =
       Objects.requireNonNull(inTextBounds, "size");
-    this.text =
-      Objects.requireNonNull(inText, "text");
+    this.textOriginal =
+      Objects.requireNonNull(inTextOriginal, "inTextOriginal");
+    this.textAsWrapped =
+      Objects.requireNonNull(inTextAsWrapped, "text");
     this.layout =
       Objects.requireNonNull(inLayout, "inLayout");
     this.pageBounds =
       PAreaSizeI.of(inPageWidth, this.textBounds.sizeY());
-
     this.lineNumber =
-      inLineNumber;
+      Objects.requireNonNull(inLineNumber, "inLineNumber");
   }
 
   @Override
@@ -90,9 +96,15 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
   }
 
   @Override
-  public SyText text()
+  public SyTextID textOriginal()
   {
-    return this.text;
+    return this.textOriginal;
+  }
+
+  @Override
+  public SyText textAsWrapped()
+  {
+    return this.textAsWrapped;
   }
 
   @Override
@@ -125,7 +137,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
   {
     Objects.requireNonNull(position, "position");
 
-    return switch (this.text.direction()) {
+    return switch (this.textAsWrapped.direction()) {
       case TEXT_DIRECTION_LEFT_TO_RIGHT -> {
         yield PVector2I.of(position.x(), position.y());
       }
@@ -146,7 +158,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
   }
 
   @Override
-  public int lineNumber()
+  public SyTextLineNumber lineNumber()
   {
     return this.lineNumber;
   }
@@ -172,7 +184,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
     }
 
     @Override
-    public int lineNumber()
+    public SyTextLineNumber lineNumber()
     {
       return this.owner.lineNumber;
     }
@@ -181,7 +193,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
     public SyCharacter characterAt()
     {
       final var text =
-        this.owner.text;
+        this.owner.textAsWrapped;
       final var textString =
         text.value();
 
@@ -222,9 +234,9 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
     @Override
     public String toString()
     {
-      return "[SyTextLocation 0x%s %d %d]".formatted(
+      return "[SyTextLocation 0x%s %s %d]".formatted(
         Integer.toUnsignedString(this.hashCode(), 16),
-        Integer.valueOf(this.lineNumber()),
+        this.lineNumber(),
         Integer.valueOf(this.hitInfo.getCharIndex())
       );
     }
@@ -239,7 +251,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
     public int compareTo(
       final SyTextLocationType other)
     {
-      return Comparator.comparingInt(SyTextLocationType::lineNumber)
+      return Comparator.comparing(SyTextLocationType::lineNumber)
         .thenComparingInt(loc -> loc.characterAt().centerIndex())
         .compare(this, other);
     }

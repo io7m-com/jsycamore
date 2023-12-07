@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         id="43bf8da9-c7dc-44f5-aa88-d592b3f4408c"
+         title="Standard Components">
+
+  <xi:include href="mc-menu.xml"/>
+  <xi:include href="mc-text.xml"/>
+  <xi:include href="mc-button.xml"/>
+
+</Section>

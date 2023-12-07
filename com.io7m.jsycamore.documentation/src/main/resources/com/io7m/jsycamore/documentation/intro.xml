@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="4ca8d3c2-8a25-4ada-aede-e79ad7eeaf5f"
+         title="Introduction">
+
+  <Paragraph>
+    The <Term type="package">jsycamore</Term> package provides...
+  </Paragraph>
+
+</Section>

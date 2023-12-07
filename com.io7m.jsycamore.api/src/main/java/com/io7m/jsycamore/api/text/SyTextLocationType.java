@@ -33,7 +33,7 @@ public interface SyTextLocationType
    * @return The line number of the text
    */
 
-  int lineNumber();
+  SyTextLineNumber lineNumber();
 
   /**
    * @return The character at the location

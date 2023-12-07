@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="9ae333c2-afd4-48b8-9c56-0f9c6605847a"
+         title="Coordinate Systems">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">jsycamore</Term> package defines numerous <Term type="term">coordinate systems</Term>.
+      All 2D coordinate systems are defined such that the origin <Term type="expression">(0, 0)</Term> represents the
+      <Term type="term">top left</Term> point of the coordinate system, with the X axis pointing
+      <Term type="term">rightwards</Term> towards positive infinity, and the Y axis pointing
+      <Term type="term">downwards</Term> towards positive infinity.
+    </Paragraph>
+    <FormalItem title="Coordinates">
+      <Image source="coords.png" width="602" height="402">
+        Coordinate orientation.
+      </Image>
+    </FormalItem>
+    <Paragraph>
+      Positions in an <Term type="term">N-dimensional</Term> coordinate system
+      <Term type="expression">S</Term> with components of type <Term type="expression">T</Term> in <Term type="package">
+      jsycamore</Term> are defined as values of immutable vectors of type <Term type="type">PVectorNT&lt;S></Term>.
+      The <Term type="term">phantom-type</Term> parameter <Term type="expression">S</Term> on the vector type statically
+      prevents users of the package from mixing up coordinates in different coordinate systems and getting unexpected
+      results. As a concrete example, the <Link target="cafe405e-f68a-421d-a68a-fac4d5f557ac">parent-relative</Link>
+      space is a two-dimensional coordinate system with integer component values, and therefore positions in this
+      coordinate system are given as values of type
+      <Term type="expression">PVector2I&lt;SySpaceParentRelativeType></Term>.
+    </Paragraph>
+    <Paragraph>
+      The following sections describe the coordinate spaces currently defined by the
+      <Term type="package">jsycamore</Term> package.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Component-Relative Space">
+    <Paragraph>
+      The <Term type="term">component-relative</Term> space is a two-dimensional integer coordinate system where the
+      origin <Term type="expression">(0, 0)</Term> represents the top-left corner of a
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>.
+    </Paragraph>
+    <Paragraph>
+      This coordinate space is primarily used by <Link target="6aeefd35-8837-4503-99ee-3ccba984a49e">themes</Link>
+      to produce <Link target="703f1dc9-6f1d-4083-a40d-8f7779d1c49b">render nodes</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Parent-Relative Space" id="cafe405e-f68a-421d-a68a-fac4d5f557ac">
+    <Paragraph>
+      The <Term type="term">parent-relative</Term> space is a two-dimensional integer coordinate system where the
+      origin <Term type="expression">(0, 0)</Term> represents the top-left corner of a parent
+      <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>.
+    </Paragraph>
+    <Paragraph>
+      The positions of all <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link> are
+      specified in this space.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="RGBAPre Space">
+    <Paragraph>
+      The <Term type="term">rgba-pre</Term> space is a four-dimensional real coordinate system describing linear,
+      alpha-premultiplied colours. For example, a pure opaque black colour is represented by the point
+      <Term type="expression">(0,0,0,1)</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Text Space">
+    <Paragraph>
+      The <Term type="term">text</Term> space is a two-dimensional integer coordinate system used to address
+      <Link target="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906">text</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Viewport Space" id="7973aa4f-4fd9-40dd-8d96-0aaa3b4d6147">
+    <Paragraph>
+      The <Term type="term">viewport</Term> space is a two-dimensional integer coordinate system where the
+      origin <Term type="expression">(0, 0)</Term> represents the top-left corner of a
+      <Link target="81ad4c2b-2348-48cc-8a3d-7b0d247f088c">screen</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Window Space">
+    <Paragraph>
+      The <Term type="term">window</Term> space is a two-dimensional integer coordinate system where the
+      origin <Term type="expression">(0, 0)</Term> represents the top-left corner of a
+      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">window</Link>.
+    </Paragraph>
+  </Subsection>
+
+</Section>
