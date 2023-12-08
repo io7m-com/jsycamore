@@ -23,14 +23,18 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuBarItemType;
 import com.io7m.jsycamore.api.menus.SyMenuBarType;
 import com.io7m.jsycamore.api.menus.SyMenuSelected;
 import com.io7m.jsycamore.api.menus.SyMenuType;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
@@ -99,8 +103,8 @@ public final class SyMenuBar
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
   }
@@ -247,8 +251,8 @@ public final class SyMenuBar
     }
 
     @Override
-    protected SyEventConsumed onEvent(
-      final SyEventType event)
+    protected SyEventConsumed onEventInput(
+      final SyEventInputType event)
     {
       return switch (event) {
         case final SyMouseEventOnPressed e -> {
@@ -264,9 +268,10 @@ public final class SyMenuBar
           }
           yield EVENT_NOT_CONSUMED;
         }
-        default -> {
-          yield EVENT_NOT_CONSUMED;
-        }
+        case final SyKeyEventType e -> EVENT_NOT_CONSUMED;
+        case final SyMouseEventOnHeld e -> EVENT_NOT_CONSUMED;
+        case final SyMouseEventOnNoLongerOver e -> EVENT_NOT_CONSUMED;
+        case final SyMouseEventOnReleased e -> EVENT_NOT_CONSUMED;
       };
     }
 

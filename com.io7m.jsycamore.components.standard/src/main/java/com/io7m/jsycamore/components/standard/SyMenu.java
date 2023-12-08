@@ -24,7 +24,7 @@ import com.io7m.jorchard.core.JOTreeNodeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemAtomType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSeparatorType;
@@ -234,8 +234,8 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
   }

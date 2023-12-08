@@ -22,10 +22,9 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
-import com.io7m.jsycamore.api.menus.SyMenuEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
@@ -38,7 +37,6 @@ import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 
 import java.util.Collections;
@@ -95,14 +93,12 @@ public final class SyTextMultiLineView
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     return switch (event) {
       case final SyMouseEventType e -> this.onMouseEvent(e);
       case final SyKeyEventType e -> EVENT_NOT_CONSUMED;
-      case final SyMenuEventType e -> EVENT_NOT_CONSUMED;
-      case final SyWindowEventType e -> EVENT_NOT_CONSUMED;
     };
   }
 

@@ -27,7 +27,7 @@ import com.io7m.jsycamore.api.components.SyComponentQuery;
 import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.screens.SyScreenType;
@@ -253,7 +253,7 @@ public abstract class SyComponentAbstract implements SyComponentType
 
   @Override
   public final SyEventConsumed eventSend(
-    final SyEventType event)
+    final SyEventInputType event)
   {
     /*
      * Only deliver the event to this component if it is active.
@@ -261,7 +261,7 @@ public abstract class SyComponentAbstract implements SyComponentType
 
     SyEventConsumed consumed = EVENT_CONSUMED;
     if (this.isActive()) {
-      consumed = this.onEvent(event);
+      consumed = this.onEventInput(event);
     }
 
     /*
@@ -301,7 +301,7 @@ public abstract class SyComponentAbstract implements SyComponentType
    * @return {@code true} if the event has been consumed
    */
 
-  protected abstract SyEventConsumed onEvent(SyEventType event);
+  protected abstract SyEventConsumed onEventInput(SyEventInputType event);
 
   @Override
   public final Optional<SyComponentType> componentForWindowRelative(

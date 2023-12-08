@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,22 +15,19 @@
  */
 
 
-package com.io7m.jsycamore.api.menus;
+package com.io7m.jsycamore.api.events;
 
-import com.io7m.jsycamore.api.events.SyEventOutputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.mouse.SyMouseEventType;
 
 /**
- * The type of events relating to menus.
+ * The type of events that the system accepts as input.
  */
 
-public sealed interface SyMenuEventType
-  extends SyEventOutputType
-  permits SyMenuClosed,
-  SyMenuOpened
+public sealed interface SyEventInputType
+  extends SyEventType
+  permits SyKeyEventType,
+  SyMouseEventType
 {
-  /**
-   * @return The menu to which the event refers
-   */
 
-  SyMenuType menu();
 }

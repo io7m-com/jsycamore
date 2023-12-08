@@ -21,16 +21,13 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemAtomType;
-import com.io7m.jsycamore.api.menus.SyMenuServiceType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
-import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyText;
-import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.components.standard.SyAlign;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyImageView;
@@ -178,8 +175,8 @@ public final class SyMenuItemAtom
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     if (event instanceof final SyMouseEventOnReleased released) {
       return switch (released.button()) {
@@ -189,10 +186,9 @@ public final class SyMenuItemAtom
           try {
             this.action.run();
           } finally {
-            this.window()
-              .map(SyWindowType::screen)
-              .map(SyScreenType::menuService)
-              .ifPresent(SyMenuServiceType::menuClose);
+            this.screen()
+              .menuService()
+              .menuClose();
           }
 
           yield EVENT_CONSUMED;

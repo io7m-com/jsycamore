@@ -22,12 +22,17 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSubmenuType;
 import com.io7m.jsycamore.api.menus.SyMenuItemType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
+import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
@@ -214,15 +219,30 @@ public final class SyMenuItemSubmenu
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
-    if (event instanceof SyMouseEventOnOver) {
-      this.openMenu();
-      return EVENT_CONSUMED;
-    }
-
-    return EVENT_NOT_CONSUMED;
+    return switch (event) {
+      case final SyMouseEventOnOver e -> {
+        this.openMenu();
+        yield EVENT_CONSUMED;
+      }
+      case final SyKeyEventType e -> {
+        yield EVENT_NOT_CONSUMED;
+      }
+      case final SyMouseEventOnHeld e -> {
+        yield EVENT_NOT_CONSUMED;
+      }
+      case final SyMouseEventOnNoLongerOver e -> {
+        yield EVENT_NOT_CONSUMED;
+      }
+      case final SyMouseEventOnPressed e -> {
+        yield EVENT_NOT_CONSUMED;
+      }
+      case final SyMouseEventOnReleased e -> {
+        yield EVENT_NOT_CONSUMED;
+      }
+    };
   }
 
   private void openMenu()

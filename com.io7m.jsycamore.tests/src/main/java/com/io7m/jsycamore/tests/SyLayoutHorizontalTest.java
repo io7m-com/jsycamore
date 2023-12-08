@@ -108,20 +108,6 @@ public final class SyLayoutHorizontalTest extends SyComponentContract<SyLayoutHo
     assertEquals(300, b2.size().get().sizeY());
   }
 
-  /**
-   * A horizontal layout doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyLayoutHorizontal newComponent()
   {

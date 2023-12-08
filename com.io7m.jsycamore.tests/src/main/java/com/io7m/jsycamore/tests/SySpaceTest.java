@@ -35,20 +35,6 @@ public final class SySpaceTest extends SyComponentContract<SySpace>
 
   }
 
-  /**
-   * A space doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SySpace newComponent()
   {

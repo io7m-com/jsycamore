@@ -20,7 +20,8 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
@@ -86,14 +87,15 @@ public final class SyWindowTitle
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
-    if (event instanceof final SyMouseEventType mouseEvent) {
-      return this.onMouseEvent(mouseEvent);
-    }
-
-    return EVENT_NOT_CONSUMED;
+    return switch (event) {
+      case final SyMouseEventType e -> {
+        yield this.onMouseEvent(e);
+      }
+      case final SyKeyEventType e -> EVENT_NOT_CONSUMED;
+    };
   }
 
   private SyEventConsumed onMouseEvent(

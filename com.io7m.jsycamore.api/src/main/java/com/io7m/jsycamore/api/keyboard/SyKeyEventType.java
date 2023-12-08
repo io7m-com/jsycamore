@@ -17,14 +17,14 @@
 
 package com.io7m.jsycamore.api.keyboard;
 
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 
 /**
  * The type of key events.
  */
 
 public sealed interface SyKeyEventType
-  extends SyEventType
+  extends SyEventInputType
   permits SyKeyEventModifierPressed,
   SyKeyEventModifierReleased,
   SyKeyEventPressed,

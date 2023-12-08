@@ -245,20 +245,6 @@ public final class SyPackHorizontalTest extends SyComponentContract<SyPackHorizo
     assertEquals(300, c.size().get().sizeY());
   }
 
-  /**
-   * A horizontal layout doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyPackHorizontal newComponent()
   {

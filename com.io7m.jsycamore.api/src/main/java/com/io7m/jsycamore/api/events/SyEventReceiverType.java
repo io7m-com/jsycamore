@@ -30,5 +30,5 @@ public interface SyEventReceiverType
    * @return A value indicating if the event was understood and consumed
    */
 
-  SyEventConsumed eventSend(SyEventType event);
+  SyEventConsumed eventSend(SyEventInputType event);
 }

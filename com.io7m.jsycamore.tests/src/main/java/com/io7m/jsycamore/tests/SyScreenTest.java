@@ -1159,34 +1159,6 @@ public final class SyScreenTest
   }
 
   /**
-   * The window components ignore window events.
-   *
-   * @throws Exception On errors
-   */
-
-  @Test
-  public void testWindowComponentsIgnoreWindowEvents()
-    throws Exception
-  {
-    final var w0 =
-      this.windowService.windowCreate(256, 256);
-
-    var root = w0.contentArea().node();
-    while (root.parent().isPresent()) {
-      root = root.parent().get();
-    }
-
-    final var finalRoot = root;
-    root.forEachDepthFirst(Void.class, (input, depth, node) -> {
-      final var component =
-        finalRoot.value();
-      final var result =
-        component.eventSend(new SyWindowClosed(w0.id()));
-      assertEquals(EVENT_NOT_CONSUMED, result);
-    });
-  }
-
-  /**
    * Mouse move events outside an open window are not consumed.
    *
    * @throws Exception On errors

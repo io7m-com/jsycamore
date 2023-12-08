@@ -16,14 +16,14 @@
 
 package com.io7m.jsycamore.api.windows;
 
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventOutputType;
 
 /**
  * The type of events relating to windows.
  */
 
 public sealed interface SyWindowEventType
-  extends SyEventType
+  extends SyEventOutputType
   permits SyWindowBecameInvisible,
   SyWindowBecameVisible,
   SyWindowClosed,

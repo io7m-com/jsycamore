@@ -17,7 +17,7 @@
 package com.io7m.jsycamore.components.standard.internal.scrollbars;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyAlign;
@@ -60,7 +60,7 @@ final class SyScrollBarVButtonDown extends SyButtonAbstract
 
   @Override
   protected SyEventConsumed onOtherEvent(
-    final SyEventType event)
+    final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
   }

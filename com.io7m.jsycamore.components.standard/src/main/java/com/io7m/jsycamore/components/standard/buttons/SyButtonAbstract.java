@@ -18,7 +18,7 @@ package com.io7m.jsycamore.components.standard.buttons;
 
 import com.io7m.jsycamore.api.components.SyButtonType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
@@ -72,8 +72,8 @@ public abstract class SyButtonAbstract
   }
 
   @Override
-  protected final SyEventConsumed onEvent(
-    final SyEventType event)
+  protected final SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     if (event instanceof final SyMouseEventType mouseEvent) {
       return this.onMouseEvent(mouseEvent);
@@ -96,7 +96,7 @@ public abstract class SyButtonAbstract
    * @return {@code true} if the event has been consumed
    */
 
-  protected abstract SyEventConsumed onOtherEvent(SyEventType event);
+  protected abstract SyEventConsumed onOtherEvent(SyEventInputType event);
 
   private SyEventConsumed onMouseEvent(
     final SyMouseEventType event)

@@ -20,7 +20,7 @@ import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jsycamore.api.components.SyButtonWithTextType;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
@@ -224,7 +224,7 @@ public final class SyButton
 
   @Override
   protected SyEventConsumed onOtherEvent(
-    final SyEventType event)
+    final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
   }

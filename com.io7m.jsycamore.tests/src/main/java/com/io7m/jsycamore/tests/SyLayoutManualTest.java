@@ -81,20 +81,6 @@ public final class SyLayoutManualTest extends SyComponentContract<SyLayoutManual
     assertEquals(20, b2.size().get().sizeY());
   }
 
-  /**
-   * A layout doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyLayoutManual newComponent()
   {

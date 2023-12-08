@@ -36,20 +36,6 @@ public final class SyImageViewTest extends SyComponentContract<SyImageView>
 
   }
 
-  /**
-   * An image view doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyImageView newComponent()
   {

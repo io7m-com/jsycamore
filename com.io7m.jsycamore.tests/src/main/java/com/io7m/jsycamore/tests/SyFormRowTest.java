@@ -225,20 +225,6 @@ public final class SyFormRowTest extends SyComponentContract<SyFormRow>
     assertEquals(48, c2.size().get().sizeY());
   }
 
-  /**
-   * A layout doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyFormRow newComponent()
   {

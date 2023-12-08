@@ -20,7 +20,8 @@ package com.io7m.jsycamore.components.standard.internal.scrollbars;
 import com.io7m.jsycamore.api.components.SyButtonReadableType;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
@@ -117,14 +118,14 @@ final class SyScrollBarVButtonThumb
   }
 
   @Override
-  protected SyEventConsumed onEvent(
-    final SyEventType event)
+  protected SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     return switch (event) {
       case final SyMouseEventType e -> {
         yield this.onMouseEvent(e);
       }
-      default -> EVENT_NOT_CONSUMED;
+      case final SyKeyEventType e -> EVENT_NOT_CONSUMED;
     };
   }
 

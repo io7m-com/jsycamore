@@ -72,10 +72,6 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
     final var c = this.newComponent();
     assertEquals(
       EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-    assertEquals(
-      EVENT_NOT_CONSUMED,
       c.eventSend(new SyMouseEventOnOver(PVectors2I.zero(), c))
     );
     assertEquals(
@@ -85,10 +81,6 @@ public final class SyTextViewTest extends SyComponentContract<SyTextViewType>
     assertEquals(
       EVENT_NOT_CONSUMED,
       c.eventSend(new SyKeyEventPressed(SyKeyCode.SY_KEY_E))
-    );
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyMenuClosed(Mockito.mock(SyMenuType.class)))
     );
   }
 

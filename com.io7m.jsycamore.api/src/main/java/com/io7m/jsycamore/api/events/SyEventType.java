@@ -16,20 +16,13 @@
 
 package com.io7m.jsycamore.api.events;
 
-import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
-import com.io7m.jsycamore.api.menus.SyMenuEventType;
-import com.io7m.jsycamore.api.mouse.SyMouseEventType;
-import com.io7m.jsycamore.api.windows.SyWindowEventType;
-
 /**
  * The base type of events used by the UI.
  */
 
 public sealed interface SyEventType
-  permits SyKeyEventType,
-  SyMenuEventType,
-  SyMouseEventType,
-  SyWindowEventType
+  permits SyEventInputType,
+  SyEventOutputType
 {
 
 }

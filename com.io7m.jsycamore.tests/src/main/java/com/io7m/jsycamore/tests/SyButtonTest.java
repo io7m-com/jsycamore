@@ -271,20 +271,6 @@ public final class SyButtonTest extends SyComponentContract<SyButtonType>
     assertEquals("Q", c.themeClassesInPreferenceOrder().get(0).className());
   }
 
-  /**
-   * A button doesn't accept window events.
-   */
-
-  @Test
-  public void testWindowEvents()
-  {
-    final var c = this.newComponent();
-    assertEquals(
-      EVENT_NOT_CONSUMED,
-      c.eventSend(new SyWindowClosed(new SyWindowID(UUID.randomUUID())))
-    );
-  }
-
   @Override
   protected SyButtonWithTextType newComponent()
   {

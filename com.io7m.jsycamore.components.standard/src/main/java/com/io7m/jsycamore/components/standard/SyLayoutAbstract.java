@@ -18,7 +18,7 @@ package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.components.SyContainerType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
-import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -43,8 +43,8 @@ public abstract class SyLayoutAbstract
   }
 
   @Override
-  protected final SyEventConsumed onEvent(
-    final SyEventType event)
+  protected final SyEventConsumed onEventInput(
+    final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
   }
