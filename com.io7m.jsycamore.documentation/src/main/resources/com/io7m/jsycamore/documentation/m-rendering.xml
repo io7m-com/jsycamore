@@ -4,8 +4,17 @@
          id="703f1dc9-6f1d-4083-a40d-8f7779d1c49b"
          title="Rendering">
 
-  <Paragraph>
-    Rendering...
-  </Paragraph>
+  <Subsection title="Description">
+    <Paragraph>
+      Rendering...
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Render Nodes"
+              id="7e859c7f-5516-42fa-8891-0dd15dea5a40">
+    <Paragraph>
+      Render nodes...
+    </Paragraph>
+  </Subsection>
 
 </Section>
