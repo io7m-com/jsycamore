@@ -4,8 +4,67 @@
          id="bcc3c7a6-df1c-4dc8-8263-2364630db64a"
          title="Events">
 
-  <Paragraph>
-    An event...
-  </Paragraph>
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="term">Events</Term>
+      are the primary means by which the
+      <Term type="package">jsycamore</Term>
+      package accepts input from external code, and by which it publishes notifications on state changes.
+    </Paragraph>
+    <Paragraph>
+      Events are divided into <Link target="faf14bf9-408c-4e98-a380-37abfc5b6271">input events</Link> and
+      <Link target="cc1c3bb7-e1e4-41ce-86c1-e52cb4f261d6">output events</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Input Events"
+              id="faf14bf9-408c-4e98-a380-37abfc5b6271">
+    <Subsection title="Description">
+      <Paragraph>
+        <Term type="term">Input events</Term>
+        are events that represent input to the UI. In order to remain fully platform-independent, the
+        <Term type="package">jsycamore</Term>
+        package does not directly read from the keyboard and mouse. Instead, users are expected to be running
+        <Term type="package">jsycamore</Term>
+        inside an existing system such as
+        <LinkExternal target="https://en.wikipedia.org/wiki/Abstract_Window_Toolkit">AWT</LinkExternal>, or perhaps
+        embedded in a GPU context via
+        <LinkExternal target="https://www.glfw.org/">GLFW</LinkExternal>, and are therefore responsible for translating
+        input events coming from those systems into method calls defined on the
+        <Term type="class">SyScreenMouseEventsType</Term>
+        and
+        <Term type="class">SyScreenKeyEventsType</Term>
+        interfaces. When these methods are called, the screen will
+        <Link target="b097067b-b8d6-4397-bb24-6a48f003e84f">dispatch</Link>
+        input events internally to any relevant
+        <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link>.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Mouse Events" id="ef6bcdaf-a8e3-4752-9744-d6221601262f">
+      <Paragraph>
+        Mouse events...
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="Keyboard Events" id="c94f6a20-0543-4da3-bf60-9a1dea6eaeed">
+      <Paragraph>
+        Keyboard events...
+      </Paragraph>
+    </Subsection>
+  </Subsection>
+
+  <Subsection title="Output Events"
+              id="cc1c3bb7-e1e4-41ce-86c1-e52cb4f261d6">
+    <Paragraph>
+      <Term type="term">Output events</Term>
+      are events that indicate state changes that have occurred. For example, closing a window will publish
+      an <Link target="29c70488-7d76-4091-9f7e-c6d4a6c66476">event</Link>.
+    </Paragraph>
+    <Paragraph>
+      Users may obtain access to a stream of output events from each
+      <Link target="03b8a907-42cf-47b1-a72b-4ba9a90a77ae">screen</Link>.
+    </Paragraph>
+  </Subsection>
 
 </Section>

@@ -57,14 +57,85 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Events">
-    <Paragraph>
-      A screen provides an
-      <LinkExternal
-      target="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Flow.Publisher.html">
-      observable stream</LinkExternal> of <Link target="bcc3c7a6-df1c-4dc8-8263-2364630db64a">events</Link>
-      to which external code may subscribe.
-    </Paragraph>
+  <Subsection title="Events" id="03b8a907-42cf-47b1-a72b-4ba9a90a77ae">
+    <Subsection title="Output Events">
+      <Paragraph>
+        A screen provides an
+        <LinkExternal
+          target="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Flow.Publisher.html">
+          observable stream</LinkExternal> of <Link target="cc1c3bb7-e1e4-41ce-86c1-e52cb4f261d6">output events</Link>
+        to which external code may subscribe.
+      </Paragraph>
+    </Subsection>
+    <Subsection title="Input Event Dispatch" id="b097067b-b8d6-4397-bb24-6a48f003e84f">
+      <Subsection title="Description">
+        <Paragraph>
+          When any of the methods on the
+          <Term type="class">SyScreenMouseEventsType</Term>
+          and
+          <Term type="class">SyScreenKeyEventsType</Term>
+          interfaces are called, the screen will dispatch appropriate events to
+          <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link>
+          inside
+          <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>
+          that are visible on the screen.
+        </Paragraph>
+      </Subsection>
+      <Subsection title="Mouse Events">
+        <Paragraph>
+          When dispatching <Link target="ef6bcdaf-a8e3-4752-9744-d6221601262f">mouse events</Link>, the process
+          is as follows for an arbitrary mouse event <Term type="variable">e</Term>:
+        </Paragraph>
+        <FormalItem title="Mouse Event Dispatch">
+          <ListOrdered>
+            <Item>
+              Get a list of the visible <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link> in
+              <Link target="caab0ac3-f623-457f-986d-312b260f184e">order</Link> such that the frontmost windows
+              are at the start of the list, and the rearmost windows are at the end of the list.
+            </Item>
+            <Item>
+              For each window <Term type="variable">w</Term> in the list of visible windows:
+              <ListOrdered>
+                <Item>
+                  If the <Link target="7973aa4f-4fd9-40dd-8d96-0aaa3b4d6147">viewport-space</Link> position
+                  of the mouse event (the cursor position) falls within the viewport-space bounds of
+                  <Term type="variable">w</Term>, then ask <Term type="variable">w</Term> for the
+                  <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>
+                  <Term type="variable">c</Term> that is overlapped by the cursor. The window implementation
+                  is required to return the most specific component for the given position; the component that
+                  is deepest within the tree of components for the given position. If there is no
+                  appropriate <Term type="variable">c</Term>, then continue on to the next window.
+                </Item>
+                <Item>
+                  Assuming there was an existing component <Term type="variable">c</Term>,
+                  call the <Term type="function">eventSend</Term> method on <Term type="variable">c</Term>, passing
+                  it the event <Term type="variable">e</Term>. The method will return a value that indicates
+                  whether the component <Term type="term">consumed</Term> the event. If the event was consumed,
+                  execution stops here. Otherwise, if the event was not consumed, then the
+                  <Term type="function">eventSend</Term> method is called on each recursively selected ancestor
+                  of <Term type="variable">c</Term> until either one of the ancestors consumes the event, or
+                  there are no more ancestors. If the event is consumed, execution stops here. If there are
+                  no more ancestors, we return to the first step and try the next visible window.
+                </Item>
+                <Item>
+                  If no component in any of the examined windows consumes <Term type="variable">e</Term>, then
+                  <Term type="variable">e</Term> is discarded.
+                </Item>
+              </ListOrdered>
+            </Item>
+          </ListOrdered>
+        </FormalItem>
+        <Paragraph>
+          Typically, successfully dispatching a mouse event to a window will result in that window
+          becoming <Link target="caab0ac3-f623-457f-986d-312b260f184e">focused</Link>.
+        </Paragraph>
+      </Subsection>
+      <Subsection title="Keyboard Events">
+        <Paragraph>
+          Keyboard events...
+        </Paragraph>
+      </Subsection>
+    </Subsection>
   </Subsection>
   
   <Subsection title="Theme">

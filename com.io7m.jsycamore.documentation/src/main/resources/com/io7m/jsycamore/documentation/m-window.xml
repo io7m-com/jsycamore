@@ -143,7 +143,7 @@
           </ListUnordered>
         </FormalItem>
       </Subsection>
-      <Subsection title="Events">
+      <Subsection title="Events" id="29c70488-7d76-4091-9f7e-c6d4a6c66476">
         <Paragraph>
           When a window is closed, an event of type <Term type="type">SyWindowClosed</Term> will be published.
         </Paragraph>
