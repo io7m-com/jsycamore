@@ -266,7 +266,7 @@ public final class SyButtonTest extends SyComponentContract<SyButtonType>
   public void testButtonTextInitialExtras()
   {
     final var c =
-      button(this.screen(), List.of(new SyThemeClassNameCustom("Q")), text("Z"));
+      button(this.screen(), List.of(new SyThemeClassNameCustom("Q", "Q")), text("Z"));
     assertEquals("Z", c.text().get().value());
     assertEquals("Q", c.themeClassesInPreferenceOrder().get(0).className());
   }

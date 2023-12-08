@@ -35,8 +35,8 @@ public final class SyThemeClassNamesTest
     final String text)
   {
     return DynamicTest.dynamicTest("testValid_" + text, () -> {
-      assertEquals(text, new SyThemeClassNameCustom(text).className());
-      assertEquals(text, new SyThemeClassNameCustom(text).toString());
+      assertEquals(text, new SyThemeClassNameCustom(text, "A").className());
+      assertEquals(text, new SyThemeClassNameCustom(text, "A").toString());
     });
   }
 
@@ -45,7 +45,7 @@ public final class SyThemeClassNamesTest
   {
     return DynamicTest.dynamicTest("testInvalid_" + text, () -> {
       assertThrows(IllegalArgumentException.class, () -> {
-        new SyThemeClassNameCustom(text);
+        new SyThemeClassNameCustom(text, "A");
       });
     });
   }

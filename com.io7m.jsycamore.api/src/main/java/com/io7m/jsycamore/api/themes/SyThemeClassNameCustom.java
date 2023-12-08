@@ -22,10 +22,13 @@ import java.util.regex.Pattern;
 /**
  * A custom class name.
  *
- * @param className The actual class name
+ * @param className   The actual class name
+ * @param description The description
  */
 
-public record SyThemeClassNameCustom(String className)
+public record SyThemeClassNameCustom(
+  String className,
+  String description)
   implements SyThemeClassNameType
 {
   private static final Pattern VALID_CLASS_NAME =
@@ -33,11 +36,15 @@ public record SyThemeClassNameCustom(String className)
 
   /**
    * A custom class name.
+   *
+   * @param className   The actual class name
+   * @param description The description
    */
 
   public SyThemeClassNameCustom
   {
     Objects.requireNonNull(className, "name");
+    Objects.requireNonNull(description, "description");
 
     if (!VALID_CLASS_NAME.matcher(className).matches()) {
       throw new IllegalArgumentException(

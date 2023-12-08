@@ -15,24 +15,39 @@
  */
 
 
-package com.io7m.jsycamore.api.themes;
+package com.io7m.jsycamore.tests;
 
-/**
- * The type of theme class names.
- */
+import com.io7m.jsycamore.api.themes.SyThemeClassNameStandard;
 
-public sealed interface SyThemeClassNameType
-  permits SyThemeClassNameStandard, SyThemeClassNameCustom
+public final class SyThemeClassNamesStandard
 {
-  /**
-   * @return The theme class name
-   */
+  private SyThemeClassNamesStandard()
+  {
 
-  String className();
+  }
 
-  /**
-   * @return A humanly-readable description of the style class
-   */
+  public static void main(
+    final String[] args)
+  {
+    System.out.println("""
+<Table xmlns="urn:com.io7m.structural:8:0" type="genericTable">
+<Columns>
+  <Column>Name</Column>
+  <Column>Description</Column>
+</Columns>
+""");
 
-  String description();
+    for (final var name : SyThemeClassNameStandard.values()) {
+      System.out.printf("""
+<Row>
+  <Cell>%s</Cell>
+  <Cell>%s</Cell>
+</Row>
+""", name.className(), name.description());
+    }
+
+    System.out.println("""
+</Table>
+""");
+  }
 }

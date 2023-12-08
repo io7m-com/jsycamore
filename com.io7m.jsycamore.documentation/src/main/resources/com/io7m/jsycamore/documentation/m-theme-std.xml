@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Table xmlns="urn:com.io7m.structural:8:0" type="genericTable">
+  <Columns>
+    <Column>Name</Column>
+    <Column>Description</Column>
+  </Columns>
+  <Row>
+    <Cell>Button</Cell>
+    <Cell>A generic button.</Cell>
+  </Row>
+  <Row>
+    <Cell>Checkbox</Cell>
+    <Cell>A checkbox.</Cell>
+  </Row>
+  <Row>
+    <Cell>Container</Cell>
+    <Cell>A generic container.</Cell>
+  </Row>
+  <Row>
+    <Cell>GridView</Cell>
+    <Cell>A grid view.</Cell>
+  </Row>
+  <Row>
+    <Cell>ImageView</Cell>
+    <Cell>An image view.</Cell>
+  </Row>
+  <Row>
+    <Cell>ListView</Cell>
+    <Cell>A list view.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuBar</Cell>
+    <Cell>A menu bar.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuBarItem</Cell>
+    <Cell>A menu bar item.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuBarItemText</Cell>
+    <Cell>The text in a menu bar item.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuItem</Cell>
+    <Cell>A menu item.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuItemAtom</Cell>
+    <Cell>A menu atom item.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuItemSeparator</Cell>
+    <Cell>A menu separator item.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuItemSubmenu</Cell>
+    <Cell>A menu submenu item.</Cell>
+  </Row>
+  <Row>
+    <Cell>Menu</Cell>
+    <Cell>A menu.</Cell>
+  </Row>
+  <Row>
+    <Cell>MenuItemText</Cell>
+    <Cell>A menu item text.</Cell>
+  </Row>
+  <Row>
+    <Cell>Meter</Cell>
+    <Cell>A generic meter.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontal</Cell>
+    <Cell>A horizontal scrollbar.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalTrack</Cell>
+    <Cell>A horizontal scrollbar track.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonLeft</Cell>
+    <Cell>A horizontal scrollbar left button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonLeftIcon</Cell>
+    <Cell>A horizontal scrollbar left button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonRight</Cell>
+    <Cell>A horizontal scrollbar right button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonRightIcon</Cell>
+    <Cell>A horizontal scrollbar right button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonThumb</Cell>
+    <Cell>A horizontal scrollbar thumb button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarHorizontalButtonThumbIcon</Cell>
+    <Cell>A horizontal scrollbar thumb button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVertical</Cell>
+    <Cell>A vertical scrollbar.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalTrack</Cell>
+    <Cell>A vertical scrollbar track.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonUp</Cell>
+    <Cell>A vertical scrollbar up button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonUpIcon</Cell>
+    <Cell>A vertical scrollbar up button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonDown</Cell>
+    <Cell>A vertical scrollbar down button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonDownIcon</Cell>
+    <Cell>A vertical scrollbar down button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonThumb</Cell>
+    <Cell>A vertical scrollbar thumb button.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollbarVerticalButtonThumbIcon</Cell>
+    <Cell>A vertical scrollbar thumb button icon.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollPane</Cell>
+    <Cell>A scroll pane.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollPaneContentArea</Cell>
+    <Cell>A scroll pane content area.</Cell>
+  </Row>
+  <Row>
+    <Cell>ScrollPaneContentAreaViewport</Cell>
+    <Cell>A scroll pane viewport.</Cell>
+  </Row>
+  <Row>
+    <Cell>TextArea</Cell>
+    <Cell>A text area.</Cell>
+  </Row>
+  <Row>
+    <Cell>TextField</Cell>
+    <Cell>A text field.</Cell>
+  </Row>
+  <Row>
+    <Cell>TextView</Cell>
+    <Cell>A text view.</Cell>
+  </Row>
+  <Row>
+    <Cell>TextMultilineView</Cell>
+    <Cell>A multi-line text view.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowButtonClose</Cell>
+    <Cell>The close button for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowButtonCloseIcon</Cell>
+    <Cell>The close button icon for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowButtonMaximize</Cell>
+    <Cell>The maximize button for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowButtonMenu</Cell>
+    <Cell>The menu button for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowContentArea</Cell>
+    <Cell>The content area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeE</Cell>
+    <Cell>The east resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeN</Cell>
+    <Cell>The north resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeNE</Cell>
+    <Cell>The north-east resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeNW</Cell>
+    <Cell>The north-west resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeS</Cell>
+    <Cell>The south resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeSE</Cell>
+    <Cell>The south-east resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeSW</Cell>
+    <Cell>The south-west resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowResizeW</Cell>
+    <Cell>The west resize area for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowRoot</Cell>
+    <Cell>The root component for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowTitle</Cell>
+    <Cell>The title component for a window.</Cell>
+  </Row>
+  <Row>
+    <Cell>WindowTitleText</Cell>
+    <Cell>The title text component for a window.</Cell>
+  </Row>
+</Table>

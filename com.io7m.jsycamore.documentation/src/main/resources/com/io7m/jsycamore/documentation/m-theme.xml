@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
          id="6aeefd35-8837-4503-99ee-3ccba984a49e"
          title="Themes">
 
@@ -84,6 +85,25 @@
       fallback function should not be evaluated unless something is wrong with the theme or the component is defined in
       a manner that makes it incompatible with the theme.
     </Paragraph>
+    <Paragraph>
+      As components return a non-empty list of style classes in priority order, this allows components to essentially
+      instruct themes on how to handle the components including potential fallback behaviour. For example, a component
+      can return the list of style classes <Term type="expression">[AcmeMagicButton, Button]</Term>. This is the
+      same as stating "If you have support for
+      <Term type="constant">AcmeMagicButton</Term>s, then render this component as one of those. Otherwise, if you
+      only have support for ordinary buttons, then render this component as one of those."
+    </Paragraph>
   </Subsection>
 
+  <Subsection title="Standard Theme Classes">
+    <Paragraph>
+      The <Term type="package">jsycamore</Term> package defines a set of standard theme classes for which all
+      themes should attempt to support at a minimum. These names are provided as part of the
+      <Term type="class">SyThemeClassNameStandard</Term> enum.
+    </Paragraph>
+    <FormalItem title="Standard Theme Classes">
+      <xi:include href="m-theme-std.xml"/>
+    </FormalItem>
+  </Subsection>
+  
 </Section>
