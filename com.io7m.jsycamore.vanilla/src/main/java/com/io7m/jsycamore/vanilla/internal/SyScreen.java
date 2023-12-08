@@ -47,7 +47,7 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.themes.SyThemeType;
-import com.io7m.jsycamore.api.windows.SyWindowLayers;
+import com.io7m.jsycamore.api.windows.SyWindowLayerID;
 import com.io7m.jsycamore.api.windows.SyWindowMaximized;
 import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowSet;
@@ -60,6 +60,7 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -345,6 +346,8 @@ public final class SyScreen implements SyScreenType
     private final EnumMap<SyMouseButton, MouseState> mouseButtonStates;
     private final SyLayoutContextType layoutContext;
     private final SyWindow windowMenuOverlay;
+    private final SyWindowLayerID menuLayer;
+    private final SyWindowLayerID windowLayerDefault;
     private SyWindowSet windows;
     private Optional<SyComponentType> componentOver;
 
@@ -364,6 +367,11 @@ public final class SyScreen implements SyScreenType
       this.mouseButtonStates = inMouseButtonStates;
       this.layoutContext = inLayoutContext;
 
+      this.menuLayer =
+        new SyWindowLayerID(BigInteger.valueOf(0xffffffffL));
+      this.windowLayerDefault =
+        SyWindowLayerID.defaultLayer();
+
       this.componentOver =
         Optional.empty();
 
@@ -372,7 +380,7 @@ public final class SyScreen implements SyScreenType
         new SyWindow(
           this.screen,
           this.windows.windowFreshId(),
-          SyWindowLayers.layerForMenus(),
+          this.menuLayer,
           WINDOW_MAY_NOT_BE_DELETED,
           this.viewportSize.get()
         );
@@ -725,13 +733,26 @@ public final class SyScreen implements SyScreenType
       return state;
     }
 
+    @Override
+    public SyWindowLayerID windowLayerDefault()
+    {
+      return this.windowLayerDefault;
+    }
+
+    @Override
+    public SyWindowLayerID windowLayerForMenus()
+    {
+      return this.menuLayer;
+    }
 
     @Override
     public SyWindowType windowCreateOnLayer(
       final int sizeX,
       final int sizeY,
-      final int layer)
+      final SyWindowLayerID layer)
     {
+      Objects.requireNonNull(layer, "layer");
+
       final var window =
         new SyWindow(
           this.screen,

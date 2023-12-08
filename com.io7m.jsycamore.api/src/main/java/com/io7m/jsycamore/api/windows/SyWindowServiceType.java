@@ -28,6 +28,18 @@ import java.util.List;
 public interface SyWindowServiceType extends SyServiceType
 {
   /**
+   * @return The default layer for windows
+   */
+
+  SyWindowLayerID windowLayerDefault();
+
+  /**
+   * @return The default layer for menus
+   */
+
+  SyWindowLayerID windowLayerForMenus();
+
+  /**
    * Create a new window.
    *
    * @param sizeX The window width
@@ -43,7 +55,7 @@ public interface SyWindowServiceType extends SyServiceType
     return this.windowCreateOnLayer(
       sizeX,
       sizeY,
-      SyWindowLayers.layerForNormalWindows()
+      this.windowLayerDefault()
     );
   }
 
@@ -60,7 +72,7 @@ public interface SyWindowServiceType extends SyServiceType
   SyWindowType windowCreateOnLayer(
     int sizeX,
     int sizeY,
-    int layer);
+    SyWindowLayerID layer);
 
   /**
    * @return A read-only list of the currently open windows in order from

@@ -41,13 +41,13 @@ import java.util.stream.Collectors;
 public final class SyWindowSet
 {
   private final Map<SyWindowID, SyWindowType> windows;
-  private final TreeMap<Integer, LinkedList<SyWindowType>> windowsVisibleOrdered;
-  private final Set<Integer> windowLayersHidden;
+  private final TreeMap<SyWindowLayerID, LinkedList<SyWindowType>> windowsVisibleOrdered;
+  private final Set<SyWindowLayerID> windowLayersHidden;
 
   private SyWindowSet(
     final Map<SyWindowID, SyWindowType> inWindows,
-    final TreeMap<Integer, LinkedList<SyWindowType>> inWindowsVisibleOrdered,
-    final Set<Integer> inWindowLayersVisible)
+    final TreeMap<SyWindowLayerID, LinkedList<SyWindowType>> inWindowsVisibleOrdered,
+    final Set<SyWindowLayerID> inWindowLayersVisible)
   {
     this.windows = Map.copyOf(inWindows);
     this.windowsVisibleOrdered = inWindowsVisibleOrdered;
@@ -83,7 +83,7 @@ public final class SyWindowSet
    */
 
   public Optional<SyWindowType> windowFocused(
-    final int layer)
+    final SyWindowLayerID layer)
   {
     final var visible =
       this.windowsVisibleOrdered.get(layer);
@@ -183,10 +183,10 @@ public final class SyWindowSet
 
     final var newMap =
       new TreeMap<>(this.windowsVisibleOrdered);
-    final var layerBoxed =
-      Integer.valueOf(window.layer());
+    final var windowLayer =
+      window.layer();
     final var newVisible =
-      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
+      new LinkedList<>(newMap.getOrDefault(windowLayer, new LinkedList<>()));
 
     final var removed = newVisible.remove(window);
     final List<SyWindowEventType> changes;
@@ -196,7 +196,7 @@ public final class SyWindowSet
       changes = List.of(new SyWindowBecameVisible(window.id()));
     }
     newVisible.addFirst(window);
-    newMap.put(layerBoxed, newVisible);
+    newMap.put(windowLayer, newVisible);
 
     return new SyWindowSetChanged(
       new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
@@ -232,10 +232,10 @@ public final class SyWindowSet
 
     final var newMap =
       new TreeMap<>(this.windowsVisibleOrdered);
-    final var layerBoxed =
-      Integer.valueOf(window.layer());
+    final var windowLayer =
+      window.layer();
     final var newVisible =
-      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
+      new LinkedList<>(newMap.getOrDefault(windowLayer, new LinkedList<>()));
 
     final var removed = newVisible.remove(window);
     final List<SyWindowEventType> changes;
@@ -244,7 +244,7 @@ public final class SyWindowSet
     } else {
       changes = List.of();
     }
-    newMap.put(layerBoxed, newVisible);
+    newMap.put(windowLayer, newVisible);
 
     return new SyWindowSetChanged(
       new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
@@ -283,17 +283,17 @@ public final class SyWindowSet
     final var newMap =
       new TreeMap<>(this.windowsVisibleOrdered);
 
-    final var layerBoxed =
-      Integer.valueOf(window.layer());
+    final var windowLayer =
+      window.layer();
     final var newVisible =
-      new LinkedList<>(newMap.getOrDefault(layerBoxed, new LinkedList<>()));
+      new LinkedList<>(newMap.getOrDefault(windowLayer, new LinkedList<>()));
 
     newVisible.remove(window);
 
     final List<SyWindowEventType> changes =
       List.of(new SyWindowClosed(window.id()));
 
-    newMap.put(layerBoxed, newVisible);
+    newMap.put(windowLayer, newVisible);
     newWindows.remove(window.id());
 
     return new SyWindowSetChanged(
@@ -320,17 +320,16 @@ public final class SyWindowSet
     final var newMap =
       new TreeMap<>(this.windowsVisibleOrdered);
 
-    final var layerBoxed =
-      Integer.valueOf(window.layer());
-
+    final var windowLayer =
+      window.layer();
     final var existingVisible =
-      newMap.getOrDefault(layerBoxed, new LinkedList<>());
+      newMap.getOrDefault(windowLayer, new LinkedList<>());
     final var newVisible =
       new LinkedList<>(existingVisible);
 
     newVisible.remove(window);
     newVisible.addFirst(window);
-    newMap.put(layerBoxed, newVisible);
+    newMap.put(windowLayer, newVisible);
 
     return new SyWindowSetChanged(
       new SyWindowSet(this.windows, newMap, this.windowLayersHidden),
@@ -349,13 +348,13 @@ public final class SyWindowSet
   {
     Objects.requireNonNull(window, "window");
 
-    final var layerBoxed = Integer.valueOf(window.layer());
-    if (this.windowLayersHidden.contains(layerBoxed)) {
+    final var windowLayer = window.layer();
+    if (this.windowLayersHidden.contains(windowLayer)) {
       return false;
     }
 
     final var layer =
-      this.windowsVisibleOrdered.get(layerBoxed);
+      this.windowsVisibleOrdered.get(windowLayer);
 
     if (layer != null) {
       return layer.contains(window);
@@ -373,11 +372,12 @@ public final class SyWindowSet
    */
 
   public SyWindowSetChanged windowLayerHide(
-    final int layer)
+    final SyWindowLayerID layer)
   {
-    final var layerBoxed = Integer.valueOf(layer);
+    Objects.requireNonNull(layer, "layer");
+
     final var newHidden = new HashSet<>(this.windowLayersHidden);
-    newHidden.add(layerBoxed);
+    newHidden.add(layer);
 
     return new SyWindowSetChanged(
       new SyWindowSet(
@@ -397,11 +397,12 @@ public final class SyWindowSet
    */
 
   public SyWindowSetChanged windowLayerShow(
-    final int layer)
+    final SyWindowLayerID layer)
   {
-    final var layerBoxed = Integer.valueOf(layer);
+    Objects.requireNonNull(layer, "layer");
+
     final var newHidden = new HashSet<>(this.windowLayersHidden);
-    newHidden.remove(layerBoxed);
+    newHidden.remove(layer);
 
     return new SyWindowSetChanged(
       new SyWindowSet(
@@ -419,9 +420,10 @@ public final class SyWindowSet
    */
 
   public boolean windowLayerIsShown(
-    final int layer)
+    final SyWindowLayerID layer)
   {
-    return !this.windowLayersHidden.contains(Integer.valueOf(layer));
+    Objects.requireNonNull(layer, "layer");
+    return !this.windowLayersHidden.contains(layer);
   }
 
   /**

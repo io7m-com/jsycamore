@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.windows.SyWindowBecameVisible;
 import com.io7m.jsycamore.api.windows.SyWindowClosed;
 import com.io7m.jsycamore.api.windows.SyWindowCreated;
 import com.io7m.jsycamore.api.windows.SyWindowID;
+import com.io7m.jsycamore.api.windows.SyWindowLayerID;
 import com.io7m.jsycamore.api.windows.SyWindowSet;
 import com.io7m.jsycamore.api.windows.SyWindowType;
 import org.junit.jupiter.api.DynamicTest;
@@ -38,9 +39,6 @@ import java.util.stream.Stream;
 
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_BE_DELETED;
 import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_NOT_BE_DELETED;
-import static com.io7m.jsycamore.api.windows.SyWindowLayers.layerForNormalWindows;
-import static com.io7m.jsycamore.api.windows.SyWindowLayers.layerHighest;
-import static com.io7m.jsycamore.api.windows.SyWindowLayers.layerLowest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public final class SyWindowSetTest
 {
   private static void testWindowCreatedMultipleFocusForLayer(
-    final int layer)
+    final SyWindowLayerID layer)
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
@@ -114,7 +112,7 @@ public final class SyWindowSetTest
   }
 
   private static void testWindowShowRedundantForLayer(
-    final int layer)
+    final SyWindowLayerID layer)
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
@@ -141,7 +139,7 @@ public final class SyWindowSetTest
   }
 
   private static void testWindowHideRedundantForLayer(
-    final int layer)
+    final SyWindowLayerID layer)
   {
     final var ws0 = SyWindowSet.empty();
     final var w0 = Mockito.mock(SyWindowType.class);
@@ -198,7 +196,7 @@ public final class SyWindowSetTest
 
     Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
     Mockito.when(w0.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
-    Mockito.when(w0.layer()).thenReturn(layerForNormalWindows());
+    Mockito.when(w0.layer()).thenReturn(SyWindowLayerID.defaultLayer());
 
     var wsc = ws0.windowCreate(w0);
     assertEquals(new SyWindowCreated(w0.id()), wsc.changes().get(0));
@@ -266,7 +264,9 @@ public final class SyWindowSetTest
       .thenReturn(WINDOW_MAY_NOT_BE_DELETED);
 
     final var wsc = ws0.windowCreate(w0);
-    assertThrows(IllegalStateException.class, () -> wsc.newSet().windowClose(w0));
+    assertThrows(
+      IllegalStateException.class,
+      () -> wsc.newSet().windowClose(w0));
   }
 
   /**
@@ -278,7 +278,10 @@ public final class SyWindowSetTest
   @TestFactory
   public Stream<DynamicTest> testWindowCreatedMultipleFocus()
   {
-    return Stream.of(layerLowest(), layerForNormalWindows(), layerHighest())
+    return Stream.of(
+        SyWindowLayerID.defaultLayer().nextLower(),
+        SyWindowLayerID.defaultLayer(),
+        SyWindowLayerID.defaultLayer().nextHigher())
       .map(layer -> {
         return DynamicTest.dynamicTest(
           "testWindowCreatedMultipleFocus" + layer,
@@ -310,9 +313,9 @@ public final class SyWindowSetTest
     Mockito.when(w1.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
     Mockito.when(w2.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
 
-    Mockito.when(w0.layer()).thenReturn(layerLowest());
-    Mockito.when(w1.layer()).thenReturn(layerForNormalWindows());
-    Mockito.when(w2.layer()).thenReturn(layerForNormalWindows());
+    Mockito.when(w0.layer()).thenReturn(SyWindowLayerID.defaultLayer().nextLower());
+    Mockito.when(w1.layer()).thenReturn(SyWindowLayerID.defaultLayer());
+    Mockito.when(w2.layer()).thenReturn(SyWindowLayerID.defaultLayer());
 
     var wsc =
       ws0.windowCreate(w0)
@@ -346,7 +349,10 @@ public final class SyWindowSetTest
   @TestFactory
   public Stream<DynamicTest> testWindowShowRedundant()
   {
-    return Stream.of(layerLowest(), layerForNormalWindows(), layerHighest())
+    return Stream.of(
+        SyWindowLayerID.defaultLayer().nextLower(),
+        SyWindowLayerID.defaultLayer(),
+        SyWindowLayerID.defaultLayer().nextHigher())
       .map(layer -> {
         return DynamicTest.dynamicTest(
           "testWindowShowRedundant_" + layer,
@@ -363,7 +369,10 @@ public final class SyWindowSetTest
   @TestFactory
   public Stream<DynamicTest> testWindowHideRedundant()
   {
-    return Stream.of(layerLowest(), layerForNormalWindows(), layerHighest())
+    return Stream.of(
+        SyWindowLayerID.defaultLayer().nextLower(),
+        SyWindowLayerID.defaultLayer(),
+        SyWindowLayerID.defaultLayer().nextHigher())
       .map(layer -> {
         return DynamicTest.dynamicTest(
           "testWindowHideRedundant_" + layer,
@@ -395,9 +404,9 @@ public final class SyWindowSetTest
     Mockito.when(w1.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
     Mockito.when(w2.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
 
-    Mockito.when(w0.layer()).thenReturn(layerLowest());
-    Mockito.when(w1.layer()).thenReturn(layerForNormalWindows());
-    Mockito.when(w2.layer()).thenReturn(layerHighest());
+    Mockito.when(w0.layer()).thenReturn(SyWindowLayerID.defaultLayer().nextLower());
+    Mockito.when(w1.layer()).thenReturn(SyWindowLayerID.defaultLayer());
+    Mockito.when(w2.layer()).thenReturn(SyWindowLayerID.defaultLayer().nextHigher());
 
     var wsc =
       ws0.windowCreate(w0)
@@ -435,21 +444,21 @@ public final class SyWindowSetTest
     Mockito.when(w0.toString()).thenReturn("w0");
     Mockito.when(w0.id()).thenReturn(new SyWindowID(UUID.randomUUID()));
     Mockito.when(w0.deletionPolicy()).thenReturn(WINDOW_MAY_BE_DELETED);
-    Mockito.when(w0.layer()).thenReturn(layerForNormalWindows());
+    Mockito.when(w0.layer()).thenReturn(SyWindowLayerID.defaultLayer());
 
     var wsc =
       ws0.windowCreate(w0)
         .then(k -> k.windowShow(w0));
 
     assertTrue(wsc.newSet().windowIsVisible(w0));
-    assertTrue(wsc.newSet().windowLayerIsShown(layerForNormalWindows()));
+    assertTrue(wsc.newSet().windowLayerIsShown(SyWindowLayerID.defaultLayer()));
 
-    wsc = wsc.then(k -> k.windowLayerHide(layerForNormalWindows()));
+    wsc = wsc.then(k -> k.windowLayerHide(SyWindowLayerID.defaultLayer()));
     assertFalse(wsc.newSet().windowIsVisible(w0));
-    assertFalse(wsc.newSet().windowLayerIsShown(layerForNormalWindows()));
+    assertFalse(wsc.newSet().windowLayerIsShown(SyWindowLayerID.defaultLayer()));
 
-    wsc = wsc.then(k -> k.windowLayerShow(layerForNormalWindows()));
+    wsc = wsc.then(k -> k.windowLayerShow(SyWindowLayerID.defaultLayer()));
     assertTrue(wsc.newSet().windowIsVisible(w0));
-    assertTrue(wsc.newSet().windowLayerIsShown(layerForNormalWindows()));
+    assertTrue(wsc.newSet().windowLayerIsShown(SyWindowLayerID.defaultLayer()));
   }
 }

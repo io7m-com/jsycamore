@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,50 +17,51 @@
 
 package com.io7m.jsycamore.api.windows;
 
+import java.math.BigInteger;
+
 /**
- * Conventional values for window layers.
+ * An identifier for a window layer.
+ *
+ * @param value The value
  */
 
-public final class SyWindowLayers
+public record SyWindowLayerID(BigInteger value)
+  implements Comparable<SyWindowLayerID>
 {
-  private SyWindowLayers()
-  {
+  private static final SyWindowLayerID FIRST_ID =
+    new SyWindowLayerID(BigInteger.ZERO);
 
+  @Override
+  public int compareTo(
+    final SyWindowLayerID other)
+  {
+    return this.value.compareTo(other.value);
   }
 
   /**
-   * @return The layer identifier used for normal windows
+   * @return The next layer ID
    */
 
-  public static int layerForNormalWindows()
+  public SyWindowLayerID nextHigher()
   {
-    return 0;
+    return new SyWindowLayerID(this.value.add(BigInteger.ONE));
   }
 
   /**
-   * @return The layer identifier used for menus
+   * @return The next layer ID
    */
 
-  public static int layerForMenus()
+  public SyWindowLayerID nextLower()
   {
-    return layerHighest();
+    return new SyWindowLayerID(this.value.subtract(BigInteger.ONE));
   }
 
   /**
-   * @return The lowest (furthest away from the viewer) layer
+   * @return The default layer ID
    */
 
-  public static int layerLowest()
+  public static SyWindowLayerID defaultLayer()
   {
-    return Integer.MIN_VALUE;
-  }
-
-  /**
-   * @return The highest (closest to the viewer) layer
-   */
-
-  public static int layerHighest()
-  {
-    return Integer.MAX_VALUE;
+    return FIRST_ID;
   }
 }
