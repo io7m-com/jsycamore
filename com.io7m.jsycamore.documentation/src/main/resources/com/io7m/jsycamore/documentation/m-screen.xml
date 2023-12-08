@@ -100,6 +100,7 @@
                   If the <Link target="7973aa4f-4fd9-40dd-8d96-0aaa3b4d6147">viewport-space</Link> position
                   of the mouse event (the cursor position) falls within the viewport-space bounds of
                   <Term type="variable">w</Term>, then ask <Term type="variable">w</Term> for the
+                  <Link target="1d8361cb-1aa8-408e-820d-4d04c7f3bfab">active</Link>
                   <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">component</Link>
                   <Term type="variable">c</Term> that is overlapped by the cursor. The window implementation
                   is required to return the most specific component for the given position; the component that
