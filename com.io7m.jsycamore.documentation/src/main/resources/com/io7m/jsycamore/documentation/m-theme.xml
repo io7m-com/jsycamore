@@ -7,7 +7,8 @@
   <Subsection title="Description">
     <Paragraph>
       A <Term type="term">theme</Term> is an entity responsible for deciding the visual appearance of
-      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link> and
+      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">windows</Link>
+      and
       <Link target="0c480fad-ee66-4532-a0b1-f06ebe582ea8">components</Link>. Primarily, themes can be considered to be
       functions from components to sets of <Link target="703f1dc9-6f1d-4083-a40d-8f7779d1c49b">render nodes</Link>,
       although they do have some other responsibilities with regard to
@@ -18,18 +19,70 @@
   <Subsection title="Window Components"
               id="47130fb1-8639-4950-8743-0bb3ce4755bf">
     <Paragraph>
-      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">Windows</Link> come with a set of predefined
-      decoration
-      <Link target="f7a815af-b097-4429-90d7-eb8d96e8ec07">components</Link>. Themes are responsible for deciding,
-      given a set of
-      <Link target="88d61172-40fe-4f21-b4e9-776ff4a8f0d7">layout constraints</Link>, where each of these components
-      are to be placed within the constraints.
+      <Link target="cb46abcd-d0b1-41f4-bb95-662186d4aa78">Windows</Link>
+      come with a set of predefined decoration
+      <Link target="f7a815af-b097-4429-90d7-eb8d96e8ec07">components</Link>. Themes are responsible for deciding, given
+      a set of
+      <Link target="88d61172-40fe-4f21-b4e9-776ff4a8f0d7">layout constraints</Link>, where each of these components are
+      to be placed within the constraints.
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Components">
+  <Subsection title="Components"
+              id="3dd1452f-4d2f-4432-840a-7d7ee7c04232">
     <Paragraph>
-      Components...
+      A theme contains a set of <Term type="term">theme component functions</Term> that, given a component
+      <Term type="variable">c</Term>, will return a set of
+      <Link target="703f1dc9-6f1d-4083-a40d-8f7779d1c49b">render nodes</Link>
+      that describe how
+      <Term type="variable">c</Term>
+      should be rendered. The actual theme component function evaluated for any given component is chosen based on
+      the
+      <Link target="66d12ed1-36ab-4a1e-b86f-0f8281b8e83e">theme classes</Link>
+      defined for the component.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Theme Classes"
+              id="66d12ed1-36ab-4a1e-b86f-0f8281b8e83e">
+    <Paragraph>
+      A <Term type="term">theme class</Term> is a textual string that is used by themes to locate theme information for
+      specific components. The process is as follows for a given theme <Term type="variable">T</Term>:
+    </Paragraph>
+    <FormalItem title="Theme Class Lookup">
+      <ListOrdered>
+        <Item>
+          For a given component <Term type="variable">c</Term>, request the non-empty list
+          <Term type="variable">S</Term>
+          of style classes held by <Term type="variable">c</Term>:
+          <ListOrdered>
+            <Item>
+              For each style class <Term type="variable">k</Term> in <Term type="variable">S</Term>:
+              <ListOrdered>
+                <Item>
+                  If the theme <Term type="variable">T</Term> contains a theme component function for
+                  <Term type="term">k</Term>, then evaluate the component function, passing it
+                  <Term type="variable">c</Term>, and halt execution.
+                </Item>
+                <Item>
+                  Otherwise, continue iterating over <Term type="variable">k</Term>.
+                </Item>
+              </ListOrdered>
+            </Item>
+            <Item>
+              If there were no theme component functions for any style class in <Term type="variable">S</Term>, then
+              evaluate the <Term type="term">fallback</Term> component function defined by the theme.
+            </Item>
+          </ListOrdered>
+        </Item>
+      </ListOrdered>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="term">fallback</Term> component function is a function that will yield render nodes if no other
+      component function can handle the given component and style classes. The fallback function is defined internally
+      to the theme, and will typically return render nodes that unambiguously indicate that something is wrong; the
+      fallback function should not be evaluated unless something is wrong with the theme or the component is defined in
+      a manner that makes it incompatible with the theme.
     </Paragraph>
   </Subsection>
 
