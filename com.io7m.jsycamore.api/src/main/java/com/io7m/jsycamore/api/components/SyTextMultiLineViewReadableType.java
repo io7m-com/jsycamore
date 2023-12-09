@@ -18,12 +18,10 @@ package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
-import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
-import com.io7m.jsycamore.api.text.SyTextLinePositioned;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelReadableType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.io7m.jsycamore.api.themes.SyThemeClassNameStandard.TEXT_MULTILINE_VIEW;
 
@@ -56,10 +54,10 @@ public interface SyTextMultiLineViewReadableType
   }
 
   /**
-   * @return A read-only snapshot of the positioned lines of text
+   * @return The text model
    */
 
-  Iterable<SyTextLinePositioned> textLinesPositioned();
+  SyTextMultiLineModelReadableType model();
 
   /**
    * Determine the minimum size on the Y axis required to display the
@@ -70,13 +68,6 @@ public interface SyTextMultiLineViewReadableType
    * @return The minimum size on the Y axis
    */
 
-  int minimumSizeYRequired(SyLayoutContextType layoutContext);
-
-  /**
-   * @param y The Y offset
-   *
-   * @return The line starting at Y offset {@code y}
-   */
-
-  Optional<SyTextLineMeasuredType> textByYOffset(int y);
+  int minimumSizeYRequired(
+    SyLayoutContextType layoutContext);
 }

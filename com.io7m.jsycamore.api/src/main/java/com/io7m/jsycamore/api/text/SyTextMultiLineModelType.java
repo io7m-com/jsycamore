@@ -50,6 +50,17 @@ public interface SyTextMultiLineModelType
     int width);
 
   /**
+   * Replace an existing text section.
+   *
+   * @param textID The text ID
+   * @param text   The new text section
+   */
+
+  void textSectionReplace(
+    SyTextID textID,
+    SyText text);
+
+  /**
    * Append a section of text at the end of the model.
    *
    * @param section The text

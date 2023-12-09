@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.services.SyServiceDirectoryReadableType;
 import com.io7m.jsycamore.api.sized.SySizedType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType;
+import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
@@ -73,6 +74,12 @@ public interface SyScreenType
   {
     return this.services().requireService(SyTextSelectionServiceType.class);
   }
+
+  /**
+   * @return The theme context
+   */
+
+  SyThemeContextType themeContext();
 
   /**
    * @return The current theme used by the screen

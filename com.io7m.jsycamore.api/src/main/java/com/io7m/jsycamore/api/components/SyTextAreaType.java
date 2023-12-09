@@ -16,7 +16,7 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 
 /**
  * Write access to text areas.
@@ -25,13 +25,8 @@ import com.io7m.jsycamore.api.text.SyText;
 public interface SyTextAreaType
   extends SyTextAreaReadableType, SyComponentType
 {
-  /**
-   * Append a text section to the end of the text area.
-   *
-   * @param section The section
-   */
-
-  void textSectionAppend(SyText section);
+  @Override
+  SyTextMultiLineModelType model();
 
   @Override
   SyScrollBarHorizontalType scrollbarHorizontal();

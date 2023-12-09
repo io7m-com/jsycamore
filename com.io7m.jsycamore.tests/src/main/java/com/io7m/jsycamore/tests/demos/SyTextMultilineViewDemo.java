@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.tests.demos;
 
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
+import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.menus.SyMenuServiceType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.screens.SyScreenType;
@@ -24,6 +25,7 @@ import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextDirection;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -101,6 +103,8 @@ public final class SyTextMultilineViewDemo
     private final List<SyText> sections;
     private final SyWindowServiceType windowService;
     private final SyMenuServiceType menuService;
+    private final SyTextMultiLineViewType textArea;
+    private final SyTextMultiLineModelType textModel;
 
     Canvas()
       throws Exception
@@ -240,12 +244,16 @@ public final class SyTextMultilineViewDemo
         final var margin = new SyLayoutMargin(this.screen);
         margin.setPaddingAll(8);
 
-        final var textArea = new SyTextMultiLineView(this.screen, List.of());
+        this.textArea =
+          SyTextMultiLineView.multiLineTextView(this.screen, List.of());
+        this.textModel =
+          this.textArea.model();
+
         for (final var section : this.sections) {
-          textArea.textSectionAppend(section);
+          this.textModel.textSectionAppend(section);
         }
 
-        margin.childAdd(textArea);
+        margin.childAdd(this.textArea);
         this.window0.contentArea().childAdd(margin);
       }
 

@@ -17,10 +17,9 @@
 
 package com.io7m.jsycamore.tests;
 
+import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.keyboard.SyKeyCode;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventPressed;
-import com.io7m.jsycamore.api.menus.SyMenuClosed;
-import com.io7m.jsycamore.api.menus.SyMenuType;
 import com.io7m.jsycamore.api.mouse.SyMouseButton;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -32,8 +31,6 @@ import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType;
-import com.io7m.jsycamore.api.windows.SyWindowClosed;
-import com.io7m.jsycamore.api.windows.SyWindowID;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
@@ -45,7 +42,6 @@ import com.io7m.jtensors.core.parameterized.vectors.PVectors2I;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +53,8 @@ import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
@@ -72,7 +66,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class SyTextMultiLineViewTest
-  extends SyComponentContract<SyTextMultiLineView>
+  extends SyComponentContract<SyTextMultiLineViewType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(SyTextMultiLineViewTest.class);
@@ -158,6 +152,7 @@ public final class SyTextMultiLineViewTest
   {
     final var c = this.newComponent();
     c.setTextSelectable(true);
+    this.windowContentArea().childAdd(c);
 
     assertEquals(
       EVENT_NOT_CONSUMED,
@@ -183,42 +178,6 @@ public final class SyTextMultiLineViewTest
         SyMouseButton.MOUSE_BUTTON_LEFT,
         c
       ))
-    );
-  }
-
-  /**
-   * Text is deferred until a layout occurs.
-   */
-
-  @Test
-  public void testTextDeferred()
-  {
-    final var c = this.newComponent();
-    c.textSectionAppend(SyText.text("Hello!"));
-
-    assertEquals(
-      Optional.empty(),
-      c.textByYOffset(0)
-    );
-
-    this.windowContentArea().childAdd(c);
-    this.window().layout(this.layoutContext);
-
-    assertEquals(
-      SyText.text("Hello!"),
-      c.textByYOffset(0).orElseThrow().textAsWrapped()
-    );
-
-    c.textSectionAppend(SyText.text("Goodbye!"));
-    this.window().layout(this.layoutContext);
-
-    assertEquals(
-      SyText.text("Hello!"),
-      c.textByYOffset(0).orElseThrow().textAsWrapped()
-    );
-    assertEquals(
-      SyText.text("Goodbye!"),
-      c.textByYOffset(14).orElseThrow().textAsWrapped()
     );
   }
 
@@ -268,8 +227,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -350,8 +310,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -436,8 +397,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -526,8 +488,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -608,8 +571,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -695,8 +659,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -787,8 +752,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -869,8 +835,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -955,8 +922,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1045,8 +1013,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1127,8 +1096,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1213,8 +1183,9 @@ public final class SyTextMultiLineViewTest
     throws IOException
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1368,9 +1339,9 @@ public final class SyTextMultiLineViewTest
   }
 
   @Override
-  protected SyTextMultiLineView newComponent()
+  protected SyTextMultiLineViewType newComponent()
   {
-    return new SyTextMultiLineView(this.screen(), List.of());
+    return SyTextMultiLineView.multiLineTextView(this.screen(), List.of());
   }
 
   private void saveImage()
@@ -1443,8 +1414,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1493,8 +1465,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1532,8 +1505,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1571,8 +1545,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1610,8 +1585,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1649,8 +1625,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("loremHebrew.txt"));
+    m.textSectionsAppend(textSections("loremHebrew.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1688,8 +1665,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1727,8 +1705,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1766,8 +1745,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1805,8 +1785,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1844,8 +1825,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);
@@ -1883,8 +1865,9 @@ public final class SyTextMultiLineViewTest
     throws Exception
   {
     final var c = this.newComponent();
+    final var m = c.model();
 
-    c.textSectionsAppend(textSections("lorem.txt"));
+    m.textSectionsAppend(textSections("lorem.txt"));
     c.setTextSelectable(true);
     this.windowContentArea().childAdd(c);
     this.window().layout(this.layoutContext);

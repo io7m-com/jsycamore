@@ -46,6 +46,7 @@ import com.io7m.jsycamore.api.services.SyServiceDirectoryType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.themes.SyThemeContextType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowLayerID;
 import com.io7m.jsycamore.api.windows.SyWindowMaximized;
@@ -81,7 +82,7 @@ import static com.io7m.jsycamore.api.windows.SyWindowDeletionPolicy.WINDOW_MAY_N
  * A screen.
  */
 
-public final class SyScreen implements SyScreenType
+public final class SyScreen implements SyScreenType, SyThemeContextType
 {
   private final AtomicBoolean closed;
   private final AttributeType<PAreaSizeI<SySpaceViewportType>> viewportSize;
@@ -177,6 +178,12 @@ public final class SyScreen implements SyScreenType
   public SyServiceDirectoryType services()
   {
     return this.services;
+  }
+
+  @Override
+  public SyThemeContextType themeContext()
+  {
+    return this;
   }
 
   @Override

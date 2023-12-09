@@ -17,7 +17,6 @@
 
 package com.io7m.jsycamore.components.standard.text;
 
-import com.io7m.jattribute.core.AttributeReadableType;
 import com.io7m.jattribute.core.AttributeType;
 import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
@@ -25,12 +24,14 @@ import com.io7m.jsycamore.api.components.SyScrollBarHorizontalType;
 import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
 import com.io7m.jsycamore.api.components.SyScrollPaneType;
 import com.io7m.jsycamore.api.components.SyTextAreaType;
+import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
@@ -38,7 +39,6 @@ import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.components.standard.SyScrollPanes;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
 
@@ -55,7 +55,7 @@ public final class SyTextArea
   private final AttributeType<List<SyText>> textSections;
   private final SyScrollPaneType textScroller;
   private final SyLayoutMargin textLayoutMargin;
-  private final SyTextMultiLineView textMultiLine;
+  private final SyTextMultiLineViewType textMultiLine;
 
   /**
    * A text area.
@@ -76,7 +76,7 @@ public final class SyTextArea
       attributes.create(List.of());
 
     this.textMultiLine =
-      new SyTextMultiLineView(screen, List.of());
+      SyTextMultiLineView.multiLineTextView(screen, List.of());
     this.textLayoutMargin =
       new SyLayoutMargin(screen);
     this.textScroller =
@@ -93,12 +93,6 @@ public final class SyTextArea
     final SyEventInputType event)
   {
     return EVENT_NOT_CONSUMED;
-  }
-
-  @Override
-  public AttributeReadableType<List<SyText>> textSections()
-  {
-    return this.textSections;
   }
 
   @Override
@@ -126,8 +120,7 @@ public final class SyTextArea
         .sizeX();
 
     final var contentSizeY =
-      this.textMultiLine.minimumSizeYRequired(layoutContext)
-      + PADDING;
+      this.textMultiLine.minimumSizeYRequired(layoutContext) + PADDING;
 
     this.textScroller.setContentAreaSize(
       PAreaSizeI.of(contentSizeX, contentSizeY)
@@ -137,11 +130,9 @@ public final class SyTextArea
   }
 
   @Override
-  public void textSectionAppend(
-    final SyText section)
+  public SyTextMultiLineModelType model()
   {
-    Objects.requireNonNull(section, "section");
-    this.textMultiLine.textSectionAppend(section);
+    return this.textMultiLine.model();
   }
 
   @Override

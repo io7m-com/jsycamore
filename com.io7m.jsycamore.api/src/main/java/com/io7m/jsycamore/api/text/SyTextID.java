@@ -31,11 +31,26 @@ public record SyTextID(BigInteger value)
   private static final SyTextID FIRST_ID =
     new SyTextID(BigInteger.ZERO);
 
+  /**
+   * @return The first text ID
+   */
+
+  public static SyTextID first()
+  {
+    return FIRST_ID;
+  }
+
   @Override
   public int compareTo(
     final SyTextID other)
   {
     return this.value.compareTo(other.value);
+  }
+
+  @Override
+  public String toString()
+  {
+    return this.value.toString();
   }
 
   /**
@@ -45,14 +60,5 @@ public record SyTextID(BigInteger value)
   public SyTextID next()
   {
     return new SyTextID(this.value.add(BigInteger.ONE));
-  }
-
-  /**
-   * @return The first text ID
-   */
-
-  public static SyTextID first()
-  {
-    return FIRST_ID;
   }
 }

@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.rendering.SyRenderNodeText;
 import com.io7m.jsycamore.api.rendering.SyRenderNodeType;
 import com.io7m.jsycamore.api.rendering.SyShapeRectangle;
 import com.io7m.jsycamore.api.spaces.SySpaceComponentRelativeType;
+import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType.SyTextSelectionIsSelected;
 import com.io7m.jsycamore.api.text.SyTextSelectionServiceType.SyTextSelectionNotSelected;
 import com.io7m.jsycamore.api.themes.SyThemeContextType;
@@ -120,12 +121,18 @@ public final class SyPrimalTextMultilineView extends SyPrimalAbstract
          * Create a text node for each line of text.
          */
 
-        for (final var linePositioned : textView.textLinesPositioned()) {
+        final var model = textView.model();
+
+        var lineNumber = SyTextLineNumber.first();
+        for (var index = 0; index < model.lineCount(); ++index) {
+          final var linePositioned =
+            model.lineAt(lineNumber)
+              .orElseThrow();
           final var line =
             linePositioned.textLine();
+
           final PVector2I<SySpaceComponentRelativeType> position =
             PVector2I.of(0, linePositioned.y());
-
           final PAreaSizeI<SySpaceComponentRelativeType> size =
             PAreaSizeI.of(textViewSize.sizeX(), line.height());
 
@@ -139,6 +146,8 @@ public final class SyPrimalTextMultilineView extends SyPrimalAbstract
               line.textAsWrapped()
             )
           );
+
+          lineNumber = lineNumber.next();
         }
 
         return new SyRenderNodeComposite("TextMultilineViewComposite", nodes);

@@ -33,17 +33,12 @@ import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
 import com.io7m.jsycamore.api.mouse.SyMouseEventType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.text.SyText;
-import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
-import com.io7m.jsycamore.api.text.SyTextLinePositioned;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
@@ -57,16 +52,8 @@ public final class SyTextMultiLineView
 {
   private final AttributeType<Boolean> textSelectable;
   private SyTextMultiLineModelType textModel;
-  private List<SyText> textSectionsDeferred;
 
-  /**
-   * A multi-line text view.
-   *
-   * @param screen       The screen that owns the component
-   * @param themeClasses The extra theme classes, if any
-   */
-
-  public SyTextMultiLineView(
+  private SyTextMultiLineView(
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
@@ -77,19 +64,46 @@ public final class SyTextMultiLineView
 
     this.textSelectable =
       components.create(Boolean.TRUE);
-    this.textSectionsDeferred =
-      new LinkedList<>();
+  }
+
+  /**
+   * Create a multi-line text view.
+   *
+   * @param screen       The screen
+   * @param themeClasses The theme classes
+   *
+   * @return The text view
+   */
+
+  public static SyTextMultiLineViewType multiLineTextView(
+    final SyScreenType screen,
+    final List<SyThemeClassNameType> themeClasses)
+  {
+    final var textView =
+      new SyTextMultiLineView(screen, themeClasses);
+
+    final var font =
+      screen.theme()
+        .findForComponent(textView)
+        .font(screen.themeContext(), textView);
+
+    final var textModel =
+      SyTextMultiLineModel.create(font, 1024);
+
+    textView.textModel = textModel;
 
     /*
      * A text view moving from selectable to not selectable will invalidate
      * its selection.
      */
 
-    this.textSelectable.subscribe((oldValue, newValue) -> {
+    textView.textSelectable.subscribe((oldValue, newValue) -> {
       if (!Objects.equals(oldValue, newValue) && !newValue.booleanValue()) {
-        this.textSelectionInvalidateIfSelected();
+        textView.textSelectionInvalidateIfSelected();
       }
     });
+
+    return textView;
   }
 
   @Override
@@ -126,16 +140,11 @@ public final class SyTextMultiLineView
       }
 
       case final SyMouseEventOnPressed e -> {
-        final var model = this.textModel;
-        if (model == null) {
-          yield EVENT_NOT_CONSUMED;
-        }
-
         final var relative =
           this.relativePositionOf(e.mousePosition());
 
         final var selection =
-          model.selectionStart(relative);
+          this.textModel.selectionStart(relative);
         if (selection.isEmpty()) {
           yield EVENT_NOT_CONSUMED;
         }
@@ -145,16 +154,11 @@ public final class SyTextMultiLineView
       }
 
       case final SyMouseEventOnHeld e -> {
-        final var model = this.textModel;
-        if (model == null) {
-          yield EVENT_NOT_CONSUMED;
-        }
-
         final var relative =
           this.relativePositionOf(e.mousePositionNow());
 
         final var selection =
-          model.selectionContinue(relative);
+          this.textModel.selectionContinue(relative);
         if (selection.isEmpty()) {
           yield EVENT_NOT_CONSUMED;
         }
@@ -164,16 +168,11 @@ public final class SyTextMultiLineView
       }
 
       case final SyMouseEventOnReleased e -> {
-        final var model = this.textModel;
-        if (model == null) {
-          yield EVENT_NOT_CONSUMED;
-        }
-
         final var relative =
           this.relativePositionOf(e.mousePosition());
 
         final var selection =
-          model.selectionFinish(relative);
+          this.textModel.selectionFinish(relative);
         if (selection.isEmpty()) {
           yield EVENT_NOT_CONSUMED;
         }
@@ -202,49 +201,15 @@ public final class SyTextMultiLineView
       this.textSelectionInvalidateIfSelected();
     }
 
-    this.createModelIfRequired(layoutContext);
     this.textModel.setPageWidth(newSize.sizeX());
     return newSize;
-  }
-
-  private void createModelIfRequired(
-    final SyLayoutContextType layoutContext)
-  {
-    final var model = this.textModel;
-    if (model == null) {
-      final var themeComponent =
-        layoutContext.themeCurrent()
-          .findForComponent(this);
-
-      final var font =
-        themeComponent.font(layoutContext, this);
-      final var sizeX =
-        this.size().get().sizeX();
-
-      this.textModel = SyTextMultiLineModel.create(font, sizeX);
-      this.textModel.textSectionsAppend(this.textSectionsDeferred);
-      this.textSectionsDeferred.clear();
-    }
   }
 
   @Override
   public int minimumSizeYRequired(
     final SyLayoutContextType layoutContext)
   {
-    this.createModelIfRequired(layoutContext);
     return this.textModel.minimumSizeYRequired();
-  }
-
-  @Override
-  public Optional<SyTextLineMeasuredType> textByYOffset(
-    final int y)
-  {
-    final var model = this.textModel;
-    if (model == null) {
-      return Optional.empty();
-    } else {
-      return model.textByYOffset(y);
-    }
   }
 
   @Override
@@ -254,27 +219,8 @@ public final class SyTextMultiLineView
   }
 
   @Override
-  public Iterable<SyTextLinePositioned> textLinesPositioned()
+  public SyTextMultiLineModelType model()
   {
-    final var model = this.textModel;
-    if (model == null) {
-      return List.of();
-    } else {
-      return model.textLinesPositioned();
-    }
-  }
-
-  @Override
-  public void textSectionsAppend(
-    final List<SyText> sections)
-  {
-    this.textSelectionInvalidateIfSelected();
-
-    final var model = this.textModel;
-    if (model == null) {
-      this.textSectionsDeferred.addAll(sections);
-    } else {
-      model.textSectionsAppend(sections);
-    }
+    return this.textModel;
   }
 }

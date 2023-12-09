@@ -48,17 +48,6 @@ public interface SyTextMultiLineModelReadableType
   SortedMap<SyTextID, SyText> textSections();
 
   /**
-   * The text section that contains the given line number.
-   *
-   * @param lineNumber The line number
-   *
-   * @return The text section, if any
-   */
-
-  Optional<SyText> textSectionContainingLine(
-    SyTextLineNumber lineNumber);
-
-  /**
    * Inspect the text at the given position. The information returned includes
    * details such as the index of the character within the string at the given
    * location, information for rendering a caret, etc.
@@ -82,16 +71,17 @@ public interface SyTextMultiLineModelReadableType
   int minimumSizeYRequired();
 
   /**
-   * @return A read-only snapshot of the positioned lines of text
+   * @return The current number of lines
    */
 
-  Iterable<SyTextLinePositioned> textLinesPositioned();
+  int lineCount();
 
   /**
-   * @param y The y offset
+   * @param line The line number
    *
-   * @return The measured line that starts at Y offset {@code y}
+   * @return The line at the given number
    */
 
-  Optional<SyTextLineMeasuredType> textByYOffset(int y);
+  Optional<SyTextLinePositioned> lineAt(
+    SyTextLineNumber line);
 }

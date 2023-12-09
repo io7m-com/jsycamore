@@ -23,6 +23,8 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceViewportType;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextID;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeType;
 import com.io7m.jsycamore.api.windows.SyWindowServiceType;
 import com.io7m.jsycamore.api.windows.SyWindowType;
@@ -54,6 +56,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -100,6 +105,8 @@ public final class SyTextAreaDemo
     private final List<String> sections;
     private final SyWindowServiceType windowService;
     private final SyMenuServiceType menuService;
+    private final SyTextArea textArea;
+    private final SyTextMultiLineModelType textModel;
 
     Canvas()
       throws Exception
@@ -234,14 +241,16 @@ public final class SyTextAreaDemo
         final var margin = new SyLayoutMargin(this.screen);
         margin.setPaddingAll(8);
 
-        final var textArea = new SyTextArea(this.screen, List.of());
-        for (final var section : this.sections) {
-          textArea.textSectionAppend(SyText.text(section));
-        }
-        textArea.scrollbarVertical().setHideIfDisabled(HIDE_IF_DISABLED);
-        textArea.scrollbarHorizontal().setHideIfDisabled(HIDE_IF_DISABLED);
+        this.textArea = new SyTextArea(this.screen, List.of());
+        this.textModel = this.textArea.model();
 
-        margin.childAdd(textArea);
+        for (final var section : this.sections) {
+          this.textModel.textSectionAppend(SyText.text(section));
+        }
+        this.textArea.scrollbarVertical().setHideIfDisabled(HIDE_IF_DISABLED);
+        this.textArea.scrollbarHorizontal().setHideIfDisabled(HIDE_IF_DISABLED);
+
+        margin.childAdd(this.textArea);
         this.window0.contentArea().childAdd(margin);
       }
 
@@ -250,6 +259,18 @@ public final class SyTextAreaDemo
           if (!this.windowService.windowIsVisible(this.window0)) {
             this.windowService.windowShow(this.window0);
           }
+
+          final var ids =
+            new ArrayList<>(this.textModel.textSections().keySet());
+          Collections.shuffle(ids);
+
+          final var textID =
+            ids.get(0);
+          final var text =
+            SyText.text(OffsetDateTime.now().toString());
+
+          LOG.debug("Replace {} -> {}", textID, text);
+          this.textModel.textSectionReplace(textID, text);
         });
       }, 0L, 2L, SECONDS);
 

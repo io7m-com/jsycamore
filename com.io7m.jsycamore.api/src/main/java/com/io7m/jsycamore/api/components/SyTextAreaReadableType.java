@@ -16,8 +16,7 @@
 
 package com.io7m.jsycamore.api.components;
 
-import com.io7m.jattribute.core.AttributeReadableType;
-import com.io7m.jsycamore.api.text.SyText;
+import com.io7m.jsycamore.api.text.SyTextMultiLineModelReadableType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
 import java.util.List;
@@ -38,10 +37,10 @@ public interface SyTextAreaReadableType
   }
 
   /**
-   * @return The text sections within the area
+   * @return The underlying text model
    */
 
-  AttributeReadableType<List<SyText>> textSections();
+  SyTextMultiLineModelReadableType model();
 
   /**
    * @return Access to the horizontal scrollbar

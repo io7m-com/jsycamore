@@ -17,11 +17,7 @@
 package com.io7m.jsycamore.api.components;
 
 import com.io7m.jattribute.core.AttributeType;
-import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Write access to multi-line text views.
@@ -49,30 +45,6 @@ public interface SyTextMultiLineViewType
     this.textSelectable().set(Boolean.valueOf(selectable));
   }
 
-  /**
-   * Append a section of text.
-   *
-   * @param section The text section
-   *
-   * @see SyTextMultiLineModelType#textSectionAppend(SyText)
-   */
-
-  default void textSectionAppend(
-    final SyText section)
-  {
-    this.textSectionsAppend(
-      List.of(Objects.requireNonNull(section, "section"))
-    );
-  }
-
-  /**
-   * Append sections of text.
-   *
-   * @param sections The text sections
-   *
-   * @see SyTextMultiLineModelType#textSectionsAppend(List)
-   */
-
-  void textSectionsAppend(
-    List<SyText> sections);
+  @Override
+  SyTextMultiLineModelType model();
 }

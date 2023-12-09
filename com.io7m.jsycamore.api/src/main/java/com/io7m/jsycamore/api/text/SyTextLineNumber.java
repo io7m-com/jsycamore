@@ -59,4 +59,16 @@ public record SyTextLineNumber(int value)
   {
     return new SyTextLineNumber(this.value + 1);
   }
+
+  /**
+   * @param delta The delta
+   *
+   * @return The line number adjusted by the given delta
+   */
+
+  public SyTextLineNumber adjust(
+    final int delta)
+  {
+    return new SyTextLineNumber(this.value + delta);
+  }
 }
