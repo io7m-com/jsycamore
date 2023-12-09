@@ -266,8 +266,8 @@ public final class SyTextView
     this.modelGetOrCreate();
 
     final var textLine = this.textModel.lineMeasured();
-    final var sizeX = textLine.textBounds().sizeX();
-    final var sizeY = textLine.textBounds().sizeY();
+    final var sizeX = textLine.textWidth();
+    final var sizeY = textLine.height();
     return PAreaSizeI.of(sizeX, sizeY);
   }
 

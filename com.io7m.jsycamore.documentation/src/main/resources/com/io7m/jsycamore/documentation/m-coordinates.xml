@@ -66,10 +66,11 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Text Space">
+  <Subsection title="Text-Aligned Space">
     <Paragraph>
-      The <Term type="term">text</Term> space is a two-dimensional integer coordinate system used to address
-      <Link target="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906">text</Link>.
+      The <Term type="term">text-aligned</Term> space is a two-dimensional integer coordinate system used to address
+      <Link target="0aa1b4dd-0803-4c8b-b3ee-68fdc9fbf906">text</Link>. It takes into account the alignment applied to
+      text for left-to-right and right-to-left text.
     </Paragraph>
   </Subsection>
 

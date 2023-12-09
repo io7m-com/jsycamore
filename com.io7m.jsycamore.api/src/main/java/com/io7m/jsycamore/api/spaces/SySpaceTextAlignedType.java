@@ -22,7 +22,7 @@ package com.io7m.jsycamore.api.spaces;
  * text direction (left-to-right vs right-to-left, for example).
  */
 
-public interface SySpaceTextType extends SySpaceType
+public interface SySpaceTextAlignedType extends SySpaceType
 {
   // No value-level representation.
 }

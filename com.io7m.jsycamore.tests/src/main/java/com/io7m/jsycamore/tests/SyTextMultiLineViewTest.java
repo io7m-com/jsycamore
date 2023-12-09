@@ -197,8 +197,8 @@ public final class SyTextMultiLineViewTest
     c.textSectionAppend(SyText.text("Hello!"));
 
     assertEquals(
-      Collections.emptySortedMap(),
-      c.textsByYOffset()
+      Optional.empty(),
+      c.textByYOffset(0)
     );
 
     this.windowContentArea().childAdd(c);
@@ -206,7 +206,7 @@ public final class SyTextMultiLineViewTest
 
     assertEquals(
       SyText.text("Hello!"),
-      c.textsByYOffset().get(0).textAsWrapped()
+      c.textByYOffset(0).orElseThrow().textAsWrapped()
     );
 
     c.textSectionAppend(SyText.text("Goodbye!"));
@@ -214,11 +214,11 @@ public final class SyTextMultiLineViewTest
 
     assertEquals(
       SyText.text("Hello!"),
-      c.textsByYOffset().get(0).textAsWrapped()
+      c.textByYOffset(0).orElseThrow().textAsWrapped()
     );
     assertEquals(
       SyText.text("Goodbye!"),
-      c.textsByYOffset().get(14).textAsWrapped()
+      c.textByYOffset(14).orElseThrow().textAsWrapped()
     );
   }
 

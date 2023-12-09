@@ -19,9 +19,8 @@ package com.io7m.jsycamore.awt.internal;
 
 import com.io7m.jregions.core.parameterized.areas.PAreaI;
 import com.io7m.jregions.core.parameterized.areas.PAreasI;
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.spaces.SySpaceTextType;
+import com.io7m.jsycamore.api.spaces.SySpaceTextAlignedType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
@@ -41,58 +40,61 @@ import java.util.Objects;
 public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
 {
   private final int pageWidth;
-  private final PAreaSizeI<SySpaceParentRelativeType> textBounds;
   private final TextLayout layout;
-  private final SyTextLineNumber lineNumber;
   private final SyText textAsWrapped;
-  private final PAreaSizeI<SySpaceParentRelativeType> pageBounds;
   private final SyTextID textOriginal;
+  private final int textHeight;
+  private final int textWidth;
 
   /**
    * Create a section of analyzed text.
    *
-   * @param inPageWidth  The page width
-   * @param inTextBounds The text bounds
-   * @param inLineNumber The line number
-   * @param inLayout     The text layout
-   * @param inTextOriginal The original text that was analyzed
-   * @param inTextAsWrapped       The text after analysis and wrapping
+   * @param inPageWidth     The page width
+   * @param inTextWidth     The text width
+   * @param inTextHeight    The text height
+   * @param inLayout        The text layout
+   * @param inTextOriginal  The original text that was analyzed
+   * @param inTextAsWrapped The text after analysis and wrapping
    */
 
   public SyAWTTextAnalyzed(
     final int inPageWidth,
-    final PAreaSizeI<SySpaceParentRelativeType> inTextBounds,
-    final SyTextLineNumber inLineNumber,
+    final int inTextWidth,
+    final int inTextHeight,
     final TextLayout inLayout,
     final SyTextID inTextOriginal,
     final SyText inTextAsWrapped)
   {
     this.pageWidth =
       inPageWidth;
-    this.textBounds =
-      Objects.requireNonNull(inTextBounds, "size");
+    this.textWidth =
+      inTextWidth;
+    this.textHeight =
+      inTextHeight;
     this.textOriginal =
       Objects.requireNonNull(inTextOriginal, "inTextOriginal");
     this.textAsWrapped =
       Objects.requireNonNull(inTextAsWrapped, "text");
     this.layout =
       Objects.requireNonNull(inLayout, "inLayout");
-    this.pageBounds =
-      PAreaSizeI.of(inPageWidth, this.textBounds.sizeY());
-    this.lineNumber =
-      Objects.requireNonNull(inLineNumber, "inLineNumber");
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> pageLineBounds()
+  public int pageWidth()
   {
-    return this.pageBounds;
+    return this.pageWidth;
   }
 
   @Override
-  public PAreaSizeI<SySpaceParentRelativeType> textBounds()
+  public int height()
   {
-    return this.textBounds;
+    return this.textHeight;
+  }
+
+  @Override
+  public int textWidth()
+  {
+    return this.textWidth;
   }
 
   @Override
@@ -109,8 +111,10 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
 
   @Override
   public SyTextLocationType inspectAt(
-    final PVector2I<SySpaceTextType> position)
+    final SyTextLineNumber lineNumber,
+    final PVector2I<SySpaceTextAlignedType> position)
   {
+    Objects.requireNonNull(lineNumber, "lineNumber");
     Objects.requireNonNull(position, "position");
 
     final var hitInfo =
@@ -128,11 +132,11 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
         caretBounds.height
       );
 
-    return new SyTextLocation(this, hitInfo, caretArea);
+    return new SyTextLocation(this, lineNumber, hitInfo, caretArea);
   }
 
   @Override
-  public PVector2I<SySpaceTextType> transformToTextCoordinates(
+  public PVector2I<SySpaceTextAlignedType> transformToTextCoordinates(
     final PVector2I<SySpaceParentRelativeType> position)
   {
     Objects.requireNonNull(position, "position");
@@ -151,32 +155,30 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
        */
 
       case TEXT_DIRECTION_RIGHT_TO_LEFT -> {
-        final var delta = this.pageWidth - this.textBounds.sizeX();
+        final var delta = this.pageWidth - this.textWidth;
         yield PVector2I.of(position.x() - delta, position.y());
       }
     };
-  }
-
-  @Override
-  public SyTextLineNumber lineNumber()
-  {
-    return this.lineNumber;
   }
 
   private static final class SyTextLocation
     implements SyTextLocationType
   {
     private final SyAWTTextAnalyzed owner;
+    private final SyTextLineNumber lineNumber;
     private final TextHitInfo hitInfo;
     private final SyCaret caret;
 
     private SyTextLocation(
       final SyAWTTextAnalyzed inOwner,
+      final SyTextLineNumber inLineNumber,
       final TextHitInfo inHitInfo,
       final PAreaI<SySpaceParentRelativeType> inArea)
     {
       this.owner =
         Objects.requireNonNull(inOwner, "owner");
+      this.lineNumber =
+        Objects.requireNonNull(inLineNumber, "lineNumber");
       this.hitInfo =
         Objects.requireNonNull(inHitInfo, "hitInfo");
       this.caret =
@@ -186,7 +188,7 @@ public final class SyAWTTextAnalyzed implements SyTextLineMeasuredType
     @Override
     public SyTextLineNumber lineNumber()
     {
-      return this.owner.lineNumber;
+      return this.lineNumber;
     }
 
     @Override

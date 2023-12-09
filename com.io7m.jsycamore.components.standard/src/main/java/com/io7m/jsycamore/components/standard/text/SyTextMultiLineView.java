@@ -35,15 +35,15 @@ import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
+import com.io7m.jsycamore.api.text.SyTextLinePositioned;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.SortedMap;
+import java.util.Optional;
 
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_CONSUMED;
 import static com.io7m.jsycamore.api.events.SyEventConsumed.EVENT_NOT_CONSUMED;
@@ -228,17 +228,6 @@ public final class SyTextMultiLineView
   }
 
   @Override
-  public SortedMap<Integer, SyTextLineMeasuredType> textsByYOffset()
-  {
-    final var model = this.textModel;
-    if (model == null) {
-      return Collections.emptySortedMap();
-    } else {
-      return model.linesByYCoordinate();
-    }
-  }
-
-  @Override
   public int minimumSizeYRequired(
     final SyLayoutContextType layoutContext)
   {
@@ -247,9 +236,32 @@ public final class SyTextMultiLineView
   }
 
   @Override
+  public Optional<SyTextLineMeasuredType> textByYOffset(
+    final int y)
+  {
+    final var model = this.textModel;
+    if (model == null) {
+      return Optional.empty();
+    } else {
+      return model.textByYOffset(y);
+    }
+  }
+
+  @Override
   public AttributeType<Boolean> textSelectable()
   {
     return this.textSelectable;
+  }
+
+  @Override
+  public Iterable<SyTextLinePositioned> textLinesPositioned()
+  {
+    final var model = this.textModel;
+    if (model == null) {
+      return List.of();
+    } else {
+      return model.textLinesPositioned();
+    }
   }
 
   @Override

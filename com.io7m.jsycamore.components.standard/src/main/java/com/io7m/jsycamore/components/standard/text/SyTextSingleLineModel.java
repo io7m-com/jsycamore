@@ -119,7 +119,6 @@ public final class SyTextSingleLineModel implements SyTextSingleLineModelType
       fontNow.textLayout(
         SyTextID.first(),
         textNow,
-        SyTextLineNumber.first(),
         textWidth
       );
     this.textMeasured =
@@ -163,7 +162,7 @@ public final class SyTextSingleLineModel implements SyTextSingleLineModelType
           yield sanitizedArea(
             xMinimum,
             xMaximum,
-            this.textMeasured.textBounds().sizeY()
+            this.textMeasured.height()
           );
         }
         case TEXT_DIRECTION_RIGHT_TO_LEFT -> {
@@ -175,7 +174,7 @@ public final class SyTextSingleLineModel implements SyTextSingleLineModelType
           yield sanitizedArea(
             xMinimum,
             xMaximum,
-            this.textMeasured.textBounds().sizeY()
+            this.textMeasured.height()
           );
         }
       }
@@ -263,7 +262,10 @@ public final class SyTextSingleLineModel implements SyTextSingleLineModelType
     final PVector2I<SySpaceParentRelativeType> position)
   {
     Objects.requireNonNull(position, "position");
-    return this.textMeasured.inspectAtParentRelative(position);
+    return this.textMeasured.inspectAtParentRelative(
+      SyTextLineNumber.first(),
+      position
+    );
   }
 
   private record SySelectionState(

@@ -23,7 +23,6 @@ import com.io7m.jsycamore.api.text.SyFontException;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
-import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +66,6 @@ public final class SyAWTFontTest
           this.font.textLayout(
             SyTextID.first(),
             text,
-            SyTextLineNumber.first(),
             320
           )
         );

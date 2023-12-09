@@ -59,14 +59,6 @@ public interface SyTextMultiLineModelReadableType
     SyTextLineNumber lineNumber);
 
   /**
-   * The set of measured lines with their associated Y coordinate.
-   *
-   * @return The measured lines
-   */
-
-  SortedMap<Integer, SyTextLineMeasuredType> linesByYCoordinate();
-
-  /**
    * Inspect the text at the given position. The information returned includes
    * details such as the index of the character within the string at the given
    * location, information for rendering a caret, etc.
@@ -88,4 +80,18 @@ public interface SyTextMultiLineModelReadableType
    */
 
   int minimumSizeYRequired();
+
+  /**
+   * @return A read-only snapshot of the positioned lines of text
+   */
+
+  Iterable<SyTextLinePositioned> textLinesPositioned();
+
+  /**
+   * @param y The y offset
+   *
+   * @return The measured line that starts at Y offset {@code y}
+   */
+
+  Optional<SyTextLineMeasuredType> textByYOffset(int y);
 }

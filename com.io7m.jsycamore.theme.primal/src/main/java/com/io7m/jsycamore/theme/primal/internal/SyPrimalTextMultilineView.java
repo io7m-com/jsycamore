@@ -79,13 +79,11 @@ public final class SyPrimalTextMultilineView extends SyPrimalAbstract
 
         final var font =
           this.font(context, component);
-        final var texts =
-          textView.textsByYOffset();
         final var textViewSize =
           textView.size().get();
 
         final var nodes =
-          new ArrayList<SyRenderNodeType>(texts.size());
+          new ArrayList<SyRenderNodeType>();
 
         /*
          * Render a background behind all text selection regions.
@@ -122,21 +120,14 @@ public final class SyPrimalTextMultilineView extends SyPrimalAbstract
          * Create a text node for each line of text.
          */
 
-        for (final var entry : texts.entrySet()) {
-          final var yOffset =
-            entry.getKey();
+        for (final var linePositioned : textView.textLinesPositioned()) {
           final var line =
-            entry.getValue();
-          final var lineSize =
-            line.textBounds();
+            linePositioned.textLine();
           final PVector2I<SySpaceComponentRelativeType> position =
-            PVector2I.of(0, yOffset.intValue());
+            PVector2I.of(0, linePositioned.y());
 
           final PAreaSizeI<SySpaceComponentRelativeType> size =
-            PAreaSizeI.<SySpaceComponentRelativeType>of(
-              textViewSize.sizeX(),
-              lineSize.sizeY()
-            );
+            PAreaSizeI.of(textViewSize.sizeX(), line.height());
 
           nodes.add(
             new SyRenderNodeText(

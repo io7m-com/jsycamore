@@ -17,13 +17,11 @@
 
 package com.io7m.jsycamore.awt.internal;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontType;
 import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineMeasuredType;
-import com.io7m.jsycamore.api.text.SyTextLineNumber;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -96,7 +94,6 @@ public final class SyAWTFont implements SyFontType
   @Override
   public List<SyTextLineMeasuredType> textLayoutMultiple(
     final SortedMap<SyTextID, SyText> texts,
-    final SyTextLineNumber firstLineNumber,
     final int pageWidth)
   {
     Objects.requireNonNull(texts, "texts");
@@ -108,8 +105,6 @@ public final class SyAWTFont implements SyFontType
     final var results =
       new LinkedList<SyTextLineMeasuredType>();
 
-    var lineNumber = firstLineNumber;
-
     for (final var textEntry : texts.entrySet()) {
       final var textID =
         textEntry.getKey();
@@ -117,8 +112,7 @@ public final class SyAWTFont implements SyFontType
         textEntry.getValue();
 
       if (text.value().isEmpty()) {
-        results.add(this.emptySectionLine(pageWidth, textID, lineNumber));
-        lineNumber = lineNumber.next();
+        results.add(this.emptySectionLine(pageWidth, textID));
         continue;
       }
 
@@ -162,8 +156,8 @@ public final class SyAWTFont implements SyFontType
         final var line =
           new SyAWTTextAnalyzed(
             pageWidth,
-            PAreaSizeI.of(textWidth, this.textHeight()),
-            lineNumber,
+            textWidth,
+            this.textHeight(),
             layout,
             textID,
             new SyText(brokenText, text.direction())
@@ -171,7 +165,6 @@ public final class SyAWTFont implements SyFontType
 
         results.add(line);
         indexThen = indexNow;
-        lineNumber = lineNumber.next();
       }
     }
 
@@ -180,13 +173,12 @@ public final class SyAWTFont implements SyFontType
 
   private SyTextLineMeasuredType emptySectionLine(
     final int pageWidth,
-    final SyTextID textID,
-    final SyTextLineNumber lineNumber)
+    final SyTextID textID)
   {
       return new SyAWTTextAnalyzed(
         pageWidth,
-        PAreaSizeI.of(0, this.textHeight()),
-        lineNumber,
+        0,
+        this.textHeight(),
         new TextLayout(" ", this.font, this.metrics.getFontRenderContext()),
         textID,
         SyText.empty()

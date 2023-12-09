@@ -17,9 +17,8 @@
 
 package com.io7m.jsycamore.api.text;
 
-import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
-import com.io7m.jsycamore.api.spaces.SySpaceTextType;
+import com.io7m.jsycamore.api.spaces.SySpaceTextAlignedType;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 /**
@@ -33,23 +32,22 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 public interface SyTextLineMeasuredType
 {
   /**
-   * The bounds in terms of a line on a page: The bounds with a height equal
-   * to the text, and the width equal to the page width.
-   *
-   * @return The size of the page line
+   * @return The width of the page within this line resides
    */
 
-  PAreaSizeI<SySpaceParentRelativeType> pageLineBounds();
+  int pageWidth();
 
   /**
-   * The smallest bounds that can contain the given text. An area of this
-   * size will be positioned somewhere within an area of size {@link #pageLineBounds()}
-   * for rendering and mouse interactions.
-   *
-   * @return The size of the text line
+   * @return The height required to contain this text
    */
 
-  PAreaSizeI<SySpaceParentRelativeType> textBounds();
+  int height();
+
+  /**
+   * @return The smallest width that can contain the given text.
+   */
+
+  int textWidth();
 
   /**
    * @return The original text that produced this line
@@ -66,15 +64,18 @@ public interface SyTextLineMeasuredType
   /**
    * Inspect the text at the given position. The information returned includes
    * details such as the index of the character within the string at the given
-   * location, information for rendering a caret, etc.
+   * location, information for rendering a caret, etc. The location will be
+   * reported to be at line {@code lineNumber}.
    *
-   * @param position The position
+   * @param lineNumber The line number
+   * @param position   The position
    *
    * @return Information about text at the given position
    */
 
   SyTextLocationType inspectAt(
-    PVector2I<SySpaceTextType> position);
+    SyTextLineNumber lineNumber,
+    PVector2I<SySpaceTextAlignedType> position);
 
   /**
    * Transform the given parent-relative coordinates to text-space coordinates.
@@ -84,28 +85,26 @@ public interface SyTextLineMeasuredType
    * @return The equivalent text-space position
    */
 
-  PVector2I<SySpaceTextType> transformToTextCoordinates(
+  PVector2I<SySpaceTextAlignedType> transformToTextCoordinates(
     PVector2I<SySpaceParentRelativeType> position);
 
   /**
-   * Inspect the character at the given parent relative location.
+   * Inspect the character at the given parent relative location. The location
+   * will be reported to be at line {@code lineNumber}.
    *
-   * @param position The parent-relative position
+   * @param lineNumber The line number
+   * @param position   The parent-relative position
    *
    * @return The character at the given location
    */
 
   default SyTextLocationType inspectAtParentRelative(
+    final SyTextLineNumber lineNumber,
     final PVector2I<SySpaceParentRelativeType> position)
   {
     return this.inspectAt(
+      lineNumber,
       this.transformToTextCoordinates(position)
     );
   }
-
-  /**
-   * @return The line number
-   */
-
-  SyTextLineNumber lineNumber();
 }

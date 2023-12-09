@@ -64,10 +64,9 @@ public interface SyFontType
    * Split the given text into lines based on the given page width; lines will
    * be broken in order to ensure that text fits within the page width.
    *
-   * @param textID The text identifier
-   * @param text            The text
-   * @param firstLineNumber The number of the first line
-   * @param pageWidth       The page width
+   * @param textID    The text identifier
+   * @param text      The text
+   * @param pageWidth The page width
    *
    * @return The non-empty list of split lines
    */
@@ -75,32 +74,25 @@ public interface SyFontType
   default List<SyTextLineMeasuredType> textLayout(
     final SyTextID textID,
     final SyText text,
-    final SyTextLineNumber firstLineNumber,
     final int pageWidth)
   {
     final var m = new TreeMap<SyTextID, SyText>();
     m.put(textID, text);
-    return this.textLayoutMultiple(
-      m,
-      firstLineNumber,
-      pageWidth
-    );
+    return this.textLayoutMultiple(m, pageWidth);
   }
 
   /**
    * Split the given texts into lines based on the given page width; lines will
    * be broken in order to ensure that text fits within the page width.
    *
-   * @param texts           The texts
-   * @param firstLineNumber The number of the first line
-   * @param pageWidth       The page width
+   * @param texts     The texts
+   * @param pageWidth The page width
    *
    * @return The split lines
    */
 
   List<SyTextLineMeasuredType> textLayoutMultiple(
     SortedMap<SyTextID, SyText> texts,
-    SyTextLineNumber firstLineNumber,
     int pageWidth
   );
 }
