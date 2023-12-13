@@ -272,7 +272,27 @@ public final class SyTextAreaDemo
           LOG.debug("Replace {} -> {}", textID, text);
           this.textModel.textSectionReplace(textID, text);
         });
-      }, 0L, 2L, SECONDS);
+      }, 0L, 1L, SECONDS);
+
+      executor.scheduleAtFixedRate(() -> {
+        SwingUtilities.invokeLater(() -> {
+          if (!this.windowService.windowIsVisible(this.window0)) {
+            this.windowService.windowShow(this.window0);
+          }
+
+          final var ids =
+            new ArrayList<>(this.textModel.textSections().keySet());
+          Collections.shuffle(ids);
+
+          final var textID =
+            ids.get(0);
+          final var text =
+            SyText.text(OffsetDateTime.now().toString());
+
+          LOG.debug("Insert {} -> {}", textID, text);
+          this.textModel.textSectionInsert(textID, text);
+        });
+      }, 0L, 1L, SECONDS);
 
       executor.scheduleAtFixedRate(() -> {
         SwingUtilities.invokeLater(this::repaint);

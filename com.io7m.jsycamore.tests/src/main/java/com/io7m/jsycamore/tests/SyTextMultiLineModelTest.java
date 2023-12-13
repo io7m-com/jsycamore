@@ -20,12 +20,17 @@ package com.io7m.jsycamore.tests;
 import com.io7m.jsycamore.api.text.SyFontDescription;
 import com.io7m.jsycamore.api.text.SyFontDirectoryServiceType;
 import com.io7m.jsycamore.api.text.SyFontStyle;
+import com.io7m.jsycamore.api.text.SyText;
 import com.io7m.jsycamore.api.text.SyTextID;
 import com.io7m.jsycamore.api.text.SyTextLineNumber;
 import com.io7m.jsycamore.api.text.SyTextMultiLineModelType;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.components.standard.text.SyTextMultiLineModel;
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.Provide;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -41,30 +46,30 @@ public final class SyTextMultiLineModelTest
   private static final Logger LOG =
     LoggerFactory.getLogger(SyTextMultiLineModelTest.class);
 
-  private SyFontDirectoryServiceType<SyAWTFont> fontsAWT;
-  private SyAWTFont font;
+  private static SyAWTFont FONT;
+  private static SyFontDirectoryServiceType<SyAWTFont> FONTS_AWT;
 
-  @BeforeEach
-  public void setup()
+  @BeforeAll
+  public static void setup()
     throws Exception
   {
-    this.fontsAWT =
+    FONTS_AWT =
       SyAWTFontDirectoryService.createFromServiceLoader();
-    this.font =
-      this.fontsAWT.get(
+    FONT =
+      FONTS_AWT.get(
         new SyFontDescription("DejaVu Sans", SyFontStyle.REGULAR, 11)
       );
   }
 
   /**
-   * Inserting texts causes renumbering.
+   * Replacing texts causes renumbering.
    */
 
   @Test
-  public void testInsertRenumbers0()
+  public void testReplaceRenumbers0()
   {
     final var m =
-      SyTextMultiLineModel.create(this.font, 128);
+      SyTextMultiLineModel.create(FONT, 128);
 
     m.textSectionAppend(text("Hello line A."));
     m.textSectionAppend(text("Hello line B."));
@@ -109,14 +114,14 @@ public final class SyTextMultiLineModelTest
   }
 
   /**
-   * Inserting texts causes renumbering.
+   * Replacing texts causes renumbering.
    */
 
   @Test
-  public void testInsertRenumbers1()
+  public void testReplaceRenumbers1()
   {
     final var m =
-      SyTextMultiLineModel.create(this.font, 128);
+      SyTextMultiLineModel.create(FONT, 128);
 
     m.textSectionAppend(text("Expressions moisturisers filtrate rumouring apportioned treachery."));
     m.textSectionAppend(text("Hello line B."));
@@ -168,7 +173,7 @@ public final class SyTextMultiLineModelTest
   public void testAppendNumbers()
   {
     final var m =
-      SyTextMultiLineModel.create(this.font, 128);
+      SyTextMultiLineModel.create(FONT, 128);
 
     m.textSectionAppend(text("Hello line A."));
     m.textSectionAppend(text("Hello line B."));
@@ -194,6 +199,114 @@ public final class SyTextMultiLineModelTest
     assertEquals(2, lineNumberOf(m, 2));
     assertEquals(3, lineNumberOf(m, 3));
     assertEquals(4 * 14, m.minimumSizeYRequired());
+  }
+
+  /**
+   * Inserting texts causes renumbering.
+   */
+
+  @Test
+  public void testInsertRenumbers0()
+  {
+    final var m =
+      SyTextMultiLineModel.create(FONT, 128);
+
+    m.textSectionAppend(text("Hello line A."));
+    m.textSectionAppend(text("Hello line B."));
+    m.textSectionAppend(text("Hello line C."));
+
+    assertEquals(3, m.lineCount());
+    assertEquals("Hello line A.", lineTextOf(m, 0));
+    assertEquals("Hello line B.", lineTextOf(m, 1));
+    assertEquals("Hello line C.", lineTextOf(m, 2));
+    assertEquals(0, lineNumberOf(m, 0));
+    assertEquals(1, lineNumberOf(m, 1));
+    assertEquals(2, lineNumberOf(m, 2));
+    assertEquals(3 * 14, m.minimumSizeYRequired());
+
+    /*
+     * A single new line is inserted at the start.
+     */
+
+    m.textSectionInsert(
+      SyTextID.first(),
+      text("Hello line -A.")
+    );
+
+    assertEquals(4, m.lineCount());
+    assertEquals("Hello line -A.", lineTextOf(m, 0));
+    assertEquals("Hello line A.", lineTextOf(m, 1));
+    assertEquals("Hello line B.", lineTextOf(m, 2));
+    assertEquals("Hello line C.", lineTextOf(m, 3));
+    assertEquals(0, lineNumberOf(m, 0));
+    assertEquals(1, lineNumberOf(m, 1));
+    assertEquals(2, lineNumberOf(m, 2));
+    assertEquals(3, lineNumberOf(m, 3));
+    assertEquals(4 * 14, m.minimumSizeYRequired());
+
+    {
+      final var lines = m.lines().toList();
+      assertEquals("Hello line -A.", lines.get(0).text());
+      assertEquals("Hello line A.", lines.get(1).text());
+      assertEquals("Hello line B.", lines.get(2).text());
+      assertEquals("Hello line C.", lines.get(3).text());
+      assertEquals(4, lines.size());
+    }
+  }
+
+  /**
+   * Removing texts causes renumbering.
+   */
+
+  @Test
+  public void testRemoveRenumbers0()
+  {
+    final var m =
+      SyTextMultiLineModel.create(FONT, 128);
+
+    m.textSectionAppend(text("Hello line A."));
+    m.textSectionAppend(text("Hello line B."));
+    m.textSectionAppend(text("Hello line C."));
+
+    assertEquals(3, m.lineCount());
+    assertEquals("Hello line A.", lineTextOf(m, 0));
+    assertEquals("Hello line B.", lineTextOf(m, 1));
+    assertEquals("Hello line C.", lineTextOf(m, 2));
+    assertEquals(0, lineNumberOf(m, 0));
+    assertEquals(1, lineNumberOf(m, 1));
+    assertEquals(2, lineNumberOf(m, 2));
+    assertEquals(3 * 14, m.minimumSizeYRequired());
+
+    /*
+     * A line is removed.
+     */
+
+    m.textSectionDelete(SyTextID.first());
+
+    assertEquals(2, m.lineCount());
+    assertEquals("Hello line B.", lineTextOf(m, 0));
+    assertEquals("Hello line C.", lineTextOf(m, 1));
+    assertEquals(0, lineNumberOf(m, 0));
+    assertEquals(1, lineNumberOf(m, 1));
+    assertEquals(2 * 14, m.minimumSizeYRequired());
+  }
+
+  @Provide
+  public static Arbitrary<SyTextMultiLineModelType> models()
+  {
+    return Arbitraries.strings()
+      .withChars("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ")
+      .ofMaxLength(64)
+      .map(SyText::text)
+      .list()
+      .map(xs -> {
+        final var model =
+          SyTextMultiLineModel.create(FONT, 128);
+        for (final var t : xs) {
+          model.textSectionAppend(t);
+        }
+        return model;
+      });
   }
 
   private static String lineTextOf(

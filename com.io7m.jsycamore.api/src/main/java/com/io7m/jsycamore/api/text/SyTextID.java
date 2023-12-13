@@ -61,4 +61,13 @@ public record SyTextID(BigInteger value)
   {
     return new SyTextID(this.value.add(BigInteger.ONE));
   }
+
+  /**
+   * @return The previous text ID
+   */
+
+  public SyTextID previous()
+  {
+    return new SyTextID(this.value.subtract(BigInteger.ONE));
+  }
 }

@@ -61,6 +61,26 @@ public interface SyTextMultiLineModelType
     SyText text);
 
   /**
+   * Insert a text section before the given text ID.
+   *
+   * @param textID The text ID
+   * @param text   The new text section
+   */
+
+  void textSectionInsert(
+    SyTextID textID,
+    SyText text);
+
+  /**
+   * Delete a text section with the given ID.
+   *
+   * @param textID The text ID
+   */
+
+  void textSectionDelete(
+    SyTextID textID);
+
+  /**
    * Append a section of text at the end of the model.
    *
    * @param section The text

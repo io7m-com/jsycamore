@@ -35,6 +35,7 @@ import com.io7m.jsycamore.api.text.SyTextSelection;
 import com.io7m.jsycamore.components.standard.SyComponentAttributes;
 import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,6 +44,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 /**
  * The multi-line text model implementation.
@@ -58,58 +60,6 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   private final AttributeType<SyFontType> font;
   private final SortedMap<SyTextID, SyText> textSectionsReadable;
   private SySelectionState selectionState;
-
-  private static final class SyTextFormatted
-  {
-    private final SyTextID textID;
-    private SyTextLineNumber lineNumber;
-    private final List<SyTextLineMeasuredType> lines;
-    private int yOffset;
-
-    SyTextFormatted(
-      final SyTextID inTextID,
-      final SyTextLineNumber inLineNumber,
-      final List<SyTextLineMeasuredType> inLines,
-      final int inYOffset)
-    {
-      this.textID =
-        Objects.requireNonNull(inTextID, "textID");
-      this.lineNumber =
-        Objects.requireNonNull(inLineNumber, "lineNumber");
-      this.lines =
-        Objects.requireNonNull(inLines, "inLines");
-      this.yOffset =
-        inYOffset;
-    }
-
-    public int height()
-    {
-      return this.lines.stream()
-        .mapToInt(SyTextLineMeasuredType::height)
-        .sum();
-    }
-
-    public Optional<SyTextLinePositioned> lineAt(
-      final SyTextLineNumber targetLineNumber)
-    {
-      var y = this.yOffset;
-      final var lineOffset = targetLineNumber.value() - this.lineNumber.value();
-      for (int index = 0; index <= lineOffset; ++index) {
-        final var line = this.lines.get(index);
-        if (index == lineOffset) {
-          return Optional.of(
-            new SyTextLinePositioned(
-              y,
-              this.lineNumber.adjust(index),
-              this.lines.get(index)
-            )
-          );
-        }
-        y += line.height();
-      }
-      return Optional.empty();
-    }
-  }
 
   private SyTextMultiLineModel(
     final SyFontType inFont,
@@ -201,7 +151,109 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       case final SyEditOpReplace op -> {
         this.editReplace(op);
       }
+      case final SyEditOpInsert op -> {
+        this.editInsert(op);
+      }
+      case final SyEditOpDelete op -> {
+        this.editDelete(op);
+      }
     }
+  }
+
+  private void editDelete(
+    final SyEditOpDelete op)
+  {
+    /*
+     * Deleting a section means removing the lines of the
+     * existing section, and then renumbering all lines that followed those
+     * removed lines.
+     */
+
+    if (!this.textSections.containsKey(op.textID)) {
+      throw new NoSuchElementException(
+        "No text present with ID %s".formatted(op.textID)
+      );
+    }
+
+    final var existingFormatted =
+      this.textSectionsFormatted.get(op.textID);
+
+    /*
+     * All lines following the removed lines need to be shifted backward
+     * by the number of removed lines.
+     */
+
+    final var lineDelta =
+      -existingFormatted.lines.size();
+
+    final var lowerLineNumber =
+      existingFormatted.lineNumber;
+    final var lowerY =
+      existingFormatted.yOffset;
+
+    this.textSections.remove(op.textID);
+    this.textSectionsFormatted.remove(op.textID);
+    this.textSectionsFormattedByLine.remove(existingFormatted.lineNumber);
+    this.textSectionsFormattedByY.remove(existingFormatted.yOffset);
+
+    this.shiftLines(lowerLineNumber, true, lineDelta, lowerY);
+  }
+
+  private void editInsert(
+    final SyEditOpInsert op)
+  {
+    /*
+     * Inserting a section means adding lines before the
+     * existing section, and then renumbering all lines that followed those
+     * removed lines.
+     */
+
+    if (!this.textSections.containsKey(op.textID)) {
+      throw new NoSuchElementException(
+        "No text present with ID %s".formatted(op.textID)
+      );
+    }
+
+    final var fontNow =
+      this.font.get();
+    final var wrapNow =
+      this.pageWidth.get().intValue();
+
+    final var newTextID =
+      op.textID.previous();
+
+    final var newLines =
+      fontNow.textLayout(newTextID, op.text, wrapNow);
+
+    final var existingFormatted =
+      this.textSectionsFormatted.get(op.textID);
+
+    final var newFormatted =
+      new SyTextFormatted(
+        newTextID,
+        existingFormatted.lineNumber,
+        newLines,
+        existingFormatted.yOffset
+      );
+
+    /*
+     * All lines following the newly inserted lines need to be shifted forward
+     * by the number of new lines.
+     */
+
+    final var lineDelta =
+      newLines.size();
+    final var lowerLineNumber =
+      existingFormatted.lineNumber;
+    final var lowerY =
+      newFormatted.yOffset + newFormatted.height();
+
+    this.shiftLines(lowerLineNumber, true, lineDelta, lowerY);
+
+    this.textSections.put(newTextID, op.text);
+    this.textSectionsFormatted.put(newTextID, newFormatted);
+    this.textSectionsFormattedByY.put(newFormatted.yOffset, newFormatted);
+    this.textSectionsFormattedByLine.put(newFormatted.lineNumber, newFormatted);
   }
 
   private void editReplace(
@@ -251,7 +303,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     final var lowerY =
       newFormatted.yOffset + newFormatted.height();
 
-    this.shiftLines(lowerLineNumber, lineDelta, lowerY);
+    this.shiftLines(lowerLineNumber, false, lineDelta, lowerY);
 
     this.textSections.replace(op.textID, op.text);
     this.textSectionsFormatted.put(existingFormatted.textID, newFormatted);
@@ -267,12 +319,13 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
 
   private void shiftLines(
     final SyTextLineNumber lowerLineNumber,
+    final boolean lowerInclusive,
     final int delta,
     final int yStart)
   {
     final var above =
       List.copyOf(
-        this.textSectionsFormattedByLine.tailMap(lowerLineNumber, false)
+        this.textSectionsFormattedByLine.tailMap(lowerLineNumber, lowerInclusive)
           .values()
       );
 
@@ -320,7 +373,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       nextID = SyTextID.first();
     }
 
-    final SyTextID regenerateFrom = nextID;
+    final var regenerateFrom = nextID;
     for (final var section : op.texts) {
       this.textSections.put(nextID, section);
       nextID = nextID.next();
@@ -444,6 +497,26 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   }
 
   @Override
+  public void textSectionInsert(
+    final SyTextID textID,
+    final SyText text)
+  {
+    Objects.requireNonNull(textID, "textID");
+    Objects.requireNonNull(text, "text");
+
+    this.edit(new SyEditOpInsert(textID, text));
+  }
+
+  @Override
+  public void textSectionDelete(
+    final SyTextID textID)
+  {
+    Objects.requireNonNull(textID, "textID");
+
+    this.edit(new SyEditOpDelete(textID));
+  }
+
+  @Override
   public void textSectionsAppend(
     final List<SyText> sections)
   {
@@ -485,8 +558,8 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     final SyTextLocationType upperInclusive,
     final int currentPageWidth)
   {
-    final LinkedList<PAreaI<SySpaceParentRelativeType>> results =
-      new LinkedList<>();
+    final var results =
+      new LinkedList<PAreaI<SySpaceParentRelativeType>>();
 
     final var lowerLine =
       lowerInclusive.lineNumber();
@@ -589,7 +662,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
             case TEXT_DIRECTION_RIGHT_TO_LEFT -> {
               final var alignmentDelta =
                 currentPageWidth - textSizeX;
-              final int xMinimum =
+              final var xMinimum =
                 upperInclusive.caret().area().minimumX() + alignmentDelta;
 
               final int xMaximum;
@@ -680,7 +753,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
       lineNumber.value() - formatted.lineNumber.value();
 
     var y = formatted.yOffset;
-    for (int index = 0; index < lineOffset; ++index) {
+    for (var index = 0; index < lineOffset; ++index) {
       y += formatted.lines.get(index).height();
     }
     return y;
@@ -692,8 +765,8 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     final SyTextLocationType upperInclusive,
     final int currentPageWidth)
   {
-    final LinkedList<PAreaI<SySpaceParentRelativeType>> results =
-      new LinkedList<>();
+    final var results =
+      new LinkedList<PAreaI<SySpaceParentRelativeType>>();
 
     final var lowerLine =
       lowerInclusive.lineNumber();
@@ -795,7 +868,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
             case TEXT_DIRECTION_RIGHT_TO_LEFT -> {
               final var alignmentDelta =
                 currentPageWidth - textSizeX;
-              final int xMaximum =
+              final var xMaximum =
                 lowerInclusive.caret().area().minimumX() + alignmentDelta;
 
               final int xMinimum;
@@ -838,7 +911,7 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
           case TEXT_DIRECTION_LEFT_TO_RIGHT -> {
             final var xMaximum =
               upperInclusive.caret().area().minimumX();
-            final int xMinimum =
+            final var xMinimum =
               0;
 
             yield sanitizedArea(xMinimum, xMaximum, y, textSizeY);
@@ -998,6 +1071,28 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
     return floor.getValue().lineAt(line);
   }
 
+  @Override
+  public Stream<SyTextLinePositioned> lines()
+  {
+    return this.textSectionsFormatted.values()
+      .stream()
+      .flatMap(t -> {
+        var y = t.yOffset;
+        final var lineCount = t.lines.size();
+        final var r = new ArrayList<SyTextLinePositioned>(lineCount);
+        for (int index = 0; index < lineCount; ++index) {
+          final var line =
+            t.lines.get(index);
+          final var lineNumber =
+            t.lineNumber.adjust(index);
+
+          r.add(new SyTextLinePositioned(y, lineNumber, line));
+          y += line.height();
+        }
+        return r.stream();
+      });
+  }
+
   private int highestYOffset()
   {
     final var lastText =
@@ -1085,6 +1180,63 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
 
   }
 
+  private static final class SyTextFormatted
+  {
+    private final SyTextID textID;
+    private final List<SyTextLineMeasuredType> lines;
+    private SyTextLineNumber lineNumber;
+    private int yOffset;
+
+    SyTextFormatted(
+      final SyTextID inTextID,
+      final SyTextLineNumber inLineNumber,
+      final List<SyTextLineMeasuredType> inLines,
+      final int inYOffset)
+    {
+      this.textID =
+        Objects.requireNonNull(inTextID, "textID");
+      this.lineNumber =
+        Objects.requireNonNull(inLineNumber, "lineNumber");
+      this.lines =
+        Objects.requireNonNull(inLines, "inLines");
+      this.yOffset =
+        inYOffset;
+
+      Preconditions.checkPreconditionV(
+        this.lines.size() > 0,
+        "The set of lines cannot be empty."
+      );
+    }
+
+    public int height()
+    {
+      return this.lines.stream()
+        .mapToInt(SyTextLineMeasuredType::height)
+        .sum();
+    }
+
+    public Optional<SyTextLinePositioned> lineAt(
+      final SyTextLineNumber targetLineNumber)
+    {
+      var y = this.yOffset;
+      final var lineOffset = targetLineNumber.value() - this.lineNumber.value();
+      for (var index = 0; index <= lineOffset; ++index) {
+        final var line = this.lines.get(index);
+        if (index == lineOffset) {
+          return Optional.of(
+            new SyTextLinePositioned(
+              y,
+              this.lineNumber.adjust(index),
+              this.lines.get(index)
+            )
+          );
+        }
+        y += line.height();
+      }
+      return Optional.empty();
+    }
+  }
+
   private record SyEditOpAppend(
     List<SyText> texts)
     implements SyEditOpType
@@ -1093,6 +1245,21 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   }
 
   private record SyEditOpReplace(
+    SyTextID textID,
+    SyText text)
+    implements SyEditOpType
+  {
+
+  }
+
+  private record SyEditOpDelete(
+    SyTextID textID)
+    implements SyEditOpType
+  {
+
+  }
+
+  private record SyEditOpInsert(
     SyTextID textID,
     SyText text)
     implements SyEditOpType

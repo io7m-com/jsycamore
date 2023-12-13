@@ -159,7 +159,7 @@
     <Subsection title="Multi-Line Model" id="9570ffa3-a51e-4998-93a1-fa9e1f6a618a">
       <Subsection title="Description">
         <Paragraph>
-          A multi-line text model is a relatively complex structure that maintains a list of
+          A multi-line text model is a mutable structure that maintains a list of
           <Link target="f50bee5f-35a0-4ca7-9c75-b213ee2e3983">text sections</Link>, and transforms the text sections
           into a potentially much larger list of
           <Link target="31d0fb77-51e6-404e-8174-d52300adb998">measured lines</Link>

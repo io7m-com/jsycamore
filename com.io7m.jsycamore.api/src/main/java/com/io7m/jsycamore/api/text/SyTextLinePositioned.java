@@ -45,4 +45,22 @@ public record SyTextLinePositioned(
     Objects.requireNonNull(textLineNumber, "textLineNumber");
     Objects.requireNonNull(textLine, "textLine");
   }
+
+  /**
+   * @return The text direction
+   */
+
+  public SyTextDirection textDirection()
+  {
+    return this.textLine.textAsWrapped().direction();
+  }
+
+  /**
+   * @return The text
+   */
+
+  public String text()
+  {
+    return this.textLine.textAsWrapped().value();
+  }
 }

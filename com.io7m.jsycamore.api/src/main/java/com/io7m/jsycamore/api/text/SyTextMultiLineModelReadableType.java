@@ -22,6 +22,7 @@ import com.io7m.jtensors.core.parameterized.vectors.PVector2I;
 
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.stream.Stream;
 
 /**
  * A readable multi-line text model.
@@ -84,4 +85,10 @@ public interface SyTextMultiLineModelReadableType
 
   Optional<SyTextLinePositioned> lineAt(
     SyTextLineNumber line);
+
+  /**
+   * @return A lazy stream of the current lines
+   */
+
+  Stream<SyTextLinePositioned> lines();
 }
