@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -47,7 +48,11 @@ final class SyScrollBarHTrack extends SyComponentAbstract
 
   SyScrollBarHTrack(final SyScreenType inScreen)
   {
-    super(inScreen, List.of());
+    super(
+      inScreen,
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.thumb = new SyScrollBarHButtonThumb(inScreen, this);
     this.childAdd(this.thumb);

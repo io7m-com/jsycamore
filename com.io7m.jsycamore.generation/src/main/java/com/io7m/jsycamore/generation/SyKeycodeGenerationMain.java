@@ -24,6 +24,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
 import static java.lang.System.err;
+import static java.lang.System.out;
 
 /**
  * Code to generate the main keycode enumeration.
@@ -65,8 +66,10 @@ public final class SyKeycodeGenerationMain
         .map(Object::toString).sorted()
         .toList();
 
-    final var outputFile = Paths.get(args[0]);
+    final var outputFile = Paths.get(args[0]).toAbsolutePath();
     Files.createDirectories(outputFile.getParent());
+
+    out.println("Writing " + outputFile);
 
     try (var outputStream = Files.newOutputStream(
       outputFile,

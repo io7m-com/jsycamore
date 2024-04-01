@@ -19,6 +19,7 @@ package com.io7m.jsycamore.api.components;
 import com.io7m.jorchard.core.JOTreeNodeReadableType;
 import com.io7m.jsycamore.api.active.SyActiveReadableType;
 import com.io7m.jsycamore.api.bounded.SyBoundedReadableType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusableReadableType;
 import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingReadableType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -40,6 +41,7 @@ import java.util.function.Predicate;
 public interface SyComponentReadableType
   extends SyActiveReadableType,
   SyVisibleReadableType,
+  SyKeyboardFocusableReadableType,
   SyMouseFocusAcceptingReadableType,
   SyBoundedReadableType<SySpaceParentRelativeType>,
   SyThemeableReadableType

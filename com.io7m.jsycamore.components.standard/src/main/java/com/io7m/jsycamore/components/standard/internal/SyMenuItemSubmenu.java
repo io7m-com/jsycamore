@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSubmenuType;
 import com.io7m.jsycamore.api.menus.SyMenuItemType;
@@ -91,7 +92,11 @@ public final class SyMenuItemSubmenu
     final SyMenuType inMenuOpen,
     final SyText inText)
   {
-    super(inMenuOwner.screen(), List.of());
+    super(
+      inMenuOwner.screen(),
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.menuOwner =
       Objects.requireNonNull(inMenuOwner, "inMenuOwner");

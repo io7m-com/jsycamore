@@ -25,6 +25,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemAtomType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSeparatorType;
@@ -77,7 +78,11 @@ public final class SyMenu extends SyComponentAbstract implements SyMenuType
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses);
+    super(
+      screen,
+      themeClasses,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.items = List.of();
 

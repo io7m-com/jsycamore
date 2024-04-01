@@ -28,6 +28,7 @@ import com.io7m.jsycamore.api.components.SyComponentReadableType;
 import com.io7m.jsycamore.api.components.SyComponentType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
 import com.io7m.jsycamore.api.screens.SyScreenType;
@@ -71,6 +72,7 @@ public abstract class SyComponentAbstract implements SyComponentType
   private volatile boolean mouseOver;
   private volatile boolean mouseAcceptQuery = true;
   private Optional<SyWindowType> window;
+  private final AttributeType<SyKeyboardFocusBehavior> focusBehavior;
 
   /**
    * A convenient abstract implementation of a component, to make it easier to
@@ -81,12 +83,14 @@ public abstract class SyComponentAbstract implements SyComponentType
    * @param inNodeDetachCheck   A function that returns {@code true} if this
    *                            component should be allowed to be detached from
    *                            the parent component
+   * @param inFocusBehavior     The default focus behavior
    */
 
   protected SyComponentAbstract(
     final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra,
-    final BooleanSupplier inNodeDetachCheck)
+    final BooleanSupplier inNodeDetachCheck,
+    final SyKeyboardFocusBehavior inFocusBehavior)
   {
     this.screen =
       Objects.requireNonNull(inScreen, "inScreen");
@@ -112,14 +116,17 @@ public abstract class SyComponentAbstract implements SyComponentType
       JOTreeNode.createWithDetachCheck(this, inNodeDetachCheck);
     this.window =
       Optional.empty();
+    this.focusBehavior =
+      attributes.create(inFocusBehavior);
   }
 
   @ConvenienceConstructor
   protected SyComponentAbstract(
     final SyScreenType inScreen,
-    final List<SyThemeClassNameType> inThemeClassesExtra)
+    final List<SyThemeClassNameType> inThemeClassesExtra,
+    final SyKeyboardFocusBehavior inFocusBehavior)
   {
-    this(inScreen, inThemeClassesExtra, () -> true);
+    this(inScreen, inThemeClassesExtra, () -> true, inFocusBehavior);
   }
 
   @SuppressWarnings("unchecked")
@@ -141,6 +148,12 @@ public abstract class SyComponentAbstract implements SyComponentType
       return targetY >= viewportMinY && targetY <= viewportMaxY;
     }
     return false;
+  }
+
+  @Override
+  public final AttributeType<SyKeyboardFocusBehavior> keyboardFocusBehavior()
+  {
+    return this.focusBehavior;
   }
 
   @Override

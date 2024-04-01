@@ -23,6 +23,7 @@ import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -61,7 +62,11 @@ public final class SyTextView
     final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inScreen, inThemeClassesExtra);
+    super(
+      inScreen,
+      inThemeClassesExtra,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     final var attributes =
       SyComponentAttributes.get();

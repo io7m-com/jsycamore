@@ -20,6 +20,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemSeparatorType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
@@ -50,7 +51,11 @@ public final class SyMenuItemSeparator
   public SyMenuItemSeparator(
     final SyMenuType inMenu)
   {
-    super(inMenu.screen(), List.of());
+    super(
+      inMenu.screen(),
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
     this.menu = Objects.requireNonNull(inMenu, "menu");
   }
 

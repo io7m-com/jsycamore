@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.events.SyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -40,7 +41,11 @@ public final class SyBlob extends SyComponentAbstract
 
   public SyBlob(final SyScreenType screen)
   {
-    super(screen, List.of());
+    super(
+      screen,
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
   }
 
   public SyBlob(

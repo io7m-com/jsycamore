@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard.internal.scrollpanes;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -33,7 +34,11 @@ final class SyScrollPaneContentArea extends SyComponentAbstract
   SyScrollPaneContentArea(
     final SyScreenType inScreen)
   {
-    super(inScreen, List.of());
+    super(
+      inScreen,
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_CONTINUES_TRAVERSAL
+    );
   }
 
   @Override

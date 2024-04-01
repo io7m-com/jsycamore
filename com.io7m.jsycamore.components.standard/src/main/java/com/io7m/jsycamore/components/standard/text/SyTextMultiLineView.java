@@ -24,6 +24,7 @@ import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
@@ -57,7 +58,12 @@ public final class SyTextMultiLineView
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses, () -> true);
+    super(
+      screen,
+      themeClasses,
+      () -> true,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     final var components =
       SyComponentAttributes.get();

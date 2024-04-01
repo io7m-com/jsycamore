@@ -31,6 +31,8 @@ import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
+import com.io7m.jsycamore.awt.internal.SyAWTKeyCodeAdapter;
+import com.io7m.jsycamore.awt.internal.SyAWTMouseAdapter;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.components.standard.SyLayoutMargin;
 import com.io7m.jsycamore.components.standard.text.SyTextArea;
@@ -152,59 +154,10 @@ public final class SyTextAreaDemo
           return thread;
         });
 
-      final var mouseAdapter = new MouseAdapter()
-      {
-        @Override
-        public void mousePressed(
-          final MouseEvent e)
-        {
-          SyTextAreaDemo.Canvas.this.screen.mouseDown(
-            PVector2I.of(e.getX(), e.getY()),
-            SyMouseButton.ofIndex(e.getButton() - 1));
-        }
-
-        @Override
-        public void mouseDragged(
-          final MouseEvent e)
-        {
-          SyTextAreaDemo.Canvas.this.screen.mouseMoved(PVector2I.of(
-            e.getX(),
-            e.getY()));
-        }
-
-        @Override
-        public void mouseReleased(
-          final MouseEvent e)
-        {
-          SyTextAreaDemo.Canvas.this.screen.mouseUp(
-            PVector2I.of(e.getX(), e.getY()),
-            SyMouseButton.ofIndex(e.getButton() - 1));
-        }
-
-        @Override
-        public void mouseMoved(
-          final MouseEvent e)
-        {
-          final PVector2I<SySpaceViewportType> position =
-            PVector2I.of(e.getX(), e.getY());
-          SyTextAreaDemo.Canvas.this.screen.mouseMoved(position);
-        }
-      };
-
-      final var keyAdapter = new KeyAdapter()
-      {
-        @Override
-        public void keyPressed(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-      };
+      final var mouseAdapter =
+        new SyAWTMouseAdapter(this.screen);
+      final var keyAdapter =
+        new SyAWTKeyCodeAdapter(this.screen);
 
       this.addMouseMotionListener(mouseAdapter);
       this.addMouseListener(mouseAdapter);
@@ -259,38 +212,6 @@ public final class SyTextAreaDemo
           if (!this.windowService.windowIsVisible(this.window0)) {
             this.windowService.windowShow(this.window0);
           }
-
-          final var ids =
-            new ArrayList<>(this.textModel.textSections().keySet());
-          Collections.shuffle(ids);
-
-          final var textID =
-            ids.get(0);
-          final var text =
-            SyText.text(OffsetDateTime.now().toString());
-
-          LOG.debug("Replace {} -> {}", textID, text);
-          this.textModel.textSectionReplace(textID, text);
-        });
-      }, 0L, 1L, SECONDS);
-
-      executor.scheduleAtFixedRate(() -> {
-        SwingUtilities.invokeLater(() -> {
-          if (!this.windowService.windowIsVisible(this.window0)) {
-            this.windowService.windowShow(this.window0);
-          }
-
-          final var ids =
-            new ArrayList<>(this.textModel.textSections().keySet());
-          Collections.shuffle(ids);
-
-          final var textID =
-            ids.get(0);
-          final var text =
-            SyText.text(OffsetDateTime.now().toString());
-
-          LOG.debug("Insert {} -> {}", textID, text);
-          this.textModel.textSectionInsert(textID, text);
         });
       }, 0L, 1L, SECONDS);
 

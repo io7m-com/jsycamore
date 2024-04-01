@@ -25,6 +25,7 @@ import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuBarItemType;
 import com.io7m.jsycamore.api.menus.SyMenuBarType;
@@ -78,7 +79,11 @@ public final class SyMenuBar
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses);
+    super(
+      screen,
+      themeClasses,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.menuBarItems = List.of();
     this.menuSelected = null;
@@ -212,7 +217,11 @@ public final class SyMenuBar
       final SyMenuType inMenu,
       final SyText inName)
     {
-      super(inMenuBar.screen(), List.of());
+      super(
+        inMenuBar.screen(),
+        List.of(),
+        SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+      );
 
       this.menuBar =
         Objects.requireNonNull(inMenuBar, "inMenuBar");

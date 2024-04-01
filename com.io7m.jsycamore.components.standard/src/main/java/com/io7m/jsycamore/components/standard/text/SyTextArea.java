@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.components.SyTextAreaType;
 import com.io7m.jsycamore.api.components.SyTextMultiLineViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -68,7 +69,11 @@ public final class SyTextArea
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses);
+    super(
+      screen,
+      themeClasses,
+      SyKeyboardFocusBehavior.RECEIVES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     final var attributes =
       SyComponentAttributes.get();

@@ -21,6 +21,7 @@ import com.io7m.jregions.core.parameterized.sizes.PAreaSizeI;
 import com.io7m.jsycamore.api.active.SyActiveType;
 import com.io7m.jsycamore.api.bounded.SyBoundedType;
 import com.io7m.jsycamore.api.events.SyEventReceiverType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusableType;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.mouse.SyMouseFocusAcceptingType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -45,6 +46,7 @@ public interface SyComponentType
   SyVisibleType,
   SyActiveType,
   SyEventReceiverType,
+  SyKeyboardFocusableType,
   SyMouseFocusAcceptingType,
   SyBoundedType<SySpaceParentRelativeType>,
   SyThemeableType

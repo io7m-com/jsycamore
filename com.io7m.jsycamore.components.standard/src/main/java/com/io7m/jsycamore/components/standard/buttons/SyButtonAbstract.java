@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard.buttons;
 import com.io7m.jsycamore.api.components.SyButtonType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnPressed;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnReleased;
@@ -52,7 +53,12 @@ public abstract class SyButtonAbstract
     final SyScreenType inScreen,
     final List<SyThemeClassNameType> themeClassesExtra)
   {
-    super(inScreen, themeClassesExtra);
+    super(
+      inScreen,
+      themeClassesExtra,
+      () -> true,
+      SyKeyboardFocusBehavior.RECEIVES_FOCUS_AND_STOPS_TRAVERSAL
+    );
     this.listener = () -> {
     };
   }

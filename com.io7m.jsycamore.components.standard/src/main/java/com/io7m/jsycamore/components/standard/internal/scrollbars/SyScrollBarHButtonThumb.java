@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyScrollBarDrag;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
 import com.io7m.jsycamore.api.keyboard.SyKeyEventType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnHeld;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnNoLongerOver;
 import com.io7m.jsycamore.api.mouse.SyMouseEventOnOver;
@@ -70,7 +71,11 @@ final class SyScrollBarHButtonThumb
     final SyScreenType screen,
     final SyScrollBarHTrack inTrack)
   {
-    super(screen, List.of());
+    super(
+      screen,
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.track =
       Objects.requireNonNull(inTrack, "track");

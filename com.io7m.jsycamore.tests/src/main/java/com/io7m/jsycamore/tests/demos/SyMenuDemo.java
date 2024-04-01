@@ -28,6 +28,8 @@ import com.io7m.jsycamore.api.windows.SyWindowType;
 import com.io7m.jsycamore.awt.internal.SyAWTFont;
 import com.io7m.jsycamore.awt.internal.SyAWTFontDirectoryService;
 import com.io7m.jsycamore.awt.internal.SyAWTImageLoader;
+import com.io7m.jsycamore.awt.internal.SyAWTKeyCodeAdapter;
+import com.io7m.jsycamore.awt.internal.SyAWTMouseAdapter;
 import com.io7m.jsycamore.awt.internal.SyAWTRenderer;
 import com.io7m.jsycamore.components.standard.SyLayoutHorizontal;
 import com.io7m.jsycamore.components.standard.SyMenu;
@@ -162,59 +164,10 @@ public final class SyMenuDemo
           return thread;
         });
 
-      final var mouseAdapter = new MouseAdapter()
-      {
-        @Override
-        public void mousePressed(
-          final MouseEvent e)
-        {
-          SyMenuDemo.Canvas.this.screen.mouseDown(
-            PVector2I.of(e.getX(), e.getY()),
-            SyMouseButton.ofIndex(e.getButton() - 1));
-        }
-
-        @Override
-        public void mouseDragged(
-          final MouseEvent e)
-        {
-          SyMenuDemo.Canvas.this.screen.mouseMoved(PVector2I.of(
-            e.getX(),
-            e.getY()));
-        }
-
-        @Override
-        public void mouseReleased(
-          final MouseEvent e)
-        {
-          SyMenuDemo.Canvas.this.screen.mouseUp(
-            PVector2I.of(e.getX(), e.getY()),
-            SyMouseButton.ofIndex(e.getButton() - 1));
-        }
-
-        @Override
-        public void mouseMoved(
-          final MouseEvent e)
-        {
-          final PVector2I<SySpaceViewportType> position =
-            PVector2I.of(e.getX(), e.getY());
-          SyMenuDemo.Canvas.this.screen.mouseMoved(position);
-        }
-      };
-
-      final var keyAdapter = new KeyAdapter()
-      {
-        @Override
-        public void keyPressed(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e)
-        {
-          System.out.println(e);
-        }
-      };
+      final var mouseAdapter =
+        new SyAWTMouseAdapter(this.screen);
+      final var keyAdapter =
+        new SyAWTKeyCodeAdapter(this.screen);
 
       this.addMouseMotionListener(mouseAdapter);
       this.addMouseListener(mouseAdapter);

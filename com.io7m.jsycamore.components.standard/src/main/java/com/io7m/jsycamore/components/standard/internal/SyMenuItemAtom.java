@@ -22,6 +22,7 @@ import com.io7m.jsycamore.api.components.SyConstraints;
 import com.io7m.jsycamore.api.components.SyTextViewType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.menus.SyMenuItemAtomType;
 import com.io7m.jsycamore.api.menus.SyMenuType;
@@ -80,7 +81,11 @@ public final class SyMenuItemAtom
     final SyText inText,
     final Runnable inAction)
   {
-    super(inMenu.screen(), List.of());
+    super(
+      inMenu.screen(),
+      List.of(),
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.columns =
       Objects.requireNonNull(inColumns, "inColumns");

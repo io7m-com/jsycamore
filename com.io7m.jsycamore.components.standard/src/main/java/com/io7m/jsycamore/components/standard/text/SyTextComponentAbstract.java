@@ -16,6 +16,7 @@
 
 package com.io7m.jsycamore.components.standard.text;
 
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.components.standard.SyComponentAbstract;
@@ -32,9 +33,10 @@ public abstract class SyTextComponentAbstract extends SyComponentAbstract
   protected SyTextComponentAbstract(
     final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra,
-    final BooleanSupplier inNodeDetachCheck)
+    final BooleanSupplier inNodeDetachCheck,
+    final SyKeyboardFocusBehavior inFocusBehavior)
   {
-    super(inScreen, inThemeClassesExtra, inNodeDetachCheck);
+    super(inScreen, inThemeClassesExtra, inNodeDetachCheck, inFocusBehavior);
   }
 
   /**

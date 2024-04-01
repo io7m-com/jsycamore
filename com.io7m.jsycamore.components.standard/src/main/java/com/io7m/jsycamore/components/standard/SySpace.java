@@ -19,6 +19,7 @@ package com.io7m.jsycamore.components.standard;
 
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 
@@ -44,7 +45,11 @@ public final class SySpace extends SyComponentAbstract
     final SyScreenType inScreen,
     final List<SyThemeClassNameType> inThemeClassesExtra)
   {
-    super(inScreen, inThemeClassesExtra);
+    super(
+      inScreen,
+      inThemeClassesExtra,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
     this.setMouseQueryAccepting(false);
   }
 

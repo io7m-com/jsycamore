@@ -17,6 +17,7 @@
 package com.io7m.jsycamore.vanilla.internal;
 
 import com.io7m.jattribute.core.AttributeReadableType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.themes.SyThemeClassNameType;
 import com.io7m.jsycamore.api.windows.SyWindowDecorationComponent;
@@ -41,7 +42,12 @@ public abstract class SyWindowComponent extends SyComponentAbstract
     final SyWindowDecorationComponent inSemantic,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses, () -> false);
+    super(
+      screen,
+      themeClasses,
+      () -> false,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_STOPS_TRAVERSAL
+    );
 
     this.semantic =
       Objects.requireNonNull(inSemantic, "semantic");

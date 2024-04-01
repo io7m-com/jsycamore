@@ -27,6 +27,7 @@ import com.io7m.jsycamore.api.components.SyScrollBarVerticalType;
 import com.io7m.jsycamore.api.components.SyScrollPaneType;
 import com.io7m.jsycamore.api.events.SyEventConsumed;
 import com.io7m.jsycamore.api.events.SyEventInputType;
+import com.io7m.jsycamore.api.keyboard.SyKeyboardFocusBehavior;
 import com.io7m.jsycamore.api.layout.SyLayoutContextType;
 import com.io7m.jsycamore.api.screens.SyScreenType;
 import com.io7m.jsycamore.api.spaces.SySpaceParentRelativeType;
@@ -67,7 +68,11 @@ public final class SyScrollPane
     final SyScreenType screen,
     final List<SyThemeClassNameType> themeClasses)
   {
-    super(screen, themeClasses);
+    super(
+      screen,
+      themeClasses,
+      SyKeyboardFocusBehavior.IGNORES_FOCUS_AND_CONTINUES_TRAVERSAL
+    );
 
     this.scrollH =
       SyScrollBarsHorizontal.create(screen);
