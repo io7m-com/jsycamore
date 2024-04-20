@@ -41,7 +41,7 @@
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
     <io7m.org.immutables.value.version>2.10.0</io7m.org.immutables.value.version>
     <javafx.version>21.0.3</javafx.version>
-    <jqwik.version>1.8.2</jqwik.version>
+    <jqwik.version>1.8.4</jqwik.version>
     <junit.version>5.10.1</junit.version>
     <mockito.version>5.11.0</mockito.version>
   </properties>
