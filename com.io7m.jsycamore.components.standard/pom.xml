@@ -15,7 +15,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.components.standard</name>
   <description>Embedded GUI library (Standard components)</description>
-  <url>https://www.io7m.com/software/jsycamore/</url>
+  <url>https://www.io7m.com/software/jsycamore</url>
 
   <dependencies>
     <dependency>

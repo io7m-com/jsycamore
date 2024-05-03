@@ -16,7 +16,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.awt</name>
   <description>Embedded GUI library (AWT rendering)</description>
-  <url>https://www.io7m.com/software/jsycamore/</url>
+  <url>https://www.io7m.com/software/jsycamore</url>
 
   <dependencies>
     <dependency>

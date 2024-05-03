@@ -15,7 +15,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.font.york</name>
   <description>Embedded GUI library (York Fonts)</description>
-  <url>https://www.io7m.com/software/jsycamore/</url>
+  <url>https://www.io7m.com/software/jsycamore</url>
 
   <licenses>
     <license>

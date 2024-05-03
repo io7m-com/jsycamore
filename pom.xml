@@ -19,7 +19,7 @@
   <packaging>pom</packaging>
   <name>com.io7m.jsycamore</name>
   <description>Embedded GUI library</description>
-  <url>https://github.com/io7m/jsycamore</url>
+  <url>https://www.io7m.com/software/jsycamore</url>
 
   <modules>
     <module>com.io7m.jsycamore.api</module>
@@ -36,9 +36,10 @@
   </modules>
 
   <properties>
-    <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <io7m.api.previousVersion>0.2.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
+
+    <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <io7m.org.immutables.value.version>2.10.0</io7m.org.immutables.value.version>
     <javafx.version>21.0.3</javafx.version>
     <jqwik.version>1.8.2</jqwik.version>
@@ -54,9 +55,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/io7m/jsycamore</url>
-    <connection>scm:git:https://github.com/io7m/jsycamore</connection>
-    <developerConnection>scm:git:https://github.com/io7m/jsycamore</developerConnection>
+    <url>https://www.github.com/io7m-com/jsycamore</url>
+    <connection>scm:git:https://www.github.com/io7m-com/jsycamore</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/jsycamore</developerConnection>
   </scm>
 
   <developers>
@@ -69,7 +70,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://github.com/io7m/jsycamore/issues</url>
+    <url>https://www.github.com/io7m-com/jsycamore/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -87,7 +88,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://github.com/jsycamore/actions</url>
+    <url>https://www.github.com/io7m-com/jsycamore/actions</url>
   </ciManagement>
 
   <prerequisites>

@@ -13,7 +13,7 @@
   </c:release>
 
   <c:ticket-system xml:id="com.github.io7m.jsycamore">
-    <c:ticket-url>https://github.com/io7m/jsycamore/issues</c:ticket-url>
+    <c:ticket-url>https://www.github.com/io7m-com/jsycamore/issues</c:ticket-url>
   </c:ticket-system>
 
 </c:changelog>

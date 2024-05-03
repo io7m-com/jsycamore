@@ -14,7 +14,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.jsycamore.api</name>
   <description>Embedded GUI library (API specification)</description>
-  <url>https://www.io7m.com/software/jsycamore/</url>
+  <url>https://www.io7m.com/software/jsycamore</url>
 
   <dependencies>
     <dependency>
