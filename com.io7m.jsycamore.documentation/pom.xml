@@ -31,7 +31,7 @@
 
     <dependency>
       <groupId>com.io7m.jcip</groupId>
-      <artifactId>com.io7m.jcip.annotations</artifactId>
+      <artifactId>com.io7m.jcip</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
