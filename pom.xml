@@ -41,7 +41,7 @@
 
     <com.io7m.xstructural.version>1.9.0</com.io7m.xstructural.version>
     <io7m.org.immutables.value.version>2.10.1</io7m.org.immutables.value.version>
-    <javafx.version>23</javafx.version>
+    <javafx.version>23.0.1</javafx.version>
     <jqwik.version>1.9.1</jqwik.version>
     <junit.version>5.11.2</junit.version>
     <mockito.version>5.14.2</mockito.version>
