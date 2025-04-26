@@ -313,7 +313,13 @@ public final class SyScreen implements SyScreenType, SyThemeContextType
 
   private enum MouseButtonState
   {
+    /**
+     * Mouse button is up.
+     */
     MOUSE_STATE_UP,
+    /**
+     * Mouse button is down.
+     */
     MOUSE_STATE_DOWN
   }
 

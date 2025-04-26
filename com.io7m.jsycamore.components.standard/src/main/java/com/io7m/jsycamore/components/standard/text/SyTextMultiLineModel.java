@@ -1172,7 +1172,9 @@ public final class SyTextMultiLineModel implements SyTextMultiLineModelType
   private enum SyEditOpRegenerateAll
     implements SyEditOpType
   {
+    // CHECKSTYLE:OFF
     SY_EDIT_OP_REGENERATE
+    // CHECKSTYLE:ON
   }
 
   private sealed interface SyEditOpType

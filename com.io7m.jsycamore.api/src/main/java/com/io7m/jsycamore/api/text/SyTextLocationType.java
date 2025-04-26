@@ -58,6 +58,8 @@ public interface SyTextLocationType
   {
     /**
      * A caret.
+     *
+     * @param area The caret area
      */
 
     public SyCaret

@@ -72,6 +72,9 @@ public interface SyTextSelectionServiceType
   {
     /**
      * A piece of text is selected in the given component.
+     *
+     * @param component The component
+     * @param selection The selection
      */
 
     public SyTextSelectionIsSelected
