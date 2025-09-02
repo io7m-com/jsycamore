@@ -44,7 +44,7 @@
     <javafx.version>23.0.2</javafx.version>
     <jqwik.version>1.9.3</jqwik.version>
     <junit.version>5.13.4</junit.version>
-    <mockito.version>5.18.0</mockito.version>
+    <mockito.version>5.19.0</mockito.version>
   </properties>
 
   <licenses>
