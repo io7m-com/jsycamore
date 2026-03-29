@@ -16,6 +16,7 @@
 
     <MetaProperty name="com.io7m.xstructural.web.branding.header">brand-header.xml</MetaProperty>
     <MetaProperty name="com.io7m.xstructural.web.branding.footer">brand-footer.xml</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.web.cover">bookBanner.jpg</MetaProperty>
   </Metadata>
 
   <xi:include href="intro.xml"/>
