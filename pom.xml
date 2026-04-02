@@ -43,7 +43,7 @@
     <io7m.org.immutables.value.version>2.12.1</io7m.org.immutables.value.version>
     <javafx.version>23.0.2</javafx.version>
     <jqwik.version>1.9.3</jqwik.version>
-    <junit.version>5.14.2</junit.version>
+    <junit.version>5.14.3</junit.version>
     <mockito.version>5.23.0</mockito.version>
   </properties>
 
