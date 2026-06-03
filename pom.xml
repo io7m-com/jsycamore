@@ -39,7 +39,7 @@
     <io7m.api.previousVersion>0.2.0-SNAPSHOT</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
-    <com.io7m.xstructural.version>2.0.1</com.io7m.xstructural.version>
+    <com.io7m.xstructural.version>2.1.0</com.io7m.xstructural.version>
     <io7m.org.immutables.value.version>2.12.1</io7m.org.immutables.value.version>
     <javafx.version>23.0.2</javafx.version>
     <jqwik.version>1.9.3</jqwik.version>
